@@ -543,7 +543,7 @@
                                 <div class="step-item">
                                     <span class="step-number">3</span>
                                     <div class="step-content">
-                                        <h4 class="step-title">Add Jacob's Server</h4>
+                                        <h4 class="step-title">Add The PlexPoint Server</h4>
                                         <p class="step-description">Visit Jacob's Plex profile and add him as a friend:</p>
                                         <button class="download-btn" id="plex-profile-btn" data-testid="plex-profile-button">
                                             Visit Plex Profile
@@ -600,26 +600,72 @@
                     </div>
                 </div>
 
-                <div class="tutorials-footer">
-                    <p class="footer-text">Need help? Contact Jacob Nathan</p>
-                    <div class="footer-buttons">
-                        <button class="btn btn-outline" id="footer-whatsapp-btn" data-testid="footer-whatsapp-button">
-                            <i data-lucide="message-circle" class="btn-icon"></i>
-                            WhatsApp: 07481 861478
-                        </button>
-                        <button class="btn btn-outline" id="footer-call-btn" data-testid="footer-call-button">
-                            <i data-lucide="phone" class="btn-icon"></i>
-                            Call: 07481 861478
-                        </button>
-                        <button class="btn btn-outline" id="footer-email-btn" data-testid="footer-email-button">
-                            <i data-lucide="mail" class="btn-icon"></i>
-                            jacobnathan1718@gmail.com
-                        </button>
-                    </div>
-                </div>
+<!-- Contact + Footer Section -->
+<section id="contact" class="contact-section">
+    <div class="container">
+
+        <!-- Contact Header -->
+        <div class="section-header">
+            <h2 class="section-title">Contact Me</h2>
+            <p class="section-subtitle">Have questions? Send a message or reach me directly.</p>
+        </div>
+
+        <!-- Contact Form -->
+<form class="PlexPoint Message" id="PlexPoint Message"
+      action="https://api.web3forms.com/submit" method="POST">
+
+    <input type="hidden" name="access_key" value="f16f0338-9afa-4179-8a38-57360a9608d4">
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required placeholder="Enter your name">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
+        </div>
+    </div>
+
+    <div class="form-group full-width">
+        <label for="message">Message</label>
+        <textarea id="message" rows="5" name="message" required placeholder="Type your message..."></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        <i data-lucide="send" class="btn-icon"></i>
+        Send Message
+    </button>
+
+    <p id="formStatus" class="form-status"></p>
+</form>
+
+
+        <!-- Direct Contact Footer -->
+        <div class="tutorials-footer">
+            <p class="footer-text">Prefer to contact me directly?</p>
+            <div class="footer-buttons">
+                <button class="btn btn-outline" id="footer-whatsapp-btn" data-testid="footer-whatsapp-button">
+                    <i data-lucide="message-circle" class="btn-icon"></i>
+                    WhatsApp: 07481 861478
+                </button>
+
+                <button class="btn btn-outline" id="footer-call-btn" data-testid="footer-call-button">
+                    <i data-lucide="phone" class="btn-icon"></i>
+                    Call: 07481 861478
+                </button>
+
+                <button class="btn btn-outline" id="footer-email-btn" data-testid="footer-email-button">
+                    <i data-lucide="mail" class="btn-icon"></i>
+                    jacobnathan1718@gmail.com
+                </button>
             </div>
         </div>
-    </section>
+
+    </div>
+</section>
+
 
     <!-- FAQ Section -->
     <section id="faq" class="faq-section" data-testid="faq-section">
