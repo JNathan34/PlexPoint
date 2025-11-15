@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlexPoint</title>
+    <meta name="description" content="Enjoy unlimited entertainment with movies and shows available right at your fingertips. PlexPoint offers subscription-based access to 900+ movies and 100+ TV shows.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="plexpoint-logo.png">
+    <link rel="apple-touch-icon" href="plexpoint-logo.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+<nav id="navigation" class="navbar" data-testid="navigation">
+    <div class="container">
+        <div class="nav-content">
+
+            <!-- Logo -->
+            <button id="logo-button" class="logo" data-testid="logo-button">
+                <img src="plexpoint-logo.png" alt="PlexPoint Logo" class="logo-image">
+                <span class="logo-text">PlexPoint</span>
+            </button>
+
+            <!-- Desktop Navigation -->
+            <div class="nav-links">
+                <button class="nav-link" data-section="home" data-testid="nav-link-home">Home</button>
+                <button class="nav-link" data-section="membership" data-testid="nav-link-membership">Membership</button>
+                <button class="nav-link" data-section="tutorials" data-testid="nav-link-tutorials">Tutorials</button>
+                <button class="nav-link" data-section="requests" data-testid="nav-link-requests">Requests</button>
+                <button class="nav-link" data-section="faq" data-testid="nav-link-faq">FAQ</button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="mobile-menu-btn" data-testid="mobile-menu-button">
+                <i data-lucide="menu" class="menu-icon"></i>
+                <i data-lucide="x" class="close-icon hidden"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="mobile-menu">
+            <div class="mobile-menu-content">
+                <button class="mobile-nav-link" data-section="home" data-testid="mobile-nav-link-home">Home</button>
+                <button class="mobile-nav-link" data-section="membership" data-testid="mobile-nav-link-membership">Membership</button>
+                <button class="mobile-nav-link" data-section="tutorials" data-testid="mobile-nav-link-tutorials">Tutorials</button>
+                <button class="mobile-nav-link" data-section="requests" data-testid="mobile-nav-link-requests">Requests</button>
+                <button class="mobile-nav-link" data-section="faq" data-testid="mobile-nav-link-faq">FAQ</button>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section" data-testid="hero-section">
+        <!-- Background Image Overlay -->
+        <div class="hero-bg"></div>
+        
+        <div class="container hero-container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 class="hero-title">
+                            Welcome to <span class="text-primary">PlexPoint</span>
+                        </h1>
+                        <p class="hero-description">
+                            Enjoy unlimited entertainment with movies 🍿 and shows 📺 available right at your fingertips. This server is subscription-based, offering different tiers to suit your viewing needs.
+                        </p>
+                        <div class="payment-info">
+                            <p class="payment-title">💳 Preferred Payment: Direct Bank Transfer through me (to avoid third-party fees)</p>
+                            <div class="payment-details">
+                                <p>- Name: Jacob Nathan</p>
+                                <p>- Account Number: 58925008</p>
+                                <p>- Sort Code: 09-01-28</p>
+                            </div>
+                            <p class="payment-footer">Join today and start streaming with ease 🚀🔥</p>
+                        </div>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div class="stats-row">
+                        <div class="stats-card">
+                            <i data-lucide="film" class="stats-icon"></i>
+                            <div class="stats-number" data-testid="movies-count">900+</div>
+                            <p class="stats-label">Movies</p>
+                        </div>
+                        
+                        <div class="stats-card">
+                            <i data-lucide="tv" class="stats-icon"></i>
+                            <div class="stats-number" data-testid="shows-count">100+</div>
+                            <p class="stats-label">TV Shows</p>
+                        </div>
+                        
+                        <div class="stats-card">
+                            <i data-lucide="users" class="stats-icon"></i>
+                            <div class="stats-number">99.9%</div>
+                            <p class="stats-label">Uptime</p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" data-section="membership" data-testid="view-subscriptions-button">
+                            <i data-lucide="users" class="btn-icon"></i>
+                            View Subscriptions
+                        </button>
+                        <button class="btn btn-outline" data-section="requests" data-testid="browse-library-button">
+                            <i data-lucide="library" class="btn-icon"></i>
+                            Request Content
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hero-image">
+                    <div class="image-container">
+                        <img src="homepage.png" 
+                             alt="Plex Media Server Homepage" 
+                             class="hero-img"
+                             data-testid="hero-image">
+                        <div class="image-overlay"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Membership Section -->
+    <section id="membership" class="membership-section" data-testid="membership-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Subscription Tiers</h2>
+                <p class="section-subtitle">🎬 Request Movies & Shows at the Website</p>
+                <div class="contact-info">
+                    <p class="contact-title">💳 Preferred Payment: Direct Bank Transfer through me (to avoid third-party fees)</p>
+					<p class="contact-title small-note">
+    💡 Want to pay for the whole year upfront? <strong>Contact me directly.</strong>
+</p>
+
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i data-lucide="phone" class="contact-icon"></i>
+                            📞 Phone: 07481 861478
+                        </div>
+                        <div class="contact-item">
+                            <i data-lucide="mail" class="contact-icon"></i>
+                            📧 Email: jacobnathan1718@gmail.com
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<div class="membership-grid">
+    <!-- Bronze Tier -->
+    <div class="membership-tier" data-testid="membership-tier-bronze-tier">
+        <div class="tier-content">
+            <div class="tier-header">
+                <i data-lucide="user" class="tier-icon bronze"></i>
+                <h4 class="tier-name">Bronze Tier</h4>
+                <div class="tier-price">
+                    £1
+                    <span class="price-period">/month</span>
+                </div>
+            </div>
+
+            <div class="tier-description">
+                <p>Welcome to the Bronze Tier! You can enjoy all the movies and shows already available on Plex.</p>
+            </div>
+            <ul class="tier-features">
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>Access to Plex</span>
+                </li>
+            </ul>
+
+            <button class="btn btn-primary join-btn" data-tier="Bronze Tier" data-testid="join-button-bronze-tier">
+                Join
+            </button>
+        </div>
+    </div>
+
+    <!-- Silver Tier -->
+    <div class="membership-tier" data-testid="membership-tier-silver-tier">
+        <div class="tier-content">
+            <div class="tier-header">
+                <i data-lucide="award" class="tier-icon silver"></i>
+                <h4 class="tier-name">Silver Tier</h4>
+                <div class="tier-price">
+                    £3
+                    <span class="price-period">/month</span>
+                </div>
+            </div>
+
+            <div class="tier-description">
+                <p>Welcome to the Silver Tier! Enjoy more freedom with 5 movie requests and 3 season requests per month.</p>
+            </div>
+            <ul class="tier-features">
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>5 Movie requests</span>
+                </li>
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>3 Season requests</span>
+                </li>
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>Access to Plex</span>
+                </li>
+            </ul>
+
+            <button class="btn btn-primary join-btn" data-tier="Silver Tier" data-testid="join-button-silver-tier">
+                Join
+            </button>
+        </div>
+    </div>
+
+    <!-- Gold Tier (Featured) -->
+    <div class="membership-tier featured" data-testid="membership-tier-gold-tier">
+        <div class="tier-content">
+            <div class="tier-header">
+                <i data-lucide="crown" class="tier-icon gold"></i>
+                <h4 class="tier-name">Gold Tier</h4>
+                <div class="tier-price">
+                    £5
+                    <span class="price-period">/month</span>
+                </div>
+            </div>
+
+            <div class="tier-description">
+                <p>Welcome to the Gold Tier! Unlock even more with 7 movie requests and 5 season requests every month.</p>
+            </div>
+            <ul class="tier-features">
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>7 Movie requests</span>
+                </li>
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>5 Season requests</span>
+                </li>
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>Access to Plex</span>
+                </li>
+            </ul>
+
+            <button class="btn btn-primary join-btn" data-tier="Gold Tier" data-testid="join-button-gold-tier">
+                Join
+            </button>
+        </div>
+    </div>
+
+    <!-- Diamond Tier -->
+    <div class="membership-tier" data-testid="membership-tier-diamond-tier">
+        <div class="tier-content">
+            <div class="tier-header">
+                <i data-lucide="gem" class="tier-icon diamond"></i>
+                <h4 class="tier-name">Diamond Tier</h4>
+                <div class="tier-price">
+                    £7
+                    <span class="price-period">/month</span>
+                </div>
+            </div>
+
+            <div class="tier-description">
+                <p>Welcome to the Diamond Tier! Unlock even more with 10 movie requests and 7 season requests every month.</p>
+            </div>
+            <ul class="tier-features">
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>10 Movie requests</span>
+                </li>
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>7 Season requests</span>
+                </li>
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>Access to Plex</span>
+                </li>
+            </ul>
+
+            <button class="btn btn-primary join-btn" data-tier="Diamond Tier" data-testid="join-button-diamond-tier">
+                Join
+            </button>
+        </div>
+    </div>
+
+    <!-- Ruby Tier -->
+    <div class="membership-tier" data-testid="membership-tier-ruby-tier">
+        <div class="tier-content">
+            <div class="tier-header">
+                <i data-lucide="gem" class="tier-icon ruby"></i>
+                <h4 class="tier-name">Ruby Tier</h4>
+                <div class="tier-price">
+                    £10
+                    <span class="price-period">/month</span>
+                </div>
+            </div>
+
+            <div class="tier-description">
+                <p>Welcome to the Ruby Tier! Enjoy more freedom with 20 movie requests and 15 season requests per month.</p>
+            </div>
+            <ul class="tier-features">
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>20 Movie requests</span>
+                </li>
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>15 Season requests</span>
+                </li>
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>Access to Plex</span>
+                </li>
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>Access to Anime</span>
+                </li>
+            </ul>
+
+            <button class="btn btn-primary join-btn" data-tier="Ruby Tier" data-testid="join-button-ruby-tier">
+                Join
+            </button>
+        </div>
+    </div>
+
+    <!-- Platinum Tier -->
+    <div class="membership-tier" data-testid="membership-tier-platinum-tier">
+        <div class="tier-content">
+            <div class="tier-header">
+                <i data-lucide="zap" class="tier-icon platinum"></i>
+                <h4 class="tier-name">Platinum Tier</h4>
+                <div class="tier-price">
+                    £15
+                    <span class="price-period">/month</span>
+                </div>
+            </div>
+
+            <div class="tier-description">
+                <p>Welcome to the Platinum Tier! Unlock even more with 50 movie requests and 50 season requests every month - the ultimate VIP experience.</p>
+            </div>
+            <ul class="tier-features">
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>30 Movie requests</span>
+                </li>
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>30 Season requests</span>
+                </li>
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>Access to Plex</span>
+                </li>
+                <li class="feature-item">
+                    <i data-lucide="check" class="feature-check"></i>
+                    <span>Access to Anime</span>
+                </li>
+            </ul>
+
+            <button class="btn btn-primary join-btn" data-tier="Platinum Tier" data-testid="join-button-platinum-tier">
+                Join
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+    <!-- Requests Section -->
+    <section id="requests" class="requests-section" data-testid="requests-section">
+        <div class="container">
+            <div class="requests-grid">
+                <div class="requests-content">
+                    <div class="requests-text">
+                        <h2 class="section-title">Request New Content</h2>
+                        <p class="section-description">
+                            Can't find what you're looking for? Use our integrated Overseerr system to request movies and TV shows.
+                        </p>
+                        <div class="webapp-info">
+                            <h3 style="color: var(--primary); margin: 1.5rem 0 1rem 0; font-size: 1.25rem;">📱 Add Overseerr as a Web App</h3>
+                            <p style="color: var(--muted-foreground); margin-bottom: 1rem;">For the best experience, add Overseerr to your home screen:</p>
+                            <div style="background: var(--card); padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border);">
+                                <p style="margin: 0.5rem 0; font-size: 0.9rem;"><strong>📱 On Iphone:</strong> Open Overseerr in your browser → Tap the share button → "Add to Home Screen"</p>
+                                <p style="margin: 0.5rem 0; font-size: 0.9rem;"><strong>💻 On Desktop:</strong> Open Overseerr in Chrome/Edge → Click the install button in the address bar</p>
+								<p style="margin: 0.5rem 0; font-size: 0.9rem;"><strong>📱 On Android:</strong> Open Overseerr in Chrome → Tap the three dots → "Add  to Home screen"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Features Grid -->
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i data-lucide="search"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h5 class="feature-title">Easy Search</h5>
+                                <p class="feature-description">
+                                    Search for any movie or TV show using our intuitive interface
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i data-lucide="clock"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h5 class="feature-title">Quick Processing</h5>
+                                <p class="feature-description">
+                                    Most requests are fulfilled within 24-48 hours
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i data-lucide="bell"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h5 class="feature-title">Auto Notifications</h5>
+                                <p class="feature-description">
+                                    Get notified when your requested content is available
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i data-lucide="star"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h5 class="feature-title">Quality Assured</h5>
+                                <p class="feature-description">
+                                    All content is verified for quality before adding
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="requests-buttons">
+                        <button class="btn btn-primary" id="make-request-btn" data-testid="make-request-button">
+                            <i data-lucide="plus-circle" class="btn-icon"></i>
+                            Make a Request
+                        </button>
+                        <button class="btn btn-outline" data-section="tutorials" data-testid="how-it-works-button">
+                            <i data-lucide="help-circle" class="btn-icon"></i>
+                            How It Works
+                        </button>
+                    </div>
+                </div>
+
+                <div class="requests-image">
+                    <div class="image-container">
+                        <img src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                             alt="Media request interface" 
+                             class="requests-img"
+                             data-testid="request-interface-image">
+                        <div class="image-overlay-center">
+                            <div class="overlay-icon">
+                                <i data-lucide="plus-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tutorials Section -->
+    <section id="tutorials" class="tutorials-section" data-testid="tutorials-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Getting Started</h2>
+                <p class="section-subtitle">How to install and setup Plex to access Jacob's server</p>
+            </div>
+
+            <div class="tutorials-content">
+                <div class="tutorials-grid">
+                    <!-- Instructions Side -->
+                    <div class="instructions-side">
+                        <div class="instructions-card">
+                            <h3 class="instructions-title">Step-by-Step Setup Guide</h3>
+                            
+                            <div class="steps-container">
+                                <!-- Step 1 -->
+                                <div class="step-item">
+                                    <span class="step-number">1</span>
+                                    <div class="step-content">
+                                        <h4 class="step-title">Download Plex App</h4>
+                                        <p class="step-description">Choose your device and download the Plex app:</p>
+                                        <div class="download-grid">
+                                            <button class="download-btn" data-url="https://apps.apple.com/app/plex/id383457673" data-testid="download-iphone-ipad">
+                                                <i data-lucide="smartphone" class="download-icon"></i>
+                                                iPhone/iPad
+                                            </button>
+                                            <button class="download-btn" data-url="https://play.google.com/store/apps/details?id=com.plexapp.android" data-testid="download-android">
+                                                <i data-lucide="smartphone" class="download-icon"></i>
+                                                Android
+                                            </button>
+                                            <button class="download-btn" data-testid="download-windows-mac">
+                                                <i data-lucide="monitor" class="download-icon"></i>
+                                                Windows/Mac
+                                            </button>
+                                            <button class="download-btn" data-testid="download-smart-tv">
+                                                <i data-lucide="tv" class="download-icon"></i>
+                                                Smart TV
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2 -->
+                                <div class="step-item">
+                                    <span class="step-number">2</span>
+                                    <div class="step-content">
+                                        <h4 class="step-title">Create Plex Account</h4>
+                                        <p class="step-description">Sign up for a free Plex account and complete the setup process.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3 -->
+                                <div class="step-item">
+                                    <span class="step-number">3</span>
+                                    <div class="step-content">
+                                        <h4 class="step-title">Add Jacob's Server</h4>
+                                        <p class="step-description">Visit Jacob's Plex profile and add him as a friend:</p>
+                                        <button class="download-btn" id="plex-profile-btn" data-testid="plex-profile-button">
+                                            Visit Plex Profile
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4 -->
+                                <div class="step-item">
+                                    <span class="step-number">4</span>
+                                    <div class="step-content">
+                                        <h4 class="step-title">Contact Jacob</h4>
+                                        <p class="step-description">Get in touch to activate your server access:</p>
+                                        <div class="contact-buttons">
+                                            <button class="download-btn" id="whatsapp-btn" data-testid="whatsapp-button">
+                                                <i data-lucide="message-circle" class="download-icon"></i>
+                                                WhatsApp
+                                            </button>
+                                            <button class="download-btn" id="call-btn" data-testid="call-button">
+                                                <i data-lucide="phone" class="download-icon"></i>
+                                                Call
+                                            </button>
+                                            <button class="download-btn" id="email-btn" data-testid="email-button">
+                                                <i data-lucide="mail" class="download-icon"></i>
+                                                Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 5 -->
+                                <div class="step-item">
+                                    <span class="step-number">5</span>
+                                    <div class="step-content">
+                                        <h4 class="step-title">Accept Server Invitation</h4>
+                                        <p class="step-description">You'll receive an email saying "JNathan34 has given you access to his server" - click the link to accept and start streaming!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Video Side -->
+                    <div class="video-side">
+                        <div class="video-card">
+                            <h3 class="video-title">Video Tutorial</h3>
+                            <div class="video-container">
+                                <video controls class="tutorial-video" data-testid="tutorial-video">
+                                    <source src="plex.mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tutorials-footer">
+                    <p class="footer-text">Need help? Contact Jacob Nathan</p>
+                    <div class="footer-buttons">
+                        <button class="btn btn-outline" id="footer-whatsapp-btn" data-testid="footer-whatsapp-button">
+                            <i data-lucide="message-circle" class="btn-icon"></i>
+                            WhatsApp: 07481 861478
+                        </button>
+                        <button class="btn btn-outline" id="footer-call-btn" data-testid="footer-call-button">
+                            <i data-lucide="phone" class="btn-icon"></i>
+                            Call: 07481 861478
+                        </button>
+                        <button class="btn btn-outline" id="footer-email-btn" data-testid="footer-email-button">
+                            <i data-lucide="mail" class="btn-icon"></i>
+                            jacobnathan1718@gmail.com
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section" data-testid="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">Everything you need to know about Plex and our service</p>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-item" data-testid="faq-0">
+                    <button class="faq-question" data-testid="faq-question-0">
+                        <h3>What is Plex?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon"></i>
+                    </button>
+                    <div class="faq-answer" data-testid="faq-answer-0">
+                        <p>Plex is a media server platform that allows you to stream your movies, TV shows, music, and other media content across all your devices. It organizes your content with beautiful artwork and metadata, making it easy to find and enjoy your entertainment library anywhere, anytime.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-testid="faq-1">
+                    <button class="faq-question" data-testid="faq-question-1">
+                        <h3>How does Plex work?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon"></i>
+                    </button>
+                    <div class="faq-answer" data-testid="faq-answer-1">
+                        <p>Plex works by running a media server on a computer that scans and organizes your media files. You can then access this content through Plex apps on various devices like phones, tablets, smart TVs, and web browsers. The server transcodes content on-the-fly to ensure smooth playback on any device.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-testid="faq-2">
+                    <button class="faq-question" data-testid="faq-question-2">
+                        <h3>What devices can I use to watch content?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon"></i>
+                    </button>
+                    <div class="faq-answer" data-testid="faq-answer-2">
+                        <p>You can watch on virtually any device including smartphones (iOS/Android), tablets, computers (Windows/Mac/Linux), smart TVs (Samsung, LG, Sony, etc.), streaming devices (Roku, Apple TV, Chromecast, Fire TV), and gaming consoles (PlayStation, Xbox).</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-testid="faq-3">
+                    <button class="faq-question" data-testid="faq-question-3">
+                        <h3>How do I request new content?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon"></i>
+                    </button>
+                    <div class="faq-answer" data-testid="faq-answer-3">
+                        <p>Simply use our integrated request system to search for and request any movie or TV show you'd like to see added to the library. Requests are processed based on your subscription tier, with higher tiers receiving faster processing times.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-testid="faq-4">
+                    <button class="faq-question" data-testid="faq-question-4">
+                        <h3>What's the difference between subscription tiers?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon"></i>
+                    </button>
+                    <div class="faq-answer" data-testid="faq-answer-4">
+                        <p>Each tier offers different benefits including the number of movie and TV show requests you can make per month, processing time for requests, and access levels. Higher tiers get more requests, faster processing, and priority treatment.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-testid="faq-5">
+                    <button class="faq-question" data-testid="faq-question-5">
+                        <h3>How do I make payments?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon"></i>
+                    </button>
+                    <div class="faq-answer" data-testid="faq-answer-5">
+                        <p>We prefer direct bank transfers to avoid third-party fees. Contact Jacob Nathan at 07481 861478 or jacobnathan1718@gmail.com for payment details. Bank transfer information: Name: Jacob Nathan, Account: 58925008, Sort Code: 09-01-28.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-testid="faq-6">
+                    <button class="faq-question" data-testid="faq-question-6">
+                        <h3>Can I share my account?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon"></i>
+                    </button>
+                    <div class="faq-answer" data-testid="faq-answer-6">
+                        <p>No, you are not allowed to share your account unless they live in the same household.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-testid="faq-7">
+                    <button class="faq-question" data-testid="faq-question-7">
+                        <h3>Is there a free trial?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon"></i>
+                    </button>
+                    <div class="faq-answer" data-testid="faq-answer-7">
+                        <p>The Bronze Tier provides basic access to all available content on Plex for just £1/month. This is a great way to test the service before upgrading to a higher tier with more features and request capabilities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" data-testid="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Brand Section -->
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <i data-lucide="play" class="footer-logo-icon"></i>
+                        <span class="footer-logo-text">PlexServer</span>
+                    </div>
+                    <p class="footer-description">
+                        Your personal media paradise with 800+ movies and 100+ TV shows. Stream anytime, anywhere.
+                    </p>
+                    <div class="footer-kofi">
+                        <a href="https://ko-fi.com/jnathan34" target="_blank" rel="noopener noreferrer" class="kofi-link">
+                            💖 Support on Ko-fi: ko-fi.com/jnathan34
+                        </a>
+                    </div>
+                </div>
+
+
+                <!-- Contact & Payment Section -->
+                <div class="footer-section">
+                    <h5 class="footer-section-title">Contact & Payment</h5>
+                    <p class="footer-contact-description">
+                        Get in touch for subscriptions or support. We prefer direct bank transfers to avoid fees.
+                    </p>
+                    <button class="btn btn-primary footer-contact-btn" id="footer-contact-btn" data-testid="footer-contact-button">
+                        <i data-lucide="coffee" class="btn-icon"></i>
+                        Contact Jacob
+                    </button>
+                </div>
+            </div>
+
+            <hr class="footer-divider">
+
+<!-- Bottom Section -->
+<div class="footer-bottom">
+    <p class="footer-copyright">
+        &copy; 2025 PlexServer. All rights reserved.
+    </p>
+    <div class="footer-legal">
+        <button class="footer-legal-link" id="openPrivacy">Privacy Policy</button>
+        <button class="footer-legal-link" id="openTerms">Terms of Service</button>
+    </div>
+</div>
+</div>
+</footer>
+
+<!-- Modals -->
+<div id="privacyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" data-close="privacyModal">&times;</span>
+        <h2>Privacy Policy</h2>
+        <p>This privacy policy outlines how we handle your information when you use our Plex Media Server service.</p>
+        <p><strong>1. Personal Information</strong><br>
+            We collect basic info like name and email to manage your account. No sensitive data is stored.</p>
+        <p><strong>2. Data Use</strong><br>
+            Data is used only to run the service. We don't sell or share your info.</p>
+        <p><strong>3. Cookies & Tracking</strong><br>
+            We don't use cookies or trackers.</p>
+        <p><strong>4. Security</strong><br>
+            Reasonable measures are taken to protect data.</p>
+        <p><strong>5. Contact</strong><br>
+            For privacy concerns, contact Jacob Nathan.</p>
+    </div>
+</div>
+<div id="termsModal" class="modal">
+  <div class="modal-content">
+    <span class="close" data-close="termsModal">&times;</span>
+    <h2>Terms and Conditions – Plex Media Server Subscription</h2>
+
+    <p><strong>1. Subscription Tiers</strong><br>
+      • <b>Bronze</b>: View-only access to existing library. No requests allowed.<br>
+      • <b>Silver</b>: Up to 5 movie requests and 3 TV season requests per month.<br>
+      • <b>Gold</b>: Up to 7 movie requests and 5 TV season requests per month.<br>
+      • <b>Diamond</b>: Up to 10 movie requests and 7 TV season requests per month.<br>
+      • <b>Ruby</b>: Up to 20 movie requests and 15 TV season requests per month. Includes <b>Anime Access</b>.<br>
+      • <b>Platinum</b>: Up to 30 movie requests per month and 30 TV season requests. Includes <b>Anime Access</b>.<br><br>
+      <em>Definition:</em> “1 TV Season” means one complete season of a show, regardless of the number of episodes. Limits apply only to new requests; all existing content in the library remains available without affecting monthly limits.
+    </p>
+
+    <p><strong>2. Account Use</strong><br>
+      • Service is for <b>personal, non-commercial use</b> only.<br>
+      • “Household” means people living at the same physical address and using the same internet connection (LAN/WiFi).<br>
+      • Accessing the service via VPN or remote devices outside the household is prohibited.<br>
+      • Sharing accounts with anyone outside the defined household is not allowed.<br>
+      • Members may not request content on behalf of other users or accounts.
+    </p>
+
+    <p><strong>3. Requests</strong><br>
+      • Request limits reset on the 1st of each calendar month.<br>
+      • Unused requests do not roll over.<br>
+      • Abuse of the request system includes (but is not limited to):<br>
+        – Repeatedly requesting unavailable titles after being informed.<br>
+        – Spamming multiple requests in a short time.<br>
+        – Asking other members to make requests for you.<br>
+        – Subscribing to a higher tier (e.g., Platinum), submitting large requests, and then downgrading to a lower tier (e.g., Bronze) to avoid limits.<br>
+      • <b>Minor violations</b> may result in a warning or temporary suspension.<br>
+      • <b>Major violations</b> (e.g., repeated abuse, deliberate exploitation) may result in permanent termination without refund.
+    </p>
+
+    <p><strong>4. Payments & Refunds</strong><br>
+      • Subscription fees must be paid in full and on time to maintain access.<br>
+      • Payments are generally non-refundable.<br>
+      • In compliance with UK/EU consumer law, new subscribers have a 14-day right to cancel from the date of purchase.<br>
+      • By streaming or making requests during this period, you <b>waive your 14-day right to cancel</b>.<br>
+      • Failure to pay may result in suspension or termination of service.<br>
+      • Plan upgrades take effect on the 1st of the following month. Until then, your current plan limits remain in place.<br>
+      • Downgrades also take effect on the 1st of the following month.
+    </p>
+
+    <p><strong>5. Service Availability</strong><br>
+      • The Plex server is provided “as is.” Reasonable efforts will be made to keep the service available.<br>
+      • Downtime may occur due to maintenance, technical issues, or third-party restrictions.<br>
+    </p>
+
+    <p><strong>6. Termination</strong><br>
+      • Accounts may be suspended or terminated for violations of these terms.<br>
+      • Examples of violations include:<br>
+        – Account sharing outside household.<br>
+        – Piracy, uploading, or unauthorized redistribution of content.<br>
+        – Attempting to hack, bypass limits, or gain unauthorized access (“system exploitation”).<br>
+      • Minor violations → warning or temporary suspension.<br>
+      • Major violations → immediate termination without refund.<br>
+      • Repeated or severe abuse may result in a permanent ban.
+    </p>
+
+    <p><strong>7. Service Modifications</strong><br>
+      • We reserve the right to modify, suspend, or discontinue the service at any time without liability.<br>
+      • Features, content, or subscription tiers may change without notice.
+    </p>
+
+    <p><strong>8. Updates to Terms</strong><br>
+      • These terms may be updated from time to time.<br>
+      • Subscribers will be notified of material changes via email or in-app notification.<br>
+      • Continued use after updates constitutes acceptance of the revised terms.
+    </p>
+
+    <p><strong>9. Age Requirement</strong><br>
+      • Subscribers must be at least 18 years old, or have verified parental/guardian consent to use the service.
+    </p>
+
+    <p><strong>10. Agreement</strong><br>
+      • By subscribing, you agree to these Terms and Conditions in full.<br>
+      • If you do not agree, you must cancel your subscription and stop using the service.
+    </p>
+  </div>
+</div>
+
+
+<!-- Modal Styles -->
+<style>
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background: #252E37;        /* Dark background */
+    color: #ffffff;             /* White text */
+    border: 2px solid #181F25;  /* Red border */
+    margin: 10% auto;
+    padding: 30px;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+
+.close {
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+</style>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="script.js"></script>
+
+<script>
+// Open modals
+document.getElementById("openPrivacy").addEventListener("click", function () {
+    document.getElementById("privacyModal").style.display = "block";
+});
+
+document.getElementById("openTerms").addEventListener("click", function () {
+    document.getElementById("termsModal").style.display = "block";
+});
+
+// Close modals via close button
+document.querySelectorAll(".close").forEach(function (el) {
+    el.addEventListener("click", function () {
+        const modalId = el.getAttribute("data-close");
+        document.getElementById(modalId).style.display = "none";
+    });
+});
+
+// Close modals when clicking outside
+window.addEventListener("click", function (e) {
+    document.querySelectorAll(".modal").forEach(function (modal) {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+});
+</script>
+</body>
+</html>
