@@ -1494,3 +1494,131 @@ html {
     margin-right: 10px;
 }
 
+/* Contact Section */
+.contact-section {
+    background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.contact-section .container {
+    max-width: 1100px;
+    width: 100%;
+}
+
+/* Contact Header */
+.section-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Contact Form */
+.contact-form {
+    width: 100%;
+    background: #0f1418;  /* example dark color */
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+    margin: 0 auto 2.5rem auto;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 0.5rem;
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 0.8rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* Contact Footer */
+.tutorials-footer {
+    text-align: center;
+    margin-top: 1rem;
+    padding-bottom: 2rem;
+}
+
+.footer-text {
+    color: var(--muted-foreground);
+    margin-bottom: 1rem;
+}
+
+.footer-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footer-buttons .btn {
+    min-width: 280px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+
+    /* Contact Section Wrapper */
+    .contact-section {
+        padding: 1rem;
+        border-radius: 0.25rem;
+    }
+
+    /* Make form rows stack vertically */
+    .form-row {
+        flex-direction: column;
+    }
+
+    /* Full width form fields */
+    .form-group {
+        width: 100%;
+    }
+
+    /* Reduce padding on the form box */
+    .contact-form {
+        padding: 1.2rem;
+        border-radius: 0.75rem;
+    }
+
+    /* Make footer buttons stack */
+    .footer-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .footer-buttons .btn {
+        min-width: 100%;
+    }
+
+    /* Reduce spacing under header */
+    .section-header {
+        margin-bottom: 1rem;
+    }
+}
+
+.contact-form button {
+    margin-top: 1rem; /* or whatever spacing you want */
+}
+
