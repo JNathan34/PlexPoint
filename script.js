@@ -1,4 +1,13 @@
-// Initialize Lucide icons when DOM is loaded
+// --- Service Worker Registration ---
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(reg => console.log('Service Worker registered:', reg.scope))
+      .catch(err => console.log('Service Worker registration failed:', err));
+  });
+}
+
+// --- Initialize DOM functionality ---
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Lucide icons
     if (typeof lucide !== 'undefined') {
@@ -14,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initMembershipButtons();
 });
 
-// Navigation functionality
+// --- Navigation functionality ---
 function initNavigation() {
     const navbar = document.getElementById('navigation');
     const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -22,10 +31,8 @@ function initNavigation() {
     const menuIcon = mobileMenuButton.querySelector('.menu-icon');
     const closeIcon = mobileMenuButton.querySelector('.close-icon');
 
-    // Handle scroll detection for navbar background
     function handleScroll() {
         const isScrolled = window.scrollY > 50;
-        
         if (isScrolled) {
             navbar.classList.add('scrolled');
         } else {
@@ -33,10 +40,8 @@ function initNavigation() {
         }
     }
 
-    // Mobile menu toggle
     function toggleMobileMenu() {
         const isOpen = mobileMenu.classList.contains('active');
-        
         if (isOpen) {
             mobileMenu.classList.remove('active');
             menuIcon.classList.remove('hidden');
@@ -48,11 +53,9 @@ function initNavigation() {
         }
     }
 
-    // Event listeners
     window.addEventListener('scroll', handleScroll);
     mobileMenuButton.addEventListener('click', toggleMobileMenu);
-    
-    // Close mobile menu when clicking on mobile nav links
+
     const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
     mobileNavLinks.forEach(link => {
         link.addEventListener('click', () => {
@@ -62,13 +65,11 @@ function initNavigation() {
         });
     });
 
-    // Initial scroll check
     handleScroll();
 }
 
-// Smooth scrolling functionality
+// --- Smooth scrolling functionality ---
 function initSmoothScrolling() {
-    // Function to scroll to section
     function scrollToSection(sectionId) {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -76,7 +77,6 @@ function initSmoothScrolling() {
         }
     }
 
-    // Add event listeners to all elements with data-section attribute
     const scrollElements = document.querySelectorAll('[data-section]');
     scrollElements.forEach(element => {
         element.addEventListener('click', (e) => {
@@ -86,7 +86,6 @@ function initSmoothScrolling() {
         });
     });
 
-    // Logo button scrolls to home
     const logoButton = document.getElementById('logo-button');
     if (logoButton) {
         logoButton.addEventListener('click', (e) => {
@@ -96,32 +95,29 @@ function initSmoothScrolling() {
     }
 }
 
-// FAQ accordion functionality
+// --- FAQ accordion functionality ---
 function initFAQ() {
     const faqItems = document.querySelectorAll('.faq-item');
     
-    faqItems.forEach((item, index) => {
+    faqItems.forEach((item) => {
         const question = item.querySelector('.faq-question');
         const answer = item.querySelector('.faq-answer');
         const icon = item.querySelector('.faq-icon');
         
         question.addEventListener('click', () => {
             const isActive = item.classList.contains('active');
-            
-            // Close all other FAQ items
+
             faqItems.forEach(otherItem => {
                 if (otherItem !== item) {
                     otherItem.classList.remove('active');
                     const otherAnswer = otherItem.querySelector('.faq-answer');
                     const otherIcon = otherItem.querySelector('.faq-icon');
                     otherAnswer.classList.remove('active');
-                    // Reset icon rotation
                     otherIcon.style.transform = 'rotate(0deg)';
                     otherIcon.style.color = 'var(--muted-foreground)';
                 }
             });
-            
-            // Toggle current item
+
             if (isActive) {
                 item.classList.remove('active');
                 answer.classList.remove('active');
@@ -137,9 +133,8 @@ function initFAQ() {
     });
 }
 
-// External links functionality
+// --- External links functionality ---
 function initExternalLinks() {
-    // Make request button
     const makeRequestBtn = document.getElementById('make-request-btn');
     if (makeRequestBtn) {
         makeRequestBtn.addEventListener('click', () => {
@@ -147,7 +142,6 @@ function initExternalLinks() {
         });
     }
 
-    // Plex profile button
     const plexProfileBtn = document.getElementById('plex-profile-btn');
     if (plexProfileBtn) {
         plexProfileBtn.addEventListener('click', () => {
@@ -155,7 +149,6 @@ function initExternalLinks() {
         });
     }
 
-    // Download buttons with URLs
     const downloadButtons = document.querySelectorAll('.download-btn[data-url]');
     downloadButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -166,7 +159,6 @@ function initExternalLinks() {
         });
     });
 
-    // Social media buttons (placeholder alerts)
     const socialButtons = document.querySelectorAll('.social-btn');
     socialButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -174,7 +166,6 @@ function initExternalLinks() {
         });
     });
 
-    // Footer links that are placeholders
     const placeholderLinks = [
         'support-link-help-center',
         'support-link-contact',
@@ -193,14 +184,13 @@ function initExternalLinks() {
     });
 }
 
-// Contact buttons functionality
+// --- Contact buttons functionality ---
 function initContactButtons() {
-    // WhatsApp buttons
     const whatsappButtons = [
         document.getElementById('whatsapp-btn'),
         document.getElementById('footer-whatsapp-btn')
     ];
-    
+
     whatsappButtons.forEach(button => {
         if (button) {
             button.addEventListener('click', () => {
@@ -209,12 +199,11 @@ function initContactButtons() {
         }
     });
 
-    // Call buttons
     const callButtons = [
         document.getElementById('call-btn'),
         document.getElementById('footer-call-btn')
     ];
-    
+
     callButtons.forEach(button => {
         if (button) {
             button.addEventListener('click', () => {
@@ -223,12 +212,11 @@ function initContactButtons() {
         }
     });
 
-    // Email buttons
     const emailButtons = [
         document.getElementById('email-btn'),
         document.getElementById('footer-email-btn')
     ];
-    
+
     emailButtons.forEach(button => {
         if (button) {
             button.addEventListener('click', () => {
@@ -237,7 +225,6 @@ function initContactButtons() {
         }
     });
 
-    // Footer contact button with alert
     const footerContactBtn = document.getElementById('footer-contact-btn');
     if (footerContactBtn) {
         footerContactBtn.addEventListener('click', () => {
@@ -246,7 +233,7 @@ function initContactButtons() {
     }
 }
 
-// Membership buttons functionality
+// --- Membership buttons functionality ---
 function initMembershipButtons() {
     const joinButtons = document.querySelectorAll('.join-btn');
     
@@ -257,7 +244,7 @@ function initMembershipButtons() {
     });
 }
 
-// Show contact information alert
+// --- Show contact information alert ---
 function showContactAlert() {
     const contactInfo = `Contact Jacob Nathan:
 
@@ -272,13 +259,12 @@ Sort Code: 09-01-28`;
     alert(contactInfo);
 }
 
-// Utility function to handle responsive behavior
+// --- Utility function to handle responsive behavior ---
 function handleResize() {
     const mobileMenu = document.getElementById('mobile-menu');
     const menuIcon = document.querySelector('.menu-icon');
     const closeIcon = document.querySelector('.close-icon');
-    
-    // Close mobile menu on resize to larger screen
+
     if (window.innerWidth >= 768) {
         mobileMenu.classList.remove('active');
         menuIcon.classList.remove('hidden');
@@ -286,27 +272,24 @@ function handleResize() {
     }
 }
 
-// Add resize event listener
 window.addEventListener('resize', handleResize);
 
-// Handle page visibility changes to reinitialize icons if needed
+// --- Reinitialize icons on visibility change ---
 document.addEventListener('visibilitychange', function() {
     if (!document.hidden && typeof lucide !== 'undefined') {
-        // Reinitialize icons when page becomes visible
         setTimeout(() => {
             lucide.createIcons();
         }, 100);
     }
 });
 
-// Function to reinitialize icons (useful for dynamic content)
 function reinitializeIcons() {
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
 }
 
-// Export functions for potential use in other scripts
+// --- Export functions for other scripts ---
 window.PlexServerApp = {
     scrollToSection: function(sectionId) {
         const element = document.getElementById(sectionId);
@@ -317,4 +300,3 @@ window.PlexServerApp = {
     showContactAlert: showContactAlert,
     reinitializeIcons: reinitializeIcons
 };
-
