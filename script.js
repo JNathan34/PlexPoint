@@ -1,14 +1,6 @@
-// --- Service Worker Registration ---
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(reg => console.log('Service Worker registered:', reg.scope))
-      .catch(err => console.log('Service Worker registration failed:', err));
-  });
-}
-
 // --- Initialize DOM functionality ---
 document.addEventListener('DOMContentLoaded', function() {
+
     // Initialize Lucide icons
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
@@ -135,6 +127,7 @@ function initFAQ() {
 
 // --- External links functionality ---
 function initExternalLinks() {
+
     const makeRequestBtn = document.getElementById('make-request-btn');
     if (makeRequestBtn) {
         makeRequestBtn.addEventListener('click', () => {
@@ -164,23 +157,6 @@ function initExternalLinks() {
         button.addEventListener('click', () => {
             alert('This social media link would be implemented in a real application');
         });
-    });
-
-    const placeholderLinks = [
-        'support-link-help-center',
-        'support-link-contact',
-        'support-link-status-page',
-        'legal-link-privacy-policy',
-        'legal-link-terms-of-service'
-    ];
-
-    placeholderLinks.forEach(linkId => {
-        const link = document.querySelector(`[data-testid="${linkId}"]`);
-        if (link) {
-            link.addEventListener('click', () => {
-                alert('This link would be implemented in a real application');
-            });
-        }
     });
 }
 
@@ -259,7 +235,7 @@ Sort Code: 09-01-28`;
     alert(contactInfo);
 }
 
-// --- Utility function to handle responsive behavior ---
+// --- Utility: Handle responsive behavior ---
 function handleResize() {
     const mobileMenu = document.getElementById('mobile-menu');
     const menuIcon = document.querySelector('.menu-icon');
@@ -283,13 +259,7 @@ document.addEventListener('visibilitychange', function() {
     }
 });
 
-function reinitializeIcons() {
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
-}
-
-// --- Export functions for other scripts ---
+// --- Export functions globally ---
 window.PlexServerApp = {
     scrollToSection: function(sectionId) {
         const element = document.getElementById(sectionId);
@@ -298,5 +268,9 @@ window.PlexServerApp = {
         }
     },
     showContactAlert: showContactAlert,
-    reinitializeIcons: reinitializeIcons
+    reinitializeIcons: function() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
 };
