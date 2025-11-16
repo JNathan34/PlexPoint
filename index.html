@@ -611,48 +611,37 @@
         </div>
 
  <!-- Contact Form -->
-            <div class="contact-form-section">
-                <div class="contact-form-card">
-                    <div class="contact-form-header">
-                        <i data-lucide="send"></i>
-                        <h3>Start Your Project</h3>
-                    </div>
+<form class="contact-form" id="plexpoint-message"
+      action="https://api.web3forms.com/submit" method="POST">
 
-                    <!-- ✅ Web3Forms version -->
-                    <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
-                        <!-- Access Key (replace with yours if different) -->
-                        <input type="hidden" name="access_key" value="0a567fab-f33e-4c2c-93f3-0ac35adf09e0">
+    <input type="hidden" name="access_key" value="f16f0338-9afa-4179-8a38-57360a9608d4">
 
-                        <!-- Basic Info -->
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="name">Full Name *</label>
-                                <input type="text" id="name" name="name" placeholder="Your name" required>
-                            </div>
+    <div class="contact-left">
 
-                        <div class="form-group">
-                            <label for="phone">Phone Number (Optional)</label>
-                            <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567">
-                        </div>
+        <!-- Name + Email row -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input id="name" type="text" name="name" required>
+            </div>
 
-
-                        <!-- Message -->
-                        <div class="form-group">
-                            <label for="message">Project Details</label>
-                            <textarea id="message" name="message" rows="5" placeholder="Tell me about your requirements, intended use, preferred components, or any specific needs..."></textarea>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary btn-lg btn-full">
-                            <i data-lucide="send"></i>
-                            <span>Send Message</span>
-                        </button>
-                    </form>
-                </div>
+            <div class="form-group">
+                <label for="email">Your Email</label>
+                <input id="email" type="email" name="email" required>
             </div>
         </div>
+
+        <!-- Message -->
+        <div class="form-group full-width">
+            <label for="message">Your Message</label>
+            <textarea id="message" name="message" required></textarea>
+        </div>
+
+        <button type="submit">
+            Submit
+        </button>
     </div>
-</section>
+</form>
 
 
 
