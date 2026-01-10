@@ -174,7 +174,7 @@ export default function MembershipSection() {
 
                     <div className="flex-grow">
                       <ul className="space-y-1 sm:space-y-2 md:space-y-3 mb-2 sm:mb-4 md:mb-6">
-                        {tier.features.slice(0, 3).map((feature, featureIndex) => (
+                        {tier.features.map((feature, featureIndex) => (
                           <motion.li
                             key={featureIndex}
                             initial={{ opacity: 0, x: -10 }}
@@ -189,11 +189,6 @@ export default function MembershipSection() {
                             <span className="text-[10px] sm:text-xs md:text-sm text-muted-foreground line-clamp-2">{feature}</span>
                           </motion.li>
                         ))}
-                        {tier.features.length > 3 && (
-                          <li className="text-[10px] sm:text-xs text-muted-foreground/70 text-center">
-                            +{tier.features.length - 3} more
-                          </li>
-                        )}
                       </ul>
                     </div>
 

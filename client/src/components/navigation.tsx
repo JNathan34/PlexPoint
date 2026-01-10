@@ -139,13 +139,10 @@ export default function Navigation() {
               <div className="py-4 mt-4 border-t border-border/50">
                 <div className="flex flex-col space-y-1">
                   {NAV_ITEMS.map((item, index) => (
-                    <motion.button
+                    <button
                       key={item}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
                       onClick={() => handleNavClick(item)}
-                      className={`text-left px-4 py-3 rounded-xl transition-all capitalize min-h-[48px] ${
+                      className={`text-left px-4 py-3 rounded-xl transition-all capitalize min-h-[48px] active:scale-95 ${
                         activeSection === item 
                           ? 'bg-primary/10 text-primary font-medium' 
                           : 'text-muted-foreground hover:text-foreground hover:bg-muted/50 active:bg-muted'
@@ -153,7 +150,7 @@ export default function Navigation() {
                       data-testid={`mobile-nav-link-${item}`}
                     >
                       {item}
-                    </motion.button>
+                    </button>
                   ))}
                 </div>
               </div>
