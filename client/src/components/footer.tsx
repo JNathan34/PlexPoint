@@ -59,7 +59,7 @@ export default function Footer() {
               <span className="text-lg md:text-xl font-bold">PlexServer</span>
             </div>
             <p className="text-muted-foreground mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
-              Your personal media paradise with 800+ movies and 100+ TV shows. Stream anytime, anywhere.
+              Your personal media paradise with 1k+ movies and 150+ TV shows. Stream anytime, anywhere.
             </p>
             <a 
               href="https://ko-fi.com/jnathan34" 

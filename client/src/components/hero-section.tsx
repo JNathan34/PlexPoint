@@ -63,7 +63,7 @@ export default function HeroSection() {
   return (
     <section 
       id="home" 
-      className="hero-section min-h-screen flex items-center relative overflow-hidden pt-20 md:pt-0"
+      className="hero-section min-h-screen flex items-center relative overflow-hidden pt-16 md:pt-0"
       data-testid="hero-section"
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -134,7 +134,7 @@ export default function HeroSection() {
               <Card className="stats-card group">
                 <CardContent className="p-3 md:p-5 text-center">
                   <Film className="h-5 w-5 md:h-7 md:w-7 text-primary mx-auto mb-2 md:mb-3 group-hover:scale-110 transition-transform" />
-                  <AnimatedCounter value={serverStats?.totalMovies?.toString() || '834'} />
+                  <AnimatedCounter value="1k+" />
                   <p className="text-xs md:text-sm text-muted-foreground mt-1">Movies</p>
                 </CardContent>
               </Card>
@@ -142,7 +142,7 @@ export default function HeroSection() {
               <Card className="stats-card group">
                 <CardContent className="p-3 md:p-5 text-center">
                   <Tv className="h-5 w-5 md:h-7 md:w-7 text-primary mx-auto mb-2 md:mb-3 group-hover:scale-110 transition-transform" />
-                  <AnimatedCounter value={serverStats?.totalTvShows?.toString() || '127'} />
+                  <AnimatedCounter value="150+" />
                   <p className="text-xs md:text-sm text-muted-foreground mt-1">TV Shows</p>
                 </CardContent>
               </Card>
@@ -150,8 +150,8 @@ export default function HeroSection() {
               <Card className="stats-card group">
                 <CardContent className="p-3 md:p-5 text-center">
                   <Users className="h-5 w-5 md:h-7 md:w-7 text-primary mx-auto mb-2 md:mb-3 group-hover:scale-110 transition-transform" />
-                  <AnimatedCounter value="24/7" />
-                  <p className="text-xs md:text-sm text-muted-foreground mt-1">Access</p>
+                  <AnimatedCounter value="99.9%" />
+                  <p className="text-xs md:text-sm text-muted-foreground mt-1">Uptime</p>
                 </CardContent>
               </Card>
             </motion.div>
