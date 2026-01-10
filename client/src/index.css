@@ -224,11 +224,20 @@
   transform: translateX(-50%);
   background: var(--gradient-primary);
   color: white;
-  padding: 6px 20px;
-  border-radius: 0 0 12px 12px;
-  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 0 0 8px 8px;
+  font-size: 7px;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+}
+
+@media (min-width: 640px) {
+  .membership-tier.featured::after {
+    padding: 6px 20px;
+    border-radius: 0 0 12px 12px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
 }
 
 .stats-card {
