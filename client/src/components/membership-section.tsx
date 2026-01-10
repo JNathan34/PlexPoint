@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { User, Crown, Gem, Star, Zap, Award, Check, Phone, Mail, ArrowRight, X, Copy, CheckCircle, MessageCircle } from "lucide-react";
+import { User, Crown, Gem, Star, Zap, Award, Check, Mail, ArrowRight, X, Copy, CheckCircle, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -121,9 +121,9 @@ export default function MembershipSection() {
           </p>
           
           <div className="inline-flex flex-row items-center justify-center gap-4 sm:gap-6">
-            <a href="tel:+447481861478" className="glass-card flex items-center gap-2 px-4 py-2.5 rounded-xl hover:border-primary/50 transition-all">
-              <Phone className="h-4 w-4 text-primary" />
-              <span className="text-sm text-muted-foreground">07481 861478</span>
+            <a href="https://wa.me/447481861478" target="_blank" rel="noopener noreferrer" className="glass-card flex items-center gap-2 px-4 py-2.5 rounded-xl hover:border-green-500/50 transition-all">
+              <MessageCircle className="h-4 w-4 text-green-500" />
+              <span className="text-sm text-muted-foreground">WhatsApp</span>
             </a>
             <a href="mailto:jacobnathan1718@gmail.com" className="glass-card flex items-center gap-2 px-4 py-2.5 rounded-xl hover:border-primary/50 transition-all">
               <Mail className="h-4 w-4 text-primary" />
