@@ -76,7 +76,7 @@ export default function TutorialsSection() {
   };
 
   return (
-    <section id="tutorials" className="py-16 md:py-24 bg-secondary/30 relative overflow-hidden" data-testid="tutorials-section">
+    <section id="tutorials" className="py-10 md:py-24 bg-secondary/30 relative overflow-hidden" data-testid="tutorials-section">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] md:w-[800px] h-[200px] md:h-[400px] rounded-full bg-gradient-to-b from-primary/5 to-transparent blur-3xl" />
       </div>

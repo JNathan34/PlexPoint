@@ -93,7 +93,7 @@ export default function MembershipSection() {
   }
 
   return (
-    <section id="membership" className="py-16 md:py-24 relative overflow-hidden" data-testid="membership-section">
+    <section id="membership" className="py-12 md:py-24 relative overflow-hidden" data-testid="membership-section">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[800px] h-[400px] md:h-[800px] rounded-full bg-gradient-to-r from-primary/5 to-transparent blur-3xl" />
       </div>
@@ -104,7 +104,7 @@ export default function MembershipSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-10 md:mb-16"
+          className="text-center mb-6 md:mb-16"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -141,7 +141,7 @@ export default function MembershipSection() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-7xl mx-auto"
+          className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 md:gap-6 max-w-7xl mx-auto"
         >
           {membershipTiers.map((tier) => {
             const Icon = tierIcons[tier.name as keyof typeof tierIcons] || User;
@@ -154,51 +154,57 @@ export default function MembershipSection() {
                   className={`membership-tier h-full ${isFeatured ? 'featured' : ''}`}
                   data-testid={`membership-tier-${tier.name.toLowerCase().replace(' ', '-')}`}
                 >
-                  <CardContent className="p-4 md:p-6 h-full flex flex-col">
-                    <div className="text-center mb-4 md:mb-6 pt-4">
+                  <CardContent className="p-2.5 sm:p-4 md:p-6 h-full flex flex-col">
+                    <div className="text-center mb-2 sm:mb-4 md:mb-6 pt-2 sm:pt-4">
                       <motion.div
                         whileHover={{ scale: 1.1, rotate: 5 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`inline-flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-xl md:rounded-2xl bg-gradient-to-br ${gradient} mb-3 md:mb-4 shadow-lg`}
+                        className={`inline-flex h-9 w-9 sm:h-12 sm:w-12 md:h-16 md:w-16 items-center justify-center rounded-lg sm:rounded-xl md:rounded-2xl bg-gradient-to-br ${gradient} mb-2 sm:mb-3 md:mb-4 shadow-lg`}
                       >
-                        <Icon className="h-6 w-6 md:h-8 md:w-8 text-white" />
+                        <Icon className="h-4 w-4 sm:h-6 sm:w-6 md:h-8 md:w-8 text-white" />
                       </motion.div>
-                      <h4 className="text-lg md:text-xl font-bold mb-2">{tier.name}</h4>
-                      <div className="flex items-baseline justify-center gap-1">
-                        <span className="text-3xl md:text-4xl font-bold text-gradient">
+                      <h4 className="text-sm sm:text-lg md:text-xl font-bold mb-1 sm:mb-2">{tier.name}</h4>
+                      <div className="flex items-baseline justify-center gap-0.5 sm:gap-1">
+                        <span className="text-xl sm:text-3xl md:text-4xl font-bold text-gradient">
                           £{(tier.price / 100).toFixed(0)}
                         </span>
-                        <span className="text-muted-foreground text-sm">/month</span>
+                        <span className="text-muted-foreground text-[10px] sm:text-sm">/month</span>
                       </div>
                     </div>
 
                     <div className="flex-grow">
-                      <ul className="space-y-2 md:space-y-3 mb-4 md:mb-6">
-                        {tier.features.map((feature, featureIndex) => (
+                      <ul className="space-y-1 sm:space-y-2 md:space-y-3 mb-2 sm:mb-4 md:mb-6">
+                        {tier.features.slice(0, 3).map((feature, featureIndex) => (
                           <motion.li
                             key={featureIndex}
                             initial={{ opacity: 0, x: -10 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: featureIndex * 0.05 }}
-                            className="flex items-start gap-2 md:gap-3"
+                            className="flex items-start gap-1.5 sm:gap-2 md:gap-3"
                           >
-                            <div className="h-4 w-4 md:h-5 md:w-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <Check className="h-2.5 w-2.5 md:h-3 md:w-3 text-green-500" />
+                            <div className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <Check className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 text-green-500" />
                             </div>
-                            <span className="text-xs md:text-sm text-muted-foreground">{feature}</span>
+                            <span className="text-[10px] sm:text-xs md:text-sm text-muted-foreground line-clamp-2">{feature}</span>
                           </motion.li>
                         ))}
+                        {tier.features.length > 3 && (
+                          <li className="text-[10px] sm:text-xs text-muted-foreground/70 text-center">
+                            +{tier.features.length - 3} more
+                          </li>
+                        )}
                       </ul>
                     </div>
 
                     <Button
-                      className={`w-full group min-h-[44px] ${isFeatured ? 'btn-primary-gradient' : 'bg-muted hover:bg-muted/80 active:bg-muted/70'}`}
+                      className={`w-full group min-h-[36px] sm:min-h-[44px] text-xs sm:text-sm ${isFeatured ? 'btn-primary-gradient' : 'bg-muted hover:bg-muted/80 active:bg-muted/70'}`}
                       onClick={() => handleBankTransfer(tier)}
                       data-testid={`join-button-${tier.name.toLowerCase().replace(' ', '-')}`}
                     >
-                      <span>Get Started</span>
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      <span className="hidden sm:inline">Get Started</span>
+                      <span className="sm:hidden">Join</span>
+                      <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </CardContent>
                 </Card>
