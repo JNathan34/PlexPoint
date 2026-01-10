@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Film, Tv, Users, Library, Sparkles, Play } from "lucide-react";
+import { Film, Tv, Users, Sparkles, Crown, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
@@ -163,7 +163,7 @@ export default function HeroSection() {
                 onClick={() => scrollToSection('membership')}
                 data-testid="view-subscriptions-button"
               >
-                <Play className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                <Crown className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                 View Subscriptions
               </Button>
               <Button
@@ -173,7 +173,7 @@ export default function HeroSection() {
                 onClick={() => scrollToSection('requests')}
                 data-testid="browse-library-button"
               >
-                <Library className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                <PlusCircle className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                 Request Content
               </Button>
             </motion.div>
