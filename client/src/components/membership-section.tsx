@@ -120,16 +120,16 @@ export default function MembershipSection() {
             Request Movies & Shows at the Website. Choose the plan that fits your streaming needs.
           </p>
           
-          <div className="glass-card inline-flex flex-col sm:flex-row items-center gap-3 sm:gap-8 p-4 md:p-4 rounded-xl md:rounded-2xl">
-            <div className="flex items-center gap-2 text-sm md:text-xs">
-              <Phone className="h-4 w-4 md:h-4 md:w-4 text-primary" />
-              <span className="text-muted-foreground">07481 861478</span>
-            </div>
-            <div className="h-px w-full sm:h-4 sm:w-px bg-border" />
-            <div className="flex items-center gap-2 text-sm md:text-xs">
-              <Mail className="h-4 w-4 md:h-4 md:w-4 text-primary" />
-              <span className="text-muted-foreground break-all">jacobnathan1718@gmail.com</span>
-            </div>
+          <div className="inline-flex flex-row items-center justify-center gap-4 sm:gap-6">
+            <a href="tel:+447481861478" className="glass-card flex items-center gap-2 px-4 py-2.5 rounded-xl hover:border-primary/50 transition-all">
+              <Phone className="h-4 w-4 text-primary" />
+              <span className="text-sm text-muted-foreground">07481 861478</span>
+            </a>
+            <a href="mailto:jacobnathan1718@gmail.com" className="glass-card flex items-center gap-2 px-4 py-2.5 rounded-xl hover:border-primary/50 transition-all">
+              <Mail className="h-4 w-4 text-primary" />
+              <span className="text-sm text-muted-foreground hidden sm:inline">jacobnathan1718@gmail.com</span>
+              <span className="text-sm text-muted-foreground sm:hidden">Email</span>
+            </a>
           </div>
         </motion.div>
 
