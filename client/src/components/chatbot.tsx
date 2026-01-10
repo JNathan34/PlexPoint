@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MessageCircle, X, Send, ChevronRight } from "lucide-react";
+import { MessageCircle, X, Send, ChevronRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -69,6 +69,7 @@ const faqs = [
 interface Message {
   type: 'user' | 'bot';
   content: string;
+  showContactButton?: boolean;
 }
 
 export default function Chatbot() {
@@ -79,14 +80,19 @@ export default function Chatbot() {
   const [showQuestions, setShowQuestions] = useState(true);
 
   const handleQuestionClick = (faq: typeof faqs[0]) => {
+    const isContactQuestion = faq.question === "Still need help?";
     setMessages(prev => [
       ...prev,
       { type: 'user', content: faq.question },
-      { type: 'bot', content: faq.answer }
+      { type: 'bot', content: faq.answer, showContactButton: isContactQuestion }
     ]);
     setShowQuestions(false);
     
     setTimeout(() => setShowQuestions(true), 500);
+  };
+
+  const handleWhatsApp = () => {
+    window.open('https://wa.me/447481861478', '_blank');
   };
 
   const resetChat = () => {
@@ -149,6 +155,16 @@ export default function Chatbot() {
                       }`}
                     >
                       {message.content}
+                      {message.showContactButton && (
+                        <Button
+                          size="sm"
+                          className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white rounded-xl"
+                          onClick={handleWhatsApp}
+                        >
+                          <Phone className="mr-2 h-4 w-4" />
+                          WhatsApp Jacob
+                        </Button>
+                      )}
                     </div>
                   </motion.div>
                 ))}
