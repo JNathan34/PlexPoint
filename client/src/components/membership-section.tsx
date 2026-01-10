@@ -94,10 +94,7 @@ export default function MembershipSection() {
 
   return (
     <section id="membership" className="py-12 md:py-24 relative overflow-hidden" data-testid="membership-section">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[800px] h-[400px] md:h-[800px] rounded-full bg-gradient-to-r from-primary/5 to-transparent blur-3xl" />
-      </div>
-      
+            
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

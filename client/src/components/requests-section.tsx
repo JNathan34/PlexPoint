@@ -50,10 +50,6 @@ export default function RequestsSection() {
 
   return (
     <section id="requests" className="py-10 md:py-24 relative overflow-hidden" data-testid="requests-section">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/3 right-0 w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full bg-gradient-to-l from-primary/5 to-transparent blur-3xl" />
-      </div>
-      
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <motion.div
