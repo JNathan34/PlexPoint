@@ -1,6 +1,11 @@
-import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { HelpCircle } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { motion } from "framer-motion";
 
 const faqs = [
   {
@@ -38,45 +43,67 @@ const faqs = [
 ];
 
 export default function FaqSection() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  const toggleFaq = (index: number) => {
-    setOpenFaq(openFaq === index ? null : index);
-  };
-
   return (
-    <section id="faq" className="py-20 bg-secondary" data-testid="faq-section">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">Frequently Asked Questions</h2>
-          <p className="text-xl text-muted-foreground">Everything you need to know about Plex and our service</p>
-        </div>
+    <section id="faq" className="py-24 bg-secondary/50 relative overflow-hidden" data-testid="faq-section">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] rounded-full bg-gradient-to-r from-primary/5 to-transparent blur-3xl" />
+      </div>
+      
+      <div className="container mx-auto px-4 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium mb-6"
+          >
+            <HelpCircle className="h-4 w-4 text-primary" />
+            <span>Got Questions?</span>
+          </motion.div>
+          
+          <h2 className="text-4xl lg:text-6xl font-bold mb-6">
+            Frequently Asked <span className="text-gradient">Questions</span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Everything you need to know about Plex and our service
+          </p>
+        </motion.div>
 
-        <div className="max-w-4xl mx-auto space-y-4">
-          {faqs.map((faq, index) => (
-            <Card key={index} className="bg-card border border-border" data-testid={`faq-${index}`}>
-              <CardContent className="p-0">
-                <button
-                  onClick={() => toggleFaq(index)}
-                  className="w-full p-6 text-left flex items-center justify-between hover:bg-muted/50 transition-colors"
-                  data-testid={`faq-question-${index}`}
-                >
-                  <h3 className="text-lg font-semibold pr-4">{faq.question}</h3>
-                  {openFaq === index ? (
-                    <ChevronUp className="h-5 w-5 text-primary flex-shrink-0" />
-                  ) : (
-                    <ChevronDown className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                  )}
-                </button>
-                {openFaq === index && (
-                  <div className="px-6 pb-6" data-testid={`faq-answer-${index}`}>
-                    <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="max-w-3xl mx-auto"
+        >
+          <Accordion type="single" collapsible className="space-y-4">
+            {faqs.map((faq, index) => (
+              <AccordionItem
+                key={index}
+                value={`item-${index}`}
+                className="glass-card rounded-2xl border-none px-6 data-[state=open]:ring-1 data-[state=open]:ring-primary/30 transition-all"
+                data-testid={`faq-${index}`}
+              >
+                <AccordionTrigger className="text-left py-5 hover:no-underline group" data-testid={`faq-question-${index}`}>
+                  <span className="font-semibold text-lg group-hover:text-primary transition-colors pr-4">
+                    {faq.question}
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="pb-5" data-testid={`faq-answer-${index}`}>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {faq.answer}
+                  </p>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </motion.div>
       </div>
     </section>
   );

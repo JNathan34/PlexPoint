@@ -1,14 +1,29 @@
 import { useState, useEffect } from "react";
 import { Play, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+
+const navItems = ['home', 'membership', 'tutorials', 'requests', 'faq'];
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
+      
+      const sections = navItems.map(id => document.getElementById(id));
+      const scrollPosition = window.scrollY + 100;
+      
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = sections[i];
+        if (section && section.offsetTop <= scrollPosition) {
+          setActiveSection(navItems[i]);
+          break;
+        }
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -24,72 +39,123 @@ export default function Navigation() {
   };
 
   return (
-    <nav 
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'navbar-custom' : 'bg-transparent'
+    <motion.nav 
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+        isScrolled ? 'navbar-custom py-2' : 'bg-transparent py-4'
       }`}
-      style={{
-        backgroundColor: isScrolled ? 'var(--card)' : 'transparent',
-        backdropFilter: isScrolled ? 'blur(10px)' : 'none'
-      }}
       data-testid="navigation"
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-4">
-          {/* Logo */}
-          <button 
+        <div className="flex items-center justify-between">
+          <motion.button 
             onClick={() => scrollToSection('home')}
-            className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors"
+            className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors group"
             data-testid="logo-button"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <Play className="h-8 w-8 text-primary" />
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-primary/30 transition-shadow">
+              <Play className="h-5 w-5 text-white" />
+            </div>
             <span className="text-xl font-bold">PlexServer</span>
-          </button>
+          </motion.button>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {['home', 'membership', 'tutorials', 'requests', 'faq'].map((item) => (
-              <button
-                key={item}
-                onClick={() => scrollToSection(item)}
-                className="text-foreground hover:text-primary transition-colors capitalize"
-                data-testid={`nav-link-${item}`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            data-testid="mobile-menu-button"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border">
-            <div className="flex flex-col space-y-4">
-              {['home', 'membership', 'tutorials', 'requests', 'faq'].map((item) => (
+          <div className="hidden md:flex items-center">
+            <div className="flex items-center gap-1 p-1.5 rounded-full glass">
+              {navItems.map((item) => (
                 <button
                   key={item}
                   onClick={() => scrollToSection(item)}
-                  className="text-left text-foreground hover:text-primary transition-colors capitalize py-2"
-                  data-testid={`mobile-nav-link-${item}`}
+                  className={`relative px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 capitalize ${
+                    activeSection === item 
+                      ? 'text-white' 
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                  data-testid={`nav-link-${item}`}
                 >
-                  {item}
+                  {activeSection === item && (
+                    <motion.div
+                      layoutId="activeNav"
+                      className="absolute inset-0 bg-gradient-to-r from-primary to-orange-400 rounded-full"
+                      transition={{ type: "spring", duration: 0.5 }}
+                    />
+                  )}
+                  <span className="relative z-10">{item}</span>
                 </button>
               ))}
             </div>
           </div>
-        )}
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden p-2"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            data-testid="mobile-menu-button"
+          >
+            <AnimatePresence mode="wait">
+              {isMenuOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <X className="h-6 w-6" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="menu"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Menu className="h-6 w-6" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </Button>
+        </div>
+
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden overflow-hidden"
+            >
+              <div className="py-4 mt-4 border-t border-border/50">
+                <div className="flex flex-col space-y-2">
+                  {navItems.map((item, index) => (
+                    <motion.button
+                      key={item}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      onClick={() => scrollToSection(item)}
+                      className={`text-left px-4 py-3 rounded-xl transition-all capitalize ${
+                        activeSection === item 
+                          ? 'bg-primary/10 text-primary font-medium' 
+                          : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                      }`}
+                      data-testid={`mobile-nav-link-${item}`}
+                    >
+                      {item}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </nav>
+    </motion.nav>
   );
 }

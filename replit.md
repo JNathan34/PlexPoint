@@ -4,6 +4,19 @@
 
 This is a full-stack web application for a personal media server platform, similar to Plex, that allows users to browse, stream, and request media content. The platform features a modern React frontend with a dark theme design, an Express.js backend API, and PostgreSQL database integration. The application includes membership tiers through Ko-fi integration, content request management via Overseerr, and comprehensive admin tools for server management.
 
+## Recent Changes
+
+### January 2026 - Website Modernization
+- Added glassmorphism effects throughout the UI with blur backgrounds
+- Implemented gradient text styling for headings and accents
+- Added Framer Motion animations for smooth entrance effects and interactions
+- Enhanced navigation with animated active state indicator
+- Improved membership cards with tier-specific gradient icons
+- Modernized FAQ section using Shadcn Accordion component
+- Added floating animated elements in hero section
+- Implemented prefers-reduced-motion accessibility support
+- Updated color scheme with deeper backgrounds and improved contrast
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.

@@ -1,6 +1,7 @@
-import { Play, Coffee } from "lucide-react";
+import { Play, Coffee, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FaDiscord, FaTelegram, FaReddit } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const quickLinks = [
   { name: "Home", href: "#home" },
@@ -51,49 +52,70 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-card py-16 border-t border-border" data-testid="footer">
-      <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
-          {/* Brand Section */}
-          <div className="lg:col-span-1">
+    <footer className="relative pt-20 pb-8 overflow-hidden" data-testid="footer">
+      <div className="absolute inset-0 bg-gradient-to-b from-background to-secondary/30" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-12 mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-1"
+          >
             <div className="flex items-center space-x-2 mb-6">
-              <Play className="h-8 w-8 text-primary" />
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center">
+                <Play className="h-5 w-5 text-white" />
+              </div>
               <span className="text-xl font-bold">PlexServer</span>
             </div>
             <p className="text-muted-foreground mb-6 leading-relaxed">
               Your personal media paradise with 800+ movies and 100+ TV shows. Stream anytime, anywhere.
             </p>
-            <div className="mb-4">
-              <a href="https://ko-fi.com/jnathan34" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 transition-colors">
-                💖 Support on Ko-fi: ko-fi.com/jnathan34
-              </a>
-            </div>
-            <div className="flex space-x-4">
+            <a 
+              href="https://ko-fi.com/jnathan34" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-sm font-medium"
+            >
+              <Coffee className="h-4 w-4" />
+              Support on Ko-fi
+              <ExternalLink className="h-3 w-3" />
+            </a>
+            
+            <div className="flex gap-2 mt-6">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
                 return (
-                  <button
+                  <motion.button
                     key={social.name}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => handleLinkClick(social.href)}
-                    className="text-muted-foreground hover:text-primary transition-colors p-2"
+                    className="h-10 w-10 rounded-xl glass flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
                     data-testid={`social-link-${social.name.toLowerCase()}`}
                   >
                     <Icon className="h-5 w-5" />
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Quick Links */}
-          <div>
-            <h5 className="font-bold mb-6">Quick Links</h5>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+          >
+            <h5 className="font-bold mb-6 text-lg">Quick Links</h5>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <button
                     onClick={() => handleLinkClick(link.href)}
-                    className="text-muted-foreground hover:text-primary transition-colors text-left"
+                    className="text-muted-foreground hover:text-primary transition-colors text-left text-sm"
                     data-testid={`quick-link-${link.name.toLowerCase().replace(' ', '-')}`}
                   >
                     {link.name}
@@ -101,17 +123,21 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
-          {/* Support Links */}
-          <div>
-            <h5 className="font-bold mb-6">Support</h5>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <h5 className="font-bold mb-6 text-lg">Support</h5>
             <ul className="space-y-3">
               {supportLinks.map((link) => (
                 <li key={link.name}>
                   <button
                     onClick={() => handleLinkClick(link.href)}
-                    className="text-muted-foreground hover:text-primary transition-colors text-left"
+                    className="text-muted-foreground hover:text-primary transition-colors text-left text-sm"
                     data-testid={`support-link-${link.name.toLowerCase().replace(' ', '-')}`}
                   >
                     {link.name}
@@ -119,38 +145,41 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
-          {/* Support Us Section */}
-          <div>
-            <h5 className="font-bold mb-6">Contact & Payment</h5>
-            <p className="text-muted-foreground mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            <h5 className="font-bold mb-6 text-lg">Contact & Payment</h5>
+            <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
               Get in touch for subscriptions or support. We prefer direct bank transfers to avoid fees.
             </p>
             <Button 
-              className="bg-primary hover:bg-primary/90"
+              className="btn-primary-gradient"
               onClick={handleContactClick}
               data-testid="footer-contact-button"
             >
               <Coffee className="mr-2 h-4 w-4" />
               Contact Jacob
             </Button>
-          </div>
+          </motion.div>
         </div>
 
-        <hr className="my-8 border-border" />
+        <div className="section-divider mb-8" />
 
-        {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-          <p className="text-muted-foreground">
-            &copy; 2024 PlexServer. All rights reserved.
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-muted-foreground text-sm">
+            &copy; {new Date().getFullYear()} PlexServer. All rights reserved.
           </p>
-          <div className="flex space-x-6">
+          <div className="flex gap-6">
             {legalLinks.map((link) => (
               <button
                 key={link.name}
                 onClick={() => handleLinkClick(link.href)}
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 data-testid={`legal-link-${link.name.toLowerCase().replace(' ', '-')}`}
               >
                 {link.name}

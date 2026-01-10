@@ -1,8 +1,58 @@
 import { useQuery } from "@tanstack/react-query";
-import { Film, Tv, Users, Coffee, Library } from "lucide-react";
+import { Film, Tv, Users, Library, Sparkles, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import type { ServerStats } from "@shared/schema";
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 30 },
+  show: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    },
+  },
+};
+
+const fadeInScale = {
+  hidden: { opacity: 0, scale: 0.9 },
+  show: { 
+    opacity: 1, 
+    scale: 1,
+    transition: {
+      duration: 0.7,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    },
+  },
+};
+
+function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
+      viewport={{ once: true }}
+      className="text-3xl font-bold text-gradient"
+    >
+      {value}{suffix}
+    </motion.div>
+  );
+}
 
 export default function HeroSection() {
   const { data: serverStats } = useQuery<ServerStats>({
@@ -22,101 +72,181 @@ export default function HeroSection() {
       className="hero-section min-h-screen flex items-center relative overflow-hidden"
       data-testid="hero-section"
     >
-      {/* Background Image Overlay */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center opacity-15"
-        style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080')"
-        }}
-      />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          animate={{
+            x: [0, 30, 0],
+            y: [0, -20, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute top-20 right-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-primary/10 to-transparent blur-3xl"
+        />
+        <motion.div
+          animate={{
+            x: [0, -20, 0],
+            y: [0, 30, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute bottom-20 left-1/4 w-80 h-80 rounded-full bg-gradient-to-r from-blue-500/5 to-transparent blur-3xl"
+        />
+      </div>
       
-      <div className="container mx-auto px-4 py-20 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                Welcome to My <span className="text-primary">Plex Media Server</span> 🎬✨
-              </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Enjoy unlimited entertainment with movies 🍿 and shows 📺 available right at your fingertips. This server is subscription-based, offering different tiers to suit your viewing needs.
-              </p>
-              <div className="bg-card/50 rounded-lg p-6 border border-border">
-                <p className="text-lg font-semibold mb-4">💳 Preferred Payment: Direct Bank Transfer through me (to avoid third-party fees)</p>
-                <div className="space-y-2 text-muted-foreground">
-                  <p>- Name: Jacob Nathan</p>
-                  <p>- Account Number: 58925008</p>
-                  <p>- Sort Code: 09-01-28</p>
+      <div className="container mx-auto px-4 py-24 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="space-y-8"
+          >
+            <div className="space-y-6">
+              <motion.div variants={item} className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span>Premium Streaming Experience</span>
+              </motion.div>
+              
+              <motion.h1 variants={item} className="text-5xl lg:text-7xl font-extrabold leading-tight tracking-tight">
+                Welcome to My{" "}
+                <span className="text-gradient">Plex Media Server</span>
+              </motion.h1>
+              
+              <motion.p variants={item} className="text-xl text-muted-foreground leading-relaxed max-w-xl">
+                Enjoy unlimited entertainment with movies and shows available right at your fingertips. Premium streaming with different tiers to suit your viewing needs.
+              </motion.p>
+              
+              <motion.div variants={item} className="glass-card rounded-2xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-sm font-medium text-muted-foreground">Preferred Payment Method</span>
                 </div>
-                <p className="text-lg font-semibold mt-4">Join today and start streaming with ease 🚀🔥</p>
-              </div>
+                <p className="text-lg font-semibold mb-4">Direct Bank Transfer (to avoid third-party fees)</p>
+                <div className="space-y-1.5 text-muted-foreground text-sm">
+                  <p>Name: <span className="text-foreground">Jacob Nathan</span></p>
+                  <p>Account: <span className="text-foreground font-mono">58925008</span></p>
+                  <p>Sort Code: <span className="text-foreground font-mono">09-01-28</span></p>
+                </div>
+              </motion.div>
             </div>
 
-            {/* Stats Row */}
-            <div className="grid grid-cols-3 gap-4">
-              <Card className="stats-card">
-                <CardContent className="p-4 text-center">
-                  <Film className="h-8 w-8 text-primary mx-auto mb-2" />
-                  <div className="text-2xl font-bold" data-testid="movies-count">
-                    {serverStats?.totalMovies || '800+'}
-                  </div>
-                  <p className="text-sm text-muted-foreground">Movies</p>
+            <motion.div variants={item} className="grid grid-cols-3 gap-4">
+              <Card className="stats-card group">
+                <CardContent className="p-5 text-center">
+                  <Film className="h-7 w-7 text-primary mx-auto mb-3 group-hover:scale-110 transition-transform" />
+                  <AnimatedCounter value={serverStats?.totalMovies?.toString() || '834'} />
+                  <p className="text-sm text-muted-foreground mt-1">Movies</p>
                 </CardContent>
               </Card>
               
-              <Card className="stats-card">
-                <CardContent className="p-4 text-center">
-                  <Tv className="h-8 w-8 text-primary mx-auto mb-2" />
-                  <div className="text-2xl font-bold" data-testid="shows-count">
-                    {serverStats?.totalTvShows || '100+'}
-                  </div>
-                  <p className="text-sm text-muted-foreground">TV Shows</p>
+              <Card className="stats-card group">
+                <CardContent className="p-5 text-center">
+                  <Tv className="h-7 w-7 text-primary mx-auto mb-3 group-hover:scale-110 transition-transform" />
+                  <AnimatedCounter value={serverStats?.totalTvShows?.toString() || '127'} />
+                  <p className="text-sm text-muted-foreground mt-1">TV Shows</p>
                 </CardContent>
               </Card>
               
-              <Card className="stats-card">
-                <CardContent className="p-4 text-center">
-                  <Users className="h-8 w-8 text-primary mx-auto mb-2" />
-                  <div className="text-2xl font-bold">24/7</div>
-                  <p className="text-sm text-muted-foreground">Access</p>
+              <Card className="stats-card group">
+                <CardContent className="p-5 text-center">
+                  <Users className="h-7 w-7 text-primary mx-auto mb-3 group-hover:scale-110 transition-transform" />
+                  <AnimatedCounter value="24/7" />
+                  <p className="text-sm text-muted-foreground mt-1">Access</p>
                 </CardContent>
               </Card>
-            </div>
+            </motion.div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <motion.div variants={item} className="flex flex-col sm:flex-row gap-4">
               <Button
                 size="lg"
-                className="bg-primary hover:bg-primary/90 px-8 py-3 text-lg font-semibold"
+                className="btn-primary-gradient px-8 py-6 text-lg font-semibold rounded-xl"
                 onClick={() => scrollToSection('membership')}
                 data-testid="view-subscriptions-button"
               >
-                <Users className="mr-2 h-5 w-5" />
+                <Play className="mr-2 h-5 w-5" />
                 View Subscriptions
               </Button>
               <Button
                 variant="outline"
                 size="lg"
-                className="px-8 py-3 text-lg border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                className="px-8 py-6 text-lg rounded-xl border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
                 onClick={() => scrollToSection('requests')}
                 data-testid="browse-library-button"
               >
                 <Library className="mr-2 h-5 w-5" />
                 Request Content
               </Button>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div className="relative">
-            <div className="relative rounded-lg overflow-hidden shadow-2xl">
-              <img 
-                src="https://pixabay.com/get/g51446dcced23c673424ac0f58cf8e5e31cc610c75cdecb4b9307cd1906c7e61554adea6933dc2f887c5614e22287c5bb1329aea28f5d5f57fc15ea890e63eed3_1280.jpg" 
-                alt="Modern media server setup" 
-                className="w-full h-auto rounded-lg"
-                data-testid="hero-image"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-25 rounded-lg" />
+          <motion.div
+            variants={fadeInScale}
+            initial="hidden"
+            animate="show"
+            className="relative hidden lg:block"
+          >
+            <div className="relative">
+              <motion.div
+                animate={{
+                  y: [0, -10, 0],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="relative rounded-3xl overflow-hidden shadow-2xl"
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent z-10" />
+                <img 
+                  src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&h=700&q=80" 
+                  alt="Modern media server setup" 
+                  className="w-full h-auto rounded-3xl object-cover"
+                  data-testid="hero-image"
+                />
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+                className="absolute -left-8 top-1/4 glass-card p-4 rounded-2xl shadow-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center">
+                    <Film className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">New Content</p>
+                    <p className="text-sm text-muted-foreground">Added daily</p>
+                  </div>
+                </div>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 1, duration: 0.6 }}
+                className="absolute -right-4 bottom-1/4 glass-card p-4 rounded-2xl shadow-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-400 flex items-center justify-center">
+                    <Sparkles className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">4K Quality</p>
+                    <p className="text-sm text-muted-foreground">Premium streams</p>
+                  </div>
+                </div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
