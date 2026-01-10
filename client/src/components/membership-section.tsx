@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { User, Crown, Gem, Star, Zap, Award, Check, Mail, ArrowRight, X, Copy, CheckCircle, MessageCircle } from "lucide-react";
+import { User, Crown, Gem, Star, Zap, Award, Check, Mail, ArrowRight, Copy, CheckCircle, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { motion, AnimatePresence } from "framer-motion";
-import type { MembershipTier } from "@shared/schema";
+import { motion } from "framer-motion";
+import { MEMBERSHIP_TIERS, type MembershipTier } from "@/lib/static-data";
 
 const tierIcons = {
   "Bronze Tier": User,
@@ -57,10 +56,6 @@ export default function MembershipSection() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<MembershipTier | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
-  
-  const { data: membershipTiers = [], isLoading } = useQuery<MembershipTier[]>({
-    queryKey: ['/api/membership-tiers'],
-  });
 
   const handleBankTransfer = (tier: MembershipTier) => {
     setSelectedTier(tier);
@@ -72,25 +67,6 @@ export default function MembershipSection() {
     setCopiedField(field);
     setTimeout(() => setCopiedField(null), 2000);
   };
-
-  if (isLoading) {
-    return (
-      <section id="membership" className="py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full"
-              />
-            </div>
-            <p className="text-muted-foreground">Loading membership tiers...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section id="membership" className="py-12 md:py-24 relative overflow-hidden" data-testid="membership-section">
@@ -140,7 +116,7 @@ export default function MembershipSection() {
           viewport={{ once: true }}
           className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 md:gap-6 max-w-7xl mx-auto"
         >
-          {membershipTiers.map((tier) => {
+          {MEMBERSHIP_TIERS.map((tier) => {
             const Icon = tierIcons[tier.name as keyof typeof tierIcons] || User;
             const gradient = tierGradients[tier.name as keyof typeof tierGradients] || "from-primary to-orange-400";
             const isFeatured = tier.name === "Gold Tier";

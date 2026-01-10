@@ -1,10 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
 import { Film, Tv, Users, Sparkles, Crown, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import type { ServerStats } from "@shared/schema";
 import { scrollToSection } from "@/lib/constants";
+import { SERVER_STATS } from "@/lib/static-data";
 
 const container = {
   hidden: { opacity: 0 },
@@ -56,10 +55,6 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 }
 
 export default function HeroSection() {
-  const { data: serverStats } = useQuery<ServerStats>({
-    queryKey: ['/api/server-stats'],
-  });
-
   return (
     <section 
       id="home" 
@@ -134,7 +129,7 @@ export default function HeroSection() {
               <Card className="stats-card group">
                 <CardContent className="p-3 md:p-5 text-center">
                   <Film className="h-5 w-5 md:h-7 md:w-7 text-primary mx-auto mb-2 md:mb-3 group-hover:scale-110 transition-transform" />
-                  <AnimatedCounter value="1k+" />
+                  <AnimatedCounter value={SERVER_STATS.totalMovies} />
                   <p className="text-xs md:text-sm text-muted-foreground mt-1">Movies</p>
                 </CardContent>
               </Card>
@@ -142,7 +137,7 @@ export default function HeroSection() {
               <Card className="stats-card group">
                 <CardContent className="p-3 md:p-5 text-center">
                   <Tv className="h-5 w-5 md:h-7 md:w-7 text-primary mx-auto mb-2 md:mb-3 group-hover:scale-110 transition-transform" />
-                  <AnimatedCounter value="150+" />
+                  <AnimatedCounter value={SERVER_STATS.totalTvShows} />
                   <p className="text-xs md:text-sm text-muted-foreground mt-1">TV Shows</p>
                 </CardContent>
               </Card>
@@ -150,7 +145,7 @@ export default function HeroSection() {
               <Card className="stats-card group">
                 <CardContent className="p-3 md:p-5 text-center">
                   <Users className="h-5 w-5 md:h-7 md:w-7 text-primary mx-auto mb-2 md:mb-3 group-hover:scale-110 transition-transform" />
-                  <AnimatedCounter value="99.9%" />
+                  <AnimatedCounter value={SERVER_STATS.uptime} />
                   <p className="text-xs md:text-sm text-muted-foreground mt-1">Uptime</p>
                 </CardContent>
               </Card>
