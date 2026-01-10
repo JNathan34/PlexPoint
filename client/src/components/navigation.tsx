@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Play, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { NAVBAR_HEIGHT, NAV_ITEMS, scrollToSection } from "@/lib/constants";
@@ -60,9 +60,11 @@ export default function Navigation() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <div className="h-9 w-9 md:h-10 md:w-10 rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-primary/30 transition-shadow">
-              <Play className="h-4 w-4 md:h-5 md:w-5 text-white" />
-            </div>
+            <img 
+              src="/plexpoint-logo.png" 
+              alt="PlexServer Logo" 
+              className="h-9 w-9 md:h-10 md:w-10 rounded-xl object-contain group-hover:shadow-lg group-hover:shadow-primary/30 transition-shadow"
+            />
             <span className="text-lg md:text-xl font-bold">PlexServer</span>
           </motion.button>
 

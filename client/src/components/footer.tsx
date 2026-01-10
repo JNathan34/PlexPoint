@@ -1,4 +1,3 @@
-import { Play } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   Dialog,
@@ -20,9 +19,11 @@ export default function Footer() {
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center">
-              <Play className="h-4 w-4 text-white" />
-            </div>
+            <img 
+              src="/plexpoint-logo.png" 
+              alt="PlexServer Logo" 
+              className="h-8 w-8 rounded-lg object-contain"
+            />
             <span className="text-sm font-semibold">PlexServer</span>
             <span className="text-muted-foreground text-xs md:text-sm">
               &copy; {new Date().getFullYear()}
