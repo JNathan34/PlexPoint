@@ -87,7 +87,7 @@ export default function RequestsSection() {
               initial="hidden"
               whileInView="show"
               viewport={{ once: true }}
-              className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-5"
+              className="flex flex-col gap-3 md:gap-4"
             >
               {features.map((feature, index) => (
                 <motion.div
