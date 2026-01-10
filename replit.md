@@ -6,16 +6,20 @@ This is a full-stack web application for a personal media server platform, simil
 
 ## Recent Changes
 
-### January 2026 - Website Modernization
+### January 2026 - Website Modernization & Mobile Optimization
 - Added glassmorphism effects throughout the UI with blur backgrounds
 - Implemented gradient text styling for headings and accents
 - Added Framer Motion animations for smooth entrance effects and interactions
-- Enhanced navigation with animated active state indicator
+- Enhanced navigation with animated active state indicator and proper scroll offset (80px)
 - Improved membership cards with tier-specific gradient icons
 - Modernized FAQ section using Shadcn Accordion component
 - Added floating animated elements in hero section
 - Implemented prefers-reduced-motion accessibility support
 - Updated color scheme with deeper backgrounds and improved contrast
+- Created shared constants file (lib/constants.ts) for NAVBAR_HEIGHT and scrollToSection utility
+- Optimized all sections for mobile devices with responsive typography and spacing
+- Added minimum touch target sizes (44-48px) for mobile accessibility
+- Improved navigation active state detection with fallback to 'home' when at top
 
 ## User Preferences
 
