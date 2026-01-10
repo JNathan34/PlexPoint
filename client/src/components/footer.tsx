@@ -21,10 +21,10 @@ export default function Footer() {
           <div className="flex items-center gap-2">
             <img 
               src="/plexpoint-logo.png" 
-              alt="PlexServer Logo" 
+              alt="Plex Point Logo" 
               className="h-8 w-8 rounded-lg object-contain"
             />
-            <span className="text-sm font-semibold">PlexServer</span>
+            <span className="text-sm font-semibold">Plex Point</span>
             <span className="text-muted-foreground text-xs md:text-sm">
               &copy; {new Date().getFullYear()}
             </span>
@@ -63,7 +63,7 @@ export default function Footer() {
               <strong className="text-foreground">Last updated:</strong> January 2026
             </p>
             <p>
-              This Privacy Policy describes how PlexServer ("we", "us", or "our") handles your information when you use our media streaming service.
+              This Privacy Policy describes how Plex Point ("we", "us", or "our") handles your information when you use our media streaming service.
             </p>
             <h4 className="font-semibold text-foreground">Information We Collect</h4>
             <p>
@@ -105,11 +105,11 @@ export default function Footer() {
               <strong className="text-foreground">Last updated:</strong> January 2026
             </p>
             <p>
-              By using PlexServer, you agree to these terms. Please read them carefully.
+              By using Plex Point, you agree to these terms. Please read them carefully.
             </p>
             <h4 className="font-semibold text-foreground">Service Description</h4>
             <p>
-              PlexServer provides access to a private Plex media server containing movies and TV shows for personal, non-commercial viewing.
+              Plex Point provides access to a private Plex media server containing movies and TV shows for personal, non-commercial viewing.
             </p>
             <h4 className="font-semibold text-foreground">Account Rules</h4>
             <ul className="list-disc pl-5 space-y-1">

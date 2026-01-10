@@ -1,4 +1,4 @@
-# Plex Media Server Platform
+# Plex Point - Media Streaming Platform
 
 ## Overview
 

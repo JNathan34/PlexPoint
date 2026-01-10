@@ -62,10 +62,10 @@ export default function Navigation() {
           >
             <img 
               src="/plexpoint-logo.png" 
-              alt="PlexServer Logo" 
+              alt="Plex Point Logo" 
               className="h-9 w-9 md:h-10 md:w-10 rounded-xl object-contain group-hover:shadow-lg group-hover:shadow-primary/30 transition-shadow"
             />
-            <span className="text-lg md:text-xl font-bold">PlexServer</span>
+            <span className="text-lg md:text-xl font-bold">Plex Point</span>
           </motion.button>
 
           <div className="hidden md:flex items-center">

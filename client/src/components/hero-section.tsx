@@ -199,8 +199,8 @@ export default function HeroSection() {
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent z-10" />
                 <img 
-                  src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&h=700&q=80" 
-                  alt="Modern media server setup" 
+                  src="https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&h=700&q=80" 
+                  alt="Smart TV streaming setup" 
                   className="w-full h-auto rounded-3xl object-cover"
                   data-testid="hero-image"
                 />
