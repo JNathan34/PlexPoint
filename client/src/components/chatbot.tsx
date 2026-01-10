@@ -35,6 +35,34 @@ const faqs = [
   {
     question: "How do I get started?",
     answer: "1) Download the Plex app, 2) Create a free Plex account, 3) Send Jacob a friend request on Plex (not follow!), 4) Message him on WhatsApp, 5) Accept the server invitation email. Check the Tutorials section for detailed steps."
+  },
+  {
+    question: "Why can't I see the server?",
+    answer: "Make sure you sent Jacob a FRIEND REQUEST on Plex (not just followed him), then wait for the server invitation email. Check your spam folder too! If you still can't see it, message Jacob on WhatsApp."
+  },
+  {
+    question: "What quality is the content?",
+    answer: "We offer HD streaming for most content. The quality depends on your internet speed - Plex will automatically adjust to give you the best experience without buffering."
+  },
+  {
+    question: "How long do requests take?",
+    answer: "Request times vary by tier: Bronze gets 5 movies/shows per month, Silver gets 15 with faster processing, Gold gets 30 with priority, and Diamond gets unlimited with instant priority processing!"
+  },
+  {
+    question: "Is there a free trial?",
+    answer: "The Bronze tier at just £1/month is a great way to try the service. You get access to all content on the server and can make 5 requests per month."
+  },
+  {
+    question: "What if content isn't available?",
+    answer: "Simply submit a request through Overseerr (click 'Requests' in the menu) and we'll try to add it. Most popular movies and shows can be added quickly!"
+  },
+  {
+    question: "How do I cancel my subscription?",
+    answer: "Just message Jacob on WhatsApp (07481 861478) to cancel. There's no contract or commitment - you can stop anytime."
+  },
+  {
+    question: "Still need help?",
+    answer: "No worries! Contact Jacob directly on WhatsApp: 07481 861478. He's happy to help with any questions or issues you have!"
   }
 ];
 
