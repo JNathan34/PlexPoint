@@ -1,4 +1,4 @@
-import { Search, Clock, Bell, Star, PlusCircle, HelpCircle, ArrowRight } from "lucide-react";
+import { Search, Clock, Star, PlusCircle, HelpCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { scrollToSection } from "@/lib/constants";
@@ -13,11 +13,6 @@ const features = [
     icon: Clock,
     title: "Quick Processing",
     description: "Most requests are fulfilled within 24-48 hours"
-  },
-  {
-    icon: Bell,
-    title: "Auto Notifications",
-    description: "Get notified when your requested content is available"
   },
   {
     icon: Star,
