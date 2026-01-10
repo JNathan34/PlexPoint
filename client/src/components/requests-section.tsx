@@ -166,8 +166,8 @@ export default function RequestsSection() {
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent z-10" />
                 <img 
-                  src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600&q=80" 
-                  alt="Media request interface" 
+                  src="/request.jpg" 
+                  alt="Overseerr request interface" 
                   className="w-full h-auto rounded-3xl object-cover"
                   data-testid="request-interface-image"
                 />
