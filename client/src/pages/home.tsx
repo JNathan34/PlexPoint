@@ -3,8 +3,8 @@ import HeroSection from "@/components/hero-section";
 import MembershipSection from "@/components/membership-section";
 import RequestsSection from "@/components/requests-section";
 import TutorialsSection from "@/components/tutorials-section";
-import FaqSection from "@/components/faq-section";
 import Footer from "@/components/footer";
+import Chatbot from "@/components/chatbot";
 
 export default function Home() {
   return (
@@ -14,8 +14,8 @@ export default function Home() {
       <MembershipSection />
       <RequestsSection />
       <TutorialsSection />
-      <FaqSection />
       <Footer />
+      <Chatbot />
     </div>
   );
 }
