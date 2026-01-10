@@ -120,15 +120,15 @@ export default function MembershipSection() {
             Request Movies & Shows at the Website. Choose the plan that fits your streaming needs.
           </p>
           
-          <div className="glass-card inline-flex flex-col sm:flex-row items-center gap-3 sm:gap-8 p-3 md:p-4 rounded-xl md:rounded-2xl">
-            <div className="flex items-center gap-2 text-xs md:text-sm">
-              <Phone className="h-3 w-3 md:h-4 md:w-4 text-primary" />
-              <span className="text-muted-foreground">07481 861478</span>
+          <div className="glass-card inline-flex flex-col sm:flex-row items-center gap-3 sm:gap-8 p-4 md:p-5 rounded-xl md:rounded-2xl">
+            <div className="flex items-center gap-2 text-sm md:text-base">
+              <Phone className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+              <span className="text-muted-foreground font-medium">07481 861478</span>
             </div>
-            <div className="h-px w-full sm:h-4 sm:w-px bg-border" />
-            <div className="flex items-center gap-2 text-xs md:text-sm">
-              <Mail className="h-3 w-3 md:h-4 md:w-4 text-primary" />
-              <span className="text-muted-foreground text-xs md:text-sm break-all">jacobnathan1718@gmail.com</span>
+            <div className="h-px w-full sm:h-5 sm:w-px bg-border" />
+            <div className="flex items-center gap-2 text-sm md:text-base">
+              <Mail className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+              <span className="text-muted-foreground font-medium break-all">jacobnathan1718@gmail.com</span>
             </div>
           </div>
         </motion.div>
