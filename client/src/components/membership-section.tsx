@@ -121,11 +121,11 @@ export default function MembershipSection() {
           </p>
           
           <div className="inline-flex flex-row items-center justify-center gap-4 sm:gap-6">
-            <a href="https://wa.me/447481861478" target="_blank" rel="noopener noreferrer" className="glass-card flex items-center gap-2 px-4 py-2.5 rounded-xl hover:border-green-500/50 transition-all">
+            <a href="https://wa.me/447481861478" target="_blank" rel="noopener noreferrer" className="glass-card flex items-center gap-2 px-4 py-2.5 rounded-xl hover:border-green-500/50 hover:text-green-500 transition-all">
               <MessageCircle className="h-4 w-4 text-green-500" />
               <span className="text-sm text-muted-foreground">WhatsApp</span>
             </a>
-            <a href="mailto:jacobnathan1718@gmail.com" className="glass-card flex items-center gap-2 px-4 py-2.5 rounded-xl hover:border-primary/50 transition-all">
+            <a href="mailto:jacobnathan1718@gmail.com" className="glass-card flex items-center gap-2 px-4 py-2.5 rounded-xl hover:border-primary/50 hover:text-primary transition-all">
               <Mail className="h-4 w-4 text-primary" />
               <span className="text-sm text-muted-foreground hidden sm:inline">jacobnathan1718@gmail.com</span>
               <span className="text-sm text-muted-foreground sm:hidden">Email</span>
