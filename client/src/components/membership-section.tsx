@@ -1,15 +1,17 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { User, Crown, Gem, Diamond, Zap, Award, Check, Phone, Mail, ArrowRight } from "lucide-react";
+import { User, Crown, Gem, Star, Zap, Award, Check, Phone, Mail, ArrowRight, X, Copy, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { motion, AnimatePresence } from "framer-motion";
 import type { MembershipTier } from "@shared/schema";
 
 const tierIcons = {
   "Bronze Tier": User,
   "Silver Tier": Award,
   "Gold Tier": Crown,
-  "Diamond Tier": Diamond,
+  "Diamond Tier": Star,
   "Ruby Tier": Gem,
   "Platinum Tier": Zap,
 };
@@ -45,13 +47,30 @@ const item = {
   },
 };
 
+const BANK_DETAILS = {
+  name: "Jacob Nathan",
+  account: "58925008",
+  sortCode: "09-01-28",
+};
+
 export default function MembershipSection() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<MembershipTier | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+  
   const { data: membershipTiers = [], isLoading } = useQuery<MembershipTier[]>({
     queryKey: ['/api/membership-tiers'],
   });
 
-  const handleBankTransfer = () => {
-    window.open('https://ko-fi.com/jnathan34/tiers', '_blank');
+  const handleBankTransfer = (tier: MembershipTier) => {
+    setSelectedTier(tier);
+    setIsDialogOpen(true);
+  };
+
+  const copyToClipboard = (text: string, field: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
   };
 
   if (isLoading) {
@@ -175,7 +194,7 @@ export default function MembershipSection() {
 
                     <Button
                       className={`w-full group min-h-[44px] ${isFeatured ? 'btn-primary-gradient' : 'bg-muted hover:bg-muted/80 active:bg-muted/70'}`}
-                      onClick={handleBankTransfer}
+                      onClick={() => handleBankTransfer(tier)}
                       data-testid={`join-button-${tier.name.toLowerCase().replace(' ', '-')}`}
                     >
                       <span>Get Started</span>
@@ -188,6 +207,108 @@ export default function MembershipSection() {
           })}
         </motion.div>
       </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="glass-card border-border/50 max-w-md mx-4">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">
+              {selectedTier ? `Subscribe to ${selectedTier.name}` : 'Bank Transfer Details'}
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              {selectedTier && (
+                <span className="text-primary font-semibold">£{(selectedTier.price / 100).toFixed(0)}/month</span>
+              )}
+              {' '}- Please use the bank details below to set up your payment.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 mt-4">
+            <div className="glass p-4 rounded-xl space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Name</p>
+                  <p className="font-semibold">{BANK_DETAILS.name}</p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 w-9 p-0"
+                  onClick={() => copyToClipboard(BANK_DETAILS.name, 'name')}
+                >
+                  {copiedField === 'name' ? (
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+              
+              <div className="h-px bg-border/50" />
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Account Number</p>
+                  <p className="font-semibold font-mono">{BANK_DETAILS.account}</p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 w-9 p-0"
+                  onClick={() => copyToClipboard(BANK_DETAILS.account, 'account')}
+                >
+                  {copiedField === 'account' ? (
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+              
+              <div className="h-px bg-border/50" />
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Sort Code</p>
+                  <p className="font-semibold font-mono">{BANK_DETAILS.sortCode}</p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 w-9 p-0"
+                  onClick={() => copyToClipboard(BANK_DETAILS.sortCode, 'sortCode')}
+                >
+                  {copiedField === 'sortCode' ? (
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+            
+            <p className="text-xs text-muted-foreground text-center">
+              After making the transfer, please contact Jacob to confirm your subscription.
+            </p>
+            
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1 min-h-[44px]"
+                onClick={() => setIsDialogOpen(false)}
+              >
+                Close
+              </Button>
+              <Button
+                className="flex-1 btn-primary-gradient min-h-[44px]"
+                onClick={() => window.open('mailto:jacobnathan1718@gmail.com', '_blank')}
+              >
+                <Mail className="mr-2 h-4 w-4" />
+                Contact Jacob
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

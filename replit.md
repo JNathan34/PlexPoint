@@ -20,6 +20,10 @@ This is a full-stack web application for a personal media server platform, simil
 - Optimized all sections for mobile devices with responsive typography and spacing
 - Added minimum touch target sizes (44-48px) for mobile accessibility
 - Improved navigation active state detection with fallback to 'home' when at top
+- Swapped navigation order: Requests now appears before Tutorials
+- Membership tier buttons now show bank transfer dialog with copyable details instead of linking to Ko-fi
+- Changed Diamond tier icon from Diamond to Star
+- Changed hero section "4K Quality" to "HD Streaming"
 
 ## User Preferences
 

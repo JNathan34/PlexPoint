@@ -1,6 +1,6 @@
 export const NAVBAR_HEIGHT = 80;
 
-export const NAV_ITEMS = ['home', 'membership', 'tutorials', 'requests', 'faq'] as const;
+export const NAV_ITEMS = ['home', 'membership', 'requests', 'tutorials', 'faq'] as const;
 
 export type NavItem = typeof NAV_ITEMS[number];
 

@@ -234,7 +234,7 @@ export default function HeroSection() {
                     <Sparkles className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <p className="font-semibold">4K Quality</p>
+                    <p className="font-semibold">HD Streaming</p>
                     <p className="text-sm text-muted-foreground">Premium streams</p>
                   </div>
                 </div>
