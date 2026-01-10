@@ -44,9 +44,9 @@ const faqs = [
 
 export default function FaqSection() {
   return (
-    <section id="faq" className="py-24 bg-secondary/50 relative overflow-hidden" data-testid="faq-section">
+    <section id="faq" className="py-16 md:py-24 bg-secondary/50 relative overflow-hidden" data-testid="faq-section">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] rounded-full bg-gradient-to-r from-primary/5 to-transparent blur-3xl" />
+        <div className="absolute bottom-0 left-1/4 w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full bg-gradient-to-r from-primary/5 to-transparent blur-3xl" />
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
@@ -55,22 +55,22 @@ export default function FaqSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 md:mb-16"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium mb-6"
+            className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full glass text-xs md:text-sm font-medium mb-4 md:mb-6"
           >
-            <HelpCircle className="h-4 w-4 text-primary" />
+            <HelpCircle className="h-3 w-3 md:h-4 md:w-4 text-primary" />
             <span>Got Questions?</span>
           </motion.div>
           
-          <h2 className="text-4xl lg:text-6xl font-bold mb-6">
+          <h2 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6">
             Frequently Asked <span className="text-gradient">Questions</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
             Everything you need to know about Plex and our service
           </p>
         </motion.div>
@@ -82,21 +82,21 @@ export default function FaqSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="max-w-3xl mx-auto"
         >
-          <Accordion type="single" collapsible className="space-y-4">
+          <Accordion type="single" collapsible className="space-y-2 md:space-y-4">
             {faqs.map((faq, index) => (
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
-                className="glass-card rounded-2xl border-none px-6 data-[state=open]:ring-1 data-[state=open]:ring-primary/30 transition-all"
+                className="glass-card rounded-xl md:rounded-2xl border-none px-4 md:px-6 data-[state=open]:ring-1 data-[state=open]:ring-primary/30 transition-all"
                 data-testid={`faq-${index}`}
               >
-                <AccordionTrigger className="text-left py-5 hover:no-underline group" data-testid={`faq-question-${index}`}>
-                  <span className="font-semibold text-lg group-hover:text-primary transition-colors pr-4">
+                <AccordionTrigger className="text-left py-4 md:py-5 hover:no-underline group min-h-[48px]" data-testid={`faq-question-${index}`}>
+                  <span className="font-semibold text-sm md:text-lg group-hover:text-primary transition-colors pr-4">
                     {faq.question}
                   </span>
                 </AccordionTrigger>
-                <AccordionContent className="pb-5" data-testid={`faq-answer-${index}`}>
-                  <p className="text-muted-foreground leading-relaxed">
+                <AccordionContent className="pb-4 md:pb-5" data-testid={`faq-answer-${index}`}>
+                  <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
                     {faq.answer}
                   </p>
                 </AccordionContent>

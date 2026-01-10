@@ -1,42 +1,45 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Play, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-
-const navItems = ['home', 'membership', 'tutorials', 'requests', 'faq'];
+import { NAVBAR_HEIGHT, NAV_ITEMS, scrollToSection } from "@/lib/constants";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const [activeSection, setActiveSection] = useState<string>('home');
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-      
-      const sections = navItems.map(id => document.getElementById(id));
-      const scrollPosition = window.scrollY + 100;
-      
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i];
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(navItems[i]);
-          break;
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+  const handleNavClick = useCallback((id: string) => {
+    scrollToSection(id);
+    setIsMenuOpen(false);
   }, []);
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  const handleScroll = useCallback(() => {
+    setIsScrolled(window.scrollY > 50);
+    
+    const scrollPosition = window.scrollY + NAVBAR_HEIGHT + 50;
+    
+    let foundSection = false;
+    for (let i = NAV_ITEMS.length - 1; i >= 0; i--) {
+      const section = document.getElementById(NAV_ITEMS[i]);
+      if (section && section.offsetTop <= scrollPosition) {
+        setActiveSection(NAV_ITEMS[i]);
+        foundSection = true;
+        break;
+      }
     }
-    setIsMenuOpen(false);
-  };
+    
+    if (!foundSection) {
+      setActiveSection('home');
+    }
+  }, []);
+
+  useEffect(() => {
+    handleScroll();
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   return (
     <motion.nav 
@@ -44,32 +47,32 @@ export default function Navigation() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
       className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-        isScrolled ? 'navbar-custom py-2' : 'bg-transparent py-4'
+        isScrolled ? 'navbar-custom py-2' : 'bg-background/80 backdrop-blur-sm py-3 md:py-4'
       }`}
       data-testid="navigation"
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <motion.button 
-            onClick={() => scrollToSection('home')}
+            onClick={() => handleNavClick('home')}
             className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors group"
             data-testid="logo-button"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-primary/30 transition-shadow">
-              <Play className="h-5 w-5 text-white" />
+            <div className="h-9 w-9 md:h-10 md:w-10 rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-primary/30 transition-shadow">
+              <Play className="h-4 w-4 md:h-5 md:w-5 text-white" />
             </div>
-            <span className="text-xl font-bold">PlexServer</span>
+            <span className="text-lg md:text-xl font-bold">PlexServer</span>
           </motion.button>
 
           <div className="hidden md:flex items-center">
             <div className="flex items-center gap-1 p-1.5 rounded-full glass">
-              {navItems.map((item) => (
+              {NAV_ITEMS.map((item) => (
                 <button
                   key={item}
-                  onClick={() => scrollToSection(item)}
-                  className={`relative px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 capitalize ${
+                  onClick={() => handleNavClick(item)}
+                  className={`relative px-4 lg:px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 capitalize ${
                     activeSection === item 
                       ? 'text-white' 
                       : 'text-muted-foreground hover:text-foreground'
@@ -92,7 +95,7 @@ export default function Navigation() {
           <Button
             variant="ghost"
             size="sm"
-            className="md:hidden p-2"
+            className="md:hidden p-2 min-h-[44px] min-w-[44px]"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             data-testid="mobile-menu-button"
           >
@@ -132,18 +135,18 @@ export default function Navigation() {
               className="md:hidden overflow-hidden"
             >
               <div className="py-4 mt-4 border-t border-border/50">
-                <div className="flex flex-col space-y-2">
-                  {navItems.map((item, index) => (
+                <div className="flex flex-col space-y-1">
+                  {NAV_ITEMS.map((item, index) => (
                     <motion.button
                       key={item}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      onClick={() => scrollToSection(item)}
-                      className={`text-left px-4 py-3 rounded-xl transition-all capitalize ${
+                      onClick={() => handleNavClick(item)}
+                      className={`text-left px-4 py-3 rounded-xl transition-all capitalize min-h-[48px] ${
                         activeSection === item 
                           ? 'bg-primary/10 text-primary font-medium' 
-                          : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-muted/50 active:bg-muted'
                       }`}
                       data-testid={`mobile-nav-link-${item}`}
                     >
