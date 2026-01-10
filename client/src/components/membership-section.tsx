@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { User, Crown, Gem, Star, Zap, Award, Check, Phone, Mail, ArrowRight, X, Copy, CheckCircle } from "lucide-react";
+import { User, Crown, Gem, Star, Zap, Award, Check, Phone, Mail, ArrowRight, X, Copy, CheckCircle, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -209,30 +209,30 @@ export default function MembershipSection() {
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="glass-card border-border/50 max-w-md mx-4">
+        <DialogContent className="glass-card border-border/50 w-[calc(100%-2rem)] max-w-md rounded-2xl sm:rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold">
+            <DialogTitle className="text-lg sm:text-xl font-bold">
               {selectedTier ? `Subscribe to ${selectedTier.name}` : 'Bank Transfer Details'}
             </DialogTitle>
-            <DialogDescription className="text-muted-foreground">
+            <DialogDescription className="text-muted-foreground text-sm">
               {selectedTier && (
                 <span className="text-primary font-semibold">£{(selectedTier.price / 100).toFixed(0)}/month</span>
               )}
-              {' '}- Please use the bank details below to set up your payment.
+              {' '}- Use the bank details below to set up your payment.
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4 mt-4">
-            <div className="glass p-4 rounded-xl space-y-3">
+          <div className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
+            <div className="glass p-3 sm:p-4 rounded-xl space-y-2 sm:space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-muted-foreground mb-1">Name</p>
-                  <p className="font-semibold">{BANK_DETAILS.name}</p>
+                  <p className="text-xs text-muted-foreground mb-0.5">Name</p>
+                  <p className="font-semibold text-sm sm:text-base">{BANK_DETAILS.name}</p>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-9 w-9 p-0"
+                  className="h-9 w-9 p-0 rounded-xl"
                   onClick={() => copyToClipboard(BANK_DETAILS.name, 'name')}
                 >
                   {copiedField === 'name' ? (
@@ -247,13 +247,13 @@ export default function MembershipSection() {
               
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-muted-foreground mb-1">Account Number</p>
-                  <p className="font-semibold font-mono">{BANK_DETAILS.account}</p>
+                  <p className="text-xs text-muted-foreground mb-0.5">Account Number</p>
+                  <p className="font-semibold font-mono text-sm sm:text-base">{BANK_DETAILS.account}</p>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-9 w-9 p-0"
+                  className="h-9 w-9 p-0 rounded-xl"
                   onClick={() => copyToClipboard(BANK_DETAILS.account, 'account')}
                 >
                   {copiedField === 'account' ? (
@@ -268,13 +268,13 @@ export default function MembershipSection() {
               
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-muted-foreground mb-1">Sort Code</p>
-                  <p className="font-semibold font-mono">{BANK_DETAILS.sortCode}</p>
+                  <p className="text-xs text-muted-foreground mb-0.5">Sort Code</p>
+                  <p className="font-semibold font-mono text-sm sm:text-base">{BANK_DETAILS.sortCode}</p>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-9 w-9 p-0"
+                  className="h-9 w-9 p-0 rounded-xl"
                   onClick={() => copyToClipboard(BANK_DETAILS.sortCode, 'sortCode')}
                 >
                   {copiedField === 'sortCode' ? (
@@ -286,24 +286,24 @@ export default function MembershipSection() {
               </div>
             </div>
             
-            <p className="text-xs text-muted-foreground text-center">
-              After making the transfer, please contact Jacob to confirm your subscription.
+            <p className="text-xs text-muted-foreground text-center px-2">
+              After making the transfer, message Jacob on WhatsApp to confirm.
             </p>
             
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3">
               <Button
                 variant="outline"
-                className="flex-1 min-h-[44px]"
+                className="flex-1 min-h-[44px] rounded-xl"
                 onClick={() => setIsDialogOpen(false)}
               >
                 Close
               </Button>
               <Button
-                className="flex-1 btn-primary-gradient min-h-[44px]"
-                onClick={() => window.open('mailto:jacobnathan1718@gmail.com', '_blank')}
+                className="flex-1 btn-primary-gradient min-h-[44px] rounded-xl"
+                onClick={() => window.open('https://wa.me/447481861478', '_blank')}
               >
-                <Mail className="mr-2 h-4 w-4" />
-                Contact Jacob
+                <MessageCircle className="mr-2 h-4 w-4" />
+                WhatsApp
               </Button>
             </div>
           </div>
