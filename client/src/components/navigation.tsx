@@ -138,19 +138,26 @@ export default function Navigation() {
             >
               <div className="py-4 mt-4 border-t border-border/50">
                 <div className="flex flex-col space-y-1">
-                  {NAV_ITEMS.map((item, index) => (
-                    <button
+                  {NAV_ITEMS.map((item) => (
+                    <div
                       key={item}
                       onClick={() => handleNavClick(item)}
-                      className={`text-left px-4 py-3 rounded-xl transition-all capitalize min-h-[48px] active:scale-95 ${
+                      onTouchEnd={(e) => {
+                        e.preventDefault();
+                        handleNavClick(item);
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      className={`text-left px-4 py-3 rounded-xl transition-all capitalize min-h-[48px] cursor-pointer select-none ${
                         activeSection === item 
                           ? 'bg-primary/10 text-primary font-medium' 
                           : 'text-muted-foreground hover:text-foreground hover:bg-muted/50 active:bg-muted'
                       }`}
+                      style={{ touchAction: 'manipulation' }}
                       data-testid={`mobile-nav-link-${item}`}
                     >
                       {item}
-                    </button>
+                    </div>
                   ))}
                 </div>
               </div>
