@@ -14,6 +14,8 @@ const buttonVariants = cva(
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
           "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        glass:
+          "glass-card relative overflow-hidden text-foreground border border-border/50 transition-all before:absolute before:inset-0 before:pointer-events-none before:bg-gradient-to-r before:from-primary/0 before:via-primary/15 before:to-primary/0 before:opacity-0 before:transition-opacity hover:before:opacity-100 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_hsla(25,100%,55%,0.12)] active:translate-y-0 active:shadow-none",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",

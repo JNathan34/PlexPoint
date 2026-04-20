@@ -111,11 +111,12 @@ export default function RequestsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="flex flex-col sm:flex-row gap-3 md:gap-4"
+              className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4"
             >
               <Button
+                variant="glass"
                 size="lg"
-                className="btn-primary-gradient px-6 md:px-8 py-5 md:py-6 text-base md:text-lg rounded-xl group min-h-[48px]"
+                className="w-full h-12 md:h-14 px-6 md:px-8 text-sm md:text-base font-semibold rounded-xl group duration-300"
                 onClick={handleMakeRequest}
                 data-testid="make-request-button"
               >
@@ -124,9 +125,9 @@ export default function RequestsSection() {
                 <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button
-                variant="outline"
+                variant="glass"
                 size="lg"
-                className="px-6 md:px-8 py-5 md:py-6 text-base md:text-lg rounded-xl border-border hover:border-primary/50 hover:bg-primary/10 active:bg-primary/20 transition-all min-h-[48px]"
+                className="w-full h-12 md:h-14 px-6 md:px-8 text-sm md:text-base font-semibold rounded-xl duration-300"
                 onClick={() => scrollToSection('tutorials')}
                 data-testid="how-it-works-button"
               >
