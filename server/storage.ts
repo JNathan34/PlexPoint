@@ -1,4 +1,15 @@
-import { type User, type InsertUser, type MediaItem, type InsertMediaItem, type MembershipTier, type InsertMembershipTier, type ContentRequest, type InsertContentRequest, type ServerStats, type InsertServerStats } from "@shared/schema";
+import {
+  type User,
+  type InsertUser,
+  type MediaItem,
+  type InsertMediaItem,
+  type MembershipTier,
+  type InsertMembershipTier,
+  type ContentRequest,
+  type InsertContentRequest,
+  type ServerStats,
+  type InsertServerStats,
+} from "../shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -46,7 +57,7 @@ export class MemStorage implements IStorage {
     const bronzeTier: MembershipTier = {
       id: randomUUID(),
       name: "Bronze Tier",
-      price: 100, // £1.00
+      price: 250, // £2.50
       features: ["Access to Plex", "Enjoy all the movies and shows already available on Plex"],
       maxStreams: 1,
       priority: "basic",
@@ -56,7 +67,7 @@ export class MemStorage implements IStorage {
     const silverTier: MembershipTier = {
       id: randomUUID(),
       name: "Silver Tier",
-      price: 300, // £3.00
+      price: 350, // £3.50
       features: ["5 Movie requests", "7 Season requests", "3 to 5 day Processing time", "Access to Plex", "Enjoy more freedom with 5 movie requests and 7 season requests per month"],
       maxStreams: 2,
       priority: "silver",
@@ -204,8 +215,15 @@ export class MemStorage implements IStorage {
     [...sampleMovies, ...sampleTvShows].forEach(item => {
       const mediaItem: MediaItem = {
         id: randomUUID(),
+        title: item.title ?? "Untitled",
+        type: item.type ?? "movie",
+        year: item.year ?? null,
+        poster: item.poster ?? null,
+        description: item.description ?? null,
+        genres: item.genres ?? null,
+        rating: item.rating ?? null,
+        seasons: item.seasons ?? null,
         addedAt: new Date(),
-        ...item as Omit<MediaItem, 'id' | 'addedAt'>
       };
       this.mediaItems.set(mediaItem.id, mediaItem);
     });
@@ -221,10 +239,11 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const user: User = { 
-      ...insertUser, 
-      id, 
-      createdAt: new Date() 
+    const user: User = {
+      ...insertUser,
+      id,
+      membershipTier: insertUser.membershipTier ?? "free",
+      createdAt: new Date(),
     };
     this.users.set(id, user);
     return user;
@@ -240,10 +259,17 @@ export class MemStorage implements IStorage {
 
   async createMediaItem(insertItem: InsertMediaItem): Promise<MediaItem> {
     const id = randomUUID();
-    const mediaItem: MediaItem = { 
-      ...insertItem, 
-      id, 
-      addedAt: new Date() 
+    const mediaItem: MediaItem = {
+      id,
+      title: insertItem.title,
+      type: insertItem.type,
+      year: insertItem.year ?? null,
+      poster: insertItem.poster ?? null,
+      description: insertItem.description ?? null,
+      genres: insertItem.genres ?? null,
+      rating: insertItem.rating ?? null,
+      seasons: insertItem.seasons ?? null,
+      addedAt: new Date(),
     };
     this.mediaItems.set(id, mediaItem);
     return mediaItem;
@@ -264,7 +290,7 @@ export class MemStorage implements IStorage {
 
   async createMembershipTier(insertTier: InsertMembershipTier): Promise<MembershipTier> {
     const id = randomUUID();
-    const tier: MembershipTier = { ...insertTier, id };
+    const tier: MembershipTier = { ...insertTier, id, kofiTierId: insertTier.kofiTierId ?? null };
     this.membershipTiers.set(id, tier);
     return tier;
   }
@@ -275,10 +301,12 @@ export class MemStorage implements IStorage {
 
   async createContentRequest(insertRequest: InsertContentRequest): Promise<ContentRequest> {
     const id = randomUUID();
-    const request: ContentRequest = { 
-      ...insertRequest, 
-      id, 
-      requestedAt: new Date() 
+    const request: ContentRequest = {
+      ...insertRequest,
+      id,
+      userId: insertRequest.userId ?? null,
+      status: insertRequest.status ?? "pending",
+      requestedAt: new Date(),
     };
     this.contentRequests.set(id, request);
     return request;

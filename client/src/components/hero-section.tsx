@@ -1,7 +1,8 @@
-import { Film, Tv, Users, Sparkles, Crown, PlusCircle } from "lucide-react";
+import { Clapperboard, Film, Tv, Users, Sparkles, Crown, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
+import { useLocation } from "wouter";
 import { scrollToSection } from "@/lib/constants";
 import { SERVER_STATS } from "@/lib/static-data";
 
@@ -55,6 +56,8 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 }
 
 export default function HeroSection() {
+  const [, setLocation] = useLocation();
+
   return (
     <section 
       id="home" 
@@ -151,10 +154,11 @@ export default function HeroSection() {
               </Card>
             </motion.div>
 
-            <motion.div variants={item} className="flex flex-col sm:flex-row gap-3 md:gap-4">
+            <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               <Button
+                variant="glass"
                 size="lg"
-                className="btn-primary-gradient px-6 md:px-8 py-5 md:py-6 text-base md:text-lg font-semibold rounded-xl min-h-[48px]"
+                className="w-full h-12 md:h-14 px-6 md:px-8 text-sm md:text-base font-semibold rounded-xl duration-300"
                 onClick={() => scrollToSection('membership')}
                 data-testid="view-subscriptions-button"
               >
@@ -162,9 +166,24 @@ export default function HeroSection() {
                 View Subscriptions
               </Button>
               <Button
-                variant="outline"
+                variant="glass"
                 size="lg"
-                className="px-6 md:px-8 py-5 md:py-6 text-base md:text-lg rounded-xl border-border hover:border-primary/50 hover:bg-primary/10 active:bg-primary/20 transition-all duration-300 min-h-[48px]"
+                className="w-full h-12 md:h-14 px-6 md:px-8 text-sm md:text-base font-semibold rounded-xl duration-300"
+                onClick={() => {
+                  setLocation("/movies");
+                  requestAnimationFrame(() => {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  });
+                }}
+                data-testid="whats-on-plexpoint-button"
+              >
+                <Clapperboard className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                What&apos;s on PlexPoint
+              </Button>
+              <Button
+                variant="glass"
+                size="lg"
+                className="w-full h-12 md:h-14 px-6 md:px-8 text-sm md:text-base font-semibold rounded-xl duration-300"
                 onClick={() => scrollToSection('requests')}
                 data-testid="browse-library-button"
               >
@@ -181,6 +200,7 @@ export default function HeroSection() {
             className="relative hidden lg:block"
           >
             <div className="relative">
+              <div className="absolute -inset-12 rounded-[2.5rem] bg-gradient-to-r from-primary/20 via-purple-500/15 to-cyan-500/15 blur-3xl opacity-80" />
               <motion.div
                 animate={{
                   y: [0, -10, 0],

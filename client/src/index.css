@@ -29,6 +29,8 @@
   --font-mono: "SF Mono", Menlo, monospace;
   
   --gradient-primary: linear-gradient(135deg, hsl(25, 100%, 55%) 0%, hsl(35, 100%, 60%) 100%);
+  --gradient-addon: linear-gradient(135deg, hsl(270, 90%, 55%) 0%, hsl(255, 95%, 70%) 100%);
+  --gradient-whatsapp: linear-gradient(135deg, hsl(142, 72%, 45%) 0%, hsl(152, 70%, 40%) 100%);
   --gradient-glow: radial-gradient(circle at 50% 50%, hsla(25, 100%, 55%, 0.15) 0%, transparent 70%);
 }
 
@@ -78,6 +80,27 @@
 }
 
 @layer utilities {
+  .app-background {
+    position: relative;
+    min-height: 100vh;
+    isolation: isolate;
+    background:
+      radial-gradient(900px circle at 18% -5%, hsla(25, 100%, 58%, 0.24) 0%, transparent 58%),
+      radial-gradient(850px circle at 88% 18%, hsla(260, 100%, 70%, 0.18) 0%, transparent 60%),
+      radial-gradient(1100px circle at 50% 112%, hsla(195, 100%, 55%, 0.22) 0%, transparent 65%),
+      radial-gradient(900px circle at 15% 120%, hsla(25, 100%, 58%, 0.18) 0%, transparent 60%),
+      radial-gradient(900px circle at 88% 122%, hsla(260, 100%, 70%, 0.16) 0%, transparent 62%),
+      linear-gradient(180deg, hsl(232, 32%, 6%) 0%, hsl(246, 34%, 7%) 55%, hsl(236, 34%, 6.5%) 100%);
+  }
+
+  .app-background::before {
+    content: none;
+  }
+
+  .app-background::after {
+    content: none;
+  }
+
   .text-gradient {
     background: var(--gradient-primary);
     -webkit-background-clip: text;
@@ -86,17 +109,28 @@
   }
   
   .glass {
-    background: hsla(225, 25%, 12%, 0.6);
+    background: linear-gradient(135deg, hsla(230, 30%, 16%, 0.74) 0%, hsla(260, 35%, 16%, 0.48) 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid hsla(215, 25%, 40%, 0.2);
+    border: 1px solid hsla(215, 25%, 65%, 0.18);
   }
   
   .glass-card {
-    background: hsla(225, 25%, 10%, 0.7);
+    background: linear-gradient(135deg, hsla(230, 30%, 14%, 0.82) 0%, hsla(255, 35%, 12%, 0.56) 100%);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid hsla(215, 25%, 40%, 0.15);
+    border: 1px solid hsla(215, 25%, 65%, 0.14);
+  }
+
+  .section-gradient {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(900px circle at 15% 0%, hsla(25, 100%, 55%, 0.18) 0%, transparent 60%),
+      radial-gradient(800px circle at 90% 25%, hsla(195, 100%, 55%, 0.14) 0%, transparent 58%),
+      linear-gradient(180deg, hsla(225, 25%, 10%, 0.55) 0%, hsla(225, 25%, 8%, 0.35) 100%);
+    border-top: 1px solid hsla(215, 25%, 55%, 0.12);
+    border-bottom: 1px solid hsla(215, 25%, 55%, 0.12);
   }
   
   .glow {
@@ -117,20 +151,11 @@
 }
 
 .hero-section {
-  background: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, hsla(25, 100%, 55%, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 80% 60%, hsla(225, 80%, 50%, 0.08) 0%, transparent 50%),
-    linear-gradient(180deg, var(--background) 0%, var(--secondary) 100%);
-  position: relative;
+  background: transparent;
 }
 
 .hero-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.03;
-  pointer-events: none;
+  content: none;
 }
 
 .media-card {
@@ -216,19 +241,40 @@
   background: linear-gradient(180deg, hsla(25, 100%, 55%, 0.1) 0%, hsla(225, 25%, 10%, 0.8) 30%);
 }
 
+.membership-tier.addon {
+  /* Keep default tier look; add purple outline only on hover */
+  border-color: hsla(215, 25%, 30%, 0.2);
+  background: hsla(225, 25%, 10%, 0.6);
+  box-shadow: none;
+}
+
+.membership-tier.addon::before {
+  background: linear-gradient(90deg, transparent, hsla(270, 90%, 55%, 0.55), transparent);
+}
+
+.membership-tier.addon:hover {
+  border-color: hsla(270, 90%, 55%, 0.5);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 60px hsla(270, 90%, 55%, 0.12);
+}
+
 .membership-tier.featured::after {
-  content: "MOST POPULAR";
   position: absolute;
   top: -1px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--gradient-primary);
   color: white;
   padding: 3px 8px;
   border-radius: 0 0 8px 8px;
   font-size: 7px;
   font-weight: 700;
   letter-spacing: 0.3px;
+}
+
+.membership-tier.featured::after {
+  content: "MOST POPULAR";
+  background: var(--gradient-primary);
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 @media (min-width: 640px) {
@@ -319,6 +365,41 @@
   background-position: 100% 0;
   transform: translateY(-2px);
   box-shadow: 0 10px 30px hsla(25, 100%, 55%, 0.3);
+}
+
+.btn-whatsapp-gradient {
+  background: var(--gradient-whatsapp);
+  background-size: 200% 200%;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-whatsapp-gradient:hover {
+  background-position: 100% 0;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px hsla(142, 72%, 45%, 0.28);
+}
+
+.btn-hover-primary-gradient:hover {
+  background: var(--gradient-primary) !important;
+  color: white !important;
+  border-color: transparent !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px hsla(25, 100%, 55%, 0.25);
+}
+
+.btn-hover-primary-gradient,
+.btn-hover-addon-gradient {
+  transition: all 0.35s ease;
+}
+
+.btn-hover-addon-gradient:hover {
+  background: var(--gradient-addon) !important;
+  color: white !important;
+  border-color: transparent !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px hsla(270, 90%, 55%, 0.25);
 }
 
 .section-divider {

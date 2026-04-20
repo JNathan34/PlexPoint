@@ -38,13 +38,13 @@ const faqs = [
   },
   {
     question: "Is there a free trial?",
-    answer: "The Bronze Tier provides basic access to all available content on Plex for just £1/month. This is a great way to test the service before upgrading to a higher tier with more features and request capabilities."
+    answer: "The Bronze Tier provides basic access to all available content on Plex for just £2.50/month. This is a great way to test the service before upgrading to a higher tier with more features and request capabilities."
   }
 ];
 
 export default function FaqSection() {
   return (
-    <section id="faq" className="py-10 md:py-24 bg-secondary/50 relative overflow-hidden" data-testid="faq-section">
+    <section id="faq" className="py-10 md:py-24 section-gradient relative overflow-hidden" data-testid="faq-section">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute bottom-0 left-1/4 w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full bg-gradient-to-r from-primary/5 to-transparent blur-3xl" />
       </div>

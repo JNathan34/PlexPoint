@@ -1,4 +1,5 @@
-import { Smartphone, Monitor, Tv, Phone, MessageCircle, Mail, BookOpen, ExternalLink, UserPlus, CheckCircle2, AlertCircle } from "lucide-react";
+import { Smartphone, Monitor, Tv, Phone, Mail, BookOpen, ExternalLink, UserPlus, CheckCircle2, AlertCircle } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
@@ -180,7 +181,7 @@ export default function TutorialsSection() {
                           onClick={handleWhatsApp}
                           data-testid="whatsapp-button"
                         >
-                          <MessageCircle className="h-4 w-4 mr-2" />
+                          <FaWhatsapp className="h-4 w-4 mr-2" />
                           WhatsApp Jacob
                         </Button>
                         <Button
