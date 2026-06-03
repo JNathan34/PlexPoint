@@ -1,243 +1,194 @@
-import { Smartphone, Monitor, Tv, Phone, MessageCircle, Mail, BookOpen, ExternalLink, UserPlus, CheckCircle2, AlertCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  CheckCircle2,
+  Download,
+  ExternalLink,
+  Mail,
+  Monitor,
+  Phone,
+  Smartphone,
+  Tv,
+} from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { PLEZY_URL, WHATSAPP_URL } from "@/lib/constants";
 
 const appStoreLinks = [
   {
     name: "iPhone/iPad",
     icon: Smartphone,
     url: "https://apps.apple.com/app/plex/id383457673",
-    platform: "iOS App Store"
   },
   {
     name: "Android",
     icon: Smartphone,
     url: "https://play.google.com/store/apps/details?id=com.plexapp.android",
-    platform: "Google Play Store"
   },
   {
     name: "Windows/Mac",
     icon: Monitor,
     url: "https://www.plex.tv/media-server-downloads/#plex-app",
-    platform: "Desktop App"
   },
   {
     name: "Smart TV",
     icon: Tv,
     url: "https://www.plex.tv/apps-devices/",
-    platform: "TV Apps"
+  },
+];
+
+const setupSteps = [
+  {
+    title: "Download Plex",
+    description: "Install Plex on the device you actually watch on: phone, laptop, TV, console, or streaming stick.",
+  },
+  {
+    title: "Create a Plex account",
+    description: "Sign up with an email address you can access and keep your Plex username handy.",
+  },
+  {
+    title: "Message Jacob on WhatsApp",
+    description: "Tell Jacob which plan you want, send payment, and he will send your PlexPoint invite link.",
+    action: {
+      label: "Message Jacob",
+      url: WHATSAPP_URL,
+      icon: FaWhatsapp,
+    },
   },
 ];
 
 export default function TutorialsSection() {
-  const handleWhatsApp = () => {
-    window.open('https://wa.me/447481861478', '_blank');
-  };
-
-  const handleCall = () => {
-    window.open('tel:+447481861478', '_blank');
-  };
-
-  const handleEmail = () => {
-    window.open('mailto:jacobnathan1718@gmail.com', '_blank');
-  };
-
-  const handlePlexProfile = () => {
-    window.open('https://l.plex.tv/B8NDphP', '_blank');
-  };
-
   return (
-    <section id="tutorials" className="py-10 md:py-24 relative overflow-hidden" data-testid="tutorials-section">
-      <div className="container mx-auto px-4 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-8 md:mb-12"
-        >
+    <section id="tutorials" className="section-gradient py-16 md:py-24" data-testid="tutorials-section">
+      <div className="container mx-auto px-4">
+        <div className="mb-10 grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-end">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full glass text-xs md:text-sm font-medium mb-4 md:mb-6"
-          >
-            <BookOpen className="h-3 w-3 md:h-4 md:w-4 text-primary" />
-            <span>Setup Guide</span>
-          </motion.div>
-          
-          <h2 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6">
-            Getting <span className="text-gradient">Started</span>
-          </h2>
-          <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
-            Follow these steps to get access to Jacob's Plex server
-          </p>
-        </motion.div>
-
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
           >
-            <Card className="glass-card">
-              <CardContent className="p-4 md:p-8">
-                <div className="space-y-6 md:space-y-8">
-                  <div className="flex items-start gap-3 md:gap-4">
-                    <div className="h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center text-white font-bold text-xs md:text-sm flex-shrink-0">1</div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold mb-2 md:mb-3 text-sm md:text-base">Download the Plex App</h4>
-                      <p className="text-muted-foreground text-xs md:text-sm mb-3 md:mb-4">
-                        First, download the Plex app on your device. Plex is available on phones, tablets, computers, smart TVs, and streaming devices.
-                      </p>
-                      <div className="grid grid-cols-2 gap-2 md:gap-3">
-                        {appStoreLinks.map((store, index) => (
-                          <Button
-                            key={index}
-                            variant="outline"
-                            size="sm"
-                            className="justify-start glass hover:border-primary/50 active:bg-primary/20 min-h-[40px] text-xs md:text-sm px-2 md:px-3"
-                            onClick={() => store.url && window.open(store.url, '_blank')}
-                            data-testid={`download-${store.name.toLowerCase().replace('/', '-')}`}
-                          >
-                            <store.icon className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2 text-primary flex-shrink-0" />
-                            <span className="truncate">{store.name}</span>
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="h-px bg-border/50" />
-
-                  <div className="flex items-start gap-3 md:gap-4">
-                    <div className="h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center text-white font-bold text-xs md:text-sm flex-shrink-0">2</div>
-                    <div>
-                      <h4 className="font-semibold mb-2 md:mb-3 text-sm md:text-base">Create a Free Plex Account</h4>
-                      <p className="text-muted-foreground text-xs md:text-sm mb-2">
-                        Open the Plex app and create a free account. You can sign up with your email address or use Google/Apple sign-in.
-                      </p>
-                      <ul className="text-muted-foreground text-xs md:text-sm space-y-1">
-                        <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-3 w-3 text-green-500 flex-shrink-0" />
-                          <span>Use a valid email address you can access</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-3 w-3 text-green-500 flex-shrink-0" />
-                          <span>Remember your username - you'll need it later</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-3 w-3 text-green-500 flex-shrink-0" />
-                          <span>Complete the initial setup wizard</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className="h-px bg-border/50" />
-
-                  <div className="flex items-start gap-3 md:gap-4">
-                    <div className="h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center text-white font-bold text-xs md:text-sm flex-shrink-0">3</div>
-                    <div>
-                      <h4 className="font-semibold mb-2 md:mb-3 text-sm md:text-base">Send Jacob a Friend Request on Plex</h4>
-                      <p className="text-muted-foreground text-xs md:text-sm mb-3">
-                        Click the button below to visit Jacob's Plex profile page. On the profile page, click the <strong>"Add Friend"</strong> button.
-                      </p>
-                      <div className="glass rounded-xl p-3 mb-3 border border-amber-500/30 bg-amber-500/5">
-                        <div className="flex items-start gap-2">
-                          <AlertCircle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                          <p className="text-xs md:text-sm text-amber-200">
-                            <strong>Important:</strong> Make sure you click <strong>"Add Friend"</strong> not "Follow". You need to send a friend request for server access to work.
-                          </p>
-                        </div>
-                      </div>
-                      <Button
-                        className="btn-primary-gradient min-h-[44px] text-xs md:text-sm"
-                        onClick={handlePlexProfile}
-                        data-testid="plex-profile-button"
-                      >
-                        <UserPlus className="mr-2 h-4 w-4" />
-                        Visit Jacob's Plex Profile
-                        <ExternalLink className="ml-2 h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="h-px bg-border/50" />
-
-                  <div className="flex items-start gap-3 md:gap-4">
-                    <div className="h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center text-white font-bold text-xs md:text-sm flex-shrink-0">4</div>
-                    <div>
-                      <h4 className="font-semibold mb-2 md:mb-3 text-sm md:text-base">Message Jacob on WhatsApp</h4>
-                      <p className="text-muted-foreground text-xs md:text-sm mb-3">
-                        After sending the friend request, message Jacob on WhatsApp to let him know your Plex username so he can accept your request and share the server with you.
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        <Button
-                          className="bg-green-600 hover:bg-green-700 active:bg-green-800 min-h-[44px] text-xs md:text-sm"
-                          onClick={handleWhatsApp}
-                          data-testid="whatsapp-button"
-                        >
-                          <MessageCircle className="h-4 w-4 mr-2" />
-                          WhatsApp Jacob
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="glass hover:border-primary/50 active:bg-primary/20 min-h-[44px] text-xs md:text-sm"
-                          onClick={handleCall}
-                          data-testid="call-button"
-                        >
-                          <Phone className="h-4 w-4 mr-2" />
-                          Call
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="glass hover:border-primary/50 active:bg-primary/20 min-h-[44px] text-xs md:text-sm"
-                          onClick={handleEmail}
-                          data-testid="email-button"
-                        >
-                          <Mail className="h-4 w-4 mr-2" />
-                          Email
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="h-px bg-border/50" />
-
-                  <div className="flex items-start gap-3 md:gap-4">
-                    <div className="h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center text-white font-bold text-xs md:text-sm flex-shrink-0">5</div>
-                    <div>
-                      <h4 className="font-semibold mb-2 md:mb-3 text-sm md:text-base">Accept the Server Invitation</h4>
-                      <p className="text-muted-foreground text-xs md:text-sm mb-2">
-                        Once Jacob shares his server with you, you'll receive an email from Plex saying <strong>"JNathan34 has given you access to his server"</strong>.
-                      </p>
-                      <ul className="text-muted-foreground text-xs md:text-sm space-y-1">
-                        <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-3 w-3 text-green-500 flex-shrink-0" />
-                          <span>Check your email inbox (and spam folder)</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-3 w-3 text-green-500 flex-shrink-0" />
-                          <span>Click the link in the email to accept</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-3 w-3 text-green-500 flex-shrink-0" />
-                          <span>Open the Plex app - the server will appear automatically</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-3 w-3 text-green-500 flex-shrink-0" />
-                          <span>Start streaming and enjoy!</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <h2 className="max-w-3xl text-3xl font-semibold tracking-normal text-white md:text-5xl">
+              Get set up and ready to stream in three steps.
+            </h2>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+              Download Plex, create your account, then message Jacob with your chosen plan after sending payment. He will
+              send the invite link.
+            </p>
           </motion.div>
+
+          <div className="glass-card rounded-2xl p-4">
+            <p className="text-sm font-medium text-white">Need help?</p>
+            <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+              <Button asChild variant="glass" className="h-10 rounded-xl">
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                  <FaWhatsapp className="h-4 w-4 text-emerald-400" />
+                  WhatsApp
+                </a>
+              </Button>
+              <Button asChild variant="glass" className="h-10 rounded-xl">
+                <a href="tel:+447481861478">
+                  <Phone className="h-4 w-4" />
+                  Call
+                </a>
+              </Button>
+              <Button asChild variant="glass" className="h-10 rounded-xl">
+                <a href="mailto:jacobnathan1718@gmail.com">
+                  <Mail className="h-4 w-4" />
+                  Email
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="glass-card rounded-[1.75rem] p-5"
+          >
+            <h3 className="text-lg font-semibold text-white">Plex app links</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Install Plex first so your invite is ready to use as soon as Jacob sends the link.
+            </p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+              {appStoreLinks.map((store) => (
+                <a
+                  key={store.name}
+                  href={store.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex min-h-12 items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm transition hover:border-primary/35 hover:bg-primary/[0.06]"
+                  data-testid={`download-${store.name.toLowerCase().replace("/", "-")}`}
+                >
+                  <span className="flex items-center gap-3">
+                    <store.icon className="h-4 w-4 text-primary" />
+                    {store.name}
+                  </span>
+                  <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                </a>
+              ))}
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-primary/20 bg-primary/[0.06] p-4">
+              <div className="flex items-start gap-3">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary">
+                  <Download className="h-5 w-5" />
+                </span>
+                <div>
+                  <h4 className="font-semibold text-white">Want downloads?</h4>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                    Use Plezy if you want access to downloads. It is free on PC, but costs {"\u00a35"} on other devices
+                    like TV and mobile.
+                  </p>
+                  <Button asChild variant="glass" className="mt-3 h-10 rounded-xl">
+                    <a href={PLEZY_URL} target="_blank" rel="noopener noreferrer" data-testid="plezy-app-link">
+                      Open Plezy
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <div className="grid gap-3">
+            {setupSteps.map((step, index) => {
+              const ActionIcon = step.action?.icon;
+              return (
+                <motion.div
+                  key={step.title}
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.45, delay: index * 0.04 }}
+                  className="glass-card rounded-2xl p-4"
+                >
+                  <div className="grid gap-4 sm:grid-cols-[auto_1fr_auto] sm:items-center">
+                    <span className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-sm font-semibold text-primary">
+                      {index + 1}
+                    </span>
+                    <div>
+                      <h3 className="font-semibold text-white">{step.title}</h3>
+                      <p className="mt-1 text-sm leading-6 text-muted-foreground">{step.description}</p>
+                    </div>
+                    {step.action && ActionIcon ? (
+                      <Button asChild className="h-10 rounded-xl btn-primary-gradient">
+                        <a href={step.action.url} target="_blank" rel="noopener noreferrer">
+                          <ActionIcon className="h-4 w-4" />
+                          {step.action.label}
+                        </a>
+                      </Button>
+                    ) : (
+                      <CheckCircle2 className="h-5 w-5 text-primary" />
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

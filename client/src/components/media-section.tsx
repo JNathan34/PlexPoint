@@ -46,7 +46,7 @@ export default function MediaSection() {
 
   if (isLoading) {
     return (
-      <section id="media" className="py-20 bg-secondary">
+      <section id="media" className="py-20 section-gradient">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
@@ -58,7 +58,7 @@ export default function MediaSection() {
   }
 
   return (
-    <section id="media" className="py-20 bg-secondary" data-testid="media-section">
+    <section id="media" className="py-20 section-gradient" data-testid="media-section">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold mb-4">Media Library</h2>

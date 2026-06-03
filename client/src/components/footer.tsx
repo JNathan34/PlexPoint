@@ -1,144 +1,132 @@
-import { motion } from "framer-motion";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useState } from "react";
+import { Gift, Mail, ShieldCheck } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { FREE_TRIAL_URL, WHATSAPP_URL } from "@/lib/constants";
+
+const legalSections = {
+  privacy: {
+    title: "Privacy Policy",
+    updated: "June 2026",
+    body: [
+      "PlexPoint only uses the information needed to manage access, contact you about the service, and confirm payments or requests.",
+      "Typical information includes your Plex username, contact details you provide, and payment-confirmation details. Plex account authentication is handled by Plex.",
+      "For privacy questions, contact Jacob Nathan on WhatsApp or email.",
+    ],
+  },
+  terms: {
+    title: "Terms of Service",
+    updated: "June 2026",
+    body: [
+      "PlexPoint provides access to a private Plex media server for personal, non-commercial viewing.",
+      "Access is intended for your household unless an approved add-on says otherwise. Account sharing, redistribution, and attempts to bypass limits are not allowed.",
+      "Subscriptions are paid monthly by bank transfer. Access may be suspended for non-payment or misuse of the request system.",
+      "The service is provided as-is and may be interrupted by maintenance, internet issues, or platform restrictions.",
+    ],
+  },
+};
+
+type LegalKey = keyof typeof legalSections;
 
 export default function Footer() {
-  const [showPrivacy, setShowPrivacy] = useState(false);
-  const [showTerms, setShowTerms] = useState(false);
+  const [activeLegal, setActiveLegal] = useState<LegalKey | null>(null);
+  const legal = activeLegal ? legalSections[activeLegal] : null;
 
   return (
-    <footer className="relative py-6 md:py-8 overflow-hidden" data-testid="footer">
-      <div className="absolute inset-0 bg-gradient-to-b from-background to-secondary/30" />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <img 
-              src="/plexpoint-logo.png" 
-              alt="Plex Point Logo" 
-              className="h-8 w-8 rounded-lg object-contain"
-            />
-            <span className="text-sm font-semibold">Plex Point</span>
-            <span className="text-muted-foreground text-xs md:text-sm">
-              &copy; {new Date().getFullYear()}
-            </span>
+    <footer className="relative overflow-hidden py-10 md:py-14" data-testid="footer">
+      <div className="container mx-auto px-4">
+        <div className="grid gap-8 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
+          <div>
+            <div className="flex items-center gap-3">
+              <img src="/plexpoint-logo.png" alt="PlexPoint" className="h-10 w-10 rounded-xl object-contain" />
+              <div>
+                <p className="font-semibold text-white">PlexPoint</p>
+                <p className="text-sm text-muted-foreground">Private streaming, cleanly managed.</p>
+              </div>
+            </div>
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <a
+                href={FREE_TRIAL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-card inline-flex h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold transition hover:border-primary/40"
+                data-testid="footer-free-trial-link"
+              >
+                <Gift className="h-4 w-4 text-primary" />
+                Start 24-hour trial
+              </a>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-card inline-flex h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold transition hover:border-emerald-400/40"
+              >
+                <FaWhatsapp className="h-4 w-4 text-emerald-400" />
+                WhatsApp
+              </a>
+            </div>
           </div>
-          
-          <div className="flex gap-4 md:gap-6">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowPrivacy(true)}
-              className="text-muted-foreground hover:text-primary text-xs md:text-sm transition-colors"
-              data-testid="privacy-policy-button"
-            >
-              Privacy Policy
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowTerms(true)}
-              className="text-muted-foreground hover:text-primary text-xs md:text-sm transition-colors"
-              data-testid="terms-of-service-button"
-            >
-              Terms of Service
-            </motion.button>
+
+          <div>
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">Explore</p>
+            <div className="grid gap-2 text-sm">
+              <a href="/movies" className="text-muted-foreground transition hover:text-primary">What's on PlexPoint</a>
+              <a href="#membership" className="text-muted-foreground transition hover:text-primary">Subscriptions</a>
+              <a href="#requests" className="text-muted-foreground transition hover:text-primary">Requests</a>
+              <a href="#tutorials" className="text-muted-foreground transition hover:text-primary">Setup guide</a>
+            </div>
           </div>
+
+          <div>
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">Support</p>
+            <div className="grid gap-2 text-sm">
+              <a href="mailto:jacobnathan1718@gmail.com" className="inline-flex items-center gap-2 text-muted-foreground transition hover:text-primary">
+                <Mail className="h-4 w-4" />
+                Email Jacob
+              </a>
+              <button
+                type="button"
+                onClick={() => setActiveLegal("privacy")}
+                className="inline-flex items-center gap-2 text-left text-muted-foreground transition hover:text-primary"
+                data-testid="privacy-policy-button"
+              >
+                <ShieldCheck className="h-4 w-4" />
+                Privacy Policy
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveLegal("terms")}
+                className="text-left text-muted-foreground transition hover:text-primary"
+                data-testid="terms-of-service-button"
+              >
+                Terms of Service
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col gap-2 pt-5 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
+          <p>&copy; {new Date().getFullYear()} PlexPoint. All rights reserved.</p>
+          <p>Independent private server. Not affiliated with Plex Inc.</p>
         </div>
       </div>
 
-      <Dialog open={showPrivacy} onOpenChange={setShowPrivacy}>
-        <DialogContent className="glass-card border-border/50 max-w-lg rounded-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold">Privacy Policy</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 text-sm text-muted-foreground">
-            <p>
-              <strong className="text-foreground">Last updated:</strong> January 2026
-            </p>
-            <p>
-              This Privacy Policy describes how Plex Point ("we", "us", or "our") handles your information when you use our media streaming service.
-            </p>
-            <h4 className="font-semibold text-foreground">Information We Collect</h4>
-            <p>
-              We collect minimal information necessary to provide the service:
-            </p>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Your Plex username (to grant server access)</li>
-              <li>Contact information you provide (phone, email)</li>
-              <li>Payment information for subscription management</li>
-            </ul>
-            <h4 className="font-semibold text-foreground">How We Use Your Information</h4>
-            <p>
-              Your information is used solely to:
-            </p>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Provide access to the Plex media server</li>
-              <li>Process subscription payments</li>
-              <li>Communicate about your account and service updates</li>
-            </ul>
-            <h4 className="font-semibold text-foreground">Data Security</h4>
-            <p>
-              We take reasonable measures to protect your information. Your Plex account credentials are never stored by us - all authentication is handled directly through Plex's secure systems.
-            </p>
-            <h4 className="font-semibold text-foreground">Contact</h4>
-            <p>
-              For privacy concerns, contact Jacob Nathan via WhatsApp at 07481 861478.
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={showTerms} onOpenChange={setShowTerms}>
-        <DialogContent className="glass-card border-border/50 max-w-lg rounded-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold">Terms of Service</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 text-sm text-muted-foreground">
-            <p>
-              <strong className="text-foreground">Last updated:</strong> January 2026
-            </p>
-            <p>
-              By using Plex Point, you agree to these terms. Please read them carefully.
-            </p>
-            <h4 className="font-semibold text-foreground">Service Description</h4>
-            <p>
-              Plex Point provides access to a private Plex media server containing movies and TV shows for personal, non-commercial viewing.
-            </p>
-            <h4 className="font-semibold text-foreground">Account Rules</h4>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>You may not share your account with anyone outside your household</li>
-              <li>You are responsible for maintaining the security of your Plex account</li>
-              <li>Sharing login credentials is strictly prohibited</li>
-            </ul>
-            <h4 className="font-semibold text-foreground">Subscription & Payments</h4>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Subscriptions are billed monthly via bank transfer</li>
-              <li>Access may be suspended for non-payment</li>
-              <li>Refunds are not provided for partial months</li>
-            </ul>
-            <h4 className="font-semibold text-foreground">Acceptable Use</h4>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Content is for personal viewing only</li>
-              <li>You may not download, copy, or redistribute content</li>
-              <li>You may not attempt to access the server infrastructure</li>
-            </ul>
-            <h4 className="font-semibold text-foreground">Termination</h4>
-            <p>
-              We reserve the right to terminate access for violation of these terms or non-payment.
-            </p>
-            <h4 className="font-semibold text-foreground">Contact</h4>
-            <p>
-              For questions about these terms, contact Jacob Nathan via WhatsApp at 07481 861478.
-            </p>
-          </div>
-        </DialogContent>
+      <Dialog open={Boolean(activeLegal)} onOpenChange={(open) => (!open ? setActiveLegal(null) : null)}>
+        {legal ? (
+          <DialogContent className="glass-card max-h-[82vh] max-w-lg overflow-y-auto rounded-2xl border-border/50">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-semibold">{legal.title}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 text-sm leading-7 text-muted-foreground">
+              <p>
+                <strong className="text-foreground">Last updated:</strong> {legal.updated}
+              </p>
+              {legal.body.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          </DialogContent>
+        ) : null}
       </Dialog>
     </footer>
   );
