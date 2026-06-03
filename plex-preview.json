@@ -1,4 +1,671 @@
 {
-  "generatedAt": "2026-03-06T00:00:00.000Z",
-  "tv": []
+  "generatedAt": "2026-06-02T19:30:47.740Z",
+  "movies": [
+    {
+      "id": "42269",
+      "title": "2 Fast 2 Furious",
+      "year": 2003,
+      "rating": 5,
+      "posterPath": "/library/metadata/42269/thumb/1779458501",
+      "summary": "EX LAPD cop Brian O'Conner (Paul Walker) teams up with his ex-con friend Roman Pearce (Tyrese Gibson) and works with undercover U.S. Customs Service agent Monica Fuentes (Eva Mendes) to bring Miami-based drug lord Carter Verone (Cole Hauser) down.",
+      "durationMinutes": 108,
+      "genres": [
+        "Action",
+        "Crime"
+      ],
+      "contentRating": "gb/12A",
+      "studio": "Ardustry Entertainment",
+      "posterUrl": "/plex-posters/42269.jpg"
+    },
+    {
+      "id": "28641",
+      "title": "6 Underground",
+      "year": 2019,
+      "rating": 6,
+      "posterPath": "/library/metadata/28641/thumb/1780108720",
+      "summary": "What's the best part of being dead? It's the freedom to fight the evil which lurks in our world. \"6 Underground\"'s group of unnamed individuals have chosen to change the future. The team is brought together by an enigmatic leader code-named 'One', whose sole mission is to the ensure that he and his teammates will have their actions remembered.",
+      "durationMinutes": 129,
+      "genres": [
+        "Thriller",
+        "Action"
+      ],
+      "contentRating": "gb/15",
+      "studio": "Skydance Media",
+      "posterUrl": "/plex-posters/28641.jpg"
+    },
+    {
+      "id": "38138",
+      "title": "10 Things I Hate About You",
+      "year": 1999,
+      "rating": 6.9,
+      "posterPath": "/library/metadata/38138/thumb/1779458422",
+      "summary": "On the first day at his new school, Cameron instantly falls for Bianca, the gorgeous girl of his dreams. The only problem is that Bianca is forbidden to date until her ill-tempered, completely un-dateable older sister Kat goes out, too. In an attempt to solve his problem, Cameron singles out the only guy who could possibly be a match for Kat: a mysterious bad boy with a nasty reputation of his own.",
+      "durationMinutes": 98,
+      "genres": [
+        "Comedy",
+        "Romance"
+      ],
+      "contentRating": "gb/12",
+      "studio": "Mad Chance",
+      "posterUrl": "/plex-posters/38138.jpg"
+    },
+    {
+      "id": "38140",
+      "title": "17 Again",
+      "year": 2009,
+      "rating": 6.7,
+      "posterPath": "/library/metadata/38140/thumb/1779458498",
+      "summary": "On the brink of a midlife crisis, 30-something Mike O'Donnell wishes he could have a \"do-over.\" And that's exactly what he gets when he wakes up one morning to find he's 17 years old again. With his adult mind stuck inside the body of a teenager, Mike actually has the chance to reverse some decisions he wishes he'd never made. But maybe they weren't so bad after all.",
+      "durationMinutes": 102,
+      "genres": [
+        "Comedy",
+        "Drama"
+      ],
+      "contentRating": "gb/12",
+      "studio": "New Line Cinema",
+      "posterUrl": "/plex-posters/38140.jpg"
+    },
+    {
+      "id": "23239",
+      "title": "57 Seconds",
+      "year": 2023,
+      "rating": 3.9,
+      "posterPath": "/library/metadata/23239/thumb/1779458496",
+      "summary": "Blogger Franklin Fausti thwarts an attack against Anton Burrell, a visionary tech guru he has been given a chance to interview. He finds a ring that Burrell dropped and discovers that it gives its wearer the ability to travel 57 seconds into the past. With Burrell's help, Franklin decides to use it to take revenge against the pharmaceutical company that was responsible for his sister's death.",
+      "durationMinutes": 96,
+      "genres": [
+        "Science Fiction",
+        "Thriller"
+      ],
+      "contentRating": "gb/15",
+      "studio": "Curmudgeon Films",
+      "posterUrl": "/plex-posters/23239.jpg"
+    },
+    {
+      "id": "32675",
+      "title": "1917",
+      "year": 2019,
+      "rating": 8.8,
+      "posterPath": "/library/metadata/32675/thumb/1779458427",
+      "summary": "April 6th, 1917. As an infantry battalion assembles to wage war deep in enemy territory, two soldiers are assigned to race against time and deliver a message that will stop 1,600 men from walking straight into a deadly trap.",
+      "durationMinutes": 119,
+      "genres": [
+        "Drama",
+        "War"
+      ],
+      "contentRating": "gb/15",
+      "studio": "DreamWorks Pictures",
+      "posterUrl": "/plex-posters/32675.jpg"
+    },
+    {
+      "id": "40555",
+      "title": "2067",
+      "year": 2020,
+      "rating": 3.9,
+      "posterPath": "/library/metadata/40555/thumb/1779458451",
+      "summary": "A lowly utility worker is called to the future by a mysterious radio signal, he must leave his dying wife to embark on a journey that will force him to face his deepest fears in an attempt to change the fabric of reality and save humankind from its greatest environmental crisis yet.",
+      "durationMinutes": 114,
+      "genres": [
+        "Science Fiction",
+        "Mystery"
+      ],
+      "contentRating": "gb/15",
+      "studio": "Arcadia",
+      "posterUrl": "/plex-posters/40555.jpg"
+    },
+    {
+      "id": "41727",
+      "title": "A-X-L",
+      "year": 1970,
+      "rating": 5.8,
+      "posterPath": "/library/metadata/41727/thumb/1779163102",
+      "summary": "A.X.L. is a top-secret, robotic dog who develops a special friendship with Miles and will go to any length to protect his new companion.",
+      "durationMinutes": 89,
+      "genres": [
+        "Family",
+        "Action"
+      ],
+      "contentRating": "gb/PG",
+      "studio": "Lakeshore Entertainment",
+      "posterUrl": "/plex-posters/41727.jpg"
+    },
+    {
+      "id": "28615",
+      "title": "Abigail",
+      "year": 2024,
+      "rating": 8.3,
+      "posterPath": "/library/metadata/28615/thumb/1780108716",
+      "summary": "After a group of would-be criminals kidnap the 12-year-old ballerina daughter of a powerful underworld figure, all they have to do to collect a $50 million ransom is watch the girl overnight. In an isolated mansion, the captors start to dwindle, one by one, and they discover, to their mounting horror, that they're locked inside with no normal little girl.",
+      "durationMinutes": 110,
+      "genres": [
+        "Horror",
+        "Thriller"
+      ],
+      "contentRating": "gb/18",
+      "studio": "Project X Entertainment",
+      "posterUrl": "/plex-posters/28615.jpg"
+    },
+    {
+      "id": "28609",
+      "title": "Abominable",
+      "year": 2019,
+      "rating": 9.5,
+      "posterPath": "/library/metadata/28609/thumb/1780108715",
+      "summary": "Three teenagers must help a Yeti return to his family while avoiding a wealthy man and a zoologist who want him for their own needs.",
+      "durationMinutes": 97,
+      "genres": [
+        "Animation",
+        "Comedy"
+      ],
+      "contentRating": "gb/U",
+      "studio": "DreamWorks Animation",
+      "posterUrl": "/plex-posters/28609.jpg"
+    },
+    {
+      "id": "28599",
+      "title": "Absolutely Anything",
+      "year": 2015,
+      "rating": 3.7,
+      "posterPath": "/library/metadata/28599/thumb/1780108714",
+      "summary": "A group of eccentric aliens confers a human being with the power to do absolutely anything, as an experiment.",
+      "durationMinutes": 86,
+      "genres": [
+        "Comedy",
+        "Science Fiction"
+      ],
+      "contentRating": "gb/12A",
+      "studio": "Phoenix Pictures",
+      "posterUrl": "/plex-posters/28599.jpg"
+    },
+    {
+      "id": "36685",
+      "title": "Accepted",
+      "year": 2006,
+      "rating": 7.2,
+      "posterPath": "/library/metadata/36685/thumb/1780026138",
+      "summary": "A high school slacker who's rejected by every school he applies to opts to create his own institution of higher learning, the South Harmon Institute of Technology, on a rundown piece of property near his hometown.",
+      "durationMinutes": 93,
+      "genres": [
+        "Comedy"
+      ],
+      "contentRating": "gb/12",
+      "studio": "Universal Pictures",
+      "posterUrl": "/plex-posters/36685.jpg"
+    },
+    {
+      "id": "23100",
+      "title": "The Accountant",
+      "year": 2016,
+      "rating": 7.7,
+      "posterPath": "/library/metadata/23100/thumb/1779458439",
+      "summary": "As a math savant uncooks the books for a new client, the treasury department closes in on his activities and the body count starts to rise.",
+      "durationMinutes": 128,
+      "genres": [
+        "Drama",
+        "Crime"
+      ],
+      "contentRating": "gb/15",
+      "studio": "Zero Gravity Management",
+      "posterUrl": "/plex-posters/23100.jpg"
+    },
+    {
+      "id": "23115",
+      "title": "The Accountant 2",
+      "year": 2025,
+      "rating": 9.2,
+      "posterPath": "/library/metadata/23115/thumb/1779458431",
+      "summary": "When an old acquaintance is murdered, Wolff is compelled to solve the case. Realizing more extreme measures are necessary, Wolff recruits his estranged and highly lethal brother, Brax, to help. In partnership with Marybeth Medina, they uncover a deadly conspiracy, becoming targets of a ruthless network of killers who will stop at nothing to keep their secrets buried.",
+      "durationMinutes": 134,
+      "genres": [
+        "Action",
+        "Crime"
+      ],
+      "contentRating": "gb/15",
+      "studio": "Artists Equity",
+      "posterUrl": "/plex-posters/23115.jpg"
+    },
+    {
+      "id": "10250",
+      "title": "The Adam Project",
+      "year": 2022,
+      "rating": 7.3,
+      "posterPath": "/library/metadata/10250/thumb/1779458437",
+      "summary": "After accidentally crash-landing in 2022, time-traveling fighter pilot Adam Reed teams up with his 12-year-old self for a mission to save the future.",
+      "durationMinutes": 107,
+      "genres": [
+        "Action",
+        "Adventure"
+      ],
+      "contentRating": "gb/12",
+      "studio": "Skydance Media",
+      "posterUrl": "/plex-posters/10250.jpg"
+    },
+    {
+      "id": "39296",
+      "title": "The Addams Family",
+      "year": 1991,
+      "rating": 6.7,
+      "posterPath": "/library/metadata/39296/thumb/1779458434",
+      "summary": "The Addams Family steps out of Charles Addams' cartoons. They live with all of the trappings of the macabre (including a detached hand for a servant) and are quite wealthy. Added to this mix is a crooked accountant and his loan shark and a plot to slip the shark's son into the family as their long-lost Uncle Fester. Can the false Fester find his way into the vault before he is discovered?",
+      "durationMinutes": 101,
+      "genres": [
+        "Comedy",
+        "Fantasy"
+      ],
+      "contentRating": "gb/PG",
+      "studio": "Paramount Pictures",
+      "posterUrl": "/plex-posters/39296.jpg"
+    },
+    {
+      "id": "37937",
+      "title": "The Addams Family",
+      "year": 2019,
+      "rating": 7,
+      "posterPath": "/library/metadata/37937/thumb/1779458436",
+      "summary": "The Addams family face-off against a crafty reality-TV host while also preparing for their extended family to arrive for a major celebration.",
+      "durationMinutes": 87,
+      "genres": [
+        "Animation",
+        "Comedy"
+      ],
+      "contentRating": "gb/PG",
+      "studio": "Cinesite Animation",
+      "posterUrl": "/plex-posters/37937.jpg"
+    },
+    {
+      "id": "37957",
+      "title": "The Addams Family 2",
+      "year": 2021,
+      "rating": 6.9,
+      "posterPath": "/library/metadata/37957/thumb/1779458446",
+      "summary": "Morticia and Gomez are distraught that Wednesday and Pugsley are growing up. To reclaim their bond they decide to cram the family into their haunted camper and hit the road for one last vacation together.",
+      "durationMinutes": 93,
+      "genres": [
+        "Animation",
+        "Adventure"
+      ],
+      "contentRating": "gb/PG",
+      "studio": "Metro-Goldwyn-Mayer",
+      "posterUrl": "/plex-posters/37957.jpg"
+    },
+    {
+      "id": "2755",
+      "title": "Addams Family Values",
+      "year": 1993,
+      "rating": 6.4,
+      "posterPath": "/library/metadata/2755/thumb/1779458450",
+      "summary": "When an adorable baby boy is added to the Addams household, Wednesday and Pugsley do not hate him, they just aren't necessarily excited about his existence. OK...yeah, they do hate him. So they plot to get rid of him one way or another. Meanwhile, their parents hire a nanny for him and she charms Fester, but has evil intentions for him. The Addamses must stop her, but how?",
+      "durationMinutes": 93,
+      "genres": [
+        "Comedy",
+        "Family"
+      ],
+      "contentRating": "gb/PG",
+      "studio": "Scott Rudin Productions",
+      "posterUrl": "/plex-posters/2755.jpg"
+    },
+    {
+      "id": "28598",
+      "title": "AINBO: Spirit of the Amazon",
+      "year": 2021,
+      "rating": 2.6,
+      "posterPath": "/library/metadata/28598/thumb/1780108713",
+      "summary": "An epic journey of a young hero and her Spirit Guides, \"Dillo\" a cute and humorous armadillo and \"Vaca\" a goofy oversized tapir, who embark on a quest to save their home in the spectacular Amazon Rainforest.",
+      "durationMinutes": 84,
+      "genres": [
+        "Animation",
+        "Adventure"
+      ],
+      "contentRating": "gb/PG",
+      "studio": "Tunche Films",
+      "posterUrl": "/plex-posters/28598.jpg"
+    },
+    {
+      "id": "42549",
+      "title": "Airplane Mode",
+      "year": 2019,
+      "rating": 2.1,
+      "posterPath": "/library/metadata/42549/thumb/1779460437",
+      "summary": "En route to Australia, Logan is terrified; it's his first time flying. All of his worst nightmares come true when the \"influencers\" aboard refuse to switch their phones to airplane mode. The internet is about to crash.",
+      "durationMinutes": 81,
+      "genres": [
+        "Comedy",
+        "Adventure"
+      ],
+      "contentRating": "gb/18",
+      "studio": "Culprit Creative",
+      "posterUrl": "/plex-posters/42549.jpg"
+    },
+    {
+      "id": "34310",
+      "title": "Ali G Indahouse",
+      "year": 2002,
+      "rating": 5.4,
+      "posterPath": "/library/metadata/34310/thumb/1779458443",
+      "summary": "Ali G unwittingly becomes a pawn in the Chancellor's plot to overthrow the Prime Minister of Great Britain. However, Ali is embraced by the nation as a voice of the youth, making the PM and his government more popular than ever.",
+      "durationMinutes": 87,
+      "genres": [
+        "Comedy"
+      ],
+      "contentRating": "gb/15",
+      "studio": "Universal Pictures",
+      "posterUrl": "/plex-posters/34310.jpg"
+    },
+    {
+      "id": "34575",
+      "title": "Alice in Wonderland",
+      "year": 2010,
+      "rating": 5.5,
+      "posterPath": "/library/metadata/34575/thumb/1779458445",
+      "summary": "Nineteen-year-old Alice returns to the magical world from her childhood adventure, where she reunites with her old friends and learns of her true destiny: to end the Red Queen's reign of terror.",
+      "durationMinutes": 109,
+      "genres": [
+        "Adventure",
+        "Family"
+      ],
+      "contentRating": "gb/PG",
+      "studio": "Walt Disney Pictures",
+      "posterUrl": "/plex-posters/34575.jpg"
+    },
+    {
+      "id": "8879",
+      "title": "Alice, Darling",
+      "year": 2022,
+      "rating": 4.2,
+      "posterPath": "/library/metadata/8879/thumb/1779458453",
+      "summary": "A young woman trapped in an abusive relationship becomes the unwitting participant in an intervention staged by her two closest friends.",
+      "durationMinutes": 89,
+      "genres": [
+        "Thriller",
+        "Romance"
+      ],
+      "contentRating": "gb/15",
+      "studio": "Babe Nation Films",
+      "posterUrl": "/plex-posters/8879.jpg"
+    },
+    {
+      "id": "33337",
+      "title": "Aliens in the Attic",
+      "year": 2009,
+      "rating": 4.3,
+      "posterPath": "/library/metadata/33337/thumb/1779458449",
+      "summary": "A group of kids must protect their vacation home from invading aliens.",
+      "durationMinutes": 86,
+      "genres": [
+        "Comedy",
+        "Adventure"
+      ],
+      "contentRating": "gb/PG",
+      "studio": "Regency Enterprises",
+      "posterUrl": "/plex-posters/33337.jpg"
+    },
+    {
+      "id": "8880",
+      "title": "Alita: Battle Angel",
+      "year": 2019,
+      "rating": 9.1,
+      "posterPath": "/library/metadata/8880/thumb/1779458502",
+      "summary": "When Alita awakens with no memory of who she is in a future world she does not recognize, she is taken in by Ido, a compassionate doctor who realizes that somewhere in this abandoned cyborg shell is the heart and soul of a young woman with an extraordinary past.",
+      "durationMinutes": 122,
+      "genres": [
+        "Action",
+        "Adventure"
+      ],
+      "contentRating": "gb/12A",
+      "studio": "Troublemaker Studios",
+      "posterUrl": "/plex-posters/8880.jpg"
+    },
+    {
+      "id": "38885",
+      "title": "All I Want for Christmas Is You",
+      "year": 2017,
+      "rating": 5.5,
+      "posterPath": "/library/metadata/38885/thumb/1779458494",
+      "summary": "The film centers on young Mariah, a little girl who dreams of getting a dog for Christmas year after year. This Christmas her dream is fueled after seeing a puppy named Princess at the local pet store. To see if she's ready for the responsibility, Mariah is tasked with dog-sitting her uncle's crazy canine Jack, who upends the family's holiday preparations with his various shenanigans.",
+      "durationMinutes": 91,
+      "genres": [
+        "Animation",
+        "Comedy"
+      ],
+      "contentRating": "gb/U",
+      "studio": "Universal Animation Studios",
+      "posterUrl": "/plex-posters/38885.jpg"
+    },
+    {
+      "id": "38190",
+      "title": "All Is Lost",
+      "year": 2013,
+      "rating": 6.4,
+      "posterPath": "/library/metadata/38190/thumb/1779458504",
+      "summary": "After a collision with a shipping container at sea, a resourceful sailor finds himself, despite all efforts to the contrary, staring his mortality in the face.",
+      "durationMinutes": 106,
+      "genres": [
+        "Action",
+        "Adventure"
+      ],
+      "contentRating": "gb/12",
+      "studio": "Black Bear Pictures",
+      "posterUrl": "/plex-posters/38190.jpg"
+    },
+    {
+      "id": "38494",
+      "title": "Allegiant",
+      "year": 2016,
+      "rating": 5.7,
+      "posterPath": "/library/metadata/38494/thumb/1780108761",
+      "summary": "After the earth-shattering revelations of Insurgent, Tris must escape with Four beyond the wall that encircles Chicago to finally discover the shocking truth of the world outside.",
+      "durationMinutes": 121,
+      "genres": [
+        "Action",
+        "Adventure"
+      ],
+      "contentRating": "gb/12A",
+      "studio": "Mandeville Films",
+      "posterUrl": "/plex-posters/38494.jpg"
+    },
+    {
+      "id": "39477",
+      "title": "Altered",
+      "year": 2025,
+      "rating": 1.8,
+      "posterPath": "/library/metadata/39477/thumb/1779458456",
+      "summary": "In an alternate present, genetically enhanced humans dominate society. Outcasts Leon and Chloe fight for justice against corrupt politicians exploiting genetic disparity, risking everything to challenge the oppressive system.",
+      "durationMinutes": 85,
+      "genres": [
+        "Action",
+        "Science Fiction"
+      ],
+      "contentRating": "PG-13",
+      "studio": "Studio Atlantic",
+      "posterUrl": "/plex-posters/39477.jpg"
+    },
+    {
+      "id": "38995",
+      "title": "Alvin and the Chipmunks",
+      "year": 2007,
+      "rating": 6.4,
+      "posterPath": "/library/metadata/38995/thumb/1780108767",
+      "summary": "Three musical chipmunks are discovered by an aspiring songwriter who wants to use their amazing singing abilities to become famous.",
+      "durationMinutes": 91,
+      "genres": [
+        "Comedy",
+        "Musical"
+      ],
+      "contentRating": "gb/U",
+      "studio": "Fox 2000 Pictures",
+      "posterUrl": "/plex-posters/38995.jpg"
+    },
+    {
+      "id": "28577",
+      "title": "Alvin and the Chipmunks: Chipwrecked",
+      "year": 2011,
+      "rating": 5.1,
+      "posterPath": "/library/metadata/28577/thumb/1780108712",
+      "summary": "Playing around while aboard a cruise ship, the Chipmunks and Chipettes accidentally go overboard and end up marooned in a tropical paradise. They discover their new turf is not as deserted as it seems.",
+      "durationMinutes": 87,
+      "genres": [
+        "Adventure",
+        "Comedy"
+      ],
+      "contentRating": "gb/U",
+      "studio": "Fox 2000 Pictures",
+      "posterUrl": "/plex-posters/28577.jpg"
+    },
+    {
+      "id": "28576",
+      "title": "Alvin and the Chipmunks: The Road Chip",
+      "year": 2015,
+      "rating": 5.1,
+      "posterPath": "/library/metadata/28576/thumb/1780108711",
+      "summary": "The Chipmunks believe that Dave plans to propose to his new girlfriend in Miami.--and dump them. They have three days to get to him and save themselves not only from losing Dave but also from gaining a terrible stepbrother.",
+      "durationMinutes": 92,
+      "genres": [
+        "Comedy",
+        "Adventure"
+      ],
+      "contentRating": "gb/U",
+      "studio": "TSG Entertainment",
+      "posterUrl": "/plex-posters/28576.jpg"
+    },
+    {
+      "id": "28573",
+      "title": "Alvin and the Chipmunks: The Squeakquel",
+      "year": 2009,
+      "rating": 4.9,
+      "posterPath": "/library/metadata/28573/thumb/1780108710",
+      "summary": "The world-famous singing preteen chipmunk trio return to contend with the pressures of school, celebrity and a rival female music group known as The Chipettes.",
+      "durationMinutes": 89,
+      "genres": [
+        "Comedy",
+        "Family"
+      ],
+      "contentRating": "gb/U",
+      "studio": "Fox 2000 Pictures",
+      "posterUrl": "/plex-posters/28573.jpg"
+    },
+    {
+      "id": "10251",
+      "title": "The Amazing Spider-Man",
+      "year": 2012,
+      "rating": 7.7,
+      "posterPath": "/library/metadata/10251/thumb/1774236913",
+      "summary": "After Peter Parker is bitten by a genetically altered spider, he gains newfound, spider-like powers and ventures out to save the city from the machinations of a mysterious reptilian foe.",
+      "durationMinutes": 136,
+      "genres": [
+        "Action",
+        "Adventure"
+      ],
+      "contentRating": "gb/12A",
+      "studio": "Marvel Entertainment",
+      "posterUrl": "/plex-posters/10251.jpg"
+    },
+    {
+      "id": "10252",
+      "title": "The Amazing Spider-Man 2",
+      "year": 2014,
+      "rating": 6.4,
+      "posterPath": "/library/metadata/10252/thumb/1779458466",
+      "summary": "When New York is put under siege by Oscorp, it is up to Spider-Man to save the city he swore to protect as well as his loved ones.",
+      "durationMinutes": 142,
+      "genres": [
+        "Action",
+        "Adventure"
+      ],
+      "contentRating": "gb/12A",
+      "studio": "Columbia Pictures",
+      "posterUrl": "/plex-posters/10252.jpg"
+    }
+  ],
+  "tv": [
+    {
+      "id": "35723",
+      "title": "One Piece",
+      "year": 1999,
+      "rating": 8.7,
+      "posterPath": "/library/metadata/35723/thumb/1777859494",
+      "seasons": 1,
+      "posterUrl": "/plex-posters/35723.jpg"
+    },
+    {
+      "id": "36278",
+      "title": "JoJo's Bizarre Adventure",
+      "year": 2012,
+      "rating": 8.6,
+      "posterPath": "/library/metadata/36278/thumb/1779679171",
+      "seasons": 6,
+      "posterUrl": "/plex-posters/36278.jpg"
+    },
+    {
+      "id": "35794",
+      "title": "High School DxD",
+      "year": 2012,
+      "rating": 8.5,
+      "posterPath": "/library/metadata/35794/thumb/1777859496",
+      "seasons": 5,
+      "posterUrl": "/plex-posters/35794.jpg"
+    },
+    {
+      "id": "35868",
+      "title": "Samurai Jack",
+      "year": 2001,
+      "rating": 8.4,
+      "posterPath": "/library/metadata/35868/thumb/1777859496",
+      "seasons": 4,
+      "posterUrl": "/plex-posters/35868.jpg"
+    },
+    {
+      "id": "36018",
+      "title": "Record of Ragnarok",
+      "year": 2021,
+      "rating": 8.4,
+      "posterPath": "/library/metadata/36018/thumb/1778124819",
+      "seasons": 1,
+      "posterUrl": "/plex-posters/36018.jpg"
+    },
+    {
+      "id": "35770",
+      "title": "Ninja Kamui",
+      "year": 2024,
+      "rating": 8.2,
+      "posterPath": "/library/metadata/35770/thumb/1777859495",
+      "seasons": 1,
+      "posterUrl": "/plex-posters/35770.jpg"
+    },
+    {
+      "id": "36035",
+      "title": "Dragon Ball DAIMA",
+      "year": 2024,
+      "rating": 8.1,
+      "posterPath": "/library/metadata/36035/thumb/1778124819",
+      "seasons": 1,
+      "posterUrl": "/plex-posters/36035.jpg"
+    },
+    {
+      "id": "35981",
+      "title": "The Eminence in Shadow",
+      "year": 2022,
+      "rating": 8,
+      "posterPath": "/library/metadata/35981/thumb/1778124818",
+      "seasons": 2,
+      "posterUrl": "/plex-posters/35981.jpg"
+    },
+    {
+      "id": "35784",
+      "title": "Devil May Cry (2025)",
+      "year": 2025,
+      "rating": 7.9,
+      "posterPath": "/library/metadata/35784/thumb/1777859495",
+      "seasons": 1,
+      "posterUrl": "/plex-posters/35784.jpg"
+    },
+    {
+      "id": "36058",
+      "title": "Chained Soldier",
+      "year": 2024,
+      "rating": 7.9,
+      "posterPath": "/library/metadata/36058/thumb/1778124820",
+      "seasons": 1,
+      "posterUrl": "/plex-posters/36058.jpg"
+    }
+  ]
 }
