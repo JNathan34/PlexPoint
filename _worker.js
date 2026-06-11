@@ -32,7 +32,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var require_util = __commonJS({
   "../node_modules/fast-xml-parser/src/util.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     var nameStartChar = ":A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD";
     var nameChar = nameStartChar + "\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040";
     var nameRegexp = "[" + nameStartChar + "][" + nameChar + "]*";
@@ -92,7 +92,7 @@ var require_util = __commonJS({
 var require_validator = __commonJS({
   "../node_modules/fast-xml-parser/src/validator.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     var util = require_util();
     var defaultOptions = {
       allowBooleanAttributes: false,
@@ -416,7 +416,7 @@ var require_validator = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
 var require_OptionsBuilder = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"(exports) {
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     var defaultOptions = {
       preserveOrder: false,
       attributeNamePrefix: "@_",
@@ -506,7 +506,7 @@ var require_OptionsBuilder = __commonJS({
 var require_xmlNode = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     var XmlNode = class {
       static {
         __name(this, "XmlNode");
@@ -536,7 +536,7 @@ var require_xmlNode = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js
 var require_DocTypeReader = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js"(exports, module) {
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     var util = require_util();
     var DocTypeReader = class {
       static {
@@ -823,7 +823,7 @@ var require_DocTypeReader = __commonJS({
 // ../node_modules/strnum/strnum.js
 var require_strnum = __commonJS({
   "../node_modules/strnum/strnum.js"(exports, module) {
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     var hexRegex = /^[-+]?0x[a-fA-F0-9]+$/;
     var numRegex = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/;
     var consider = {
@@ -915,7 +915,7 @@ var require_strnum = __commonJS({
 // ../node_modules/fast-xml-parser/src/ignoreAttributes.js
 var require_ignoreAttributes = __commonJS({
   "../node_modules/fast-xml-parser/src/ignoreAttributes.js"(exports, module) {
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     function getIgnoreAttributesFn(ignoreAttributes) {
       if (typeof ignoreAttributes === "function") {
         return ignoreAttributes;
@@ -943,7 +943,7 @@ var require_ignoreAttributes = __commonJS({
 var require_OrderedObjParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     var util = require_util();
     var xmlNode = require_xmlNode();
     var DocTypeReader = require_DocTypeReader();
@@ -1539,7 +1539,7 @@ var require_OrderedObjParser = __commonJS({
 var require_node2json = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/node2json.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     function prettify(node, options) {
       return compress(node, options);
     }
@@ -1631,7 +1631,7 @@ var require_node2json = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js
 var require_XMLParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js"(exports, module) {
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     var { buildOptions } = require_OptionsBuilder();
     var OrderedObjParser = require_OrderedObjParser();
     var { prettify } = require_node2json();
@@ -1693,7 +1693,7 @@ var require_XMLParser = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js
 var require_orderedJs2Xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js"(exports, module) {
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     var EOL = "\n";
     function toXml(jArray, options) {
       let indentation = "";
@@ -1834,7 +1834,7 @@ var require_orderedJs2Xml = __commonJS({
 var require_json2xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     var buildFromOrderedJs = require_orderedJs2Xml();
     var getIgnoreAttributesFn = require_ignoreAttributes();
     var defaultOptions = {
@@ -2085,7 +2085,7 @@ var require_json2xml = __commonJS({
 var require_fxp = __commonJS({
   "../node_modules/fast-xml-parser/src/fxp.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     var validator = require_validator();
     var XMLParser2 = require_XMLParser();
     var XMLBuilder = require_json2xml();
@@ -2503,7 +2503,7 @@ var import_fast_xml_parser, parser, cache, DEFAULT_PLEX_FETCH_TIMEOUT_MS, DEFAUL
 var init_plex_client = __esm({
   "../shared/plex-client.ts"() {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     import_fast_xml_parser = __toESM(require_fxp(), 1);
     parser = new import_fast_xml_parser.XMLParser({
       ignoreAttributes: false
@@ -2616,8 +2616,8 @@ var PLEX_API_CACHE_VERSION;
 var init_pages = __esm({
   "_lib/pages.ts"() {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
-    PLEX_API_CACHE_VERSION = "v3-full-library-selection";
+    init_functionsRoutes_0_7931910114310042();
+    PLEX_API_CACHE_VERSION = "v4-optional-limit-parsing";
     __name(json, "json");
     __name(errorMessage, "errorMessage");
     __name(cloneWithHeader, "cloneWithHeader");
@@ -2640,7 +2640,7 @@ async function onRequestGet(context) {
 var init_collections = __esm({
   "api/plex/collections.ts"() {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     init_plex_client();
     init_pages();
     __name(onRequestGet, "onRequestGet");
@@ -2659,7 +2659,7 @@ async function onRequestGet2(context) {
 var init_counts = __esm({
   "api/plex/counts.ts"() {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     init_plex_client();
     init_pages();
     __name(onRequestGet2, "onRequestGet");
@@ -2688,7 +2688,7 @@ async function onRequestGet3(context) {
 var init_featured_collection = __esm({
   "api/plex/featured-collection.ts"() {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     init_plex_client();
     init_pages();
     __name(onRequestGet3, "onRequestGet");
@@ -2739,7 +2739,7 @@ async function onRequestGet4(context) {
 var init_image = __esm({
   "api/plex/image.ts"() {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     init_plex_client();
     init_pages();
     __name(onRequestGet4, "onRequestGet");
@@ -2762,7 +2762,7 @@ async function onRequestGet5(context) {
 var init_movies = __esm({
   "api/plex/movies.ts"() {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     init_plex_client();
     init_pages();
     __name(onRequestGet5, "onRequestGet");
@@ -2781,7 +2781,7 @@ async function onRequestGet6(context) {
 var init_sections = __esm({
   "api/plex/sections.ts"() {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     init_plex_client();
     init_pages();
     __name(onRequestGet6, "onRequestGet");
@@ -2843,7 +2843,7 @@ async function onRequestGet7(context) {
 var init_status = __esm({
   "api/plex/status.ts"() {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     init_plex_client();
     init_pages();
     __name(configured, "configured");
@@ -2870,17 +2870,17 @@ async function onRequestGet8(context) {
 var init_top_rated = __esm({
   "api/plex/top-rated.ts"() {
     "use strict";
-    init_functionsRoutes_0_009987050360510508();
+    init_functionsRoutes_0_7931910114310042();
     init_plex_client();
     init_pages();
     __name(onRequestGet8, "onRequestGet");
   }
 });
 
-// ../.wrangler/tmp/pages-nNQHnY/functionsRoutes-0.009987050360510508.mjs
+// ../.wrangler/tmp/pages-C65zgE/functionsRoutes-0.7931910114310042.mjs
 var routes;
-var init_functionsRoutes_0_009987050360510508 = __esm({
-  "../.wrangler/tmp/pages-nNQHnY/functionsRoutes-0.009987050360510508.mjs"() {
+var init_functionsRoutes_0_7931910114310042 = __esm({
+  "../.wrangler/tmp/pages-C65zgE/functionsRoutes-0.7931910114310042.mjs"() {
     "use strict";
     init_collections();
     init_counts();
@@ -2952,10 +2952,10 @@ var init_functionsRoutes_0_009987050360510508 = __esm({
 });
 
 // C:/Users/jacob/AppData/Roaming/npm/node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_009987050360510508();
+init_functionsRoutes_0_7931910114310042();
 
 // C:/Users/jacob/AppData/Roaming/npm/node_modules/wrangler/node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_009987050360510508();
+init_functionsRoutes_0_7931910114310042();
 function lexer(str) {
   var tokens = [];
   var i = 0;

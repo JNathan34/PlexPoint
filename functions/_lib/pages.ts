@@ -10,7 +10,7 @@ export type PagesFunctionContext<Env extends Record<string, unknown> = Record<st
 };
 
 export type PlexPagesEnv = PlexEnv & Record<string, string | undefined>;
-const PLEX_API_CACHE_VERSION = "v3-full-library-selection";
+const PLEX_API_CACHE_VERSION = "v4-optional-limit-parsing";
 
 export function json(data: unknown, init: ResponseInit = {}) {
   const headers = new Headers(init.headers);
