@@ -68,6 +68,10 @@ const parser = new XMLParser({
 
 const cache = new Map<string, CacheEntry<unknown>>();
 const DEFAULT_PLEX_FETCH_TIMEOUT_MS = 8_000;
+const DEFAULT_LIBRARY_TITLES: Record<PlexMediaType, string> = {
+  movie: "Movies",
+  tv: "Shows",
+};
 
 function toArray<T>(value: T | T[] | undefined | null): T[] {
   if (!value) return [];
@@ -350,12 +354,17 @@ export async function getPlexSections(
 
 async function resolveSectionId(env: PlexEnv, forType: PlexMediaType): Promise<string> {
   const envKey = forType === "tv" ? "PLEX_TV_SECTION_ID" : "PLEX_MOVIE_SECTION_ID";
-  const explicit = env[envKey];
+  const explicit = env[envKey]?.trim();
   if (explicit) return explicit;
 
   const sections = await getPlexSections(env);
   const desired: PlexLibraryType = forType === "tv" ? "show" : "movie";
-  const match = sections.find((section) => section.type === desired);
+  const desiredTitle = DEFAULT_LIBRARY_TITLES[forType].toLowerCase();
+  const matchingSections = sections.filter((section) => section.type === desired);
+  const match =
+    matchingSections.find((section) => section.title.trim().toLowerCase() === desiredTitle) ??
+    matchingSections[0];
+
   if (!match) {
     throw new Error(`Could not auto-detect Plex ${forType} library. Set ${envKey} to the library section id.`);
   }
@@ -364,18 +373,7 @@ async function resolveSectionId(env: PlexEnv, forType: PlexMediaType): Promise<s
 }
 
 async function resolveCountSectionIds(env: PlexEnv, forType: PlexMediaType): Promise<string[]> {
-  const envKey = forType === "tv" ? "PLEX_TV_SECTION_ID" : "PLEX_MOVIE_SECTION_ID";
-  const explicit = env[envKey];
-  if (explicit) return [explicit];
-
-  const sections = await getPlexSections(env);
-  const desired: PlexLibraryType = forType === "tv" ? "show" : "movie";
-  const matches = sections.filter((section) => section.type === desired);
-  if (matches.length === 0) {
-    throw new Error(`Could not auto-detect Plex ${forType} library. Set ${envKey} to the library section id.`);
-  }
-
-  return matches.map((section) => section.key);
+  return [await resolveSectionId(env, forType)];
 }
 
 async function getLibrarySectionItemCount(env: PlexEnv, type: PlexMediaType, sectionId: string): Promise<number> {

@@ -10,6 +10,7 @@ export type PagesFunctionContext<Env extends Record<string, unknown> = Record<st
 };
 
 export type PlexPagesEnv = PlexEnv & Record<string, string | undefined>;
+const PLEX_API_CACHE_VERSION = "v2-library-selection";
 
 export function json(data: unknown, init: ResponseInit = {}) {
   const headers = new Headers(init.headers);
@@ -58,7 +59,9 @@ export async function cachedJson<T>(
   },
 ) {
   const cache = await caches.open(options.cacheName);
-  const cacheKey = new Request(options.cacheKey, { method: "GET" });
+  const cacheUrl = new URL(String(options.cacheKey));
+  cacheUrl.searchParams.set("__plexpoint_cache", PLEX_API_CACHE_VERSION);
+  const cacheKey = new Request(cacheUrl.toString(), { method: "GET" });
   const cached = await cache.match(cacheKey);
 
   if (cached) {
