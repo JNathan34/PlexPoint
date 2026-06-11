@@ -32,7 +32,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var require_util = __commonJS({
   "../node_modules/fast-xml-parser/src/util.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_5011006043052091();
+    init_functionsRoutes_0_48157506490270874();
     var nameStartChar = ":A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD";
     var nameChar = nameStartChar + "\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040";
     var nameRegexp = "[" + nameStartChar + "][" + nameChar + "]*";
@@ -82,24 +82,9 @@ var require_util = __commonJS({
         return "";
       }
     };
-    var DANGEROUS_PROPERTY_NAMES = [
-      // '__proto__',
-      // 'constructor',
-      // 'prototype',
-      "hasOwnProperty",
-      "toString",
-      "valueOf",
-      "__defineGetter__",
-      "__defineSetter__",
-      "__lookupGetter__",
-      "__lookupSetter__"
-    ];
-    var criticalProperties = ["__proto__", "constructor", "prototype"];
     exports.isName = isName;
     exports.getAllMatches = getAllMatches;
     exports.nameRegexp = nameRegexp;
-    exports.DANGEROUS_PROPERTY_NAMES = DANGEROUS_PROPERTY_NAMES;
-    exports.criticalProperties = criticalProperties;
   }
 });
 
@@ -107,7 +92,7 @@ var require_util = __commonJS({
 var require_validator = __commonJS({
   "../node_modules/fast-xml-parser/src/validator.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_5011006043052091();
+    init_functionsRoutes_0_48157506490270874();
     var util = require_util();
     var defaultOptions = {
       allowBooleanAttributes: false,
@@ -431,14 +416,7 @@ var require_validator = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
 var require_OptionsBuilder = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"(exports) {
-    init_functionsRoutes_0_5011006043052091();
-    var { DANGEROUS_PROPERTY_NAMES, criticalProperties } = require_util();
-    var defaultOnDangerousProperty = /* @__PURE__ */ __name((name) => {
-      if (DANGEROUS_PROPERTY_NAMES.includes(name)) {
-        return "__" + name;
-      }
-      return name;
-    }, "defaultOnDangerousProperty");
+    init_functionsRoutes_0_48157506490270874();
     var defaultOptions = {
       preserveOrder: false,
       attributeNamePrefix: "@_",
@@ -484,26 +462,8 @@ var require_OptionsBuilder = __commonJS({
       // skipEmptyListItem: false
       captureMetaData: false,
       maxNestedTags: 100,
-      strictReservedNames: true,
-      onDangerousProperty: defaultOnDangerousProperty
+      strictReservedNames: true
     };
-    function validatePropertyName(propertyName, optionName) {
-      if (typeof propertyName !== "string") {
-        return;
-      }
-      const normalized = propertyName.toLowerCase();
-      if (DANGEROUS_PROPERTY_NAMES.some((dangerous) => normalized === dangerous.toLowerCase())) {
-        throw new Error(
-          `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`
-        );
-      }
-      if (criticalProperties.some((dangerous) => normalized === dangerous.toLowerCase())) {
-        throw new Error(
-          `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`
-        );
-      }
-    }
-    __name(validatePropertyName, "validatePropertyName");
     function normalizeProcessEntities(value) {
       if (typeof value === "boolean") {
         return {
@@ -520,11 +480,11 @@ var require_OptionsBuilder = __commonJS({
       if (typeof value === "object" && value !== null) {
         return {
           enabled: value.enabled !== false,
-          maxEntitySize: Math.max(1, value.maxEntitySize ?? 1e4),
-          maxExpansionDepth: Math.max(1, value.maxExpansionDepth ?? 1e4),
-          maxTotalExpansions: Math.max(1, value.maxTotalExpansions ?? Infinity),
-          maxExpandedLength: Math.max(1, value.maxExpandedLength ?? 1e5),
-          maxEntityCount: Math.max(1, value.maxEntityCount ?? 1e3),
+          // default true if not specified
+          maxEntitySize: value.maxEntitySize ?? 1e4,
+          maxExpansionDepth: value.maxExpansionDepth ?? 10,
+          maxTotalExpansions: value.maxTotalExpansions ?? 1e3,
+          maxExpandedLength: value.maxExpandedLength ?? 1e5,
           allowedTags: value.allowedTags ?? null,
           tagFilter: value.tagFilter ?? null
         };
@@ -534,21 +494,6 @@ var require_OptionsBuilder = __commonJS({
     __name(normalizeProcessEntities, "normalizeProcessEntities");
     var buildOptions = /* @__PURE__ */ __name(function(options) {
       const built = Object.assign({}, defaultOptions, options);
-      const propertyNameOptions = [
-        { value: built.attributeNamePrefix, name: "attributeNamePrefix" },
-        { value: built.attributesGroupName, name: "attributesGroupName" },
-        { value: built.textNodeName, name: "textNodeName" },
-        { value: built.cdataPropName, name: "cdataPropName" },
-        { value: built.commentPropName, name: "commentPropName" }
-      ];
-      for (const { value, name } of propertyNameOptions) {
-        if (value) {
-          validatePropertyName(value, name);
-        }
-      }
-      if (built.onDangerousProperty === null) {
-        built.onDangerousProperty = defaultOnDangerousProperty;
-      }
       built.processEntities = normalizeProcessEntities(built.processEntities);
       return built;
     }, "buildOptions");
@@ -561,7 +506,7 @@ var require_OptionsBuilder = __commonJS({
 var require_xmlNode = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_5011006043052091();
+    init_functionsRoutes_0_48157506490270874();
     var XmlNode = class {
       static {
         __name(this, "XmlNode");
@@ -591,7 +536,7 @@ var require_xmlNode = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js
 var require_DocTypeReader = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js"(exports, module) {
-    init_functionsRoutes_0_5011006043052091();
+    init_functionsRoutes_0_48157506490270874();
     var util = require_util();
     var DocTypeReader = class {
       static {
@@ -603,7 +548,6 @@ var require_DocTypeReader = __commonJS({
       }
       readDocType(xmlData, i) {
         const entities = /* @__PURE__ */ Object.create(null);
-        let entityCount = 0;
         if (xmlData[i + 3] === "O" && xmlData[i + 4] === "C" && xmlData[i + 5] === "T" && xmlData[i + 6] === "Y" && xmlData[i + 7] === "P" && xmlData[i + 8] === "E") {
           i = i + 9;
           let angleBracketsCount = 1;
@@ -616,17 +560,11 @@ var require_DocTypeReader = __commonJS({
                 let entityName, val;
                 [entityName, val, i] = this.readEntityExp(xmlData, i + 1, this.suppressValidationErr);
                 if (val.indexOf("&") === -1) {
-                  if (this.options.enabled !== false && this.options.maxEntityCount != null && entityCount >= this.options.maxEntityCount) {
-                    throw new Error(
-                      `Entity count (${entityCount + 1}) exceeds maximum allowed (${this.options.maxEntityCount})`
-                    );
-                  }
-                  const escaped = entityName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                  const escaped = entityName.replace(/[.\-+*:]/g, "\\.");
                   entities[entityName] = {
                     regx: RegExp(`&${escaped};`, "g"),
                     val
                   };
-                  entityCount++;
                 }
               } else if (hasBody && hasSeq(xmlData, "!ELEMENT", i)) {
                 i += 8;
@@ -689,7 +627,7 @@ var require_DocTypeReader = __commonJS({
         }
         let entityValue = "";
         [i, entityValue] = this.readIdentifierVal(xmlData, i, "entity");
-        if (this.options.enabled !== false && this.options.maxEntitySize != null && entityValue.length > this.options.maxEntitySize) {
+        if (this.options.enabled !== false && this.options.maxEntitySize && entityValue.length > this.options.maxEntitySize) {
           throw new Error(
             `Entity "${entityName}" size (${entityValue.length}) exceeds maximum allowed size (${this.options.maxEntitySize})`
           );
@@ -885,7 +823,7 @@ var require_DocTypeReader = __commonJS({
 // ../node_modules/strnum/strnum.js
 var require_strnum = __commonJS({
   "../node_modules/strnum/strnum.js"(exports, module) {
-    init_functionsRoutes_0_5011006043052091();
+    init_functionsRoutes_0_48157506490270874();
     var hexRegex = /^[-+]?0x[a-fA-F0-9]+$/;
     var numRegex = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/;
     var consider = {
@@ -977,7 +915,7 @@ var require_strnum = __commonJS({
 // ../node_modules/fast-xml-parser/src/ignoreAttributes.js
 var require_ignoreAttributes = __commonJS({
   "../node_modules/fast-xml-parser/src/ignoreAttributes.js"(exports, module) {
-    init_functionsRoutes_0_5011006043052091();
+    init_functionsRoutes_0_48157506490270874();
     function getIgnoreAttributesFn(ignoreAttributes) {
       if (typeof ignoreAttributes === "function") {
         return ignoreAttributes;
@@ -1005,7 +943,7 @@ var require_ignoreAttributes = __commonJS({
 var require_OrderedObjParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_5011006043052091();
+    init_functionsRoutes_0_48157506490270874();
     var util = require_util();
     var xmlNode = require_xmlNode();
     var DocTypeReader = require_DocTypeReader();
@@ -1141,7 +1079,7 @@ var require_OrderedObjParser = __commonJS({
             if (this.options.transformAttributeName) {
               aName = this.options.transformAttributeName(aName);
             }
-            aName = sanitizeName(aName, this.options);
+            if (aName === "__proto__") aName = "#__proto__";
             if (oldVal !== void 0) {
               if (this.options.trimValues) {
                 oldVal = oldVal.trim();
@@ -1270,7 +1208,7 @@ var require_OrderedObjParser = __commonJS({
               }
               tagName = newTagName;
             }
-            if (this.options.strictReservedNames && (tagName === this.options.commentPropName || tagName === this.options.cdataPropName || tagName === this.options.textNodeName || tagName === this.options.attributesGroupName)) {
+            if (this.options.strictReservedNames && (tagName === this.options.commentPropName || tagName === this.options.cdataPropName)) {
               throw new Error(`Invalid tag name: ${tagName}`);
             }
             if (currentNode && textData) {
@@ -1422,32 +1360,14 @@ var require_OrderedObjParser = __commonJS({
         }
       }
       if (val.indexOf("&") === -1) return val;
-      for (const entityName of Object.keys(this.lastEntities)) {
+      for (let entityName in this.lastEntities) {
         const entity = this.lastEntities[entityName];
-        const matches = val.match(entity.regex);
-        if (matches) {
-          this.entityExpansionCount += matches.length;
-          if (entityConfig.maxTotalExpansions && this.entityExpansionCount > entityConfig.maxTotalExpansions) {
-            throw new Error(
-              `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`
-            );
-          }
-        }
         val = val.replace(entity.regex, entity.val);
       }
       if (val.indexOf("&") === -1) return val;
       if (this.options.htmlEntities) {
-        for (const entityName of Object.keys(this.htmlEntities)) {
+        for (let entityName in this.htmlEntities) {
           const entity = this.htmlEntities[entityName];
-          const matches = val.match(entity.regex);
-          if (matches) {
-            this.entityExpansionCount += matches.length;
-            if (entityConfig.maxTotalExpansions && this.entityExpansionCount > entityConfig.maxTotalExpansions) {
-              throw new Error(
-                `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`
-              );
-            }
-          }
           val = val.replace(entity.regex, entity.val);
         }
       }
@@ -1611,15 +1531,6 @@ var require_OrderedObjParser = __commonJS({
       }
     }
     __name(fromCodePoint, "fromCodePoint");
-    function sanitizeName(name, options) {
-      if (util.criticalProperties.includes(name)) {
-        throw new Error(`[SECURITY] Invalid name: "${name}" is a reserved JavaScript keyword that could cause prototype pollution`);
-      } else if (util.DANGEROUS_PROPERTY_NAMES.includes(name)) {
-        return options.onDangerousProperty(name);
-      }
-      return name;
-    }
-    __name(sanitizeName, "sanitizeName");
     module.exports = OrderedObjParser;
   }
 });
@@ -1628,7 +1539,7 @@ var require_OrderedObjParser = __commonJS({
 var require_node2json = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/node2json.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_5011006043052091();
+    init_functionsRoutes_0_48157506490270874();
     function prettify(node, options) {
       return compress(node, options);
     }
@@ -1720,7 +1631,7 @@ var require_node2json = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js
 var require_XMLParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js"(exports, module) {
-    init_functionsRoutes_0_5011006043052091();
+    init_functionsRoutes_0_48157506490270874();
     var { buildOptions } = require_OptionsBuilder();
     var OrderedObjParser = require_OrderedObjParser();
     var { prettify } = require_node2json();
@@ -1782,7 +1693,7 @@ var require_XMLParser = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js
 var require_orderedJs2Xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js"(exports, module) {
-    init_functionsRoutes_0_5011006043052091();
+    init_functionsRoutes_0_48157506490270874();
     var EOL = "\n";
     function toXml(jArray, options) {
       let indentation = "";
@@ -1923,7 +1834,7 @@ var require_orderedJs2Xml = __commonJS({
 var require_json2xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_5011006043052091();
+    init_functionsRoutes_0_48157506490270874();
     var buildFromOrderedJs = require_orderedJs2Xml();
     var getIgnoreAttributesFn = require_ignoreAttributes();
     var defaultOptions = {
@@ -2174,7 +2085,7 @@ var require_json2xml = __commonJS({
 var require_fxp = __commonJS({
   "../node_modules/fast-xml-parser/src/fxp.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_5011006043052091();
+    init_functionsRoutes_0_48157506490270874();
     var validator = require_validator();
     var XMLParser2 = require_XMLParser();
     var XMLBuilder = require_json2xml();
@@ -2591,7 +2502,8 @@ async function getFeaturedCollection(env, options = {}) {
 var import_fast_xml_parser, parser, cache, DEFAULT_PLEX_FETCH_TIMEOUT_MS, DEFAULT_LIBRARY_TITLES;
 var init_plex_client = __esm({
   "../shared/plex-client.ts"() {
-    init_functionsRoutes_0_5011006043052091();
+    "use strict";
+    init_functionsRoutes_0_48157506490270874();
     import_fast_xml_parser = __toESM(require_fxp(), 1);
     parser = new import_fast_xml_parser.XMLParser({
       ignoreAttributes: false
@@ -2703,8 +2615,9 @@ async function cachedJson(context, options) {
 var PLEX_API_CACHE_VERSION;
 var init_pages = __esm({
   "_lib/pages.ts"() {
-    init_functionsRoutes_0_5011006043052091();
-    PLEX_API_CACHE_VERSION = "v2-library-selection";
+    "use strict";
+    init_functionsRoutes_0_48157506490270874();
+    PLEX_API_CACHE_VERSION = "v3-full-library-selection";
     __name(json, "json");
     __name(errorMessage, "errorMessage");
     __name(cloneWithHeader, "cloneWithHeader");
@@ -2726,7 +2639,8 @@ async function onRequestGet(context) {
 }
 var init_collections = __esm({
   "api/plex/collections.ts"() {
-    init_functionsRoutes_0_5011006043052091();
+    "use strict";
+    init_functionsRoutes_0_48157506490270874();
     init_plex_client();
     init_pages();
     __name(onRequestGet, "onRequestGet");
@@ -2744,7 +2658,8 @@ async function onRequestGet2(context) {
 }
 var init_counts = __esm({
   "api/plex/counts.ts"() {
-    init_functionsRoutes_0_5011006043052091();
+    "use strict";
+    init_functionsRoutes_0_48157506490270874();
     init_plex_client();
     init_pages();
     __name(onRequestGet2, "onRequestGet");
@@ -2771,7 +2686,8 @@ async function onRequestGet3(context) {
 }
 var init_featured_collection = __esm({
   "api/plex/featured-collection.ts"() {
-    init_functionsRoutes_0_5011006043052091();
+    "use strict";
+    init_functionsRoutes_0_48157506490270874();
     init_plex_client();
     init_pages();
     __name(onRequestGet3, "onRequestGet");
@@ -2821,7 +2737,8 @@ async function onRequestGet4(context) {
 }
 var init_image = __esm({
   "api/plex/image.ts"() {
-    init_functionsRoutes_0_5011006043052091();
+    "use strict";
+    init_functionsRoutes_0_48157506490270874();
     init_plex_client();
     init_pages();
     __name(onRequestGet4, "onRequestGet");
@@ -2842,7 +2759,8 @@ async function onRequestGet5(context) {
 }
 var init_movies = __esm({
   "api/plex/movies.ts"() {
-    init_functionsRoutes_0_5011006043052091();
+    "use strict";
+    init_functionsRoutes_0_48157506490270874();
     init_plex_client();
     init_pages();
     __name(onRequestGet5, "onRequestGet");
@@ -2860,7 +2778,8 @@ async function onRequestGet6(context) {
 }
 var init_sections = __esm({
   "api/plex/sections.ts"() {
-    init_functionsRoutes_0_5011006043052091();
+    "use strict";
+    init_functionsRoutes_0_48157506490270874();
     init_plex_client();
     init_pages();
     __name(onRequestGet6, "onRequestGet");
@@ -2921,7 +2840,8 @@ async function onRequestGet7(context) {
 }
 var init_status = __esm({
   "api/plex/status.ts"() {
-    init_functionsRoutes_0_5011006043052091();
+    "use strict";
+    init_functionsRoutes_0_48157506490270874();
     init_plex_client();
     init_pages();
     __name(configured, "configured");
@@ -2946,17 +2866,19 @@ async function onRequestGet8(context) {
 }
 var init_top_rated = __esm({
   "api/plex/top-rated.ts"() {
-    init_functionsRoutes_0_5011006043052091();
+    "use strict";
+    init_functionsRoutes_0_48157506490270874();
     init_plex_client();
     init_pages();
     __name(onRequestGet8, "onRequestGet");
   }
 });
 
-// ../.wrangler/tmp/pages-FHHrBh/functionsRoutes-0.5011006043052091.mjs
+// ../.wrangler/tmp/pages-aueoI3/functionsRoutes-0.48157506490270874.mjs
 var routes;
-var init_functionsRoutes_0_5011006043052091 = __esm({
-  "../.wrangler/tmp/pages-FHHrBh/functionsRoutes-0.5011006043052091.mjs"() {
+var init_functionsRoutes_0_48157506490270874 = __esm({
+  "../.wrangler/tmp/pages-aueoI3/functionsRoutes-0.48157506490270874.mjs"() {
+    "use strict";
     init_collections();
     init_counts();
     init_featured_collection();
@@ -3027,10 +2949,10 @@ var init_functionsRoutes_0_5011006043052091 = __esm({
 });
 
 // C:/Users/jacob/AppData/Roaming/npm/node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_5011006043052091();
+init_functionsRoutes_0_48157506490270874();
 
 // C:/Users/jacob/AppData/Roaming/npm/node_modules/wrangler/node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_5011006043052091();
+init_functionsRoutes_0_48157506490270874();
 function lexer(str) {
   var tokens = [];
   var i = 0;
