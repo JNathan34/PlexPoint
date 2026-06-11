@@ -3,7 +3,8 @@ import { cachedJson, type PagesFunctionContext, type PlexPagesEnv } from "../../
 
 export async function onRequestGet(context: PagesFunctionContext<PlexPagesEnv>) {
   const url = new URL(context.request.url);
-  const limitRaw = Number(url.searchParams.get("limit"));
+  const limitParam = url.searchParams.get("limit");
+  const limitRaw = limitParam == null ? NaN : Number(limitParam);
   const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(10_000, Math.trunc(limitRaw))) : undefined;
 
   return cachedJson(context, {

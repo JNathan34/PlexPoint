@@ -5,7 +5,8 @@ export async function onRequestGet(context: PagesFunctionContext<PlexPagesEnv>) 
   const url = new URL(context.request.url);
   const typeParam = String(url.searchParams.get("type") ?? "tv").toLowerCase();
   const type = typeParam === "movie" ? "movie" : "tv";
-  const limitRaw = Number(url.searchParams.get("limit"));
+  const limitParam = url.searchParams.get("limit");
+  const limitRaw = limitParam == null ? NaN : Number(limitParam);
   const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(30, Math.trunc(limitRaw))) : 12;
 
   return cachedJson(context, {
