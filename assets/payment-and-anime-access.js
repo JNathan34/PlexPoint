@@ -47,7 +47,7 @@ function addRevolutPaymentOption() {
     );
     if (stripeLabel) {
       const summaryGrid = stripeLabel.parentElement?.parentElement;
-      stripeLabel.parentElement?.remove();
+      if (stripeLabel.parentElement) stripeLabel.parentElement.style.display = "none";
       summaryGrid?.classList.remove("grid-cols-2");
       summaryGrid?.classList.add("grid-cols-1");
     }
@@ -55,7 +55,7 @@ function addRevolutPaymentOption() {
     const stripePanel = stripeLink.closest("div.rounded-2xl");
 
     if (dialog.querySelector("[data-revolut-payment]")) {
-      stripePanel?.remove();
+      if (stripePanel) stripePanel.style.display = "none";
       continue;
     }
 
@@ -79,7 +79,7 @@ function addRevolutPaymentOption() {
 
     panel.append(link, note);
     stripePanel?.insertAdjacentElement("beforebegin", panel);
-    stripePanel?.remove();
+    if (stripePanel) stripePanel.style.display = "none";
   }
 }
 
@@ -95,8 +95,8 @@ function updatePaymentCopy() {
     if (element.textContent === "Subscriptions are billed monthly via bank transfer.") {
       element.textContent = "Subscriptions are billed monthly via bank transfer or Revolut.";
     }
-    if (element.textContent?.startsWith("Stripe checkout prices may be higher")) element.remove();
-    if (element.textContent?.startsWith("Stripe checkout may also be offered")) element.remove();
+    if (element.textContent?.startsWith("Stripe checkout prices may be higher")) element.style.display = "none";
+    if (element.textContent?.startsWith("Stripe checkout may also be offered")) element.style.display = "none";
   }
 }
 
