@@ -55,1304 +55,11 @@ var __toESM = (mod, isNodeMode, target) => (
   )
 );
 
-// ../node_modules/unenv/dist/runtime/_internal/utils.mjs
-// @__NO_SIDE_EFFECTS__
-function createNotImplementedError(name) {
-  return new Error(`[unenv] ${name} is not implemented yet!`);
-}
-// @__NO_SIDE_EFFECTS__
-function notImplemented(name) {
-  const fn = /* @__PURE__ */ __name(() => {
-    throw /* @__PURE__ */ createNotImplementedError(name);
-  }, "fn");
-  return Object.assign(fn, { __unenv__: true });
-}
-// @__NO_SIDE_EFFECTS__
-function notImplementedClass(name) {
-  return class {
-    __unenv__ = true;
-    constructor() {
-      throw new Error(`[unenv] ${name} is not implemented yet!`);
-    }
-  };
-}
-var init_utils = __esm({
-  "../node_modules/unenv/dist/runtime/_internal/utils.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    __name(createNotImplementedError, "createNotImplementedError");
-    __name(notImplemented, "notImplemented");
-    __name(notImplementedClass, "notImplementedClass");
-  },
-});
-
-// ../node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs
-var _timeOrigin,
-  _performanceNow,
-  nodeTiming,
-  PerformanceEntry,
-  PerformanceMark,
-  PerformanceMeasure,
-  PerformanceResourceTiming,
-  PerformanceObserverEntryList,
-  Performance,
-  PerformanceObserver,
-  performance;
-var init_performance = __esm({
-  "../node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    init_utils();
-    _timeOrigin = globalThis.performance?.timeOrigin ?? Date.now();
-    _performanceNow = globalThis.performance?.now
-      ? globalThis.performance.now.bind(globalThis.performance)
-      : () => Date.now() - _timeOrigin;
-    nodeTiming = {
-      name: "node",
-      entryType: "node",
-      startTime: 0,
-      duration: 0,
-      nodeStart: 0,
-      v8Start: 0,
-      bootstrapComplete: 0,
-      environment: 0,
-      loopStart: 0,
-      loopExit: 0,
-      idleTime: 0,
-      uvMetricsInfo: {
-        loopCount: 0,
-        events: 0,
-        eventsWaiting: 0,
-      },
-      detail: void 0,
-      toJSON() {
-        return this;
-      },
-    };
-    PerformanceEntry = class {
-      static {
-        __name(this, "PerformanceEntry");
-      }
-      __unenv__ = true;
-      detail;
-      entryType = "event";
-      name;
-      startTime;
-      constructor(name, options) {
-        this.name = name;
-        this.startTime = options?.startTime || _performanceNow();
-        this.detail = options?.detail;
-      }
-      get duration() {
-        return _performanceNow() - this.startTime;
-      }
-      toJSON() {
-        return {
-          name: this.name,
-          entryType: this.entryType,
-          startTime: this.startTime,
-          duration: this.duration,
-          detail: this.detail,
-        };
-      }
-    };
-    PerformanceMark = class PerformanceMark2 extends PerformanceEntry {
-      static {
-        __name(this, "PerformanceMark");
-      }
-      entryType = "mark";
-      constructor() {
-        super(...arguments);
-      }
-      get duration() {
-        return 0;
-      }
-    };
-    PerformanceMeasure = class extends PerformanceEntry {
-      static {
-        __name(this, "PerformanceMeasure");
-      }
-      entryType = "measure";
-    };
-    PerformanceResourceTiming = class extends PerformanceEntry {
-      static {
-        __name(this, "PerformanceResourceTiming");
-      }
-      entryType = "resource";
-      serverTiming = [];
-      connectEnd = 0;
-      connectStart = 0;
-      decodedBodySize = 0;
-      domainLookupEnd = 0;
-      domainLookupStart = 0;
-      encodedBodySize = 0;
-      fetchStart = 0;
-      initiatorType = "";
-      name = "";
-      nextHopProtocol = "";
-      redirectEnd = 0;
-      redirectStart = 0;
-      requestStart = 0;
-      responseEnd = 0;
-      responseStart = 0;
-      secureConnectionStart = 0;
-      startTime = 0;
-      transferSize = 0;
-      workerStart = 0;
-      responseStatus = 0;
-    };
-    PerformanceObserverEntryList = class {
-      static {
-        __name(this, "PerformanceObserverEntryList");
-      }
-      __unenv__ = true;
-      getEntries() {
-        return [];
-      }
-      getEntriesByName(_name, _type) {
-        return [];
-      }
-      getEntriesByType(type) {
-        return [];
-      }
-    };
-    Performance = class {
-      static {
-        __name(this, "Performance");
-      }
-      __unenv__ = true;
-      timeOrigin = _timeOrigin;
-      eventCounts = /* @__PURE__ */ new Map();
-      _entries = [];
-      _resourceTimingBufferSize = 0;
-      navigation = void 0;
-      timing = void 0;
-      timerify(_fn, _options) {
-        throw createNotImplementedError("Performance.timerify");
-      }
-      get nodeTiming() {
-        return nodeTiming;
-      }
-      eventLoopUtilization() {
-        return {};
-      }
-      markResourceTiming() {
-        return new PerformanceResourceTiming("");
-      }
-      onresourcetimingbufferfull = null;
-      now() {
-        if (this.timeOrigin === _timeOrigin) {
-          return _performanceNow();
-        }
-        return Date.now() - this.timeOrigin;
-      }
-      clearMarks(markName) {
-        this._entries = markName
-          ? this._entries.filter((e) => e.name !== markName)
-          : this._entries.filter((e) => e.entryType !== "mark");
-      }
-      clearMeasures(measureName) {
-        this._entries = measureName
-          ? this._entries.filter((e) => e.name !== measureName)
-          : this._entries.filter((e) => e.entryType !== "measure");
-      }
-      clearResourceTimings() {
-        this._entries = this._entries.filter(
-          (e) => e.entryType !== "resource" || e.entryType !== "navigation",
-        );
-      }
-      getEntries() {
-        return this._entries;
-      }
-      getEntriesByName(name, type) {
-        return this._entries.filter(
-          (e) => e.name === name && (!type || e.entryType === type),
-        );
-      }
-      getEntriesByType(type) {
-        return this._entries.filter((e) => e.entryType === type);
-      }
-      mark(name, options) {
-        const entry = new PerformanceMark(name, options);
-        this._entries.push(entry);
-        return entry;
-      }
-      measure(measureName, startOrMeasureOptions, endMark) {
-        let start;
-        let end;
-        if (typeof startOrMeasureOptions === "string") {
-          start = this.getEntriesByName(startOrMeasureOptions, "mark")[0]
-            ?.startTime;
-          end = this.getEntriesByName(endMark, "mark")[0]?.startTime;
-        } else {
-          start = Number.parseFloat(startOrMeasureOptions?.start) || this.now();
-          end = Number.parseFloat(startOrMeasureOptions?.end) || this.now();
-        }
-        const entry = new PerformanceMeasure(measureName, {
-          startTime: start,
-          detail: {
-            start,
-            end,
-          },
-        });
-        this._entries.push(entry);
-        return entry;
-      }
-      setResourceTimingBufferSize(maxSize) {
-        this._resourceTimingBufferSize = maxSize;
-      }
-      addEventListener(type, listener, options) {
-        throw createNotImplementedError("Performance.addEventListener");
-      }
-      removeEventListener(type, listener, options) {
-        throw createNotImplementedError("Performance.removeEventListener");
-      }
-      dispatchEvent(event) {
-        throw createNotImplementedError("Performance.dispatchEvent");
-      }
-      toJSON() {
-        return this;
-      }
-    };
-    PerformanceObserver = class {
-      static {
-        __name(this, "PerformanceObserver");
-      }
-      __unenv__ = true;
-      static supportedEntryTypes = [];
-      _callback = null;
-      constructor(callback) {
-        this._callback = callback;
-      }
-      takeRecords() {
-        return [];
-      }
-      disconnect() {
-        throw createNotImplementedError("PerformanceObserver.disconnect");
-      }
-      observe(options) {
-        throw createNotImplementedError("PerformanceObserver.observe");
-      }
-      bind(fn) {
-        return fn;
-      }
-      runInAsyncScope(fn, thisArg, ...args) {
-        return fn.call(thisArg, ...args);
-      }
-      asyncId() {
-        return 0;
-      }
-      triggerAsyncId() {
-        return 0;
-      }
-      emitDestroy() {
-        return this;
-      }
-    };
-    performance =
-      globalThis.performance && "addEventListener" in globalThis.performance
-        ? globalThis.performance
-        : new Performance();
-  },
-});
-
-// ../node_modules/unenv/dist/runtime/node/perf_hooks.mjs
-var init_perf_hooks = __esm({
-  "../node_modules/unenv/dist/runtime/node/perf_hooks.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    init_performance();
-  },
-});
-
-// ../node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs
-var init_performance2 = __esm({
-  "../node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs"() {
-    init_perf_hooks();
-    if (!("__unenv__" in performance)) {
-      const proto = Performance.prototype;
-      for (const key of Object.getOwnPropertyNames(proto)) {
-        if (key !== "constructor" && !(key in performance)) {
-          const desc = Object.getOwnPropertyDescriptor(proto, key);
-          if (desc) {
-            Object.defineProperty(performance, key, desc);
-          }
-        }
-      }
-    }
-    globalThis.performance = performance;
-    globalThis.Performance = Performance;
-    globalThis.PerformanceEntry = PerformanceEntry;
-    globalThis.PerformanceMark = PerformanceMark;
-    globalThis.PerformanceMeasure = PerformanceMeasure;
-    globalThis.PerformanceObserver = PerformanceObserver;
-    globalThis.PerformanceObserverEntryList = PerformanceObserverEntryList;
-    globalThis.PerformanceResourceTiming = PerformanceResourceTiming;
-  },
-});
-
-// ../node_modules/unenv/dist/runtime/mock/noop.mjs
-var noop_default;
-var init_noop = __esm({
-  "../node_modules/unenv/dist/runtime/mock/noop.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    noop_default = Object.assign(() => {}, { __unenv__: true });
-  },
-});
-
-// ../node_modules/unenv/dist/runtime/node/console.mjs
-import { Writable } from "node:stream";
-var _console,
-  _ignoreErrors,
-  _stderr,
-  _stdout,
-  log,
-  info,
-  trace,
-  debug,
-  table,
-  error,
-  warn,
-  createTask,
-  clear,
-  count,
-  countReset,
-  dir,
-  dirxml,
-  group,
-  groupEnd,
-  groupCollapsed,
-  profile,
-  profileEnd,
-  time,
-  timeEnd,
-  timeLog,
-  timeStamp,
-  Console,
-  _times,
-  _stdoutErrorHandler,
-  _stderrErrorHandler;
-var init_console = __esm({
-  "../node_modules/unenv/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    init_noop();
-    init_utils();
-    _console = globalThis.console;
-    _ignoreErrors = true;
-    _stderr = new Writable();
-    _stdout = new Writable();
-    log = _console?.log ?? noop_default;
-    info = _console?.info ?? log;
-    trace = _console?.trace ?? info;
-    debug = _console?.debug ?? log;
-    table = _console?.table ?? log;
-    error = _console?.error ?? log;
-    warn = _console?.warn ?? error;
-    createTask =
-      _console?.createTask ??
-      /* @__PURE__ */ notImplemented("console.createTask");
-    clear = _console?.clear ?? noop_default;
-    count = _console?.count ?? noop_default;
-    countReset = _console?.countReset ?? noop_default;
-    dir = _console?.dir ?? noop_default;
-    dirxml = _console?.dirxml ?? noop_default;
-    group = _console?.group ?? noop_default;
-    groupEnd = _console?.groupEnd ?? noop_default;
-    groupCollapsed = _console?.groupCollapsed ?? noop_default;
-    profile = _console?.profile ?? noop_default;
-    profileEnd = _console?.profileEnd ?? noop_default;
-    time = _console?.time ?? noop_default;
-    timeEnd = _console?.timeEnd ?? noop_default;
-    timeLog = _console?.timeLog ?? noop_default;
-    timeStamp = _console?.timeStamp ?? noop_default;
-    Console =
-      _console?.Console ??
-      /* @__PURE__ */ notImplementedClass("console.Console");
-    _times = /* @__PURE__ */ new Map();
-    _stdoutErrorHandler = noop_default;
-    _stderrErrorHandler = noop_default;
-  },
-});
-
-// ../node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs
-var workerdConsole,
-  assert,
-  clear2,
-  context,
-  count2,
-  countReset2,
-  createTask2,
-  debug2,
-  dir2,
-  dirxml2,
-  error2,
-  group2,
-  groupCollapsed2,
-  groupEnd2,
-  info2,
-  log2,
-  profile2,
-  profileEnd2,
-  table2,
-  time2,
-  timeEnd2,
-  timeLog2,
-  timeStamp2,
-  trace2,
-  warn2,
-  console_default;
-var init_console2 = __esm({
-  "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    init_console();
-    workerdConsole = globalThis["console"];
-    ({
-      assert,
-      clear: clear2,
-      context:
-        // @ts-expect-error undocumented public API
-        context,
-      count: count2,
-      countReset: countReset2,
-      createTask:
-        // @ts-expect-error undocumented public API
-        createTask2,
-      debug: debug2,
-      dir: dir2,
-      dirxml: dirxml2,
-      error: error2,
-      group: group2,
-      groupCollapsed: groupCollapsed2,
-      groupEnd: groupEnd2,
-      info: info2,
-      log: log2,
-      profile: profile2,
-      profileEnd: profileEnd2,
-      table: table2,
-      time: time2,
-      timeEnd: timeEnd2,
-      timeLog: timeLog2,
-      timeStamp: timeStamp2,
-      trace: trace2,
-      warn: warn2,
-    } = workerdConsole);
-    Object.assign(workerdConsole, {
-      Console,
-      _ignoreErrors,
-      _stderr,
-      _stderrErrorHandler,
-      _stdout,
-      _stdoutErrorHandler,
-      _times,
-    });
-    console_default = workerdConsole;
-  },
-});
-
-// ../node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console
-var init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console =
-  __esm({
-    "../node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console"() {
-      init_console2();
-      globalThis.console = console_default;
-    },
-  });
-
-// ../node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs
-var hrtime;
-var init_hrtime = __esm({
-  "../node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    hrtime = /* @__PURE__ */ Object.assign(
-      /* @__PURE__ */ __name(function hrtime2(startTime) {
-        const now = Date.now();
-        const seconds = Math.trunc(now / 1e3);
-        const nanos = (now % 1e3) * 1e6;
-        if (startTime) {
-          let diffSeconds = seconds - startTime[0];
-          let diffNanos = nanos - startTime[0];
-          if (diffNanos < 0) {
-            diffSeconds = diffSeconds - 1;
-            diffNanos = 1e9 + diffNanos;
-          }
-          return [diffSeconds, diffNanos];
-        }
-        return [seconds, nanos];
-      }, "hrtime"),
-      {
-        bigint: /* @__PURE__ */ __name(function bigint() {
-          return BigInt(Date.now() * 1e6);
-        }, "bigint"),
-      },
-    );
-  },
-});
-
-// ../node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs
-var ReadStream;
-var init_read_stream = __esm({
-  "../node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    ReadStream = class {
-      static {
-        __name(this, "ReadStream");
-      }
-      fd;
-      isRaw = false;
-      isTTY = false;
-      constructor(fd) {
-        this.fd = fd;
-      }
-      setRawMode(mode) {
-        this.isRaw = mode;
-        return this;
-      }
-    };
-  },
-});
-
-// ../node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs
-var WriteStream;
-var init_write_stream = __esm({
-  "../node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    WriteStream = class {
-      static {
-        __name(this, "WriteStream");
-      }
-      fd;
-      columns = 80;
-      rows = 24;
-      isTTY = false;
-      constructor(fd) {
-        this.fd = fd;
-      }
-      clearLine(dir3, callback) {
-        callback && callback();
-        return false;
-      }
-      clearScreenDown(callback) {
-        callback && callback();
-        return false;
-      }
-      cursorTo(x, y, callback) {
-        callback && typeof callback === "function" && callback();
-        return false;
-      }
-      moveCursor(dx, dy, callback) {
-        callback && callback();
-        return false;
-      }
-      getColorDepth(env2) {
-        return 1;
-      }
-      hasColors(count3, env2) {
-        return false;
-      }
-      getWindowSize() {
-        return [this.columns, this.rows];
-      }
-      write(str, encoding, cb) {
-        if (str instanceof Uint8Array) {
-          str = new TextDecoder().decode(str);
-        }
-        try {
-          console.log(str);
-        } catch {}
-        cb && typeof cb === "function" && cb();
-        return false;
-      }
-    };
-  },
-});
-
-// ../node_modules/unenv/dist/runtime/node/tty.mjs
-var init_tty = __esm({
-  "../node_modules/unenv/dist/runtime/node/tty.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    init_read_stream();
-    init_write_stream();
-  },
-});
-
-// ../node_modules/unenv/dist/runtime/node/internal/process/node-version.mjs
-var NODE_VERSION;
-var init_node_version = __esm({
-  "../node_modules/unenv/dist/runtime/node/internal/process/node-version.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    NODE_VERSION = "22.14.0";
-  },
-});
-
-// ../node_modules/unenv/dist/runtime/node/internal/process/process.mjs
-import { EventEmitter } from "node:events";
-var Process;
-var init_process = __esm({
-  "../node_modules/unenv/dist/runtime/node/internal/process/process.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    init_tty();
-    init_utils();
-    init_node_version();
-    Process = class _Process extends EventEmitter {
-      static {
-        __name(this, "Process");
-      }
-      env;
-      hrtime;
-      nextTick;
-      constructor(impl) {
-        super();
-        this.env = impl.env;
-        this.hrtime = impl.hrtime;
-        this.nextTick = impl.nextTick;
-        for (const prop of [
-          ...Object.getOwnPropertyNames(_Process.prototype),
-          ...Object.getOwnPropertyNames(EventEmitter.prototype),
-        ]) {
-          const value = this[prop];
-          if (typeof value === "function") {
-            this[prop] = value.bind(this);
-          }
-        }
-      }
-      // --- event emitter ---
-      emitWarning(warning, type, code) {
-        console.warn(
-          `${code ? `[${code}] ` : ""}${type ? `${type}: ` : ""}${warning}`,
-        );
-      }
-      emit(...args) {
-        return super.emit(...args);
-      }
-      listeners(eventName) {
-        return super.listeners(eventName);
-      }
-      // --- stdio (lazy initializers) ---
-      #stdin;
-      #stdout;
-      #stderr;
-      get stdin() {
-        return (this.#stdin ??= new ReadStream(0));
-      }
-      get stdout() {
-        return (this.#stdout ??= new WriteStream(1));
-      }
-      get stderr() {
-        return (this.#stderr ??= new WriteStream(2));
-      }
-      // --- cwd ---
-      #cwd = "/";
-      chdir(cwd2) {
-        this.#cwd = cwd2;
-      }
-      cwd() {
-        return this.#cwd;
-      }
-      // --- dummy props and getters ---
-      arch = "";
-      platform = "";
-      argv = [];
-      argv0 = "";
-      execArgv = [];
-      execPath = "";
-      title = "";
-      pid = 200;
-      ppid = 100;
-      get version() {
-        return `v${NODE_VERSION}`;
-      }
-      get versions() {
-        return { node: NODE_VERSION };
-      }
-      get allowedNodeEnvironmentFlags() {
-        return /* @__PURE__ */ new Set();
-      }
-      get sourceMapsEnabled() {
-        return false;
-      }
-      get debugPort() {
-        return 0;
-      }
-      get throwDeprecation() {
-        return false;
-      }
-      get traceDeprecation() {
-        return false;
-      }
-      get features() {
-        return {};
-      }
-      get release() {
-        return {};
-      }
-      get connected() {
-        return false;
-      }
-      get config() {
-        return {};
-      }
-      get moduleLoadList() {
-        return [];
-      }
-      constrainedMemory() {
-        return 0;
-      }
-      availableMemory() {
-        return 0;
-      }
-      uptime() {
-        return 0;
-      }
-      resourceUsage() {
-        return {};
-      }
-      // --- noop methods ---
-      ref() {}
-      unref() {}
-      // --- unimplemented methods ---
-      umask() {
-        throw createNotImplementedError("process.umask");
-      }
-      getBuiltinModule() {
-        return void 0;
-      }
-      getActiveResourcesInfo() {
-        throw createNotImplementedError("process.getActiveResourcesInfo");
-      }
-      exit() {
-        throw createNotImplementedError("process.exit");
-      }
-      reallyExit() {
-        throw createNotImplementedError("process.reallyExit");
-      }
-      kill() {
-        throw createNotImplementedError("process.kill");
-      }
-      abort() {
-        throw createNotImplementedError("process.abort");
-      }
-      dlopen() {
-        throw createNotImplementedError("process.dlopen");
-      }
-      setSourceMapsEnabled() {
-        throw createNotImplementedError("process.setSourceMapsEnabled");
-      }
-      loadEnvFile() {
-        throw createNotImplementedError("process.loadEnvFile");
-      }
-      disconnect() {
-        throw createNotImplementedError("process.disconnect");
-      }
-      cpuUsage() {
-        throw createNotImplementedError("process.cpuUsage");
-      }
-      setUncaughtExceptionCaptureCallback() {
-        throw createNotImplementedError(
-          "process.setUncaughtExceptionCaptureCallback",
-        );
-      }
-      hasUncaughtExceptionCaptureCallback() {
-        throw createNotImplementedError(
-          "process.hasUncaughtExceptionCaptureCallback",
-        );
-      }
-      initgroups() {
-        throw createNotImplementedError("process.initgroups");
-      }
-      openStdin() {
-        throw createNotImplementedError("process.openStdin");
-      }
-      assert() {
-        throw createNotImplementedError("process.assert");
-      }
-      binding() {
-        throw createNotImplementedError("process.binding");
-      }
-      // --- attached interfaces ---
-      permission = {
-        has: /* @__PURE__ */ notImplemented("process.permission.has"),
-      };
-      report = {
-        directory: "",
-        filename: "",
-        signal: "SIGUSR2",
-        compact: false,
-        reportOnFatalError: false,
-        reportOnSignal: false,
-        reportOnUncaughtException: false,
-        getReport: /* @__PURE__ */ notImplemented("process.report.getReport"),
-        writeReport: /* @__PURE__ */ notImplemented(
-          "process.report.writeReport",
-        ),
-      };
-      finalization = {
-        register: /* @__PURE__ */ notImplemented(
-          "process.finalization.register",
-        ),
-        unregister: /* @__PURE__ */ notImplemented(
-          "process.finalization.unregister",
-        ),
-        registerBeforeExit: /* @__PURE__ */ notImplemented(
-          "process.finalization.registerBeforeExit",
-        ),
-      };
-      memoryUsage = Object.assign(
-        () => ({
-          arrayBuffers: 0,
-          rss: 0,
-          external: 0,
-          heapTotal: 0,
-          heapUsed: 0,
-        }),
-        { rss: /* @__PURE__ */ __name(() => 0, "rss") },
-      );
-      // --- undefined props ---
-      mainModule = void 0;
-      domain = void 0;
-      // optional
-      send = void 0;
-      exitCode = void 0;
-      channel = void 0;
-      getegid = void 0;
-      geteuid = void 0;
-      getgid = void 0;
-      getgroups = void 0;
-      getuid = void 0;
-      setegid = void 0;
-      seteuid = void 0;
-      setgid = void 0;
-      setgroups = void 0;
-      setuid = void 0;
-      // internals
-      _events = void 0;
-      _eventsCount = void 0;
-      _exiting = void 0;
-      _maxListeners = void 0;
-      _debugEnd = void 0;
-      _debugProcess = void 0;
-      _fatalException = void 0;
-      _getActiveHandles = void 0;
-      _getActiveRequests = void 0;
-      _kill = void 0;
-      _preload_modules = void 0;
-      _rawDebug = void 0;
-      _startProfilerIdleNotifier = void 0;
-      _stopProfilerIdleNotifier = void 0;
-      _tickCallback = void 0;
-      _disconnect = void 0;
-      _handleQueue = void 0;
-      _pendingMessage = void 0;
-      _channel = void 0;
-      _send = void 0;
-      _linkedBinding = void 0;
-    };
-  },
-});
-
-// ../node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs
-var globalProcess,
-  getBuiltinModule,
-  workerdProcess,
-  unenvProcess,
-  exit,
-  features,
-  platform,
-  _channel,
-  _debugEnd,
-  _debugProcess,
-  _disconnect,
-  _events,
-  _eventsCount,
-  _exiting,
-  _fatalException,
-  _getActiveHandles,
-  _getActiveRequests,
-  _handleQueue,
-  _kill,
-  _linkedBinding,
-  _maxListeners,
-  _pendingMessage,
-  _preload_modules,
-  _rawDebug,
-  _send,
-  _startProfilerIdleNotifier,
-  _stopProfilerIdleNotifier,
-  _tickCallback,
-  abort,
-  addListener,
-  allowedNodeEnvironmentFlags,
-  arch,
-  argv,
-  argv0,
-  assert2,
-  availableMemory,
-  binding,
-  channel,
-  chdir,
-  config,
-  connected,
-  constrainedMemory,
-  cpuUsage,
-  cwd,
-  debugPort,
-  disconnect,
-  dlopen,
-  domain,
-  emit,
-  emitWarning,
-  env,
-  eventNames,
-  execArgv,
-  execPath,
-  exitCode,
-  finalization,
-  getActiveResourcesInfo,
-  getegid,
-  geteuid,
-  getgid,
-  getgroups,
-  getMaxListeners,
-  getuid,
-  hasUncaughtExceptionCaptureCallback,
-  hrtime3,
-  initgroups,
-  kill,
-  listenerCount,
-  listeners,
-  loadEnvFile,
-  mainModule,
-  memoryUsage,
-  moduleLoadList,
-  nextTick,
-  off,
-  on,
-  once,
-  openStdin,
-  permission,
-  pid,
-  ppid,
-  prependListener,
-  prependOnceListener,
-  rawListeners,
-  reallyExit,
-  ref,
-  release,
-  removeAllListeners,
-  removeListener,
-  report,
-  resourceUsage,
-  send,
-  setegid,
-  seteuid,
-  setgid,
-  setgroups,
-  setMaxListeners,
-  setSourceMapsEnabled,
-  setuid,
-  setUncaughtExceptionCaptureCallback,
-  sourceMapsEnabled,
-  stderr,
-  stdin,
-  stdout,
-  throwDeprecation,
-  title,
-  traceDeprecation,
-  umask,
-  unref,
-  uptime,
-  version,
-  versions,
-  _process,
-  process_default;
-var init_process2 = __esm({
-  "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    init_hrtime();
-    init_process();
-    globalProcess = globalThis["process"];
-    getBuiltinModule = globalProcess.getBuiltinModule;
-    workerdProcess = getBuiltinModule("node:process");
-    unenvProcess = new Process({
-      env: globalProcess.env,
-      hrtime,
-      // `nextTick` is available from workerd process v1
-      nextTick: workerdProcess.nextTick,
-    });
-    ({ exit, features, platform } = workerdProcess);
-    ({
-      _channel,
-      _debugEnd,
-      _debugProcess,
-      _disconnect,
-      _events,
-      _eventsCount,
-      _exiting,
-      _fatalException,
-      _getActiveHandles,
-      _getActiveRequests,
-      _handleQueue,
-      _kill,
-      _linkedBinding,
-      _maxListeners,
-      _pendingMessage,
-      _preload_modules,
-      _rawDebug,
-      _send,
-      _startProfilerIdleNotifier,
-      _stopProfilerIdleNotifier,
-      _tickCallback,
-      abort,
-      addListener,
-      allowedNodeEnvironmentFlags,
-      arch,
-      argv,
-      argv0,
-      assert: assert2,
-      availableMemory,
-      binding,
-      channel,
-      chdir,
-      config,
-      connected,
-      constrainedMemory,
-      cpuUsage,
-      cwd,
-      debugPort,
-      disconnect,
-      dlopen,
-      domain,
-      emit,
-      emitWarning,
-      env,
-      eventNames,
-      execArgv,
-      execPath,
-      exitCode,
-      finalization,
-      getActiveResourcesInfo,
-      getegid,
-      geteuid,
-      getgid,
-      getgroups,
-      getMaxListeners,
-      getuid,
-      hasUncaughtExceptionCaptureCallback,
-      hrtime: hrtime3,
-      initgroups,
-      kill,
-      listenerCount,
-      listeners,
-      loadEnvFile,
-      mainModule,
-      memoryUsage,
-      moduleLoadList,
-      nextTick,
-      off,
-      on,
-      once,
-      openStdin,
-      permission,
-      pid,
-      ppid,
-      prependListener,
-      prependOnceListener,
-      rawListeners,
-      reallyExit,
-      ref,
-      release,
-      removeAllListeners,
-      removeListener,
-      report,
-      resourceUsage,
-      send,
-      setegid,
-      seteuid,
-      setgid,
-      setgroups,
-      setMaxListeners,
-      setSourceMapsEnabled,
-      setuid,
-      setUncaughtExceptionCaptureCallback,
-      sourceMapsEnabled,
-      stderr,
-      stdin,
-      stdout,
-      throwDeprecation,
-      title,
-      traceDeprecation,
-      umask,
-      unref,
-      uptime,
-      version,
-      versions,
-    } = unenvProcess);
-    _process = {
-      abort,
-      addListener,
-      allowedNodeEnvironmentFlags,
-      hasUncaughtExceptionCaptureCallback,
-      setUncaughtExceptionCaptureCallback,
-      loadEnvFile,
-      sourceMapsEnabled,
-      arch,
-      argv,
-      argv0,
-      chdir,
-      config,
-      connected,
-      constrainedMemory,
-      availableMemory,
-      cpuUsage,
-      cwd,
-      debugPort,
-      dlopen,
-      disconnect,
-      emit,
-      emitWarning,
-      env,
-      eventNames,
-      execArgv,
-      execPath,
-      exit,
-      finalization,
-      features,
-      getBuiltinModule,
-      getActiveResourcesInfo,
-      getMaxListeners,
-      hrtime: hrtime3,
-      kill,
-      listeners,
-      listenerCount,
-      memoryUsage,
-      nextTick,
-      on,
-      off,
-      once,
-      pid,
-      platform,
-      ppid,
-      prependListener,
-      prependOnceListener,
-      rawListeners,
-      release,
-      removeAllListeners,
-      removeListener,
-      report,
-      resourceUsage,
-      setMaxListeners,
-      setSourceMapsEnabled,
-      stderr,
-      stdin,
-      stdout,
-      title,
-      throwDeprecation,
-      traceDeprecation,
-      umask,
-      uptime,
-      version,
-      versions,
-      // @ts-expect-error old API
-      domain,
-      initgroups,
-      moduleLoadList,
-      reallyExit,
-      openStdin,
-      assert: assert2,
-      binding,
-      send,
-      exitCode,
-      channel,
-      getegid,
-      geteuid,
-      getgid,
-      getgroups,
-      getuid,
-      setegid,
-      seteuid,
-      setgid,
-      setgroups,
-      setuid,
-      permission,
-      mainModule,
-      _events,
-      _eventsCount,
-      _exiting,
-      _maxListeners,
-      _debugEnd,
-      _debugProcess,
-      _fatalException,
-      _getActiveHandles,
-      _getActiveRequests,
-      _kill,
-      _preload_modules,
-      _rawDebug,
-      _startProfilerIdleNotifier,
-      _stopProfilerIdleNotifier,
-      _tickCallback,
-      _disconnect,
-      _handleQueue,
-      _pendingMessage,
-      _channel,
-      _send,
-      _linkedBinding,
-    };
-    process_default = _process;
-  },
-});
-
-// ../node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process
-var init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process =
-  __esm({
-    "../node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process"() {
-      init_process2();
-      globalThis.process = process_default;
-    },
-  });
-
 // ../node_modules/fast-xml-parser/src/util.js
 var require_util = __commonJS({
   "../node_modules/fast-xml-parser/src/util.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     var nameStartChar =
       ":A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD";
     var nameChar =
@@ -1429,10 +136,7 @@ var require_util = __commonJS({
 var require_validator = __commonJS({
   "../node_modules/fast-xml-parser/src/validator.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     var util = require_util();
     var defaultOptions = {
       allowBooleanAttributes: false,
@@ -1850,9 +554,9 @@ var require_validator = __commonJS({
         i++;
         return validateNumberAmpersand(xmlData, i);
       }
-      let count3 = 0;
-      for (; i < xmlData.length; i++, count3++) {
-        if (xmlData[i].match(/\w/) && count3 < 20) continue;
+      let count = 0;
+      for (; i < xmlData.length; i++, count++) {
+        if (xmlData[i].match(/\w/) && count < 20) continue;
         if (xmlData[i] === ";") break;
         return -1;
       }
@@ -1897,10 +601,7 @@ var require_validator = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
 var require_OptionsBuilder = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"(exports) {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     var { DANGEROUS_PROPERTY_NAMES, criticalProperties } = require_util();
     var defaultOnDangerousProperty = /* @__PURE__ */ __name((name) => {
       if (DANGEROUS_PROPERTY_NAMES.includes(name)) {
@@ -2038,10 +739,7 @@ var require_OptionsBuilder = __commonJS({
 var require_xmlNode = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     var XmlNode = class {
       static {
         __name(this, "XmlNode");
@@ -2074,10 +772,7 @@ var require_DocTypeReader = __commonJS({
     exports,
     module,
   ) {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     var util = require_util();
     var DocTypeReader = class {
       static {
@@ -2437,10 +1132,7 @@ var require_DocTypeReader = __commonJS({
 // ../node_modules/strnum/strnum.js
 var require_strnum = __commonJS({
   "../node_modules/strnum/strnum.js"(exports, module) {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     var hexRegex = /^[-+]?0x[a-fA-F0-9]+$/;
     var numRegex = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/;
     var consider = {
@@ -2556,10 +1248,7 @@ var require_strnum = __commonJS({
 // ../node_modules/fast-xml-parser/src/ignoreAttributes.js
 var require_ignoreAttributes = __commonJS({
   "../node_modules/fast-xml-parser/src/ignoreAttributes.js"(exports, module) {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     function getIgnoreAttributesFn(ignoreAttributes) {
       if (typeof ignoreAttributes === "function") {
         return ignoreAttributes;
@@ -2590,10 +1279,7 @@ var require_OrderedObjParser = __commonJS({
     module,
   ) {
     "use strict";
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     var util = require_util();
     var xmlNode = require_xmlNode();
     var DocTypeReader = require_DocTypeReader();
@@ -3398,10 +2084,7 @@ var require_OrderedObjParser = __commonJS({
 var require_node2json = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/node2json.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     function prettify(node, options) {
       return compress(node, options);
     }
@@ -3508,10 +2191,7 @@ var require_XMLParser = __commonJS({
     exports,
     module,
   ) {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     var { buildOptions } = require_OptionsBuilder();
     var OrderedObjParser = require_OrderedObjParser();
     var { prettify } = require_node2json();
@@ -3581,10 +2261,7 @@ var require_orderedJs2Xml = __commonJS({
     exports,
     module,
   ) {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     var EOL = "\n";
     function toXml(jArray, options) {
       let indentation = "";
@@ -3746,10 +2423,7 @@ var require_json2xml = __commonJS({
     module,
   ) {
     "use strict";
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     var buildFromOrderedJs = require_orderedJs2Xml();
     var getIgnoreAttributesFn = require_ignoreAttributes();
     var defaultOptions = {
@@ -4098,10 +2772,7 @@ var require_json2xml = __commonJS({
 var require_fxp = __commonJS({
   "../node_modules/fast-xml-parser/src/fxp.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     var validator = require_validator();
     var XMLParser2 = require_XMLParser();
     var XMLBuilder = require_json2xml();
@@ -4118,21 +2789,21 @@ function toArray(value) {
   if (!value) return [];
   return Array.isArray(value) ? value : [value];
 }
-function getRequiredEnv(env2, name) {
-  const value = env2[name];
+function getRequiredEnv(env, name) {
+  const value = env[name];
   if (!value) throw new Error(`Missing required env var: ${name}`);
   return value;
 }
-function cachePrefix(env2) {
-  return `${env2.PLEX_URL ?? "missing-url"}::${env2.PLEX_COLLECTION_ID ?? env2.PLEX_COLLECTION_TITLE ?? "no-collection"}`;
+function cachePrefix(env) {
+  return `${env.PLEX_URL ?? "missing-url"}::${env.PLEX_COLLECTION_ID ?? env.PLEX_COLLECTION_TITLE ?? "no-collection"}`;
 }
 function normalizeBaseUrl(raw) {
   const url = new URL(raw);
   if (!url.pathname.endsWith("/")) url.pathname += "/";
   return url;
 }
-function plexFetchTimeoutMs(env2) {
-  const configured2 = Number(env2.PLEX_FETCH_TIMEOUT_MS);
+function plexFetchTimeoutMs(env) {
+  const configured2 = Number(env.PLEX_FETCH_TIMEOUT_MS);
   if (!Number.isFinite(configured2) || configured2 <= 0)
     return DEFAULT_PLEX_FETCH_TIMEOUT_MS;
   return Math.max(1e3, Math.min(3e4, Math.trunc(configured2)));
@@ -4145,11 +2816,11 @@ async function fetchWithTimeout(input, init, timeoutMs) {
       ...init,
       signal: controller.signal,
     });
-  } catch (error3) {
-    if (error3 instanceof Error && error3.name === "AbortError") {
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
       throw new Error(`Plex request timed out after ${timeoutMs}ms`);
     }
-    throw error3;
+    throw error;
   } finally {
     clearTimeout(timeout);
   }
@@ -4223,16 +2894,16 @@ function getMediaContainerEntries(parsed) {
 }
 function mapPreviewItem(entry) {
   const id = extractEntryId(entry);
-  const title2 = pickFirstString(entry, [
+  const title = pickFirstString(entry, [
     "@_title",
     "title",
     "@_originalTitle",
     "originalTitle",
   ]);
-  if (!id || !title2) return null;
+  if (!id || !title) return null;
   return {
     id,
-    title: title2,
+    title,
     year: pickFirstNumber(entry, ["@_year", "year"]),
     rating: pickFirstNumber(entry, [
       "@_audienceRating",
@@ -4255,11 +2926,11 @@ function mapPreviewItem(entry) {
 }
 function mapCollectionSummary(entry) {
   const id = extractEntryId(entry);
-  const title2 = pickFirstString(entry, ["@_title", "title"]);
-  if (!id || !title2) return null;
+  const title = pickFirstString(entry, ["@_title", "title"]);
+  if (!id || !title) return null;
   return {
     id,
-    title: title2,
+    title,
     summary: pickFirstString(entry, ["@_summary", "summary"]),
     posterPath: pickFirstString(entry, [
       "@_thumb",
@@ -4274,16 +2945,16 @@ function mapCollectionSummary(entry) {
 }
 function mapCollectionMovie(entry) {
   const id = extractEntryId(entry);
-  const title2 = pickFirstString(entry, [
+  const title = pickFirstString(entry, [
     "@_title",
     "title",
     "@_originalTitle",
     "originalTitle",
   ]);
-  if (!id || !title2) return null;
+  if (!id || !title) return null;
   return {
     id,
-    title: title2,
+    title,
     year: pickFirstNumber(entry, ["@_year", "year"]),
     rating: pickFirstNumber(entry, [
       "@_audienceRating",
@@ -4334,9 +3005,9 @@ function mapLibraryShow(entry) {
     studio: item.studio,
   };
 }
-async function plexRequest(env2, pathname, params) {
-  const baseUrl = normalizeBaseUrl(getRequiredEnv(env2, "PLEX_URL"));
-  const token = getRequiredEnv(env2, "PLEX_TOKEN");
+async function plexRequest(env, pathname, params) {
+  const baseUrl = normalizeBaseUrl(getRequiredEnv(env, "PLEX_URL"));
+  const token = getRequiredEnv(env, "PLEX_TOKEN");
   const url = new URL(pathname.replace(/^\//, ""), baseUrl);
   url.searchParams.set("X-Plex-Token", token);
   if (params) {
@@ -4351,7 +3022,7 @@ async function plexRequest(env2, pathname, params) {
         Accept: "application/json, text/xml, application/xml;q=0.9, */*;q=0.8",
       },
     },
-    plexFetchTimeoutMs(env2),
+    plexFetchTimeoutMs(env),
   );
   if (!res.ok) {
     const body = (await res.text().catch(() => "")) || res.statusText;
@@ -4364,9 +3035,9 @@ async function plexRequest(env2, pathname, params) {
   }
   return parser.parse(text);
 }
-async function plexFetchImage(env2, path, options = {}) {
-  const baseUrl = normalizeBaseUrl(getRequiredEnv(env2, "PLEX_URL"));
-  const token = getRequiredEnv(env2, "PLEX_TOKEN");
+async function plexFetchImage(env, path, options = {}) {
+  const baseUrl = normalizeBaseUrl(getRequiredEnv(env, "PLEX_URL"));
+  const token = getRequiredEnv(env, "PLEX_TOKEN");
   const safePath = path.startsWith("/") ? path : `/${path}`;
   const width = options.width;
   const height = options.height;
@@ -4383,12 +3054,12 @@ async function plexFetchImage(env2, path, options = {}) {
         })()
       : new URL(safePath.slice(1), baseUrl);
   url.searchParams.set("X-Plex-Token", token);
-  return fetchWithTimeout(url, {}, plexFetchTimeoutMs(env2));
+  return fetchWithTimeout(url, {}, plexFetchTimeoutMs(env));
 }
-async function getPlexSections(env2) {
-  const key = `${cachePrefix(env2)}::sections`;
+async function getPlexSections(env) {
+  const key = `${cachePrefix(env)}::sections`;
   return cached(key, 6e4, async () => {
-    const parsed = await plexRequest(env2, "/library/sections");
+    const parsed = await plexRequest(env, "/library/sections");
     const mediaContainer = parsed.MediaContainer ?? parsed;
     const directories = toArray(mediaContainer?.Directory);
     return directories
@@ -4405,12 +3076,12 @@ async function getPlexSections(env2) {
       );
   });
 }
-async function resolveSectionId(env2, forType) {
+async function resolveSectionId(env, forType) {
   const envKey =
     forType === "tv" ? "PLEX_TV_SECTION_ID" : "PLEX_MOVIE_SECTION_ID";
-  const explicit = env2[envKey]?.trim();
+  const explicit = env[envKey]?.trim();
   if (explicit) return explicit;
-  const sections = await getPlexSections(env2);
+  const sections = await getPlexSections(env);
   const desired = forType === "tv" ? "show" : "movie";
   const desiredTitle = DEFAULT_LIBRARY_TITLES[forType].toLowerCase();
   const matchingSections = sections.filter(
@@ -4427,15 +3098,15 @@ async function resolveSectionId(env2, forType) {
   }
   return match2.key;
 }
-async function resolveCountSectionIds(env2, forType) {
-  return [await resolveSectionId(env2, forType)];
+async function resolveCountSectionIds(env, forType) {
+  return [await resolveSectionId(env, forType)];
 }
-async function getLibrarySectionItemCount(env2, type, sectionId) {
+async function getLibrarySectionItemCount(env, type, sectionId) {
   const plexType = type === "tv" ? 2 : 1;
-  const key = `${cachePrefix(env2)}::libraryCount:${type}:${sectionId}`;
+  const key = `${cachePrefix(env)}::libraryCount:${type}:${sectionId}`;
   return cached(key, 6e4, async () => {
     const parsed = await plexRequest(
-      env2,
+      env,
       `/library/sections/${sectionId}/all`,
       {
         type: plexType,
@@ -4454,19 +3125,19 @@ async function getLibrarySectionItemCount(env2, type, sectionId) {
     return total;
   });
 }
-async function getLibraryItemCount(env2, type) {
-  const sectionIds = await resolveCountSectionIds(env2, type);
+async function getLibraryItemCount(env, type) {
+  const sectionIds = await resolveCountSectionIds(env, type);
   const counts = await Promise.all(
     sectionIds.map((sectionId) =>
-      getLibrarySectionItemCount(env2, type, sectionId),
+      getLibrarySectionItemCount(env, type, sectionId),
     ),
   );
-  return counts.reduce((total, count3) => total + count3, 0);
+  return counts.reduce((total, count) => total + count, 0);
 }
-async function getPlexLibraryCounts(env2) {
+async function getPlexLibraryCounts(env) {
   const safeCount = /* @__PURE__ */ __name(async (type) => {
     try {
-      return await getLibraryItemCount(env2, type);
+      return await getLibraryItemCount(env, type);
     } catch {
       return null;
     }
@@ -4477,14 +3148,14 @@ async function getPlexLibraryCounts(env2) {
   ]);
   return { movies, shows };
 }
-async function getTopRated(env2, options) {
+async function getTopRated(env, options) {
   const { type, limit } = options;
-  const sectionId = await resolveSectionId(env2, type);
+  const sectionId = await resolveSectionId(env, type);
   const plexType = type === "tv" ? 2 : 1;
-  const key = `${cachePrefix(env2)}::topRated:${type}:${limit}:${sectionId}`;
+  const key = `${cachePrefix(env)}::topRated:${type}:${limit}:${sectionId}`;
   return cached(key, 6e4, async () => {
     const parsed = await plexRequest(
-      env2,
+      env,
       `/library/sections/${sectionId}/all`,
       {
         type: plexType,
@@ -4503,10 +3174,10 @@ function normalizeLibraryLimit(limit) {
   if (limit == null || !Number.isFinite(limit)) return null;
   return Math.max(1, Math.min(1e4, Math.trunc(limit)));
 }
-async function getPlexMovies(env2, options = {}) {
-  const sectionId = await resolveSectionId(env2, "movie");
+async function getPlexMovies(env, options = {}) {
+  const sectionId = await resolveSectionId(env, "movie");
   const limit = normalizeLibraryLimit(options.limit);
-  const key = `${cachePrefix(env2)}::movies:${sectionId}:${limit ?? "all"}`;
+  const key = `${cachePrefix(env)}::movies:${sectionId}:${limit ?? "all"}`;
   return cached(key, 6e4, async () => {
     const pageSize = 200;
     const items = [];
@@ -4517,7 +3188,7 @@ async function getPlexMovies(env2, options = {}) {
         limit == null ? pageSize : Math.min(pageSize, limit - items.length);
       if (remaining <= 0) break;
       const parsed = await plexRequest(
-        env2,
+        env,
         `/library/sections/${sectionId}/all`,
         {
           type: 1,
@@ -4542,10 +3213,10 @@ async function getPlexMovies(env2, options = {}) {
     return items;
   });
 }
-async function getPlexShows(env2, options = {}) {
-  const sectionId = await resolveSectionId(env2, "tv");
+async function getPlexShows(env, options = {}) {
+  const sectionId = await resolveSectionId(env, "tv");
   const limit = normalizeLibraryLimit(options.limit);
-  const key = `${cachePrefix(env2)}::shows:${sectionId}:${limit ?? "all"}`;
+  const key = `${cachePrefix(env)}::shows:${sectionId}:${limit ?? "all"}`;
   return cached(key, 6e4, async () => {
     const pageSize = 200;
     const items = [];
@@ -4556,7 +3227,7 @@ async function getPlexShows(env2, options = {}) {
         limit == null ? pageSize : Math.min(pageSize, limit - items.length);
       if (remaining <= 0) break;
       const parsed = await plexRequest(
-        env2,
+        env,
         `/library/sections/${sectionId}/all`,
         {
           type: 2,
@@ -4581,13 +3252,12 @@ async function getPlexShows(env2, options = {}) {
     return items;
   });
 }
-async function getPlexCollections(env2, options = {}) {
-  const sectionId =
-    options.sectionId ?? (await resolveSectionId(env2, "movie"));
-  const key = `${cachePrefix(env2)}::collections:${sectionId}`;
+async function getPlexCollections(env, options = {}) {
+  const sectionId = options.sectionId ?? (await resolveSectionId(env, "movie"));
+  const key = `${cachePrefix(env)}::collections:${sectionId}`;
   return cached(key, 6e4, async () => {
     const parsed = await plexRequest(
-      env2,
+      env,
       `/library/sections/${sectionId}/collections`,
     );
     return getMediaContainerEntries(parsed)
@@ -4595,16 +3265,16 @@ async function getPlexCollections(env2, options = {}) {
       .filter((collection) => Boolean(collection));
   });
 }
-async function getCollectionMetadata(env2, collectionId) {
-  const key = `${cachePrefix(env2)}::collectionMeta:${collectionId}`;
+async function getCollectionMetadata(env, collectionId) {
+  const key = `${cachePrefix(env)}::collectionMeta:${collectionId}`;
   return cached(key, 6e4, async () => {
-    const parsed = await plexRequest(env2, `/library/metadata/${collectionId}`);
+    const parsed = await plexRequest(env, `/library/metadata/${collectionId}`);
     const [entry] = getMediaContainerEntries(parsed);
     return entry ? mapCollectionSummary(entry) : null;
   });
 }
-async function getCollectionItems(env2, collectionId) {
-  const key = `${cachePrefix(env2)}::collectionItems:${collectionId}`;
+async function getCollectionItems(env, collectionId) {
+  const key = `${cachePrefix(env)}::collectionItems:${collectionId}`;
   return cached(key, 6e4, async () => {
     const pageSize = 100;
     const items = [];
@@ -4612,7 +3282,7 @@ async function getCollectionItems(env2, collectionId) {
     let totalSize = null;
     while (true) {
       const parsed = await plexRequest(
-        env2,
+        env,
         `/library/collections/${collectionId}/items`,
         {
           "X-Plex-Container-Start": start,
@@ -4643,19 +3313,19 @@ function normalizeText(value) {
   const normalized = value?.trim();
   return normalized ? normalized : null;
 }
-async function resolveFeaturedCollectionTarget(env2, options) {
+async function resolveFeaturedCollectionTarget(env, options) {
   const desiredId = normalizeText(
-    options.collectionId ?? env2.PLEX_COLLECTION_ID,
+    options.collectionId ?? env.PLEX_COLLECTION_ID,
   );
   const desiredTitle = normalizeText(
-    options.collectionTitle ?? env2.PLEX_COLLECTION_TITLE,
+    options.collectionTitle ?? env.PLEX_COLLECTION_TITLE,
   );
   if (!desiredId && !desiredTitle) {
     throw new Error(
       "Set PLEX_COLLECTION_ID or PLEX_COLLECTION_TITLE to choose which Plex collection to display.",
     );
   }
-  const collections = await getPlexCollections(env2);
+  const collections = await getPlexCollections(env);
   if (desiredId) {
     const summary2 =
       collections.find((collection) => collection.id === desiredId) ?? null;
@@ -4673,17 +3343,17 @@ async function resolveFeaturedCollectionTarget(env2, options) {
   }
   return { collectionId: summary.id, summary };
 }
-async function getFeaturedCollection(env2, options = {}) {
+async function getFeaturedCollection(env, options = {}) {
   const { collectionId, summary } = await resolveFeaturedCollectionTarget(
-    env2,
+    env,
     options,
   );
   const limit = normalizeLimit(options.limit);
   const [metadata, allItems] = await Promise.all([
     summary
       ? Promise.resolve(summary)
-      : getCollectionMetadata(env2, collectionId),
-    getCollectionItems(env2, collectionId),
+      : getCollectionMetadata(env, collectionId),
+    getCollectionItems(env, collectionId),
   ]);
   const resolvedSummary = metadata ?? summary;
   const items = limit == null ? allItems : allItems.slice(0, limit);
@@ -4691,7 +3361,7 @@ async function getFeaturedCollection(env2, options = {}) {
     id: collectionId,
     title:
       resolvedSummary?.title ??
-      normalizeText(options.collectionTitle ?? env2.PLEX_COLLECTION_TITLE) ??
+      normalizeText(options.collectionTitle ?? env.PLEX_COLLECTION_TITLE) ??
       "Featured Collection",
     summary: resolvedSummary?.summary ?? null,
     posterPath: resolvedSummary?.posterPath ?? null,
@@ -4708,10 +3378,7 @@ var import_fast_xml_parser,
   DEFAULT_LIBRARY_TITLES;
 var init_plex_client = __esm({
   "../shared/plex-client.ts"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     import_fast_xml_parser = __toESM(require_fxp(), 1);
     parser = new import_fast_xml_parser.XMLParser({
       ignoreAttributes: false,
@@ -4775,8 +3442,8 @@ function json(data, init = {}) {
     headers,
   });
 }
-function errorMessage(error3, fallback) {
-  return error3 instanceof Error ? error3.message : fallback;
+function errorMessage(error, fallback) {
+  return error instanceof Error ? error.message : fallback;
 }
 function cloneWithHeader(response, name, value) {
   const headers = new Headers(response.headers);
@@ -4797,14 +3464,14 @@ function cachedJsonResponse(data, cacheStatus) {
     },
   });
 }
-async function cachedJson(context2, options) {
+async function cachedJson(context, options) {
   const cache2 = await caches.open(options.cacheName);
   const cacheUrl = new URL(String(options.cacheKey));
   cacheUrl.searchParams.set("__plexpoint_cache", PLEX_API_CACHE_VERSION);
   const cacheKey = new Request(cacheUrl.toString(), { method: "GET" });
   const cached2 = await cache2.match(cacheKey);
   if (cached2) {
-    context2.waitUntil(
+    context.waitUntil(
       options
         .load()
         .then((data) =>
@@ -4817,12 +3484,12 @@ async function cachedJson(context2, options) {
   try {
     const data = await options.load();
     const response = cachedJsonResponse(data, "miss");
-    context2.waitUntil(cache2.put(cacheKey, response.clone()));
+    context.waitUntil(cache2.put(cacheKey, response.clone()));
     return response;
-  } catch (error3) {
+  } catch (error) {
     return json(
       {
-        message: errorMessage(error3, options.fallbackMessage),
+        message: errorMessage(error, options.fallbackMessage),
       },
       { status: 501 },
     );
@@ -4831,10 +3498,7 @@ async function cachedJson(context2, options) {
 var PLEX_API_CACHE_VERSION;
 var init_pages = __esm({
   "_lib/pages.ts"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     PLEX_API_CACHE_VERSION = "v4-optional-limit-parsing";
     __name(json, "json");
     __name(errorMessage, "errorMessage");
@@ -4845,14 +3509,14 @@ var init_pages = __esm({
 });
 
 // api/plex/collections.ts
-async function onRequestGet(context2) {
-  const url = new URL(context2.request.url);
+async function onRequestGet(context) {
+  const url = new URL(context.request.url);
   const sectionId = url.searchParams.get("sectionId") ?? void 0;
-  return cachedJson(context2, {
+  return cachedJson(context, {
     cacheName: "plex-api",
-    cacheKey: context2.request.url,
+    cacheKey: context.request.url,
     load: /* @__PURE__ */ __name(
-      () => getPlexCollections(context2.env, { sectionId }),
+      () => getPlexCollections(context.env, { sectionId }),
       "load",
     ),
     fallbackMessage:
@@ -4861,10 +3525,7 @@ async function onRequestGet(context2) {
 }
 var init_collections = __esm({
   "api/plex/collections.ts"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     init_plex_client();
     init_pages();
     __name(onRequestGet, "onRequestGet");
@@ -4872,12 +3533,12 @@ var init_collections = __esm({
 });
 
 // api/plex/counts.ts
-async function onRequestGet2(context2) {
-  return cachedJson(context2, {
+async function onRequestGet2(context) {
+  return cachedJson(context, {
     cacheName: "plex-api",
-    cacheKey: context2.request.url,
+    cacheKey: context.request.url,
     load: /* @__PURE__ */ __name(
-      () => getPlexLibraryCounts(context2.env),
+      () => getPlexLibraryCounts(context.env),
       "load",
     ),
     fallbackMessage:
@@ -4886,10 +3547,7 @@ async function onRequestGet2(context2) {
 }
 var init_counts = __esm({
   "api/plex/counts.ts"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     init_plex_client();
     init_pages();
     __name(onRequestGet2, "onRequestGet");
@@ -4897,8 +3555,8 @@ var init_counts = __esm({
 });
 
 // api/plex/featured-collection.ts
-async function onRequestGet3(context2) {
-  const url = new URL(context2.request.url);
+async function onRequestGet3(context) {
+  const url = new URL(context.request.url);
   const collectionId = url.searchParams.get("id") ?? void 0;
   const collectionTitle = url.searchParams.get("title") ?? void 0;
   const limitParam = url.searchParams.get("limit");
@@ -4906,12 +3564,12 @@ async function onRequestGet3(context2) {
   const limit = Number.isFinite(limitRaw)
     ? Math.max(1, Math.min(500, Math.trunc(limitRaw)))
     : void 0;
-  return cachedJson(context2, {
+  return cachedJson(context, {
     cacheName: "plex-api",
-    cacheKey: context2.request.url,
+    cacheKey: context.request.url,
     load: /* @__PURE__ */ __name(
       () =>
-        getFeaturedCollection(context2.env, {
+        getFeaturedCollection(context.env, {
           collectionId,
           collectionTitle,
           limit,
@@ -4924,10 +3582,7 @@ async function onRequestGet3(context2) {
 }
 var init_featured_collection = __esm({
   "api/plex/featured-collection.ts"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     init_plex_client();
     init_pages();
     __name(onRequestGet3, "onRequestGet");
@@ -4935,9 +3590,9 @@ var init_featured_collection = __esm({
 });
 
 // api/plex/image.ts
-async function onRequestGet4(context2) {
+async function onRequestGet4(context) {
   try {
-    const url = new URL(context2.request.url);
+    const url = new URL(context.request.url);
     const path = url.searchParams.get("path");
     if (typeof path !== "string" || !path.startsWith("/")) {
       return json(
@@ -4955,14 +3610,11 @@ async function onRequestGet4(context2) {
       Number.isFinite(heightRaw) && heightRaw > 0
         ? Math.max(40, Math.min(2e3, Math.trunc(heightRaw)))
         : void 0;
-    const cacheKey = new Request(url.toString(), context2.request);
+    const cacheKey = new Request(url.toString(), context.request);
     const cache2 = await caches.open("plex-images");
     const cached2 = await cache2.match(cacheKey);
     if (cached2) return cached2;
-    const upstream = await plexFetchImage(context2.env, path, {
-      width,
-      height,
-    });
+    const upstream = await plexFetchImage(context.env, path, { width, height });
     if (!upstream.ok) {
       const body =
         (await upstream.text().catch(() => "")) || upstream.statusText;
@@ -4980,13 +3632,13 @@ async function onRequestGet4(context2) {
       status: upstream.status,
       headers,
     });
-    context2.waitUntil(cache2.put(cacheKey, response.clone()));
+    context.waitUntil(cache2.put(cacheKey, response.clone()));
     return response;
-  } catch (error3) {
+  } catch (error) {
     return json(
       {
         message: errorMessage(
-          error3,
+          error,
           "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)",
         ),
       },
@@ -4996,10 +3648,7 @@ async function onRequestGet4(context2) {
 }
 var init_image = __esm({
   "api/plex/image.ts"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     init_plex_client();
     init_pages();
     __name(onRequestGet4, "onRequestGet");
@@ -5007,18 +3656,18 @@ var init_image = __esm({
 });
 
 // api/plex/movies.ts
-async function onRequestGet5(context2) {
-  const url = new URL(context2.request.url);
+async function onRequestGet5(context) {
+  const url = new URL(context.request.url);
   const limitParam = url.searchParams.get("limit");
   const limitRaw = limitParam == null ? NaN : Number(limitParam);
   const limit = Number.isFinite(limitRaw)
     ? Math.max(1, Math.min(1e4, Math.trunc(limitRaw)))
     : void 0;
-  return cachedJson(context2, {
+  return cachedJson(context, {
     cacheName: "plex-api",
-    cacheKey: context2.request.url,
+    cacheKey: context.request.url,
     load: /* @__PURE__ */ __name(
-      () => getPlexMovies(context2.env, { limit }),
+      () => getPlexMovies(context.env, { limit }),
       "load",
     ),
     fallbackMessage:
@@ -5027,10 +3676,7 @@ async function onRequestGet5(context2) {
 }
 var init_movies = __esm({
   "api/plex/movies.ts"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     init_plex_client();
     init_pages();
     __name(onRequestGet5, "onRequestGet");
@@ -5038,21 +3684,18 @@ var init_movies = __esm({
 });
 
 // api/plex/sections.ts
-async function onRequestGet6(context2) {
-  return cachedJson(context2, {
+async function onRequestGet6(context) {
+  return cachedJson(context, {
     cacheName: "plex-api",
-    cacheKey: context2.request.url,
-    load: /* @__PURE__ */ __name(() => getPlexSections(context2.env), "load"),
+    cacheKey: context.request.url,
+    load: /* @__PURE__ */ __name(() => getPlexSections(context.env), "load"),
     fallbackMessage:
       "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)",
   });
 }
 var init_sections = __esm({
   "api/plex/sections.ts"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     init_plex_client();
     init_pages();
     __name(onRequestGet6, "onRequestGet");
@@ -5060,18 +3703,18 @@ var init_sections = __esm({
 });
 
 // api/plex/shows.ts
-async function onRequestGet7(context2) {
-  const url = new URL(context2.request.url);
+async function onRequestGet7(context) {
+  const url = new URL(context.request.url);
   const limitParam = url.searchParams.get("limit");
   const limitRaw = limitParam == null ? NaN : Number(limitParam);
   const limit = Number.isFinite(limitRaw)
     ? Math.max(1, Math.min(1e4, Math.trunc(limitRaw)))
     : void 0;
-  return cachedJson(context2, {
+  return cachedJson(context, {
     cacheName: "plex-api",
-    cacheKey: context2.request.url,
+    cacheKey: context.request.url,
     load: /* @__PURE__ */ __name(
-      () => getPlexShows(context2.env, { limit }),
+      () => getPlexShows(context.env, { limit }),
       "load",
     ),
     fallbackMessage:
@@ -5080,10 +3723,7 @@ async function onRequestGet7(context2) {
 }
 var init_shows = __esm({
   "api/plex/shows.ts"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     init_plex_client();
     init_pages();
     __name(onRequestGet7, "onRequestGet");
@@ -5094,29 +3734,29 @@ var init_shows = __esm({
 function configured(value) {
   return Boolean(value && value.trim().length > 0);
 }
-function publicMessage(error3) {
-  if (!(error3 instanceof Error)) {
+function publicMessage(error) {
+  if (!(error instanceof Error)) {
     return "Cloudflare could not reach Plex.";
   }
-  if (error3.message.startsWith("Missing required env var:")) {
-    return error3.message;
+  if (error.message.startsWith("Missing required env var:")) {
+    return error.message;
   }
   return "Cloudflare could not reach Plex. Check that PLEX_URL is reachable from Cloudflare and PLEX_TOKEN is valid.";
 }
-async function onRequestGet8(context2) {
+async function onRequestGet8(context) {
   const startedAt = Date.now();
   const envStatus = {
-    plexUrl: configured(context2.env.PLEX_URL),
-    plexToken: configured(context2.env.PLEX_TOKEN),
-    movieSectionId: configured(context2.env.PLEX_MOVIE_SECTION_ID),
-    tvSectionId: configured(context2.env.PLEX_TV_SECTION_ID),
-    collectionId: configured(context2.env.PLEX_COLLECTION_ID),
-    collectionTitle: configured(context2.env.PLEX_COLLECTION_TITLE),
+    plexUrl: configured(context.env.PLEX_URL),
+    plexToken: configured(context.env.PLEX_TOKEN),
+    movieSectionId: configured(context.env.PLEX_MOVIE_SECTION_ID),
+    tvSectionId: configured(context.env.PLEX_TV_SECTION_ID),
+    collectionId: configured(context.env.PLEX_COLLECTION_ID),
+    collectionTitle: configured(context.env.PLEX_COLLECTION_TITLE),
   };
   try {
     const [sections, counts] = await Promise.all([
-      getPlexSections(context2.env),
-      getPlexLibraryCounts(context2.env),
+      getPlexSections(context.env),
+      getPlexLibraryCounts(context.env),
     ]);
     return json({
       ok: true,
@@ -5129,13 +3769,13 @@ async function onRequestGet8(context2) {
       counts,
       durationMs: Date.now() - startedAt,
     });
-  } catch (error3) {
+  } catch (error) {
     return json(
       {
         ok: false,
         reachable: false,
         env: envStatus,
-        message: publicMessage(error3),
+        message: publicMessage(error),
         durationMs: Date.now() - startedAt,
       },
       { status: 503 },
@@ -5144,10 +3784,7 @@ async function onRequestGet8(context2) {
 }
 var init_status = __esm({
   "api/plex/status.ts"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     init_plex_client();
     init_pages();
     __name(configured, "configured");
@@ -5157,8 +3794,8 @@ var init_status = __esm({
 });
 
 // api/plex/top-rated.ts
-async function onRequestGet9(context2) {
-  const url = new URL(context2.request.url);
+async function onRequestGet9(context) {
+  const url = new URL(context.request.url);
   const typeParam = String(url.searchParams.get("type") ?? "tv").toLowerCase();
   const type = typeParam === "movie" ? "movie" : "tv";
   const limitParam = url.searchParams.get("limit");
@@ -5166,11 +3803,11 @@ async function onRequestGet9(context2) {
   const limit = Number.isFinite(limitRaw)
     ? Math.max(1, Math.min(30, Math.trunc(limitRaw)))
     : 12;
-  return cachedJson(context2, {
+  return cachedJson(context, {
     cacheName: "plex-api",
-    cacheKey: context2.request.url,
+    cacheKey: context.request.url,
     load: /* @__PURE__ */ __name(
-      () => getTopRated(context2.env, { type, limit }),
+      () => getTopRated(context.env, { type, limit }),
       "load",
     ),
     fallbackMessage:
@@ -5179,20 +3816,17 @@ async function onRequestGet9(context2) {
 }
 var init_top_rated = __esm({
   "api/plex/top-rated.ts"() {
-    init_functionsRoutes_0_5277810449847653();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
+    init_functionsRoutes_0_44629216370293023();
     init_plex_client();
     init_pages();
     __name(onRequestGet9, "onRequestGet");
   },
 });
 
-// ../.wrangler/tmp/pages-KKAamF/functionsRoutes-0.5277810449847653.mjs
+// ../.wrangler/tmp/pages-VXq9Km/functionsRoutes-0.44629216370293023.mjs
 var routes;
-var init_functionsRoutes_0_5277810449847653 = __esm({
-  "../.wrangler/tmp/pages-KKAamF/functionsRoutes-0.5277810449847653.mjs"() {
+var init_functionsRoutes_0_44629216370293023 = __esm({
+  "../.wrangler/tmp/pages-VXq9Km/functionsRoutes-0.44629216370293023.mjs"() {
     init_collections();
     init_counts();
     init_featured_collection();
@@ -5271,16 +3905,10 @@ var init_functionsRoutes_0_5277810449847653 = __esm({
 });
 
 // ../node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_5277810449847653();
-init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-init_performance2();
+init_functionsRoutes_0_44629216370293023();
 
 // ../node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_5277810449847653();
-init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-init_performance2();
+init_functionsRoutes_0_44629216370293023();
 function lexer(str) {
   var tokens = [];
   var i = 0;
@@ -5325,7 +3953,7 @@ function lexer(str) {
       continue;
     }
     if (char === "(") {
-      var count3 = 1;
+      var count = 1;
       var pattern = "";
       var j = i + 1;
       if (str[j] === "?") {
@@ -5337,13 +3965,13 @@ function lexer(str) {
           continue;
         }
         if (str[j] === ")") {
-          count3--;
-          if (count3 === 0) {
+          count--;
+          if (count === 0) {
             j++;
             break;
           }
         } else if (str[j] === "(") {
-          count3++;
+          count++;
           if (str[j + 1] !== "?") {
             throw new TypeError(
               "Capturing groups are not allowed at ".concat(j),
@@ -5352,7 +3980,7 @@ function lexer(str) {
         }
         pattern += str[j++];
       }
-      if (count3) throw new TypeError("Unbalanced pattern at ".concat(i));
+      if (count) throw new TypeError("Unbalanced pattern at ".concat(i));
       if (!pattern) throw new TypeError("Missing pattern at ".concat(i));
       tokens.push({ type: "PATTERN", index: i, value: pattern });
       i = j;
@@ -5707,7 +4335,7 @@ function* executeRequest(request) {
 }
 __name(executeRequest, "executeRequest");
 var pages_template_worker_default = {
-  async fetch(originalRequest, env2, workerContext) {
+  async fetch(originalRequest, env, workerContext) {
     let request = originalRequest;
     const handlerIterator = executeRequest(request);
     let data = {};
@@ -5723,7 +4351,7 @@ var pages_template_worker_default = {
       const result = handlerIterator.next();
       if (result.done === false) {
         const { handler, params, path } = result.value;
-        const context2 = {
+        const context = {
           request: new Request(request.clone()),
           functionPath: path,
           next,
@@ -5737,19 +4365,19 @@ var pages_template_worker_default = {
             }
             data = value;
           },
-          env: env2,
+          env,
           waitUntil: workerContext.waitUntil.bind(workerContext),
           passThroughOnException: /* @__PURE__ */ __name(() => {
             isFailOpen = true;
           }, "passThroughOnException"),
         };
-        const response = await handler(context2);
+        const response = await handler(context);
         if (!(response instanceof Response)) {
           throw new Error("Your Pages function should return a Response");
         }
         return cloneResponse(response);
       } else if ("ASSETS") {
-        const response = await env2["ASSETS"].fetch(request);
+        const response = await env["ASSETS"].fetch(request);
         return cloneResponse(response);
       } else {
         const response = await fetch(request);
@@ -5758,12 +4386,12 @@ var pages_template_worker_default = {
     }, "next");
     try {
       return await next();
-    } catch (error3) {
+    } catch (error) {
       if (isFailOpen) {
-        const response = await env2["ASSETS"].fetch(request);
+        const response = await env["ASSETS"].fetch(request);
         return cloneResponse(response);
       }
-      throw error3;
+      throw error;
     }
   },
 };
