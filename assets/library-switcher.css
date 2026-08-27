@@ -1,4 +1,5 @@
-.plex-library-switcher {
+.plex-library-switcher,
+[data-plex-shows-panel] select {
   appearance: none;
   color-scheme: dark;
   padding-right: 2.5rem;
@@ -13,9 +14,16 @@
   border-color: rgba(255, 123, 0, 0.3);
 }
 
-.plex-library-switcher option {
-  background: #151922;
+.plex-library-switcher option,
+[data-plex-shows-panel] select option {
+  background-color: #171c26;
   color: #f8fafc;
+}
+
+.plex-library-switcher option:checked,
+[data-plex-shows-panel] select option:checked {
+  background-color: #ff7b00;
+  color: #ffffff;
 }
 
 @media (max-width: 639px) {
