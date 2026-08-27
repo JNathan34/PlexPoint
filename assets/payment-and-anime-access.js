@@ -14,6 +14,12 @@ let plexShows = null;
 let plexShowsLoadPromise = null;
 let plexShowsError = null;
 let activePlexLibraryTab = "movies";
+const plexLibraryChoices = [
+  { value: "movies", label: "Movies" },
+  { value: "shows", label: "Shows" },
+  { value: "anime-movies", label: "Anime Movies" },
+  { value: "anime-shows", label: "Anime Shows" },
+];
 const plexShowsFilters = { query: "", genre: "all", sort: "library" };
 const plexAnimeLibraries = {
   "anime-movies": {
@@ -893,30 +899,85 @@ function createPlexAnimePanel(libraryKey) {
 }
 
 function createPlexLibrarySwitcher() {
-  const select = createPlexElement("select", {
-    className:
-      "plex-library-switcher h-10 w-full rounded-xl border border-white/10 bg-white/[0.035] px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary/30 sm:h-12 sm:w-72 sm:text-base",
+  const switcher = createPlexElement("div", {
+    className: "plex-library-switcher h-10 w-full text-sm sm:h-12 sm:w-72 sm:text-base",
     attributes: {
-      "aria-label": "Choose Plex library",
       "data-plex-library-switcher": "true",
     },
   });
-  select.append(
-    createPlexElement("option", { text: "Movies", attributes: { value: "movies" } }),
-    createPlexElement("option", { text: "Shows", attributes: { value: "shows" } }),
-    createPlexElement("option", {
-      text: "Anime Movies",
-      attributes: { value: "anime-movies" },
-    }),
-    createPlexElement("option", {
-      text: "Anime Shows",
-      attributes: { value: "anime-shows" },
-    }),
-  );
-  select.value = activePlexLibraryTab;
-  stylePlexSelectOptions(select);
-  select.addEventListener("change", () => setPlexLibraryTab(select.value));
-  return select;
+  const trigger = createPlexElement("button", {
+    className: "plex-library-switcher__trigger",
+    attributes: {
+      type: "button",
+      "aria-label": "Choose Plex library",
+      "aria-haspopup": "listbox",
+      "aria-expanded": "false",
+      "data-plex-library-trigger": "true",
+    },
+  });
+  const label = createPlexElement("span", { attributes: { "data-plex-library-label": "true" } });
+  trigger.append(label);
+
+  const menu = createPlexElement("div", {
+    className: "plex-library-switcher__menu",
+    attributes: { role: "listbox", "aria-label": "Plex library", hidden: "hidden" },
+  });
+  for (const choice of plexLibraryChoices) {
+    const option = createPlexElement("button", {
+      className: "plex-library-switcher__option",
+      text: choice.label,
+      attributes: {
+        type: "button",
+        role: "option",
+        "data-plex-library-option": choice.value,
+      },
+    });
+    option.addEventListener("click", () => {
+      closePlexLibrarySwitcher(switcher);
+      setPlexLibraryTab(choice.value);
+    });
+    menu.append(option);
+  }
+
+  trigger.addEventListener("click", () => {
+    const willOpen = menu.hidden;
+    document.querySelectorAll("[data-plex-library-switcher]").forEach(closePlexLibrarySwitcher);
+    menu.hidden = !willOpen;
+    trigger.setAttribute("aria-expanded", String(willOpen));
+    switcher.classList.toggle("is-open", willOpen);
+  });
+  switcher.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    closePlexLibrarySwitcher(switcher);
+    trigger.focus();
+  });
+  document.addEventListener("click", (event) => {
+    if (!switcher.contains(event.target)) closePlexLibrarySwitcher(switcher);
+  });
+
+  switcher.append(trigger, menu);
+  updatePlexLibrarySwitcher(switcher);
+  return switcher;
+}
+
+function closePlexLibrarySwitcher(switcher) {
+  const menu = switcher?.querySelector(".plex-library-switcher__menu");
+  const trigger = switcher?.querySelector("[data-plex-library-trigger]");
+  if (menu) menu.hidden = true;
+  if (trigger) trigger.setAttribute("aria-expanded", "false");
+  switcher?.classList.remove("is-open");
+}
+
+function updatePlexLibrarySwitcher(switcher) {
+  const activeChoice =
+    plexLibraryChoices.find((choice) => choice.value === activePlexLibraryTab) || plexLibraryChoices[0];
+  const label = switcher?.querySelector("[data-plex-library-label]");
+  if (label && label.textContent !== activeChoice.label) label.textContent = activeChoice.label;
+  switcher?.querySelectorAll("[data-plex-library-option]").forEach((option) => {
+    const selected = option.dataset.plexLibraryOption === activeChoice.value;
+    option.classList.toggle("is-selected", selected);
+    option.setAttribute("aria-selected", String(selected));
+  });
 }
 
 function setPlexLibraryTab(tab) {
@@ -941,10 +1002,7 @@ function setPlexLibraryTab(tab) {
     pickerTrigger.setAttribute("aria-hidden", String(!showPicker));
   }
 
-  section?.querySelectorAll("[data-plex-library-switcher]").forEach((select) => {
-    if (select.value !== activePlexLibraryTab) select.value = activePlexLibraryTab;
-    stylePlexSelectOptions(select);
-  });
+  section?.querySelectorAll("[data-plex-library-switcher]").forEach(updatePlexLibrarySwitcher);
 
   if (activePlexLibraryTab === "shows" && plexShows == null) void loadPlexShows();
   if (plexAnimeLibraries[activePlexLibraryTab]?.items == null) {
