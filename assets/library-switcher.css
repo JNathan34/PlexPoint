@@ -16,7 +16,22 @@
 }
 
 .plex-library-switcher.is-open {
-  z-index: 80;
+  z-index: 300;
+}
+
+[data-plex-library-filter-row] {
+  position: relative;
+  z-index: 20;
+  overflow: visible;
+}
+
+[data-plex-library-filter-row]:has(.plex-library-switcher.is-open) {
+  z-index: 300;
+}
+
+[data-testid="plex-collection-section"] .movie-library-grid {
+  position: relative;
+  z-index: 0;
 }
 
 .plex-library-switcher__trigger {
@@ -49,6 +64,7 @@
 
 .plex-library-switcher__menu {
   position: absolute;
+  z-index: 320;
   top: calc(100% + 0.4rem);
   left: 0;
   width: 100%;
