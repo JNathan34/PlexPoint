@@ -403,6 +403,12 @@ function openPlexMediaPreview(item, mediaType = "show") {
   dialog.showModal();
 }
 
+window.addEventListener("plexpoint:open-media-preview", (event) => {
+  const item = normalizePlexShow(event.detail?.item);
+  if (!item) return;
+  openPlexMediaPreview(item, event.detail?.mediaType === "show" ? "show" : "movie");
+});
+
 function createPlexShowCard(show, index, mediaType = "show", testIdPrefix = "collection-show") {
   const card = createPlexElement("article", {
     className:

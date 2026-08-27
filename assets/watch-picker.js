@@ -108,7 +108,11 @@ function uniquePickerMovies(items) {
 
 function readPickerHistory() {
   try {
-    const stored = JSON.parse(sessionStorage.getItem(WATCH_PICKER_HISTORY_KEY) || "[]");
+    const saved =
+      localStorage.getItem(WATCH_PICKER_HISTORY_KEY) ||
+      sessionStorage.getItem(WATCH_PICKER_HISTORY_KEY) ||
+      "[]";
+    const stored = JSON.parse(saved);
     if (Array.isArray(stored)) {
       watchPickerState.history = new Set(
         stored.filter((item) => typeof item === "string").slice(-WATCH_PICKER_MAX_HISTORY),
@@ -121,12 +125,14 @@ function readPickerHistory() {
 
 function savePickerHistory() {
   try {
-    sessionStorage.setItem(
+    const serialized = JSON.stringify([...watchPickerState.history].slice(-WATCH_PICKER_MAX_HISTORY));
+    localStorage.setItem(
       WATCH_PICKER_HISTORY_KEY,
-      JSON.stringify([...watchPickerState.history].slice(-WATCH_PICKER_MAX_HISTORY)),
+      serialized,
     );
+    sessionStorage.setItem(WATCH_PICKER_HISTORY_KEY, serialized);
   } catch {
-    // The picker still works when session storage is unavailable.
+    // The picker still works when browser storage is unavailable.
   }
 }
 
@@ -527,8 +533,9 @@ function injectWatchPickerStyles() {
     .pp-picker-answer-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 15px; }
     .pp-picker-chip { padding: 6px 9px; border: 1px solid rgba(255,136,54,.22); border-radius: 999px; color: #ff9c58; background: rgba(255,119,24,.075); font-size: 10px; font-weight: 700; }
     .pp-picker-results { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; margin-top: 24px; }
-    .pp-picker-result { min-width: 0; overflow: hidden; border: 1px solid rgba(255,255,255,.09); border-radius: 19px; background: rgba(255,255,255,.026); transition: transform .18s ease, border-color .18s ease; }
+    .pp-picker-result { min-width: 0; overflow: hidden; border: 1px solid rgba(255,255,255,.09); border-radius: 19px; background: rgba(255,255,255,.026); cursor: pointer; transition: transform .18s ease, border-color .18s ease; }
     .pp-picker-result:hover { transform: translateY(-3px); border-color: rgba(255,135,49,.34); }
+    .pp-picker-result:focus-visible { outline: 2px solid rgba(255,132,44,.75); outline-offset: 3px; }
     .pp-picker-poster { position: relative; aspect-ratio: 2 / 2.72; overflow: hidden; background: #141923; }
     .pp-picker-poster img { width: 100%; height: 100%; object-fit: cover; }
     .pp-picker-poster::after { content: ""; position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, rgba(7,9,14,.88)); pointer-events: none; }
@@ -547,29 +554,64 @@ function injectWatchPickerStyles() {
     @keyframes pp-picker-rise { from { opacity: 0; transform: translateY(12px) scale(.985); } }
     @keyframes pp-picker-spin { to { transform: rotate(360deg); } }
     @media (max-width: 760px) {
-      .pp-picker-backdrop { padding: 8px; align-items: end; }
-      .pp-picker-shell { display: block; width: 100%; height: auto; max-height: calc(100dvh - 8px); border-radius: 24px 24px 0 0; overflow-y: auto; }
-      .pp-picker-aside { min-height: 0; padding: 24px 20px 18px; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.08); }
-      .pp-picker-aside h2 { max-width: none; margin: 14px 45px 6px 0; font-size: 28px; }
-      .pp-picker-aside-copy { max-width: 520px; font-size: 12px; }
-      .pp-picker-steps { grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 18px; }
-      .pp-picker-step { display: flex; min-width: 0; min-height: 38px; gap: 7px; padding: 5px; }
-      .pp-picker-step-number { width: 27px; height: 27px; flex: 0 0 auto; }
-      .pp-picker-step strong { font-size: 10px; }
+      .pp-picker-backdrop { align-items: stretch; padding: 0; }
+      .pp-picker-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        width: 100%;
+        height: 100dvh;
+        max-height: 100dvh;
+        border-width: 0;
+        border-radius: 0;
+        overflow: hidden;
+      }
+      .pp-picker-close { position: fixed; top: 10px; right: 10px; width: 42px; height: 42px; border-radius: 14px; }
+      .pp-picker-aside { min-height: 0; padding: 14px 14px 12px; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+      .pp-picker-kicker { padding: 5px 8px; font-size: 9px; }
+      .pp-picker-aside h2 { max-width: none; margin: 9px 50px 2px 0; font-size: 22px; line-height: 1.08; }
+      .pp-picker-aside-copy { display: none; }
+      .pp-picker-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 11px; }
+      .pp-picker-step { display: flex; min-width: 0; min-height: 34px; gap: 6px; padding: 4px 5px; border-radius: 12px; }
+      .pp-picker-step-number { width: 25px; height: 25px; flex: 0 0 auto; border-radius: 8px; font-size: 10px; }
+      .pp-picker-step strong { overflow: hidden; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
       .pp-picker-step small { display: none; }
-      .pp-picker-surprise { display: none; }
-      .pp-picker-main { overflow: visible; padding: 24px 18px 26px; }
+      .pp-picker-surprise { min-height: 38px; margin-top: 9px; padding: 8px 11px; border-radius: 12px; }
+      .pp-picker-surprise strong { font-size: 11px; }
+      .pp-picker-surprise small { display: none; }
+      .pp-picker-surprise span:last-child { font-size: 16px; }
+      .pp-picker-main { min-height: 0; overflow-y: auto; padding: 14px 14px max(22px, env(safe-area-inset-bottom)); overscroll-behavior: contain; }
       .pp-picker-content { min-height: 0; }
-      .pp-picker-progress { margin-bottom: 22px; padding-right: 0; }
-      .pp-picker-options { grid-template-columns: 1fr; gap: 9px; margin-top: 21px; }
-      .pp-picker-option { min-height: 70px; }
+      .pp-picker-progress { margin-bottom: 15px; padding-right: 0; }
+      .pp-picker-progress-label { font-size: 9px; }
+      .pp-picker-eyebrow { margin-bottom: 5px; font-size: 9px; }
+      .pp-picker-title { font-size: clamp(23px, 7.2vw, 28px); line-height: 1.1; }
+      .pp-picker-description { margin-top: 7px; font-size: 12px; line-height: 1.45; }
+      .pp-picker-options { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
+      .pp-picker-option { grid-template-columns: 32px minmax(0, 1fr) 13px; gap: 8px; min-height: 64px; padding: 9px; border-radius: 15px; }
+      .pp-picker-option:hover { transform: none; }
+      .pp-picker-option-icon { width: 32px; height: 32px; border-radius: 10px; font-size: 14px; }
+      .pp-picker-option-copy { min-width: 0; }
+      .pp-picker-option strong { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+      .pp-picker-option small { overflow: hidden; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+      .pp-picker-option-radio { width: 13px; height: 13px; }
+      .pp-picker-actions { gap: 8px; margin-top: 18px; }
+      .pp-picker-actions .pp-picker-button { flex: 1; }
       .pp-picker-results-head { display: block; }
-      .pp-picker-results-head .pp-picker-button { margin-top: 15px; }
-      .pp-picker-results { grid-template-columns: 1fr; }
-      .pp-picker-result { display: grid; grid-template-columns: 88px 1fr; }
-      .pp-picker-poster { height: 100%; min-height: 132px; aspect-ratio: auto; }
-      .pp-picker-result-body { align-self: center; }
+      .pp-picker-results-head .pp-picker-button { width: 100%; margin-top: 13px; }
+      .pp-picker-answer-chips { margin-top: 11px; }
+      .pp-picker-results { grid-template-columns: 1fr; gap: 10px; margin-top: 16px; }
+      .pp-picker-result { display: grid; grid-template-columns: 92px minmax(0, 1fr); min-height: 136px; }
+      .pp-picker-result:hover { transform: none; }
+      .pp-picker-poster { height: 100%; min-height: 136px; aspect-ratio: auto; }
+      .pp-picker-result-body { align-self: center; padding: 12px; }
+      .pp-picker-result h4 { font-size: 13px; }
       .pp-picker-summary { min-height: 0; -webkit-line-clamp: 2; }
+      .pp-picker-empty { min-height: 320px; }
+    }
+    @media (max-width: 350px) {
+      .pp-picker-option small { display: none; }
+      .pp-picker-aside h2 { font-size: 20px; }
     }
     @media (prefers-reduced-motion: reduce) {
       .pp-picker-backdrop, .pp-picker-shell, .pp-picker-spinner { animation: none; }
@@ -693,7 +735,7 @@ function renderPickerQuestion(content) {
         "aria-pressed": String(selected),
       },
     });
-    const copy = pickerElement("span");
+    const copy = pickerElement("span", { className: "pp-picker-option-copy" });
     copy.append(
       pickerElement("strong", { text: option.label }),
       pickerElement("small", { text: option.description }),
@@ -736,7 +778,24 @@ function renderPickerQuestion(content) {
 function createPickerResultCard(movie, index) {
   const card = pickerElement("article", {
     className: "pp-picker-result",
-    attributes: { "data-testid": `watch-picker-result-${movie.id}` },
+    attributes: {
+      "data-testid": `watch-picker-result-${movie.id}`,
+      role: "button",
+      tabindex: "0",
+      "aria-label": `View details for ${movie.title}`,
+    },
+  });
+  const openDetails = () =>
+    window.dispatchEvent(
+      new CustomEvent("plexpoint:open-media-preview", {
+        detail: { item: movie, mediaType: "movie" },
+      }),
+    );
+  card.addEventListener("click", openDetails);
+  card.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    openDetails();
   });
   const poster = pickerElement("div", { className: "pp-picker-poster" });
   poster.append(
@@ -788,7 +847,7 @@ function renderPickerResults(content) {
       className: "pp-picker-description",
       text: `${watchPickerState.history.size.toLocaleString()} different ${
         watchPickerState.history.size === 1 ? "film has" : "films have"
-      } been recommended this session.`,
+      } been recommended recently, and these picks avoid repeats.`,
     }),
   );
   const another = pickerElement("button", {
