@@ -45,6 +45,19 @@ export type PlexCollectionMovie = {
   studio: string | null;
 };
 
+export type PlexLibraryShow = {
+  id: string;
+  title: string;
+  year: number | null;
+  rating: number | null;
+  posterPath: string | null;
+  summary: string | null;
+  genres: string[];
+  seasons: number | null;
+  contentRating: string | null;
+  studio: string | null;
+};
+
 export type PlexFeaturedCollection = PlexCollectionSummary & {
   itemCount: number;
   items: PlexCollectionMovie[];
@@ -264,6 +277,24 @@ function mapCollectionMovie(entry: Record<string, unknown>): PlexCollectionMovie
   };
 }
 
+function mapLibraryShow(entry: Record<string, unknown>): PlexLibraryShow | null {
+  const item = mapCollectionMovie(entry);
+  if (!item) return null;
+
+  return {
+    id: item.id,
+    title: item.title,
+    year: item.year,
+    rating: item.rating,
+    posterPath: item.posterPath,
+    summary: item.summary,
+    genres: item.genres,
+    seasons: pickFirstNumber(entry, ["@_childCount", "childCount"]),
+    contentRating: item.contentRating,
+    studio: item.studio,
+  };
+}
+
 async function plexRequest(
   env: PlexEnv,
   pathname: string,
@@ -479,6 +510,53 @@ export async function getPlexMovies(
       items.push(...pageItems);
       totalSize =
         pickFirstNumber(mediaContainer as Record<string, unknown>, ["@_totalSize", "totalSize"]) ??
+        totalSize;
+
+      if (pageItems.length === 0) break;
+
+      start += pageItems.length;
+      if (limit != null && items.length >= limit) break;
+      if (totalSize != null && start >= totalSize) break;
+      if (pageItems.length < remaining) break;
+    }
+
+    return items;
+  });
+}
+
+export async function getPlexShows(
+  env: PlexEnv,
+  options: { limit?: number | null } = {},
+): Promise<PlexLibraryShow[]> {
+  const sectionId = await resolveSectionId(env, "tv");
+  const limit = normalizeLibraryLimit(options.limit);
+  const key = `${cachePrefix(env)}::shows:${sectionId}:${limit ?? "all"}`;
+
+  return cached(key, 60_000, async () => {
+    const pageSize = 200;
+    const items: PlexLibraryShow[] = [];
+    let start = 0;
+    let totalSize: number | null = null;
+
+    while (true) {
+      const remaining = limit == null ? pageSize : Math.min(pageSize, limit - items.length);
+      if (remaining <= 0) break;
+
+      const parsed = await plexRequest(env, `/library/sections/${sectionId}/all`, {
+        type: 2,
+        "X-Plex-Container-Start": start,
+        "X-Plex-Container-Size": remaining,
+      });
+
+      const mediaContainer =
+        ((parsed as { MediaContainer?: unknown } | null)?.MediaContainer ?? parsed) as Record<string, unknown>;
+      const pageItems = getMediaContainerEntries(parsed)
+        .map(mapLibraryShow)
+        .filter((item): item is PlexLibraryShow => Boolean(item));
+
+      items.push(...pageItems);
+      totalSize =
+        pickFirstNumber(mediaContainer, ["@_totalSize", "totalSize"]) ??
         totalSize;
 
       if (pageItems.length === 0) break;

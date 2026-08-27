@@ -4,40 +4,1362 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-var __esm = (fn, res) => function __init() {
-  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
-};
-var __commonJS = (cb, mod) => function __require() {
-  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
-};
+var __name = (target, value) =>
+  __defProp(target, "name", { value, configurable: true });
+var __esm = (fn, res, err) =>
+  function __init() {
+    if (err) throw err[0];
+    try {
+      return (fn && (res = (0, fn[__getOwnPropNames(fn)[0]])((fn = 0))), res);
+    } catch (e) {
+      throw ((err = [e]), e);
+    }
+  };
+var __commonJS = (cb, mod) =>
+  function __require() {
+    try {
+      return (
+        mod ||
+          (0, cb[__getOwnPropNames(cb)[0]])(
+            (mod = { exports: {} }).exports,
+            mod,
+          ),
+        mod.exports
+      );
+    } catch (e) {
+      throw ((mod = 0), e);
+    }
+  };
 var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
+  if ((from && typeof from === "object") || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
       if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+        __defProp(to, key, {
+          get: () => from[key],
+          enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable,
+        });
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
+var __toESM = (mod, isNodeMode, target) => (
+  (target = mod != null ? __create(__getProtoOf(mod)) : {}),
+  __copyProps(
+    // If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod || !mod.__esModule
+      ? __defProp(target, "default", { value: mod, enumerable: true })
+      : target,
+    mod,
+  )
+);
+
+// ../node_modules/unenv/dist/runtime/_internal/utils.mjs
+// @__NO_SIDE_EFFECTS__
+function createNotImplementedError(name) {
+  return new Error(`[unenv] ${name} is not implemented yet!`);
+}
+// @__NO_SIDE_EFFECTS__
+function notImplemented(name) {
+  const fn = /* @__PURE__ */ __name(() => {
+    throw /* @__PURE__ */ createNotImplementedError(name);
+  }, "fn");
+  return Object.assign(fn, { __unenv__: true });
+}
+// @__NO_SIDE_EFFECTS__
+function notImplementedClass(name) {
+  return class {
+    __unenv__ = true;
+    constructor() {
+      throw new Error(`[unenv] ${name} is not implemented yet!`);
+    }
+  };
+}
+var init_utils = __esm({
+  "../node_modules/unenv/dist/runtime/_internal/utils.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    __name(createNotImplementedError, "createNotImplementedError");
+    __name(notImplemented, "notImplemented");
+    __name(notImplementedClass, "notImplementedClass");
+  },
+});
+
+// ../node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs
+var _timeOrigin,
+  _performanceNow,
+  nodeTiming,
+  PerformanceEntry,
+  PerformanceMark,
+  PerformanceMeasure,
+  PerformanceResourceTiming,
+  PerformanceObserverEntryList,
+  Performance,
+  PerformanceObserver,
+  performance;
+var init_performance = __esm({
+  "../node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_utils();
+    _timeOrigin = globalThis.performance?.timeOrigin ?? Date.now();
+    _performanceNow = globalThis.performance?.now
+      ? globalThis.performance.now.bind(globalThis.performance)
+      : () => Date.now() - _timeOrigin;
+    nodeTiming = {
+      name: "node",
+      entryType: "node",
+      startTime: 0,
+      duration: 0,
+      nodeStart: 0,
+      v8Start: 0,
+      bootstrapComplete: 0,
+      environment: 0,
+      loopStart: 0,
+      loopExit: 0,
+      idleTime: 0,
+      uvMetricsInfo: {
+        loopCount: 0,
+        events: 0,
+        eventsWaiting: 0,
+      },
+      detail: void 0,
+      toJSON() {
+        return this;
+      },
+    };
+    PerformanceEntry = class {
+      static {
+        __name(this, "PerformanceEntry");
+      }
+      __unenv__ = true;
+      detail;
+      entryType = "event";
+      name;
+      startTime;
+      constructor(name, options) {
+        this.name = name;
+        this.startTime = options?.startTime || _performanceNow();
+        this.detail = options?.detail;
+      }
+      get duration() {
+        return _performanceNow() - this.startTime;
+      }
+      toJSON() {
+        return {
+          name: this.name,
+          entryType: this.entryType,
+          startTime: this.startTime,
+          duration: this.duration,
+          detail: this.detail,
+        };
+      }
+    };
+    PerformanceMark = class PerformanceMark2 extends PerformanceEntry {
+      static {
+        __name(this, "PerformanceMark");
+      }
+      entryType = "mark";
+      constructor() {
+        super(...arguments);
+      }
+      get duration() {
+        return 0;
+      }
+    };
+    PerformanceMeasure = class extends PerformanceEntry {
+      static {
+        __name(this, "PerformanceMeasure");
+      }
+      entryType = "measure";
+    };
+    PerformanceResourceTiming = class extends PerformanceEntry {
+      static {
+        __name(this, "PerformanceResourceTiming");
+      }
+      entryType = "resource";
+      serverTiming = [];
+      connectEnd = 0;
+      connectStart = 0;
+      decodedBodySize = 0;
+      domainLookupEnd = 0;
+      domainLookupStart = 0;
+      encodedBodySize = 0;
+      fetchStart = 0;
+      initiatorType = "";
+      name = "";
+      nextHopProtocol = "";
+      redirectEnd = 0;
+      redirectStart = 0;
+      requestStart = 0;
+      responseEnd = 0;
+      responseStart = 0;
+      secureConnectionStart = 0;
+      startTime = 0;
+      transferSize = 0;
+      workerStart = 0;
+      responseStatus = 0;
+    };
+    PerformanceObserverEntryList = class {
+      static {
+        __name(this, "PerformanceObserverEntryList");
+      }
+      __unenv__ = true;
+      getEntries() {
+        return [];
+      }
+      getEntriesByName(_name, _type) {
+        return [];
+      }
+      getEntriesByType(type) {
+        return [];
+      }
+    };
+    Performance = class {
+      static {
+        __name(this, "Performance");
+      }
+      __unenv__ = true;
+      timeOrigin = _timeOrigin;
+      eventCounts = /* @__PURE__ */ new Map();
+      _entries = [];
+      _resourceTimingBufferSize = 0;
+      navigation = void 0;
+      timing = void 0;
+      timerify(_fn, _options) {
+        throw createNotImplementedError("Performance.timerify");
+      }
+      get nodeTiming() {
+        return nodeTiming;
+      }
+      eventLoopUtilization() {
+        return {};
+      }
+      markResourceTiming() {
+        return new PerformanceResourceTiming("");
+      }
+      onresourcetimingbufferfull = null;
+      now() {
+        if (this.timeOrigin === _timeOrigin) {
+          return _performanceNow();
+        }
+        return Date.now() - this.timeOrigin;
+      }
+      clearMarks(markName) {
+        this._entries = markName
+          ? this._entries.filter((e) => e.name !== markName)
+          : this._entries.filter((e) => e.entryType !== "mark");
+      }
+      clearMeasures(measureName) {
+        this._entries = measureName
+          ? this._entries.filter((e) => e.name !== measureName)
+          : this._entries.filter((e) => e.entryType !== "measure");
+      }
+      clearResourceTimings() {
+        this._entries = this._entries.filter(
+          (e) => e.entryType !== "resource" || e.entryType !== "navigation",
+        );
+      }
+      getEntries() {
+        return this._entries;
+      }
+      getEntriesByName(name, type) {
+        return this._entries.filter(
+          (e) => e.name === name && (!type || e.entryType === type),
+        );
+      }
+      getEntriesByType(type) {
+        return this._entries.filter((e) => e.entryType === type);
+      }
+      mark(name, options) {
+        const entry = new PerformanceMark(name, options);
+        this._entries.push(entry);
+        return entry;
+      }
+      measure(measureName, startOrMeasureOptions, endMark) {
+        let start;
+        let end;
+        if (typeof startOrMeasureOptions === "string") {
+          start = this.getEntriesByName(startOrMeasureOptions, "mark")[0]
+            ?.startTime;
+          end = this.getEntriesByName(endMark, "mark")[0]?.startTime;
+        } else {
+          start = Number.parseFloat(startOrMeasureOptions?.start) || this.now();
+          end = Number.parseFloat(startOrMeasureOptions?.end) || this.now();
+        }
+        const entry = new PerformanceMeasure(measureName, {
+          startTime: start,
+          detail: {
+            start,
+            end,
+          },
+        });
+        this._entries.push(entry);
+        return entry;
+      }
+      setResourceTimingBufferSize(maxSize) {
+        this._resourceTimingBufferSize = maxSize;
+      }
+      addEventListener(type, listener, options) {
+        throw createNotImplementedError("Performance.addEventListener");
+      }
+      removeEventListener(type, listener, options) {
+        throw createNotImplementedError("Performance.removeEventListener");
+      }
+      dispatchEvent(event) {
+        throw createNotImplementedError("Performance.dispatchEvent");
+      }
+      toJSON() {
+        return this;
+      }
+    };
+    PerformanceObserver = class {
+      static {
+        __name(this, "PerformanceObserver");
+      }
+      __unenv__ = true;
+      static supportedEntryTypes = [];
+      _callback = null;
+      constructor(callback) {
+        this._callback = callback;
+      }
+      takeRecords() {
+        return [];
+      }
+      disconnect() {
+        throw createNotImplementedError("PerformanceObserver.disconnect");
+      }
+      observe(options) {
+        throw createNotImplementedError("PerformanceObserver.observe");
+      }
+      bind(fn) {
+        return fn;
+      }
+      runInAsyncScope(fn, thisArg, ...args) {
+        return fn.call(thisArg, ...args);
+      }
+      asyncId() {
+        return 0;
+      }
+      triggerAsyncId() {
+        return 0;
+      }
+      emitDestroy() {
+        return this;
+      }
+    };
+    performance =
+      globalThis.performance && "addEventListener" in globalThis.performance
+        ? globalThis.performance
+        : new Performance();
+  },
+});
+
+// ../node_modules/unenv/dist/runtime/node/perf_hooks.mjs
+var init_perf_hooks = __esm({
+  "../node_modules/unenv/dist/runtime/node/perf_hooks.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_performance();
+  },
+});
+
+// ../node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs
+var init_performance2 = __esm({
+  "../node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs"() {
+    init_perf_hooks();
+    if (!("__unenv__" in performance)) {
+      const proto = Performance.prototype;
+      for (const key of Object.getOwnPropertyNames(proto)) {
+        if (key !== "constructor" && !(key in performance)) {
+          const desc = Object.getOwnPropertyDescriptor(proto, key);
+          if (desc) {
+            Object.defineProperty(performance, key, desc);
+          }
+        }
+      }
+    }
+    globalThis.performance = performance;
+    globalThis.Performance = Performance;
+    globalThis.PerformanceEntry = PerformanceEntry;
+    globalThis.PerformanceMark = PerformanceMark;
+    globalThis.PerformanceMeasure = PerformanceMeasure;
+    globalThis.PerformanceObserver = PerformanceObserver;
+    globalThis.PerformanceObserverEntryList = PerformanceObserverEntryList;
+    globalThis.PerformanceResourceTiming = PerformanceResourceTiming;
+  },
+});
+
+// ../node_modules/unenv/dist/runtime/mock/noop.mjs
+var noop_default;
+var init_noop = __esm({
+  "../node_modules/unenv/dist/runtime/mock/noop.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    noop_default = Object.assign(() => {}, { __unenv__: true });
+  },
+});
+
+// ../node_modules/unenv/dist/runtime/node/console.mjs
+import { Writable } from "node:stream";
+var _console,
+  _ignoreErrors,
+  _stderr,
+  _stdout,
+  log,
+  info,
+  trace,
+  debug,
+  table,
+  error,
+  warn,
+  createTask,
+  clear,
+  count,
+  countReset,
+  dir,
+  dirxml,
+  group,
+  groupEnd,
+  groupCollapsed,
+  profile,
+  profileEnd,
+  time,
+  timeEnd,
+  timeLog,
+  timeStamp,
+  Console,
+  _times,
+  _stdoutErrorHandler,
+  _stderrErrorHandler;
+var init_console = __esm({
+  "../node_modules/unenv/dist/runtime/node/console.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_noop();
+    init_utils();
+    _console = globalThis.console;
+    _ignoreErrors = true;
+    _stderr = new Writable();
+    _stdout = new Writable();
+    log = _console?.log ?? noop_default;
+    info = _console?.info ?? log;
+    trace = _console?.trace ?? info;
+    debug = _console?.debug ?? log;
+    table = _console?.table ?? log;
+    error = _console?.error ?? log;
+    warn = _console?.warn ?? error;
+    createTask =
+      _console?.createTask ??
+      /* @__PURE__ */ notImplemented("console.createTask");
+    clear = _console?.clear ?? noop_default;
+    count = _console?.count ?? noop_default;
+    countReset = _console?.countReset ?? noop_default;
+    dir = _console?.dir ?? noop_default;
+    dirxml = _console?.dirxml ?? noop_default;
+    group = _console?.group ?? noop_default;
+    groupEnd = _console?.groupEnd ?? noop_default;
+    groupCollapsed = _console?.groupCollapsed ?? noop_default;
+    profile = _console?.profile ?? noop_default;
+    profileEnd = _console?.profileEnd ?? noop_default;
+    time = _console?.time ?? noop_default;
+    timeEnd = _console?.timeEnd ?? noop_default;
+    timeLog = _console?.timeLog ?? noop_default;
+    timeStamp = _console?.timeStamp ?? noop_default;
+    Console =
+      _console?.Console ??
+      /* @__PURE__ */ notImplementedClass("console.Console");
+    _times = /* @__PURE__ */ new Map();
+    _stdoutErrorHandler = noop_default;
+    _stderrErrorHandler = noop_default;
+  },
+});
+
+// ../node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs
+var workerdConsole,
+  assert,
+  clear2,
+  context,
+  count2,
+  countReset2,
+  createTask2,
+  debug2,
+  dir2,
+  dirxml2,
+  error2,
+  group2,
+  groupCollapsed2,
+  groupEnd2,
+  info2,
+  log2,
+  profile2,
+  profileEnd2,
+  table2,
+  time2,
+  timeEnd2,
+  timeLog2,
+  timeStamp2,
+  trace2,
+  warn2,
+  console_default;
+var init_console2 = __esm({
+  "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_console();
+    workerdConsole = globalThis["console"];
+    ({
+      assert,
+      clear: clear2,
+      context:
+        // @ts-expect-error undocumented public API
+        context,
+      count: count2,
+      countReset: countReset2,
+      createTask:
+        // @ts-expect-error undocumented public API
+        createTask2,
+      debug: debug2,
+      dir: dir2,
+      dirxml: dirxml2,
+      error: error2,
+      group: group2,
+      groupCollapsed: groupCollapsed2,
+      groupEnd: groupEnd2,
+      info: info2,
+      log: log2,
+      profile: profile2,
+      profileEnd: profileEnd2,
+      table: table2,
+      time: time2,
+      timeEnd: timeEnd2,
+      timeLog: timeLog2,
+      timeStamp: timeStamp2,
+      trace: trace2,
+      warn: warn2,
+    } = workerdConsole);
+    Object.assign(workerdConsole, {
+      Console,
+      _ignoreErrors,
+      _stderr,
+      _stderrErrorHandler,
+      _stdout,
+      _stdoutErrorHandler,
+      _times,
+    });
+    console_default = workerdConsole;
+  },
+});
+
+// ../node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console
+var init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console =
+  __esm({
+    "../node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console"() {
+      init_console2();
+      globalThis.console = console_default;
+    },
+  });
+
+// ../node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs
+var hrtime;
+var init_hrtime = __esm({
+  "../node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    hrtime = /* @__PURE__ */ Object.assign(
+      /* @__PURE__ */ __name(function hrtime2(startTime) {
+        const now = Date.now();
+        const seconds = Math.trunc(now / 1e3);
+        const nanos = (now % 1e3) * 1e6;
+        if (startTime) {
+          let diffSeconds = seconds - startTime[0];
+          let diffNanos = nanos - startTime[0];
+          if (diffNanos < 0) {
+            diffSeconds = diffSeconds - 1;
+            diffNanos = 1e9 + diffNanos;
+          }
+          return [diffSeconds, diffNanos];
+        }
+        return [seconds, nanos];
+      }, "hrtime"),
+      {
+        bigint: /* @__PURE__ */ __name(function bigint() {
+          return BigInt(Date.now() * 1e6);
+        }, "bigint"),
+      },
+    );
+  },
+});
+
+// ../node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs
+var ReadStream;
+var init_read_stream = __esm({
+  "../node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    ReadStream = class {
+      static {
+        __name(this, "ReadStream");
+      }
+      fd;
+      isRaw = false;
+      isTTY = false;
+      constructor(fd) {
+        this.fd = fd;
+      }
+      setRawMode(mode) {
+        this.isRaw = mode;
+        return this;
+      }
+    };
+  },
+});
+
+// ../node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs
+var WriteStream;
+var init_write_stream = __esm({
+  "../node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    WriteStream = class {
+      static {
+        __name(this, "WriteStream");
+      }
+      fd;
+      columns = 80;
+      rows = 24;
+      isTTY = false;
+      constructor(fd) {
+        this.fd = fd;
+      }
+      clearLine(dir3, callback) {
+        callback && callback();
+        return false;
+      }
+      clearScreenDown(callback) {
+        callback && callback();
+        return false;
+      }
+      cursorTo(x, y, callback) {
+        callback && typeof callback === "function" && callback();
+        return false;
+      }
+      moveCursor(dx, dy, callback) {
+        callback && callback();
+        return false;
+      }
+      getColorDepth(env2) {
+        return 1;
+      }
+      hasColors(count3, env2) {
+        return false;
+      }
+      getWindowSize() {
+        return [this.columns, this.rows];
+      }
+      write(str, encoding, cb) {
+        if (str instanceof Uint8Array) {
+          str = new TextDecoder().decode(str);
+        }
+        try {
+          console.log(str);
+        } catch {}
+        cb && typeof cb === "function" && cb();
+        return false;
+      }
+    };
+  },
+});
+
+// ../node_modules/unenv/dist/runtime/node/tty.mjs
+var init_tty = __esm({
+  "../node_modules/unenv/dist/runtime/node/tty.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_read_stream();
+    init_write_stream();
+  },
+});
+
+// ../node_modules/unenv/dist/runtime/node/internal/process/node-version.mjs
+var NODE_VERSION;
+var init_node_version = __esm({
+  "../node_modules/unenv/dist/runtime/node/internal/process/node-version.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    NODE_VERSION = "22.14.0";
+  },
+});
+
+// ../node_modules/unenv/dist/runtime/node/internal/process/process.mjs
+import { EventEmitter } from "node:events";
+var Process;
+var init_process = __esm({
+  "../node_modules/unenv/dist/runtime/node/internal/process/process.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_tty();
+    init_utils();
+    init_node_version();
+    Process = class _Process extends EventEmitter {
+      static {
+        __name(this, "Process");
+      }
+      env;
+      hrtime;
+      nextTick;
+      constructor(impl) {
+        super();
+        this.env = impl.env;
+        this.hrtime = impl.hrtime;
+        this.nextTick = impl.nextTick;
+        for (const prop of [
+          ...Object.getOwnPropertyNames(_Process.prototype),
+          ...Object.getOwnPropertyNames(EventEmitter.prototype),
+        ]) {
+          const value = this[prop];
+          if (typeof value === "function") {
+            this[prop] = value.bind(this);
+          }
+        }
+      }
+      // --- event emitter ---
+      emitWarning(warning, type, code) {
+        console.warn(
+          `${code ? `[${code}] ` : ""}${type ? `${type}: ` : ""}${warning}`,
+        );
+      }
+      emit(...args) {
+        return super.emit(...args);
+      }
+      listeners(eventName) {
+        return super.listeners(eventName);
+      }
+      // --- stdio (lazy initializers) ---
+      #stdin;
+      #stdout;
+      #stderr;
+      get stdin() {
+        return (this.#stdin ??= new ReadStream(0));
+      }
+      get stdout() {
+        return (this.#stdout ??= new WriteStream(1));
+      }
+      get stderr() {
+        return (this.#stderr ??= new WriteStream(2));
+      }
+      // --- cwd ---
+      #cwd = "/";
+      chdir(cwd2) {
+        this.#cwd = cwd2;
+      }
+      cwd() {
+        return this.#cwd;
+      }
+      // --- dummy props and getters ---
+      arch = "";
+      platform = "";
+      argv = [];
+      argv0 = "";
+      execArgv = [];
+      execPath = "";
+      title = "";
+      pid = 200;
+      ppid = 100;
+      get version() {
+        return `v${NODE_VERSION}`;
+      }
+      get versions() {
+        return { node: NODE_VERSION };
+      }
+      get allowedNodeEnvironmentFlags() {
+        return /* @__PURE__ */ new Set();
+      }
+      get sourceMapsEnabled() {
+        return false;
+      }
+      get debugPort() {
+        return 0;
+      }
+      get throwDeprecation() {
+        return false;
+      }
+      get traceDeprecation() {
+        return false;
+      }
+      get features() {
+        return {};
+      }
+      get release() {
+        return {};
+      }
+      get connected() {
+        return false;
+      }
+      get config() {
+        return {};
+      }
+      get moduleLoadList() {
+        return [];
+      }
+      constrainedMemory() {
+        return 0;
+      }
+      availableMemory() {
+        return 0;
+      }
+      uptime() {
+        return 0;
+      }
+      resourceUsage() {
+        return {};
+      }
+      // --- noop methods ---
+      ref() {}
+      unref() {}
+      // --- unimplemented methods ---
+      umask() {
+        throw createNotImplementedError("process.umask");
+      }
+      getBuiltinModule() {
+        return void 0;
+      }
+      getActiveResourcesInfo() {
+        throw createNotImplementedError("process.getActiveResourcesInfo");
+      }
+      exit() {
+        throw createNotImplementedError("process.exit");
+      }
+      reallyExit() {
+        throw createNotImplementedError("process.reallyExit");
+      }
+      kill() {
+        throw createNotImplementedError("process.kill");
+      }
+      abort() {
+        throw createNotImplementedError("process.abort");
+      }
+      dlopen() {
+        throw createNotImplementedError("process.dlopen");
+      }
+      setSourceMapsEnabled() {
+        throw createNotImplementedError("process.setSourceMapsEnabled");
+      }
+      loadEnvFile() {
+        throw createNotImplementedError("process.loadEnvFile");
+      }
+      disconnect() {
+        throw createNotImplementedError("process.disconnect");
+      }
+      cpuUsage() {
+        throw createNotImplementedError("process.cpuUsage");
+      }
+      setUncaughtExceptionCaptureCallback() {
+        throw createNotImplementedError(
+          "process.setUncaughtExceptionCaptureCallback",
+        );
+      }
+      hasUncaughtExceptionCaptureCallback() {
+        throw createNotImplementedError(
+          "process.hasUncaughtExceptionCaptureCallback",
+        );
+      }
+      initgroups() {
+        throw createNotImplementedError("process.initgroups");
+      }
+      openStdin() {
+        throw createNotImplementedError("process.openStdin");
+      }
+      assert() {
+        throw createNotImplementedError("process.assert");
+      }
+      binding() {
+        throw createNotImplementedError("process.binding");
+      }
+      // --- attached interfaces ---
+      permission = {
+        has: /* @__PURE__ */ notImplemented("process.permission.has"),
+      };
+      report = {
+        directory: "",
+        filename: "",
+        signal: "SIGUSR2",
+        compact: false,
+        reportOnFatalError: false,
+        reportOnSignal: false,
+        reportOnUncaughtException: false,
+        getReport: /* @__PURE__ */ notImplemented("process.report.getReport"),
+        writeReport: /* @__PURE__ */ notImplemented(
+          "process.report.writeReport",
+        ),
+      };
+      finalization = {
+        register: /* @__PURE__ */ notImplemented(
+          "process.finalization.register",
+        ),
+        unregister: /* @__PURE__ */ notImplemented(
+          "process.finalization.unregister",
+        ),
+        registerBeforeExit: /* @__PURE__ */ notImplemented(
+          "process.finalization.registerBeforeExit",
+        ),
+      };
+      memoryUsage = Object.assign(
+        () => ({
+          arrayBuffers: 0,
+          rss: 0,
+          external: 0,
+          heapTotal: 0,
+          heapUsed: 0,
+        }),
+        { rss: /* @__PURE__ */ __name(() => 0, "rss") },
+      );
+      // --- undefined props ---
+      mainModule = void 0;
+      domain = void 0;
+      // optional
+      send = void 0;
+      exitCode = void 0;
+      channel = void 0;
+      getegid = void 0;
+      geteuid = void 0;
+      getgid = void 0;
+      getgroups = void 0;
+      getuid = void 0;
+      setegid = void 0;
+      seteuid = void 0;
+      setgid = void 0;
+      setgroups = void 0;
+      setuid = void 0;
+      // internals
+      _events = void 0;
+      _eventsCount = void 0;
+      _exiting = void 0;
+      _maxListeners = void 0;
+      _debugEnd = void 0;
+      _debugProcess = void 0;
+      _fatalException = void 0;
+      _getActiveHandles = void 0;
+      _getActiveRequests = void 0;
+      _kill = void 0;
+      _preload_modules = void 0;
+      _rawDebug = void 0;
+      _startProfilerIdleNotifier = void 0;
+      _stopProfilerIdleNotifier = void 0;
+      _tickCallback = void 0;
+      _disconnect = void 0;
+      _handleQueue = void 0;
+      _pendingMessage = void 0;
+      _channel = void 0;
+      _send = void 0;
+      _linkedBinding = void 0;
+    };
+  },
+});
+
+// ../node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs
+var globalProcess,
+  getBuiltinModule,
+  workerdProcess,
+  unenvProcess,
+  exit,
+  features,
+  platform,
+  _channel,
+  _debugEnd,
+  _debugProcess,
+  _disconnect,
+  _events,
+  _eventsCount,
+  _exiting,
+  _fatalException,
+  _getActiveHandles,
+  _getActiveRequests,
+  _handleQueue,
+  _kill,
+  _linkedBinding,
+  _maxListeners,
+  _pendingMessage,
+  _preload_modules,
+  _rawDebug,
+  _send,
+  _startProfilerIdleNotifier,
+  _stopProfilerIdleNotifier,
+  _tickCallback,
+  abort,
+  addListener,
+  allowedNodeEnvironmentFlags,
+  arch,
+  argv,
+  argv0,
+  assert2,
+  availableMemory,
+  binding,
+  channel,
+  chdir,
+  config,
+  connected,
+  constrainedMemory,
+  cpuUsage,
+  cwd,
+  debugPort,
+  disconnect,
+  dlopen,
+  domain,
+  emit,
+  emitWarning,
+  env,
+  eventNames,
+  execArgv,
+  execPath,
+  exitCode,
+  finalization,
+  getActiveResourcesInfo,
+  getegid,
+  geteuid,
+  getgid,
+  getgroups,
+  getMaxListeners,
+  getuid,
+  hasUncaughtExceptionCaptureCallback,
+  hrtime3,
+  initgroups,
+  kill,
+  listenerCount,
+  listeners,
+  loadEnvFile,
+  mainModule,
+  memoryUsage,
+  moduleLoadList,
+  nextTick,
+  off,
+  on,
+  once,
+  openStdin,
+  permission,
+  pid,
+  ppid,
+  prependListener,
+  prependOnceListener,
+  rawListeners,
+  reallyExit,
+  ref,
+  release,
+  removeAllListeners,
+  removeListener,
+  report,
+  resourceUsage,
+  send,
+  setegid,
+  seteuid,
+  setgid,
+  setgroups,
+  setMaxListeners,
+  setSourceMapsEnabled,
+  setuid,
+  setUncaughtExceptionCaptureCallback,
+  sourceMapsEnabled,
+  stderr,
+  stdin,
+  stdout,
+  throwDeprecation,
+  title,
+  traceDeprecation,
+  umask,
+  unref,
+  uptime,
+  version,
+  versions,
+  _process,
+  process_default;
+var init_process2 = __esm({
+  "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_hrtime();
+    init_process();
+    globalProcess = globalThis["process"];
+    getBuiltinModule = globalProcess.getBuiltinModule;
+    workerdProcess = getBuiltinModule("node:process");
+    unenvProcess = new Process({
+      env: globalProcess.env,
+      hrtime,
+      // `nextTick` is available from workerd process v1
+      nextTick: workerdProcess.nextTick,
+    });
+    ({ exit, features, platform } = workerdProcess);
+    ({
+      _channel,
+      _debugEnd,
+      _debugProcess,
+      _disconnect,
+      _events,
+      _eventsCount,
+      _exiting,
+      _fatalException,
+      _getActiveHandles,
+      _getActiveRequests,
+      _handleQueue,
+      _kill,
+      _linkedBinding,
+      _maxListeners,
+      _pendingMessage,
+      _preload_modules,
+      _rawDebug,
+      _send,
+      _startProfilerIdleNotifier,
+      _stopProfilerIdleNotifier,
+      _tickCallback,
+      abort,
+      addListener,
+      allowedNodeEnvironmentFlags,
+      arch,
+      argv,
+      argv0,
+      assert: assert2,
+      availableMemory,
+      binding,
+      channel,
+      chdir,
+      config,
+      connected,
+      constrainedMemory,
+      cpuUsage,
+      cwd,
+      debugPort,
+      disconnect,
+      dlopen,
+      domain,
+      emit,
+      emitWarning,
+      env,
+      eventNames,
+      execArgv,
+      execPath,
+      exitCode,
+      finalization,
+      getActiveResourcesInfo,
+      getegid,
+      geteuid,
+      getgid,
+      getgroups,
+      getMaxListeners,
+      getuid,
+      hasUncaughtExceptionCaptureCallback,
+      hrtime: hrtime3,
+      initgroups,
+      kill,
+      listenerCount,
+      listeners,
+      loadEnvFile,
+      mainModule,
+      memoryUsage,
+      moduleLoadList,
+      nextTick,
+      off,
+      on,
+      once,
+      openStdin,
+      permission,
+      pid,
+      ppid,
+      prependListener,
+      prependOnceListener,
+      rawListeners,
+      reallyExit,
+      ref,
+      release,
+      removeAllListeners,
+      removeListener,
+      report,
+      resourceUsage,
+      send,
+      setegid,
+      seteuid,
+      setgid,
+      setgroups,
+      setMaxListeners,
+      setSourceMapsEnabled,
+      setuid,
+      setUncaughtExceptionCaptureCallback,
+      sourceMapsEnabled,
+      stderr,
+      stdin,
+      stdout,
+      throwDeprecation,
+      title,
+      traceDeprecation,
+      umask,
+      unref,
+      uptime,
+      version,
+      versions,
+    } = unenvProcess);
+    _process = {
+      abort,
+      addListener,
+      allowedNodeEnvironmentFlags,
+      hasUncaughtExceptionCaptureCallback,
+      setUncaughtExceptionCaptureCallback,
+      loadEnvFile,
+      sourceMapsEnabled,
+      arch,
+      argv,
+      argv0,
+      chdir,
+      config,
+      connected,
+      constrainedMemory,
+      availableMemory,
+      cpuUsage,
+      cwd,
+      debugPort,
+      dlopen,
+      disconnect,
+      emit,
+      emitWarning,
+      env,
+      eventNames,
+      execArgv,
+      execPath,
+      exit,
+      finalization,
+      features,
+      getBuiltinModule,
+      getActiveResourcesInfo,
+      getMaxListeners,
+      hrtime: hrtime3,
+      kill,
+      listeners,
+      listenerCount,
+      memoryUsage,
+      nextTick,
+      on,
+      off,
+      once,
+      pid,
+      platform,
+      ppid,
+      prependListener,
+      prependOnceListener,
+      rawListeners,
+      release,
+      removeAllListeners,
+      removeListener,
+      report,
+      resourceUsage,
+      setMaxListeners,
+      setSourceMapsEnabled,
+      stderr,
+      stdin,
+      stdout,
+      title,
+      throwDeprecation,
+      traceDeprecation,
+      umask,
+      uptime,
+      version,
+      versions,
+      // @ts-expect-error old API
+      domain,
+      initgroups,
+      moduleLoadList,
+      reallyExit,
+      openStdin,
+      assert: assert2,
+      binding,
+      send,
+      exitCode,
+      channel,
+      getegid,
+      geteuid,
+      getgid,
+      getgroups,
+      getuid,
+      setegid,
+      seteuid,
+      setgid,
+      setgroups,
+      setuid,
+      permission,
+      mainModule,
+      _events,
+      _eventsCount,
+      _exiting,
+      _maxListeners,
+      _debugEnd,
+      _debugProcess,
+      _fatalException,
+      _getActiveHandles,
+      _getActiveRequests,
+      _kill,
+      _preload_modules,
+      _rawDebug,
+      _startProfilerIdleNotifier,
+      _stopProfilerIdleNotifier,
+      _tickCallback,
+      _disconnect,
+      _handleQueue,
+      _pendingMessage,
+      _channel,
+      _send,
+      _linkedBinding,
+    };
+    process_default = _process;
+  },
+});
+
+// ../node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process
+var init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process =
+  __esm({
+    "../node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process"() {
+      init_process2();
+      globalThis.process = process_default;
+    },
+  });
 
 // ../node_modules/fast-xml-parser/src/util.js
 var require_util = __commonJS({
   "../node_modules/fast-xml-parser/src/util.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_7931910114310042();
-    var nameStartChar = ":A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD";
-    var nameChar = nameStartChar + "\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040";
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    var nameStartChar =
+      ":A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD";
+    var nameChar =
+      nameStartChar + "\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040";
     var nameRegexp = "[" + nameStartChar + "][" + nameChar + "]*";
     var regexName = new RegExp("^" + nameRegexp + "$");
-    var getAllMatches = /* @__PURE__ */ __name(function(string, regex) {
+    var getAllMatches = /* @__PURE__ */ __name(function (string, regex) {
       const matches = [];
       let match2 = regex.exec(string);
       while (match2) {
@@ -52,17 +1374,17 @@ var require_util = __commonJS({
       }
       return matches;
     }, "getAllMatches");
-    var isName = /* @__PURE__ */ __name(function(string) {
+    var isName = /* @__PURE__ */ __name(function (string) {
       const match2 = regexName.exec(string);
       return !(match2 === null || typeof match2 === "undefined");
     }, "isName");
-    exports.isExist = function(v) {
+    exports.isExist = function (v) {
       return typeof v !== "undefined";
     };
-    exports.isEmptyObject = function(obj) {
+    exports.isEmptyObject = function (obj) {
       return Object.keys(obj).length === 0;
     };
-    exports.merge = function(target, a, arrayMode) {
+    exports.merge = function (target, a, arrayMode) {
       if (a) {
         const keys = Object.keys(a);
         const len = keys.length;
@@ -75,31 +1397,49 @@ var require_util = __commonJS({
         }
       }
     };
-    exports.getValue = function(v) {
+    exports.getValue = function (v) {
       if (exports.isExist(v)) {
         return v;
       } else {
         return "";
       }
     };
+    var DANGEROUS_PROPERTY_NAMES = [
+      // '__proto__',
+      // 'constructor',
+      // 'prototype',
+      "hasOwnProperty",
+      "toString",
+      "valueOf",
+      "__defineGetter__",
+      "__defineSetter__",
+      "__lookupGetter__",
+      "__lookupSetter__",
+    ];
+    var criticalProperties = ["__proto__", "constructor", "prototype"];
     exports.isName = isName;
     exports.getAllMatches = getAllMatches;
     exports.nameRegexp = nameRegexp;
-  }
+    exports.DANGEROUS_PROPERTY_NAMES = DANGEROUS_PROPERTY_NAMES;
+    exports.criticalProperties = criticalProperties;
+  },
 });
 
 // ../node_modules/fast-xml-parser/src/validator.js
 var require_validator = __commonJS({
   "../node_modules/fast-xml-parser/src/validator.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     var util = require_util();
     var defaultOptions = {
       allowBooleanAttributes: false,
       //A tag can have attributes without any value
-      unpairedTags: []
+      unpairedTags: [],
     };
-    exports.validate = function(xmlData, options) {
+    exports.validate = function (xmlData, options) {
       options = Object.assign({}, defaultOptions, options);
       const tags = [];
       let tagFound = false;
@@ -125,7 +1465,16 @@ var require_validator = __commonJS({
               i++;
             }
             let tagName = "";
-            for (; i < xmlData.length && xmlData[i] !== ">" && xmlData[i] !== " " && xmlData[i] !== "	" && xmlData[i] !== "\n" && xmlData[i] !== "\r"; i++) {
+            for (
+              ;
+              i < xmlData.length &&
+              xmlData[i] !== ">" &&
+              xmlData[i] !== " " &&
+              xmlData[i] !== "	" &&
+              xmlData[i] !== "\n" &&
+              xmlData[i] !== "\r";
+              i++
+            ) {
               tagName += xmlData[i];
             }
             tagName = tagName.trim();
@@ -140,11 +1489,19 @@ var require_validator = __commonJS({
               } else {
                 msg = "Tag '" + tagName + "' is an invalid name.";
               }
-              return getErrorObject("InvalidTag", msg, getLineNumberForPosition(xmlData, i));
+              return getErrorObject(
+                "InvalidTag",
+                msg,
+                getLineNumberForPosition(xmlData, i),
+              );
             }
             const result = readAttributeStr(xmlData, i);
             if (result === false) {
-              return getErrorObject("InvalidAttr", "Attributes for '" + tagName + "' have open quote.", getLineNumberForPosition(xmlData, i));
+              return getErrorObject(
+                "InvalidAttr",
+                "Attributes for '" + tagName + "' have open quote.",
+                getLineNumberForPosition(xmlData, i),
+              );
             }
             let attrStr = result.value;
             i = result.index;
@@ -155,23 +1512,55 @@ var require_validator = __commonJS({
               if (isValid === true) {
                 tagFound = true;
               } else {
-                return getErrorObject(isValid.err.code, isValid.err.msg, getLineNumberForPosition(xmlData, attrStrStart + isValid.err.line));
+                return getErrorObject(
+                  isValid.err.code,
+                  isValid.err.msg,
+                  getLineNumberForPosition(
+                    xmlData,
+                    attrStrStart + isValid.err.line,
+                  ),
+                );
               }
             } else if (closingTag) {
               if (!result.tagClosed) {
-                return getErrorObject("InvalidTag", "Closing tag '" + tagName + "' doesn't have proper closing.", getLineNumberForPosition(xmlData, i));
+                return getErrorObject(
+                  "InvalidTag",
+                  "Closing tag '" + tagName + "' doesn't have proper closing.",
+                  getLineNumberForPosition(xmlData, i),
+                );
               } else if (attrStr.trim().length > 0) {
-                return getErrorObject("InvalidTag", "Closing tag '" + tagName + "' can't have attributes or invalid starting.", getLineNumberForPosition(xmlData, tagStartPos));
+                return getErrorObject(
+                  "InvalidTag",
+                  "Closing tag '" +
+                    tagName +
+                    "' can't have attributes or invalid starting.",
+                  getLineNumberForPosition(xmlData, tagStartPos),
+                );
               } else if (tags.length === 0) {
-                return getErrorObject("InvalidTag", "Closing tag '" + tagName + "' has not been opened.", getLineNumberForPosition(xmlData, tagStartPos));
+                return getErrorObject(
+                  "InvalidTag",
+                  "Closing tag '" + tagName + "' has not been opened.",
+                  getLineNumberForPosition(xmlData, tagStartPos),
+                );
               } else {
                 const otg = tags.pop();
                 if (tagName !== otg.tagName) {
-                  let openPos = getLineNumberForPosition(xmlData, otg.tagStartPos);
+                  let openPos = getLineNumberForPosition(
+                    xmlData,
+                    otg.tagStartPos,
+                  );
                   return getErrorObject(
                     "InvalidTag",
-                    "Expected closing tag '" + otg.tagName + "' (opened in line " + openPos.line + ", col " + openPos.col + ") instead of closing tag '" + tagName + "'.",
-                    getLineNumberForPosition(xmlData, tagStartPos)
+                    "Expected closing tag '" +
+                      otg.tagName +
+                      "' (opened in line " +
+                      openPos.line +
+                      ", col " +
+                      openPos.col +
+                      ") instead of closing tag '" +
+                      tagName +
+                      "'.",
+                    getLineNumberForPosition(xmlData, tagStartPos),
                   );
                 }
                 if (tags.length == 0) {
@@ -181,10 +1570,21 @@ var require_validator = __commonJS({
             } else {
               const isValid = validateAttributeString(attrStr, options);
               if (isValid !== true) {
-                return getErrorObject(isValid.err.code, isValid.err.msg, getLineNumberForPosition(xmlData, i - attrStr.length + isValid.err.line));
+                return getErrorObject(
+                  isValid.err.code,
+                  isValid.err.msg,
+                  getLineNumberForPosition(
+                    xmlData,
+                    i - attrStr.length + isValid.err.line,
+                  ),
+                );
               }
               if (reachedRoot === true) {
-                return getErrorObject("InvalidXml", "Multiple possible root nodes found.", getLineNumberForPosition(xmlData, i));
+                return getErrorObject(
+                  "InvalidXml",
+                  "Multiple possible root nodes found.",
+                  getLineNumberForPosition(xmlData, i),
+                );
               } else if (options.unpairedTags.indexOf(tagName) !== -1) {
               } else {
                 tags.push({ tagName, tagStartPos });
@@ -206,11 +1606,19 @@ var require_validator = __commonJS({
               } else if (xmlData[i] === "&") {
                 const afterAmp = validateAmpersand(xmlData, i);
                 if (afterAmp == -1)
-                  return getErrorObject("InvalidChar", "char '&' is not expected.", getLineNumberForPosition(xmlData, i));
+                  return getErrorObject(
+                    "InvalidChar",
+                    "char '&' is not expected.",
+                    getLineNumberForPosition(xmlData, i),
+                  );
                 i = afterAmp;
               } else {
                 if (reachedRoot === true && !isWhiteSpace(xmlData[i])) {
-                  return getErrorObject("InvalidXml", "Extra text at the end", getLineNumberForPosition(xmlData, i));
+                  return getErrorObject(
+                    "InvalidXml",
+                    "Extra text at the end",
+                    getLineNumberForPosition(xmlData, i),
+                  );
                 }
               }
             }
@@ -222,15 +1630,33 @@ var require_validator = __commonJS({
           if (isWhiteSpace(xmlData[i])) {
             continue;
           }
-          return getErrorObject("InvalidChar", "char '" + xmlData[i] + "' is not expected.", getLineNumberForPosition(xmlData, i));
+          return getErrorObject(
+            "InvalidChar",
+            "char '" + xmlData[i] + "' is not expected.",
+            getLineNumberForPosition(xmlData, i),
+          );
         }
       }
       if (!tagFound) {
         return getErrorObject("InvalidXml", "Start tag expected.", 1);
       } else if (tags.length == 1) {
-        return getErrorObject("InvalidTag", "Unclosed tag '" + tags[0].tagName + "'.", getLineNumberForPosition(xmlData, tags[0].tagStartPos));
+        return getErrorObject(
+          "InvalidTag",
+          "Unclosed tag '" + tags[0].tagName + "'.",
+          getLineNumberForPosition(xmlData, tags[0].tagStartPos),
+        );
       } else if (tags.length > 0) {
-        return getErrorObject("InvalidXml", "Invalid '" + JSON.stringify(tags.map((t) => t.tagName), null, 4).replace(/\r?\n/g, "") + "' found.", { line: 1, col: 1 });
+        return getErrorObject(
+          "InvalidXml",
+          "Invalid '" +
+            JSON.stringify(
+              tags.map((t) => t.tagName),
+              null,
+              4,
+            ).replace(/\r?\n/g, "") +
+            "' found.",
+          { line: 1, col: 1 },
+        );
       }
       return true;
     };
@@ -244,7 +1670,11 @@ var require_validator = __commonJS({
         if (xmlData[i] == "?" || xmlData[i] == " ") {
           const tagname = xmlData.substr(start, i - start);
           if (i > 5 && tagname === "xml") {
-            return getErrorObject("InvalidXml", "XML declaration allowed only at the start of the document.", getLineNumberForPosition(xmlData, i));
+            return getErrorObject(
+              "InvalidXml",
+              "XML declaration allowed only at the start of the document.",
+              getLineNumberForPosition(xmlData, i),
+            );
           } else if (xmlData[i] == "?" && xmlData[i + 1] == ">") {
             i++;
             break;
@@ -257,14 +1687,31 @@ var require_validator = __commonJS({
     }
     __name(readPI, "readPI");
     function readCommentAndCDATA(xmlData, i) {
-      if (xmlData.length > i + 5 && xmlData[i + 1] === "-" && xmlData[i + 2] === "-") {
+      if (
+        xmlData.length > i + 5 &&
+        xmlData[i + 1] === "-" &&
+        xmlData[i + 2] === "-"
+      ) {
         for (i += 3; i < xmlData.length; i++) {
-          if (xmlData[i] === "-" && xmlData[i + 1] === "-" && xmlData[i + 2] === ">") {
+          if (
+            xmlData[i] === "-" &&
+            xmlData[i + 1] === "-" &&
+            xmlData[i + 2] === ">"
+          ) {
             i += 2;
             break;
           }
         }
-      } else if (xmlData.length > i + 8 && xmlData[i + 1] === "D" && xmlData[i + 2] === "O" && xmlData[i + 3] === "C" && xmlData[i + 4] === "T" && xmlData[i + 5] === "Y" && xmlData[i + 6] === "P" && xmlData[i + 7] === "E") {
+      } else if (
+        xmlData.length > i + 8 &&
+        xmlData[i + 1] === "D" &&
+        xmlData[i + 2] === "O" &&
+        xmlData[i + 3] === "C" &&
+        xmlData[i + 4] === "T" &&
+        xmlData[i + 5] === "Y" &&
+        xmlData[i + 6] === "P" &&
+        xmlData[i + 7] === "E"
+      ) {
         let angleBracketsCount = 1;
         for (i += 8; i < xmlData.length; i++) {
           if (xmlData[i] === "<") {
@@ -276,9 +1723,22 @@ var require_validator = __commonJS({
             }
           }
         }
-      } else if (xmlData.length > i + 9 && xmlData[i + 1] === "[" && xmlData[i + 2] === "C" && xmlData[i + 3] === "D" && xmlData[i + 4] === "A" && xmlData[i + 5] === "T" && xmlData[i + 6] === "A" && xmlData[i + 7] === "[") {
+      } else if (
+        xmlData.length > i + 9 &&
+        xmlData[i + 1] === "[" &&
+        xmlData[i + 2] === "C" &&
+        xmlData[i + 3] === "D" &&
+        xmlData[i + 4] === "A" &&
+        xmlData[i + 5] === "T" &&
+        xmlData[i + 6] === "A" &&
+        xmlData[i + 7] === "["
+      ) {
         for (i += 8; i < xmlData.length; i++) {
-          if (xmlData[i] === "]" && xmlData[i + 1] === "]" && xmlData[i + 2] === ">") {
+          if (
+            xmlData[i] === "]" &&
+            xmlData[i + 1] === "]" &&
+            xmlData[i + 2] === ">"
+          ) {
             i += 2;
             break;
           }
@@ -315,30 +1775,56 @@ var require_validator = __commonJS({
       return {
         value: attrStr,
         index: i,
-        tagClosed
+        tagClosed,
       };
     }
     __name(readAttributeStr, "readAttributeStr");
-    var validAttrStrRegxp = new RegExp(`(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['"])(([\\s\\S])*?)\\5)?`, "g");
+    var validAttrStrRegxp = new RegExp(
+      `(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['"])(([\\s\\S])*?)\\5)?`,
+      "g",
+    );
     function validateAttributeString(attrStr, options) {
       const matches = util.getAllMatches(attrStr, validAttrStrRegxp);
       const attrNames = {};
       for (let i = 0; i < matches.length; i++) {
         if (matches[i][1].length === 0) {
-          return getErrorObject("InvalidAttr", "Attribute '" + matches[i][2] + "' has no space in starting.", getPositionFromMatch(matches[i]));
+          return getErrorObject(
+            "InvalidAttr",
+            "Attribute '" + matches[i][2] + "' has no space in starting.",
+            getPositionFromMatch(matches[i]),
+          );
         } else if (matches[i][3] !== void 0 && matches[i][4] === void 0) {
-          return getErrorObject("InvalidAttr", "Attribute '" + matches[i][2] + "' is without value.", getPositionFromMatch(matches[i]));
-        } else if (matches[i][3] === void 0 && !options.allowBooleanAttributes) {
-          return getErrorObject("InvalidAttr", "boolean attribute '" + matches[i][2] + "' is not allowed.", getPositionFromMatch(matches[i]));
+          return getErrorObject(
+            "InvalidAttr",
+            "Attribute '" + matches[i][2] + "' is without value.",
+            getPositionFromMatch(matches[i]),
+          );
+        } else if (
+          matches[i][3] === void 0 &&
+          !options.allowBooleanAttributes
+        ) {
+          return getErrorObject(
+            "InvalidAttr",
+            "boolean attribute '" + matches[i][2] + "' is not allowed.",
+            getPositionFromMatch(matches[i]),
+          );
         }
         const attrName = matches[i][2];
         if (!validateAttrName(attrName)) {
-          return getErrorObject("InvalidAttr", "Attribute '" + attrName + "' is an invalid name.", getPositionFromMatch(matches[i]));
+          return getErrorObject(
+            "InvalidAttr",
+            "Attribute '" + attrName + "' is an invalid name.",
+            getPositionFromMatch(matches[i]),
+          );
         }
         if (!attrNames.hasOwnProperty(attrName)) {
           attrNames[attrName] = 1;
         } else {
-          return getErrorObject("InvalidAttr", "Attribute '" + attrName + "' is repeated.", getPositionFromMatch(matches[i]));
+          return getErrorObject(
+            "InvalidAttr",
+            "Attribute '" + attrName + "' is repeated.",
+            getPositionFromMatch(matches[i]),
+          );
         }
       }
       return true;
@@ -351,28 +1837,23 @@ var require_validator = __commonJS({
         re = /[\da-fA-F]/;
       }
       for (; i < xmlData.length; i++) {
-        if (xmlData[i] === ";")
-          return i;
-        if (!xmlData[i].match(re))
-          break;
+        if (xmlData[i] === ";") return i;
+        if (!xmlData[i].match(re)) break;
       }
       return -1;
     }
     __name(validateNumberAmpersand, "validateNumberAmpersand");
     function validateAmpersand(xmlData, i) {
       i++;
-      if (xmlData[i] === ";")
-        return -1;
+      if (xmlData[i] === ";") return -1;
       if (xmlData[i] === "#") {
         i++;
         return validateNumberAmpersand(xmlData, i);
       }
-      let count = 0;
-      for (; i < xmlData.length; i++, count++) {
-        if (xmlData[i].match(/\w/) && count < 20)
-          continue;
-        if (xmlData[i] === ";")
-          break;
+      let count3 = 0;
+      for (; i < xmlData.length; i++, count3++) {
+        if (xmlData[i].match(/\w/) && count3 < 20) continue;
+        if (xmlData[i] === ";") break;
         return -1;
       }
       return i;
@@ -384,8 +1865,8 @@ var require_validator = __commonJS({
           code,
           msg: message,
           line: lineNumber.line || lineNumber,
-          col: lineNumber.col
-        }
+          col: lineNumber.col,
+        },
       };
     }
     __name(getErrorObject, "getErrorObject");
@@ -402,7 +1883,7 @@ var require_validator = __commonJS({
       return {
         line: lines.length,
         // column number is last line's length + 1, because column numbering starts at 1:
-        col: lines[lines.length - 1].length + 1
+        col: lines[lines.length - 1].length + 1,
       };
     }
     __name(getLineNumberForPosition, "getLineNumberForPosition");
@@ -410,13 +1891,23 @@ var require_validator = __commonJS({
       return match2.startIndex + match2[1].length;
     }
     __name(getPositionFromMatch, "getPositionFromMatch");
-  }
+  },
 });
 
 // ../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
 var require_OptionsBuilder = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"(exports) {
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    var { DANGEROUS_PROPERTY_NAMES, criticalProperties } = require_util();
+    var defaultOnDangerousProperty = /* @__PURE__ */ __name((name) => {
+      if (DANGEROUS_PROPERTY_NAMES.includes(name)) {
+        return "__" + name;
+      }
+      return name;
+    }, "defaultOnDangerousProperty");
     var defaultOptions = {
       preserveOrder: false,
       attributeNamePrefix: "@_",
@@ -436,12 +1927,12 @@ var require_OptionsBuilder = __commonJS({
       numberParseOptions: {
         hex: true,
         leadingZeros: true,
-        eNotation: true
+        eNotation: true,
       },
-      tagValueProcessor: /* @__PURE__ */ __name(function(tagName, val) {
+      tagValueProcessor: /* @__PURE__ */ __name(function (tagName, val) {
         return val;
       }, "tagValueProcessor"),
-      attributeValueProcessor: /* @__PURE__ */ __name(function(attrName, val) {
+      attributeValueProcessor: /* @__PURE__ */ __name(function (attrName, val) {
         return val;
       }, "attributeValueProcessor"),
       stopNodes: [],
@@ -456,14 +1947,40 @@ var require_OptionsBuilder = __commonJS({
       ignorePiTags: false,
       transformTagName: false,
       transformAttributeName: false,
-      updateTag: /* @__PURE__ */ __name(function(tagName, jPath, attrs) {
+      updateTag: /* @__PURE__ */ __name(function (tagName, jPath, attrs) {
         return tagName;
       }, "updateTag"),
       // skipEmptyListItem: false
       captureMetaData: false,
       maxNestedTags: 100,
-      strictReservedNames: true
+      strictReservedNames: true,
+      onDangerousProperty: defaultOnDangerousProperty,
     };
+    function validatePropertyName(propertyName, optionName) {
+      if (typeof propertyName !== "string") {
+        return;
+      }
+      const normalized = propertyName.toLowerCase();
+      if (
+        DANGEROUS_PROPERTY_NAMES.some(
+          (dangerous) => normalized === dangerous.toLowerCase(),
+        )
+      ) {
+        throw new Error(
+          `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`,
+        );
+      }
+      if (
+        criticalProperties.some(
+          (dangerous) => normalized === dangerous.toLowerCase(),
+        )
+      ) {
+        throw new Error(
+          `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`,
+        );
+      }
+    }
+    __name(validatePropertyName, "validatePropertyName");
     function normalizeProcessEntities(value) {
       if (typeof value === "boolean") {
         return {
@@ -474,39 +1991,57 @@ var require_OptionsBuilder = __commonJS({
           maxTotalExpansions: 1e3,
           maxExpandedLength: 1e5,
           allowedTags: null,
-          tagFilter: null
+          tagFilter: null,
         };
       }
       if (typeof value === "object" && value !== null) {
         return {
           enabled: value.enabled !== false,
-          // default true if not specified
-          maxEntitySize: value.maxEntitySize ?? 1e4,
-          maxExpansionDepth: value.maxExpansionDepth ?? 10,
-          maxTotalExpansions: value.maxTotalExpansions ?? 1e3,
-          maxExpandedLength: value.maxExpandedLength ?? 1e5,
+          maxEntitySize: Math.max(1, value.maxEntitySize ?? 1e4),
+          maxExpansionDepth: Math.max(1, value.maxExpansionDepth ?? 1e4),
+          maxTotalExpansions: Math.max(1, value.maxTotalExpansions ?? Infinity),
+          maxExpandedLength: Math.max(1, value.maxExpandedLength ?? 1e5),
+          maxEntityCount: Math.max(1, value.maxEntityCount ?? 1e3),
           allowedTags: value.allowedTags ?? null,
-          tagFilter: value.tagFilter ?? null
+          tagFilter: value.tagFilter ?? null,
         };
       }
       return normalizeProcessEntities(true);
     }
     __name(normalizeProcessEntities, "normalizeProcessEntities");
-    var buildOptions = /* @__PURE__ */ __name(function(options) {
+    var buildOptions = /* @__PURE__ */ __name(function (options) {
       const built = Object.assign({}, defaultOptions, options);
+      const propertyNameOptions = [
+        { value: built.attributeNamePrefix, name: "attributeNamePrefix" },
+        { value: built.attributesGroupName, name: "attributesGroupName" },
+        { value: built.textNodeName, name: "textNodeName" },
+        { value: built.cdataPropName, name: "cdataPropName" },
+        { value: built.commentPropName, name: "commentPropName" },
+      ];
+      for (const { value, name } of propertyNameOptions) {
+        if (value) {
+          validatePropertyName(value, name);
+        }
+      }
+      if (built.onDangerousProperty === null) {
+        built.onDangerousProperty = defaultOnDangerousProperty;
+      }
       built.processEntities = normalizeProcessEntities(built.processEntities);
       return built;
     }, "buildOptions");
     exports.buildOptions = buildOptions;
     exports.defaultOptions = defaultOptions;
-  }
+  },
 });
 
 // ../node_modules/fast-xml-parser/src/xmlparser/xmlNode.js
 var require_xmlNode = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     var XmlNode = class {
       static {
         __name(this, "XmlNode");
@@ -530,13 +2065,19 @@ var require_xmlNode = __commonJS({
       }
     };
     module.exports = XmlNode;
-  }
+  },
 });
 
 // ../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js
 var require_DocTypeReader = __commonJS({
-  "../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js"(exports, module) {
-    init_functionsRoutes_0_7931910114310042();
+  "../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js"(
+    exports,
+    module,
+  ) {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     var util = require_util();
     var DocTypeReader = class {
       static {
@@ -548,23 +2089,49 @@ var require_DocTypeReader = __commonJS({
       }
       readDocType(xmlData, i) {
         const entities = /* @__PURE__ */ Object.create(null);
-        if (xmlData[i + 3] === "O" && xmlData[i + 4] === "C" && xmlData[i + 5] === "T" && xmlData[i + 6] === "Y" && xmlData[i + 7] === "P" && xmlData[i + 8] === "E") {
+        let entityCount = 0;
+        if (
+          xmlData[i + 3] === "O" &&
+          xmlData[i + 4] === "C" &&
+          xmlData[i + 5] === "T" &&
+          xmlData[i + 6] === "Y" &&
+          xmlData[i + 7] === "P" &&
+          xmlData[i + 8] === "E"
+        ) {
           i = i + 9;
           let angleBracketsCount = 1;
-          let hasBody = false, comment = false;
+          let hasBody = false,
+            comment = false;
           let exp = "";
           for (; i < xmlData.length; i++) {
             if (xmlData[i] === "<" && !comment) {
               if (hasBody && hasSeq(xmlData, "!ENTITY", i)) {
                 i += 7;
                 let entityName, val;
-                [entityName, val, i] = this.readEntityExp(xmlData, i + 1, this.suppressValidationErr);
+                [entityName, val, i] = this.readEntityExp(
+                  xmlData,
+                  i + 1,
+                  this.suppressValidationErr,
+                );
                 if (val.indexOf("&") === -1) {
-                  const escaped = entityName.replace(/[.\-+*:]/g, "\\.");
+                  if (
+                    this.options.enabled !== false &&
+                    this.options.maxEntityCount != null &&
+                    entityCount >= this.options.maxEntityCount
+                  ) {
+                    throw new Error(
+                      `Entity count (${entityCount + 1}) exceeds maximum allowed (${this.options.maxEntityCount})`,
+                    );
+                  }
+                  const escaped = entityName.replace(
+                    /[.*+?^${}()|[\]\\]/g,
+                    "\\$&",
+                  );
                   entities[entityName] = {
                     regx: RegExp(`&${escaped};`, "g"),
-                    val
+                    val,
                   };
+                  entityCount++;
                 }
               } else if (hasBody && hasSeq(xmlData, "!ELEMENT", i)) {
                 i += 8;
@@ -574,7 +2141,11 @@ var require_DocTypeReader = __commonJS({
                 i += 8;
               } else if (hasBody && hasSeq(xmlData, "!NOTATION", i)) {
                 i += 9;
-                const { index } = this.readNotationExp(xmlData, i + 1, this.suppressValidationErr);
+                const { index } = this.readNotationExp(
+                  xmlData,
+                  i + 1,
+                  this.suppressValidationErr,
+                );
                 i = index;
               } else if (hasSeq(xmlData, "!--", i)) {
                 comment = true;
@@ -612,7 +2183,12 @@ var require_DocTypeReader = __commonJS({
       readEntityExp(xmlData, i) {
         i = skipWhitespace(xmlData, i);
         let entityName = "";
-        while (i < xmlData.length && !/\s/.test(xmlData[i]) && xmlData[i] !== '"' && xmlData[i] !== "'") {
+        while (
+          i < xmlData.length &&
+          !/\s/.test(xmlData[i]) &&
+          xmlData[i] !== '"' &&
+          xmlData[i] !== "'"
+        ) {
           entityName += xmlData[i];
           i++;
         }
@@ -627,9 +2203,13 @@ var require_DocTypeReader = __commonJS({
         }
         let entityValue = "";
         [i, entityValue] = this.readIdentifierVal(xmlData, i, "entity");
-        if (this.options.enabled !== false && this.options.maxEntitySize && entityValue.length > this.options.maxEntitySize) {
+        if (
+          this.options.enabled !== false &&
+          this.options.maxEntitySize != null &&
+          entityValue.length > this.options.maxEntitySize
+        ) {
           throw new Error(
-            `Entity "${entityName}" size (${entityValue.length}) exceeds maximum allowed size (${this.options.maxEntitySize})`
+            `Entity "${entityName}" size (${entityValue.length}) exceeds maximum allowed size (${this.options.maxEntitySize})`,
           );
         }
         i--;
@@ -645,23 +2225,43 @@ var require_DocTypeReader = __commonJS({
         !this.suppressValidationErr && validateEntityName(notationName);
         i = skipWhitespace(xmlData, i);
         const identifierType = xmlData.substring(i, i + 6).toUpperCase();
-        if (!this.suppressValidationErr && identifierType !== "SYSTEM" && identifierType !== "PUBLIC") {
-          throw new Error(`Expected SYSTEM or PUBLIC, found "${identifierType}"`);
+        if (
+          !this.suppressValidationErr &&
+          identifierType !== "SYSTEM" &&
+          identifierType !== "PUBLIC"
+        ) {
+          throw new Error(
+            `Expected SYSTEM or PUBLIC, found "${identifierType}"`,
+          );
         }
         i += identifierType.length;
         i = skipWhitespace(xmlData, i);
         let publicIdentifier = null;
         let systemIdentifier = null;
         if (identifierType === "PUBLIC") {
-          [i, publicIdentifier] = this.readIdentifierVal(xmlData, i, "publicIdentifier");
+          [i, publicIdentifier] = this.readIdentifierVal(
+            xmlData,
+            i,
+            "publicIdentifier",
+          );
           i = skipWhitespace(xmlData, i);
           if (xmlData[i] === '"' || xmlData[i] === "'") {
-            [i, systemIdentifier] = this.readIdentifierVal(xmlData, i, "systemIdentifier");
+            [i, systemIdentifier] = this.readIdentifierVal(
+              xmlData,
+              i,
+              "systemIdentifier",
+            );
           }
         } else if (identifierType === "SYSTEM") {
-          [i, systemIdentifier] = this.readIdentifierVal(xmlData, i, "systemIdentifier");
+          [i, systemIdentifier] = this.readIdentifierVal(
+            xmlData,
+            i,
+            "systemIdentifier",
+          );
           if (!this.suppressValidationErr && !systemIdentifier) {
-            throw new Error("Missing mandatory system identifier for SYSTEM notation");
+            throw new Error(
+              "Missing mandatory system identifier for SYSTEM notation",
+            );
           }
         }
         return { notationName, publicIdentifier, systemIdentifier, index: --i };
@@ -714,7 +2314,7 @@ var require_DocTypeReader = __commonJS({
         return {
           elementName,
           contentModel: contentModel.trim(),
-          index: i
+          index: i,
         };
       }
       readAttlistExp(xmlData, i) {
@@ -747,7 +2347,11 @@ var require_DocTypeReader = __commonJS({
           let allowedNotations = [];
           while (i < xmlData.length && xmlData[i] !== ")") {
             let notation = "";
-            while (i < xmlData.length && xmlData[i] !== "|" && xmlData[i] !== ")") {
+            while (
+              i < xmlData.length &&
+              xmlData[i] !== "|" &&
+              xmlData[i] !== ")"
+            ) {
               notation += xmlData[i];
               i++;
             }
@@ -771,8 +2375,20 @@ var require_DocTypeReader = __commonJS({
             attributeType += xmlData[i];
             i++;
           }
-          const validTypes = ["CDATA", "ID", "IDREF", "IDREFS", "ENTITY", "ENTITIES", "NMTOKEN", "NMTOKENS"];
-          if (!this.suppressValidationErr && !validTypes.includes(attributeType.toUpperCase())) {
+          const validTypes = [
+            "CDATA",
+            "ID",
+            "IDREF",
+            "IDREFS",
+            "ENTITY",
+            "ENTITIES",
+            "NMTOKEN",
+            "NMTOKENS",
+          ];
+          if (
+            !this.suppressValidationErr &&
+            !validTypes.includes(attributeType.toUpperCase())
+          ) {
             throw new Error(`Invalid attribute type: "${attributeType}"`);
           }
         }
@@ -792,7 +2408,7 @@ var require_DocTypeReader = __commonJS({
           attributeName,
           attributeType,
           defaultValue,
-          index: i
+          index: i,
         };
       }
     };
@@ -810,20 +2426,21 @@ var require_DocTypeReader = __commonJS({
     }
     __name(hasSeq, "hasSeq");
     function validateEntityName(name) {
-      if (util.isName(name))
-        return name;
-      else
-        throw new Error(`Invalid entity name ${name}`);
+      if (util.isName(name)) return name;
+      else throw new Error(`Invalid entity name ${name}`);
     }
     __name(validateEntityName, "validateEntityName");
     module.exports = DocTypeReader;
-  }
+  },
 });
 
 // ../node_modules/strnum/strnum.js
 var require_strnum = __commonJS({
   "../node_modules/strnum/strnum.js"(exports, module) {
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     var hexRegex = /^[-+]?0x[a-fA-F0-9]+$/;
     var numRegex = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/;
     var consider = {
@@ -831,19 +2448,22 @@ var require_strnum = __commonJS({
       // oct: false,
       leadingZeros: true,
       decimalPoint: ".",
-      eNotation: true
+      eNotation: true,
       //skipLike: /regex/
     };
     function toNumber(str, options = {}) {
       options = Object.assign({}, consider, options);
       if (!str || typeof str !== "string") return str;
       let trimmedStr = str.trim();
-      if (options.skipLike !== void 0 && options.skipLike.test(trimmedStr)) return str;
+      if (options.skipLike !== void 0 && options.skipLike.test(trimmedStr))
+        return str;
       else if (str === "0") return 0;
       else if (options.hex && hexRegex.test(trimmedStr)) {
         return parse_int(trimmedStr, 16);
       } else if (trimmedStr.search(/[eE]/) !== -1) {
-        const notation = trimmedStr.match(/^([-\+])?(0*)([0-9]*(\.[0-9]*)?[eE][-\+]?[0-9]+)$/);
+        const notation = trimmedStr.match(
+          /^([-\+])?(0*)([0-9]*(\.[0-9]*)?[eE][-\+]?[0-9]+)$/,
+        );
         if (notation) {
           if (options.leadingZeros) {
             trimmedStr = (notation[1] || "") + notation[3];
@@ -863,8 +2483,20 @@ var require_strnum = __commonJS({
           const sign = match2[1];
           const leadingZeros = match2[2];
           let numTrimmedByZeros = trimZeros(match2[3]);
-          if (!options.leadingZeros && leadingZeros.length > 0 && sign && trimmedStr[2] !== ".") return str;
-          else if (!options.leadingZeros && leadingZeros.length > 0 && !sign && trimmedStr[1] !== ".") return str;
+          if (
+            !options.leadingZeros &&
+            leadingZeros.length > 0 &&
+            sign &&
+            trimmedStr[2] !== "."
+          )
+            return str;
+          else if (
+            !options.leadingZeros &&
+            leadingZeros.length > 0 &&
+            !sign &&
+            trimmedStr[1] !== "."
+          )
+            return str;
           else if (options.leadingZeros && leadingZeros === str) return 0;
           else {
             const num = Number(trimmedStr);
@@ -879,9 +2511,14 @@ var require_strnum = __commonJS({
               else return str;
             }
             if (leadingZeros) {
-              return numTrimmedByZeros === numStr || sign + numTrimmedByZeros === numStr ? num : str;
+              return numTrimmedByZeros === numStr ||
+                sign + numTrimmedByZeros === numStr
+                ? num
+                : str;
             } else {
-              return trimmedStr === numStr || trimmedStr === sign + numStr ? num : str;
+              return trimmedStr === numStr || trimmedStr === sign + numStr
+                ? num
+                : str;
             }
           }
         } else {
@@ -895,7 +2532,8 @@ var require_strnum = __commonJS({
         numStr = numStr.replace(/0+$/, "");
         if (numStr === ".") numStr = "0";
         else if (numStr[0] === ".") numStr = "0" + numStr;
-        else if (numStr[numStr.length - 1] === ".") numStr = numStr.substr(0, numStr.length - 1);
+        else if (numStr[numStr.length - 1] === ".")
+          numStr = numStr.substr(0, numStr.length - 1);
         return numStr;
       }
       return numStr;
@@ -905,17 +2543,23 @@ var require_strnum = __commonJS({
       if (parseInt) return parseInt(numStr, base);
       else if (Number.parseInt) return Number.parseInt(numStr, base);
       else if (window && window.parseInt) return window.parseInt(numStr, base);
-      else throw new Error("parseInt, Number.parseInt, window.parseInt are not supported");
+      else
+        throw new Error(
+          "parseInt, Number.parseInt, window.parseInt are not supported",
+        );
     }
     __name(parse_int, "parse_int");
     module.exports = toNumber;
-  }
+  },
 });
 
 // ../node_modules/fast-xml-parser/src/ignoreAttributes.js
 var require_ignoreAttributes = __commonJS({
   "../node_modules/fast-xml-parser/src/ignoreAttributes.js"(exports, module) {
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     function getIgnoreAttributesFn(ignoreAttributes) {
       if (typeof ignoreAttributes === "function") {
         return ignoreAttributes;
@@ -936,14 +2580,20 @@ var require_ignoreAttributes = __commonJS({
     }
     __name(getIgnoreAttributesFn, "getIgnoreAttributesFn");
     module.exports = getIgnoreAttributesFn;
-  }
+  },
 });
 
 // ../node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js
 var require_OrderedObjParser = __commonJS({
-  "../node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js"(exports, module) {
+  "../node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js"(
+    exports,
+    module,
+  ) {
     "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     var util = require_util();
     var xmlNode = require_xmlNode();
     var DocTypeReader = require_DocTypeReader();
@@ -959,28 +2609,40 @@ var require_OrderedObjParser = __commonJS({
         this.tagsNodeStack = [];
         this.docTypeEntities = {};
         this.lastEntities = {
-          "apos": { regex: /&(apos|#39|#x27);/g, val: "'" },
-          "gt": { regex: /&(gt|#62|#x3E);/g, val: ">" },
-          "lt": { regex: /&(lt|#60|#x3C);/g, val: "<" },
-          "quot": { regex: /&(quot|#34|#x22);/g, val: '"' }
+          apos: { regex: /&(apos|#39|#x27);/g, val: "'" },
+          gt: { regex: /&(gt|#62|#x3E);/g, val: ">" },
+          lt: { regex: /&(lt|#60|#x3C);/g, val: "<" },
+          quot: { regex: /&(quot|#34|#x22);/g, val: '"' },
         };
         this.ampEntity = { regex: /&(amp|#38|#x26);/g, val: "&" };
         this.htmlEntities = {
-          "space": { regex: /&(nbsp|#160);/g, val: " " },
+          space: { regex: /&(nbsp|#160);/g, val: " " },
           // "lt" : { regex: /&(lt|#60);/g, val: "<" },
           // "gt" : { regex: /&(gt|#62);/g, val: ">" },
           // "amp" : { regex: /&(amp|#38);/g, val: "&" },
           // "quot" : { regex: /&(quot|#34);/g, val: "\"" },
           // "apos" : { regex: /&(apos|#39);/g, val: "'" },
-          "cent": { regex: /&(cent|#162);/g, val: "\xA2" },
-          "pound": { regex: /&(pound|#163);/g, val: "\xA3" },
-          "yen": { regex: /&(yen|#165);/g, val: "\xA5" },
-          "euro": { regex: /&(euro|#8364);/g, val: "\u20AC" },
-          "copyright": { regex: /&(copy|#169);/g, val: "\xA9" },
-          "reg": { regex: /&(reg|#174);/g, val: "\xAE" },
-          "inr": { regex: /&(inr|#8377);/g, val: "\u20B9" },
-          "num_dec": { regex: /&#([0-9]{1,7});/g, val: /* @__PURE__ */ __name((_, str) => fromCodePoint(str, 10, "&#"), "val") },
-          "num_hex": { regex: /&#x([0-9a-fA-F]{1,6});/g, val: /* @__PURE__ */ __name((_, str) => fromCodePoint(str, 16, "&#x"), "val") }
+          cent: { regex: /&(cent|#162);/g, val: "\xA2" },
+          pound: { regex: /&(pound|#163);/g, val: "\xA3" },
+          yen: { regex: /&(yen|#165);/g, val: "\xA5" },
+          euro: { regex: /&(euro|#8364);/g, val: "\u20AC" },
+          copyright: { regex: /&(copy|#169);/g, val: "\xA9" },
+          reg: { regex: /&(reg|#174);/g, val: "\xAE" },
+          inr: { regex: /&(inr|#8377);/g, val: "\u20B9" },
+          num_dec: {
+            regex: /&#([0-9]{1,7});/g,
+            val: /* @__PURE__ */ __name(
+              (_, str) => fromCodePoint(str, 10, "&#"),
+              "val",
+            ),
+          },
+          num_hex: {
+            regex: /&#x([0-9a-fA-F]{1,6});/g,
+            val: /* @__PURE__ */ __name(
+              (_, str) => fromCodePoint(str, 16, "&#x"),
+              "val",
+            ),
+          },
         };
         this.addExternalEntities = addExternalEntities;
         this.parseXml = parseXml;
@@ -992,7 +2654,9 @@ var require_OrderedObjParser = __commonJS({
         this.readStopNodeData = readStopNodeData;
         this.saveTextToParentTag = saveTextToParentTag;
         this.addChild = addChild;
-        this.ignoreAttributesFn = getIgnoreAttributesFn(this.options.ignoreAttributes);
+        this.ignoreAttributesFn = getIgnoreAttributesFn(
+          this.options.ignoreAttributes,
+        );
         this.entityExpansionCount = 0;
         this.currentExpandedLength = 0;
         if (this.options.stopNodes && this.options.stopNodes.length > 0) {
@@ -1017,29 +2681,52 @@ var require_OrderedObjParser = __commonJS({
         const escaped = ent.replace(/[.\-+*:]/g, "\\.");
         this.lastEntities[ent] = {
           regex: new RegExp("&" + escaped + ";", "g"),
-          val: externalEntities[ent]
+          val: externalEntities[ent],
         };
       }
     }
     __name(addExternalEntities, "addExternalEntities");
-    function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode, escapeEntities) {
+    function parseTextData(
+      val,
+      tagName,
+      jPath,
+      dontTrim,
+      hasAttributes,
+      isLeafNode,
+      escapeEntities,
+    ) {
       if (val !== void 0) {
         if (this.options.trimValues && !dontTrim) {
           val = val.trim();
         }
         if (val.length > 0) {
-          if (!escapeEntities) val = this.replaceEntitiesValue(val, tagName, jPath);
-          const newval = this.options.tagValueProcessor(tagName, val, jPath, hasAttributes, isLeafNode);
+          if (!escapeEntities)
+            val = this.replaceEntitiesValue(val, tagName, jPath);
+          const newval = this.options.tagValueProcessor(
+            tagName,
+            val,
+            jPath,
+            hasAttributes,
+            isLeafNode,
+          );
           if (newval === null || newval === void 0) {
             return val;
           } else if (typeof newval !== typeof val || newval !== val) {
             return newval;
           } else if (this.options.trimValues) {
-            return parseValue(val, this.options.parseTagValue, this.options.numberParseOptions);
+            return parseValue(
+              val,
+              this.options.parseTagValue,
+              this.options.numberParseOptions,
+            );
           } else {
             const trimmedVal = val.trim();
             if (trimmedVal === val) {
-              return parseValue(val, this.options.parseTagValue, this.options.numberParseOptions);
+              return parseValue(
+                val,
+                this.options.parseTagValue,
+                this.options.numberParseOptions,
+              );
             } else {
               return val;
             }
@@ -1062,9 +2749,15 @@ var require_OrderedObjParser = __commonJS({
       return tagname;
     }
     __name(resolveNameSpace, "resolveNameSpace");
-    var attrsRegx = new RegExp(`([^\\s=]+)\\s*(=\\s*(['"])([\\s\\S]*?)\\3)?`, "gm");
+    var attrsRegx = new RegExp(
+      `([^\\s=]+)\\s*(=\\s*(['"])([\\s\\S]*?)\\3)?`,
+      "gm",
+    );
     function buildAttributesMap(attrStr, jPath, tagName) {
-      if (this.options.ignoreAttributes !== true && typeof attrStr === "string") {
+      if (
+        this.options.ignoreAttributes !== true &&
+        typeof attrStr === "string"
+      ) {
         const matches = util.getAllMatches(attrStr, attrsRegx);
         const len = matches.length;
         const attrs = {};
@@ -1079,13 +2772,17 @@ var require_OrderedObjParser = __commonJS({
             if (this.options.transformAttributeName) {
               aName = this.options.transformAttributeName(aName);
             }
-            if (aName === "__proto__") aName = "#__proto__";
+            aName = sanitizeName(aName, this.options);
             if (oldVal !== void 0) {
               if (this.options.trimValues) {
                 oldVal = oldVal.trim();
               }
               oldVal = this.replaceEntitiesValue(oldVal, tagName, jPath);
-              const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPath);
+              const newVal = this.options.attributeValueProcessor(
+                attrName,
+                oldVal,
+                jPath,
+              );
               if (newVal === null || newVal === void 0) {
                 attrs[aName] = oldVal;
               } else if (typeof newVal !== typeof oldVal || newVal !== oldVal) {
@@ -1094,7 +2791,7 @@ var require_OrderedObjParser = __commonJS({
                 attrs[aName] = parseValue(
                   oldVal,
                   this.options.parseAttributeValue,
-                  this.options.numberParseOptions
+                  this.options.numberParseOptions,
                 );
               }
             } else if (this.options.allowBooleanAttributes) {
@@ -1114,7 +2811,7 @@ var require_OrderedObjParser = __commonJS({
       }
     }
     __name(buildAttributesMap, "buildAttributesMap");
-    var parseXml = /* @__PURE__ */ __name(function(xmlData) {
+    var parseXml = /* @__PURE__ */ __name(function (xmlData) {
       xmlData = xmlData.replace(/\r\n?/g, "\n");
       const xmlObj = new xmlNode("!xml");
       let currentNode = xmlObj;
@@ -1127,7 +2824,12 @@ var require_OrderedObjParser = __commonJS({
         const ch = xmlData[i];
         if (ch === "<") {
           if (xmlData[i + 1] === "/") {
-            const closeIndex = findClosingIndex(xmlData, ">", i, "Closing Tag is not closed.");
+            const closeIndex = findClosingIndex(
+              xmlData,
+              ">",
+              i,
+              "Closing Tag is not closed.",
+            );
             let tagName = xmlData.substring(i + 2, closeIndex).trim();
             if (this.options.removeNSPrefix) {
               const colonIndex = tagName.indexOf(":");
@@ -1143,10 +2845,15 @@ var require_OrderedObjParser = __commonJS({
             }
             const lastTagName = jPath.substring(jPath.lastIndexOf(".") + 1);
             if (tagName && this.options.unpairedTags.indexOf(tagName) !== -1) {
-              throw new Error(`Unpaired tag can not be used as closing tag: </${tagName}>`);
+              throw new Error(
+                `Unpaired tag can not be used as closing tag: </${tagName}>`,
+              );
             }
             let propIndex = 0;
-            if (lastTagName && this.options.unpairedTags.indexOf(lastTagName) !== -1) {
+            if (
+              lastTagName &&
+              this.options.unpairedTags.indexOf(lastTagName) !== -1
+            ) {
               propIndex = jPath.lastIndexOf(".", jPath.lastIndexOf(".") - 1);
               this.tagsNodeStack.pop();
             } else {
@@ -1160,22 +2867,39 @@ var require_OrderedObjParser = __commonJS({
             let tagData = readTagExp(xmlData, i, false, "?>");
             if (!tagData) throw new Error("Pi Tag is not closed.");
             textData = this.saveTextToParentTag(textData, currentNode, jPath);
-            if (this.options.ignoreDeclaration && tagData.tagName === "?xml" || this.options.ignorePiTags) {
+            if (
+              (this.options.ignoreDeclaration && tagData.tagName === "?xml") ||
+              this.options.ignorePiTags
+            ) {
             } else {
               const childNode = new xmlNode(tagData.tagName);
               childNode.add(this.options.textNodeName, "");
-              if (tagData.tagName !== tagData.tagExp && tagData.attrExpPresent) {
-                childNode[":@"] = this.buildAttributesMap(tagData.tagExp, jPath, tagData.tagName);
+              if (
+                tagData.tagName !== tagData.tagExp &&
+                tagData.attrExpPresent
+              ) {
+                childNode[":@"] = this.buildAttributesMap(
+                  tagData.tagExp,
+                  jPath,
+                  tagData.tagName,
+                );
               }
               this.addChild(currentNode, childNode, jPath, i);
             }
             i = tagData.closeIndex + 1;
           } else if (xmlData.substr(i + 1, 3) === "!--") {
-            const endIndex = findClosingIndex(xmlData, "-->", i + 4, "Comment is not closed.");
+            const endIndex = findClosingIndex(
+              xmlData,
+              "-->",
+              i + 4,
+              "Comment is not closed.",
+            );
             if (this.options.commentPropName) {
               const comment = xmlData.substring(i + 4, endIndex - 2);
               textData = this.saveTextToParentTag(textData, currentNode, jPath);
-              currentNode.add(this.options.commentPropName, [{ [this.options.textNodeName]: comment }]);
+              currentNode.add(this.options.commentPropName, [
+                { [this.options.textNodeName]: comment },
+              ]);
             }
             i = endIndex;
           } else if (xmlData.substr(i + 1, 2) === "!D") {
@@ -1183,13 +2907,24 @@ var require_OrderedObjParser = __commonJS({
             this.docTypeEntities = result.entities;
             i = result.i;
           } else if (xmlData.substr(i + 1, 2) === "![") {
-            const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2;
+            const closeIndex =
+              findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2;
             const tagExp = xmlData.substring(i + 9, closeIndex);
             textData = this.saveTextToParentTag(textData, currentNode, jPath);
-            let val = this.parseTextData(tagExp, currentNode.tagname, jPath, true, false, true, true);
+            let val = this.parseTextData(
+              tagExp,
+              currentNode.tagname,
+              jPath,
+              true,
+              false,
+              true,
+              true,
+            );
             if (val == void 0) val = "";
             if (this.options.cdataPropName) {
-              currentNode.add(this.options.cdataPropName, [{ [this.options.textNodeName]: tagExp }]);
+              currentNode.add(this.options.cdataPropName, [
+                { [this.options.textNodeName]: tagExp },
+              ]);
             } else {
               currentNode.add(this.options.textNodeName, val);
             }
@@ -1208,16 +2943,30 @@ var require_OrderedObjParser = __commonJS({
               }
               tagName = newTagName;
             }
-            if (this.options.strictReservedNames && (tagName === this.options.commentPropName || tagName === this.options.cdataPropName)) {
+            if (
+              this.options.strictReservedNames &&
+              (tagName === this.options.commentPropName ||
+                tagName === this.options.cdataPropName ||
+                tagName === this.options.textNodeName ||
+                tagName === this.options.attributesGroupName)
+            ) {
               throw new Error(`Invalid tag name: ${tagName}`);
             }
             if (currentNode && textData) {
               if (currentNode.tagname !== "!xml") {
-                textData = this.saveTextToParentTag(textData, currentNode, jPath, false);
+                textData = this.saveTextToParentTag(
+                  textData,
+                  currentNode,
+                  jPath,
+                  false,
+                );
               }
             }
             const lastTag = currentNode;
-            if (lastTag && this.options.unpairedTags.indexOf(lastTag.tagname) !== -1) {
+            if (
+              lastTag &&
+              this.options.unpairedTags.indexOf(lastTag.tagname) !== -1
+            ) {
               currentNode = this.tagsNodeStack.pop();
               jPath = jPath.substring(0, jPath.lastIndexOf("."));
             }
@@ -1225,9 +2974,19 @@ var require_OrderedObjParser = __commonJS({
               jPath += jPath ? "." + tagName : tagName;
             }
             const startIndex = i;
-            if (this.isItStopNode(this.stopNodesExact, this.stopNodesWildcard, jPath, tagName)) {
+            if (
+              this.isItStopNode(
+                this.stopNodesExact,
+                this.stopNodesWildcard,
+                jPath,
+                tagName,
+              )
+            ) {
               let tagContent = "";
-              if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
+              if (
+                tagExp.length > 0 &&
+                tagExp.lastIndexOf("/") === tagExp.length - 1
+              ) {
                 if (tagName[tagName.length - 1] === "/") {
                   tagName = tagName.substr(0, tagName.length - 1);
                   jPath = jPath.substr(0, jPath.length - 1);
@@ -1239,23 +2998,43 @@ var require_OrderedObjParser = __commonJS({
               } else if (this.options.unpairedTags.indexOf(tagName) !== -1) {
                 i = result.closeIndex;
               } else {
-                const result2 = this.readStopNodeData(xmlData, rawTagName, closeIndex + 1);
-                if (!result2) throw new Error(`Unexpected end of ${rawTagName}`);
+                const result2 = this.readStopNodeData(
+                  xmlData,
+                  rawTagName,
+                  closeIndex + 1,
+                );
+                if (!result2)
+                  throw new Error(`Unexpected end of ${rawTagName}`);
                 i = result2.i;
                 tagContent = result2.tagContent;
               }
               const childNode = new xmlNode(tagName);
               if (tagName !== tagExp && attrExpPresent) {
-                childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
+                childNode[":@"] = this.buildAttributesMap(
+                  tagExp,
+                  jPath,
+                  tagName,
+                );
               }
               if (tagContent) {
-                tagContent = this.parseTextData(tagContent, tagName, jPath, true, attrExpPresent, true, true);
+                tagContent = this.parseTextData(
+                  tagContent,
+                  tagName,
+                  jPath,
+                  true,
+                  attrExpPresent,
+                  true,
+                  true,
+                );
               }
               jPath = jPath.substr(0, jPath.lastIndexOf("."));
               childNode.add(this.options.textNodeName, tagContent);
               this.addChild(currentNode, childNode, jPath, startIndex);
             } else {
-              if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
+              if (
+                tagExp.length > 0 &&
+                tagExp.lastIndexOf("/") === tagExp.length - 1
+              ) {
                 if (tagName[tagName.length - 1] === "/") {
                   tagName = tagName.substr(0, tagName.length - 1);
                   jPath = jPath.substr(0, jPath.length - 1);
@@ -1272,7 +3051,11 @@ var require_OrderedObjParser = __commonJS({
                 }
                 const childNode = new xmlNode(tagName);
                 if (tagName !== tagExp && attrExpPresent) {
-                  childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
+                  childNode[":@"] = this.buildAttributesMap(
+                    tagExp,
+                    jPath,
+                    tagName,
+                  );
                 }
                 this.addChild(currentNode, childNode, jPath, startIndex);
                 jPath = jPath.substr(0, jPath.lastIndexOf("."));
@@ -1292,7 +3075,11 @@ var require_OrderedObjParser = __commonJS({
                 }
                 this.tagsNodeStack.push(currentNode);
                 if (tagName !== tagExp && attrExpPresent) {
-                  childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
+                  childNode[":@"] = this.buildAttributesMap(
+                    tagExp,
+                    jPath,
+                    tagName,
+                  );
                 }
                 this.addChild(currentNode, childNode, jPath);
                 currentNode = childNode;
@@ -1309,7 +3096,11 @@ var require_OrderedObjParser = __commonJS({
     }, "parseXml");
     function addChild(currentNode, childNode, jPath, startIndex) {
       if (!this.options.captureMetaData) startIndex = void 0;
-      const result = this.options.updateTag(childNode.tagname, jPath, childNode[":@"]);
+      const result = this.options.updateTag(
+        childNode.tagname,
+        jPath,
+        childNode[":@"],
+      );
       if (result === false) {
       } else if (typeof result === "string") {
         childNode.tagname = result;
@@ -1319,7 +3110,11 @@ var require_OrderedObjParser = __commonJS({
       }
     }
     __name(addChild, "addChild");
-    var replaceEntitiesValue = /* @__PURE__ */ __name(function(val, tagName, jPath) {
+    var replaceEntitiesValue = /* @__PURE__ */ __name(function (
+      val,
+      tagName,
+      jPath,
+    ) {
       if (val.indexOf("&") === -1) {
         return val;
       }
@@ -1342,9 +3137,12 @@ var require_OrderedObjParser = __commonJS({
         const matches = val.match(entity.regx);
         if (matches) {
           this.entityExpansionCount += matches.length;
-          if (entityConfig.maxTotalExpansions && this.entityExpansionCount > entityConfig.maxTotalExpansions) {
+          if (
+            entityConfig.maxTotalExpansions &&
+            this.entityExpansionCount > entityConfig.maxTotalExpansions
+          ) {
             throw new Error(
-              `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`
+              `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`,
             );
           }
           const lengthBefore = val.length;
@@ -1353,21 +3151,45 @@ var require_OrderedObjParser = __commonJS({
             this.currentExpandedLength += val.length - lengthBefore;
             if (this.currentExpandedLength > entityConfig.maxExpandedLength) {
               throw new Error(
-                `Total expanded content size exceeded: ${this.currentExpandedLength} > ${entityConfig.maxExpandedLength}`
+                `Total expanded content size exceeded: ${this.currentExpandedLength} > ${entityConfig.maxExpandedLength}`,
               );
             }
           }
         }
       }
       if (val.indexOf("&") === -1) return val;
-      for (let entityName in this.lastEntities) {
+      for (const entityName of Object.keys(this.lastEntities)) {
         const entity = this.lastEntities[entityName];
+        const matches = val.match(entity.regex);
+        if (matches) {
+          this.entityExpansionCount += matches.length;
+          if (
+            entityConfig.maxTotalExpansions &&
+            this.entityExpansionCount > entityConfig.maxTotalExpansions
+          ) {
+            throw new Error(
+              `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`,
+            );
+          }
+        }
         val = val.replace(entity.regex, entity.val);
       }
       if (val.indexOf("&") === -1) return val;
       if (this.options.htmlEntities) {
-        for (let entityName in this.htmlEntities) {
+        for (const entityName of Object.keys(this.htmlEntities)) {
           const entity = this.htmlEntities[entityName];
+          const matches = val.match(entity.regex);
+          if (matches) {
+            this.entityExpansionCount += matches.length;
+            if (
+              entityConfig.maxTotalExpansions &&
+              this.entityExpansionCount > entityConfig.maxTotalExpansions
+            ) {
+              throw new Error(
+                `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`,
+              );
+            }
+          }
           val = val.replace(entity.regex, entity.val);
         }
       }
@@ -1383,7 +3205,7 @@ var require_OrderedObjParser = __commonJS({
           jPath,
           false,
           parentNode[":@"] ? Object.keys(parentNode[":@"]).length !== 0 : false,
-          isLeafNode
+          isLeafNode,
         );
         if (textData !== void 0 && textData !== "")
           parentNode.add(this.options.textNodeName, textData);
@@ -1392,8 +3214,14 @@ var require_OrderedObjParser = __commonJS({
       return textData;
     }
     __name(saveTextToParentTag, "saveTextToParentTag");
-    function isItStopNode(stopNodesExact, stopNodesWildcard, jPath, currentTagName) {
-      if (stopNodesWildcard && stopNodesWildcard.has(currentTagName)) return true;
+    function isItStopNode(
+      stopNodesExact,
+      stopNodesWildcard,
+      jPath,
+      currentTagName,
+    ) {
+      if (stopNodesWildcard && stopNodesWildcard.has(currentTagName))
+        return true;
       if (stopNodesExact && stopNodesExact.has(jPath)) return true;
       return false;
     }
@@ -1412,13 +3240,13 @@ var require_OrderedObjParser = __commonJS({
             if (xmlData[index + 1] === closingChar[1]) {
               return {
                 data: tagExp,
-                index
+                index,
               };
             }
           } else {
             return {
               data: tagExp,
-              index
+              index,
             };
           }
         } else if (ch === "	") {
@@ -1462,7 +3290,7 @@ var require_OrderedObjParser = __commonJS({
         tagExp,
         closeIndex,
         attrExpPresent,
-        rawTagName
+        rawTagName,
       };
     }
     __name(readTagExp, "readTagExp");
@@ -1472,32 +3300,52 @@ var require_OrderedObjParser = __commonJS({
       for (; i < xmlData.length; i++) {
         if (xmlData[i] === "<") {
           if (xmlData[i + 1] === "/") {
-            const closeIndex = findClosingIndex(xmlData, ">", i, `${tagName} is not closed`);
+            const closeIndex = findClosingIndex(
+              xmlData,
+              ">",
+              i,
+              `${tagName} is not closed`,
+            );
             let closeTagName = xmlData.substring(i + 2, closeIndex).trim();
             if (closeTagName === tagName) {
               openTagCount--;
               if (openTagCount === 0) {
                 return {
                   tagContent: xmlData.substring(startIndex, i),
-                  i: closeIndex
+                  i: closeIndex,
                 };
               }
             }
             i = closeIndex;
           } else if (xmlData[i + 1] === "?") {
-            const closeIndex = findClosingIndex(xmlData, "?>", i + 1, "StopNode is not closed.");
+            const closeIndex = findClosingIndex(
+              xmlData,
+              "?>",
+              i + 1,
+              "StopNode is not closed.",
+            );
             i = closeIndex;
           } else if (xmlData.substr(i + 1, 3) === "!--") {
-            const closeIndex = findClosingIndex(xmlData, "-->", i + 3, "StopNode is not closed.");
+            const closeIndex = findClosingIndex(
+              xmlData,
+              "-->",
+              i + 3,
+              "StopNode is not closed.",
+            );
             i = closeIndex;
           } else if (xmlData.substr(i + 1, 2) === "![") {
-            const closeIndex = findClosingIndex(xmlData, "]]>", i, "StopNode is not closed.") - 2;
+            const closeIndex =
+              findClosingIndex(xmlData, "]]>", i, "StopNode is not closed.") -
+              2;
             i = closeIndex;
           } else {
             const tagData = readTagExp(xmlData, i, ">");
             if (tagData) {
               const openTagName = tagData && tagData.tagName;
-              if (openTagName === tagName && tagData.tagExp[tagData.tagExp.length - 1] !== "/") {
+              if (
+                openTagName === tagName &&
+                tagData.tagExp[tagData.tagExp.length - 1] !== "/"
+              ) {
                 openTagCount++;
               }
               i = tagData.closeIndex;
@@ -1531,15 +3379,29 @@ var require_OrderedObjParser = __commonJS({
       }
     }
     __name(fromCodePoint, "fromCodePoint");
+    function sanitizeName(name, options) {
+      if (util.criticalProperties.includes(name)) {
+        throw new Error(
+          `[SECURITY] Invalid name: "${name}" is a reserved JavaScript keyword that could cause prototype pollution`,
+        );
+      } else if (util.DANGEROUS_PROPERTY_NAMES.includes(name)) {
+        return options.onDangerousProperty(name);
+      }
+      return name;
+    }
+    __name(sanitizeName, "sanitizeName");
     module.exports = OrderedObjParser;
-  }
+  },
 });
 
 // ../node_modules/fast-xml-parser/src/xmlparser/node2json.js
 var require_node2json = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/node2json.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     function prettify(node, options) {
       return compress(node, options);
     }
@@ -1563,13 +3425,20 @@ var require_node2json = __commonJS({
           const isLeaf = isLeafTag(val, options);
           if (tagObj[":@"]) {
             assignAttributes(val, tagObj[":@"], newJpath, options);
-          } else if (Object.keys(val).length === 1 && val[options.textNodeName] !== void 0 && !options.alwaysCreateTextNode) {
+          } else if (
+            Object.keys(val).length === 1 &&
+            val[options.textNodeName] !== void 0 &&
+            !options.alwaysCreateTextNode
+          ) {
             val = val[options.textNodeName];
           } else if (Object.keys(val).length === 0) {
             if (options.alwaysCreateTextNode) val[options.textNodeName] = "";
             else val = "";
           }
-          if (compressedObj[property] !== void 0 && compressedObj.hasOwnProperty(property)) {
+          if (
+            compressedObj[property] !== void 0 &&
+            compressedObj.hasOwnProperty(property)
+          ) {
             if (!Array.isArray(compressedObj[property])) {
               compressedObj[property] = [compressedObj[property]];
             }
@@ -1618,20 +3487,31 @@ var require_node2json = __commonJS({
       if (propCount === 0) {
         return true;
       }
-      if (propCount === 1 && (obj[textNodeName] || typeof obj[textNodeName] === "boolean" || obj[textNodeName] === 0)) {
+      if (
+        propCount === 1 &&
+        (obj[textNodeName] ||
+          typeof obj[textNodeName] === "boolean" ||
+          obj[textNodeName] === 0)
+      ) {
         return true;
       }
       return false;
     }
     __name(isLeafTag, "isLeafTag");
     exports.prettify = prettify;
-  }
+  },
 });
 
 // ../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js
 var require_XMLParser = __commonJS({
-  "../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js"(exports, module) {
-    init_functionsRoutes_0_7931910114310042();
+  "../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js"(
+    exports,
+    module,
+  ) {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     var { buildOptions } = require_OptionsBuilder();
     var OrderedObjParser = require_OrderedObjParser();
     var { prettify } = require_node2json();
@@ -1660,13 +3540,16 @@ var require_XMLParser = __commonJS({
           if (validationOption === true) validationOption = {};
           const result = validator.validate(xmlData, validationOption);
           if (result !== true) {
-            throw Error(`${result.err.msg}:${result.err.line}:${result.err.col}`);
+            throw Error(
+              `${result.err.msg}:${result.err.line}:${result.err.col}`,
+            );
           }
         }
         const orderedObjParser = new OrderedObjParser(this.options);
         orderedObjParser.addExternalEntities(this.externalEntities);
         const orderedResult = orderedObjParser.parseXml(xmlData);
-        if (this.options.preserveOrder || orderedResult === void 0) return orderedResult;
+        if (this.options.preserveOrder || orderedResult === void 0)
+          return orderedResult;
         else return prettify(orderedResult, this.options);
       }
       /**
@@ -1678,7 +3561,9 @@ var require_XMLParser = __commonJS({
         if (value.indexOf("&") !== -1) {
           throw new Error("Entity value can't have '&'");
         } else if (key.indexOf("&") !== -1 || key.indexOf(";") !== -1) {
-          throw new Error("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'");
+          throw new Error(
+            "An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'",
+          );
         } else if (value === "&") {
           throw new Error("An entity with value '&' is not permitted");
         } else {
@@ -1687,13 +3572,19 @@ var require_XMLParser = __commonJS({
       }
     };
     module.exports = XMLParser2;
-  }
+  },
 });
 
 // ../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js
 var require_orderedJs2Xml = __commonJS({
-  "../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js"(exports, module) {
-    init_functionsRoutes_0_7931910114310042();
+  "../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js"(
+    exports,
+    module,
+  ) {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     var EOL = "\n";
     function toXml(jArray, options) {
       let indentation = "";
@@ -1741,14 +3632,16 @@ var require_orderedJs2Xml = __commonJS({
           isPreviousElementTag = false;
           continue;
         } else if (tagName === options.commentPropName) {
-          xmlStr += indentation + `<!--${tagObj[tagName][0][options.textNodeName]}-->`;
+          xmlStr +=
+            indentation + `<!--${tagObj[tagName][0][options.textNodeName]}-->`;
           isPreviousElementTag = true;
           continue;
         } else if (tagName[0] === "?") {
           const attStr2 = attr_to_str(tagObj[":@"], options);
           const tempInd = tagName === "?xml" ? "" : indentation;
           let piTextNodeName = tagObj[tagName][0][options.textNodeName];
-          piTextNodeName = piTextNodeName.length !== 0 ? " " + piTextNodeName : "";
+          piTextNodeName =
+            piTextNodeName.length !== 0 ? " " + piTextNodeName : "";
           xmlStr += tempInd + `<${tagName}${piTextNodeName}${attStr2}?>`;
           isPreviousElementTag = true;
           continue;
@@ -1759,17 +3652,29 @@ var require_orderedJs2Xml = __commonJS({
         }
         const attStr = attr_to_str(tagObj[":@"], options);
         const tagStart = indentation + `<${tagName}${attStr}`;
-        const tagValue = arrToStr(tagObj[tagName], options, newJPath, newIdentation);
+        const tagValue = arrToStr(
+          tagObj[tagName],
+          options,
+          newJPath,
+          newIdentation,
+        );
         if (options.unpairedTags.indexOf(tagName) !== -1) {
           if (options.suppressUnpairedNode) xmlStr += tagStart + ">";
           else xmlStr += tagStart + "/>";
-        } else if ((!tagValue || tagValue.length === 0) && options.suppressEmptyNode) {
+        } else if (
+          (!tagValue || tagValue.length === 0) &&
+          options.suppressEmptyNode
+        ) {
           xmlStr += tagStart + "/>";
         } else if (tagValue && tagValue.endsWith(">")) {
           xmlStr += tagStart + `>${tagValue}${indentation}</${tagName}>`;
         } else {
           xmlStr += tagStart + ">";
-          if (tagValue && indentation !== "" && (tagValue.includes("/>") || tagValue.includes("</"))) {
+          if (
+            tagValue &&
+            indentation !== "" &&
+            (tagValue.includes("/>") || tagValue.includes("</"))
+          ) {
             xmlStr += indentation + options.indentBy + tagValue + indentation;
           } else {
             xmlStr += tagValue;
@@ -1811,7 +3716,11 @@ var require_orderedJs2Xml = __commonJS({
       jPath = jPath.substr(0, jPath.length - options.textNodeName.length - 1);
       let tagName = jPath.substr(jPath.lastIndexOf(".") + 1);
       for (let index in options.stopNodes) {
-        if (options.stopNodes[index] === jPath || options.stopNodes[index] === "*." + tagName) return true;
+        if (
+          options.stopNodes[index] === jPath ||
+          options.stopNodes[index] === "*." + tagName
+        )
+          return true;
       }
       return false;
     }
@@ -1827,14 +3736,20 @@ var require_orderedJs2Xml = __commonJS({
     }
     __name(replaceEntitiesValue, "replaceEntitiesValue");
     module.exports = toXml;
-  }
+  },
 });
 
 // ../node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js
 var require_json2xml = __commonJS({
-  "../node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js"(exports, module) {
+  "../node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js"(
+    exports,
+    module,
+  ) {
     "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     var buildFromOrderedJs = require_orderedJs2Xml();
     var getIgnoreAttributesFn = require_ignoreAttributes();
     var defaultOptions = {
@@ -1848,10 +3763,10 @@ var require_json2xml = __commonJS({
       suppressEmptyNode: false,
       suppressUnpairedNode: true,
       suppressBooleanAttributes: true,
-      tagValueProcessor: /* @__PURE__ */ __name(function(key, a) {
+      tagValueProcessor: /* @__PURE__ */ __name(function (key, a) {
         return a;
       }, "tagValueProcessor"),
-      attributeValueProcessor: /* @__PURE__ */ __name(function(attrName, a) {
+      attributeValueProcessor: /* @__PURE__ */ __name(function (attrName, a) {
         return a;
       }, "attributeValueProcessor"),
       preserveOrder: false,
@@ -1863,22 +3778,27 @@ var require_json2xml = __commonJS({
         { regex: new RegExp(">", "g"), val: "&gt;" },
         { regex: new RegExp("<", "g"), val: "&lt;" },
         { regex: new RegExp("'", "g"), val: "&apos;" },
-        { regex: new RegExp('"', "g"), val: "&quot;" }
+        { regex: new RegExp('"', "g"), val: "&quot;" },
       ],
       processEntities: true,
       stopNodes: [],
       // transformTagName: false,
       // transformAttributeName: false,
-      oneListGroup: false
+      oneListGroup: false,
     };
     function Builder(options) {
       this.options = Object.assign({}, defaultOptions, options);
-      if (this.options.ignoreAttributes === true || this.options.attributesGroupName) {
-        this.isAttribute = function() {
+      if (
+        this.options.ignoreAttributes === true ||
+        this.options.attributesGroupName
+      ) {
+        this.isAttribute = function () {
           return false;
         };
       } else {
-        this.ignoreAttributesFn = getIgnoreAttributesFn(this.options.ignoreAttributes);
+        this.ignoreAttributesFn = getIgnoreAttributesFn(
+          this.options.ignoreAttributes,
+        );
         this.attrPrefixLen = this.options.attributeNamePrefix.length;
         this.isAttribute = isAttribute;
       }
@@ -1888,7 +3808,7 @@ var require_json2xml = __commonJS({
         this.tagEndChar = ">\n";
         this.newLine = "\n";
       } else {
-        this.indentate = function() {
+        this.indentate = function () {
           return "";
         };
         this.tagEndChar = ">";
@@ -1896,19 +3816,23 @@ var require_json2xml = __commonJS({
       }
     }
     __name(Builder, "Builder");
-    Builder.prototype.build = function(jObj) {
+    Builder.prototype.build = function (jObj) {
       if (this.options.preserveOrder) {
         return buildFromOrderedJs(jObj, this.options);
       } else {
-        if (Array.isArray(jObj) && this.options.arrayNodeName && this.options.arrayNodeName.length > 1) {
+        if (
+          Array.isArray(jObj) &&
+          this.options.arrayNodeName &&
+          this.options.arrayNodeName.length > 1
+        ) {
           jObj = {
-            [this.options.arrayNodeName]: jObj
+            [this.options.arrayNodeName]: jObj,
           };
         }
         return this.j2x(jObj, 0, []).val;
       }
     };
-    Builder.prototype.j2x = function(jObj, level, ajPath) {
+    Builder.prototype.j2x = function (jObj, level, ajPath) {
       let attrStr = "";
       let val = "";
       const jPath = ajPath.join(".");
@@ -1950,17 +3874,29 @@ var require_json2xml = __commonJS({
             const item = jObj[key][j];
             if (typeof item === "undefined") {
             } else if (item === null) {
-              if (key[0] === "?") val += this.indentate(level) + "<" + key + "?" + this.tagEndChar;
-              else val += this.indentate(level) + "<" + key + "/" + this.tagEndChar;
+              if (key[0] === "?")
+                val +=
+                  this.indentate(level) + "<" + key + "?" + this.tagEndChar;
+              else
+                val +=
+                  this.indentate(level) + "<" + key + "/" + this.tagEndChar;
             } else if (typeof item === "object") {
               if (this.options.oneListGroup) {
                 const result = this.j2x(item, level + 1, ajPath.concat(key));
                 listTagVal += result.val;
-                if (this.options.attributesGroupName && item.hasOwnProperty(this.options.attributesGroupName)) {
+                if (
+                  this.options.attributesGroupName &&
+                  item.hasOwnProperty(this.options.attributesGroupName)
+                ) {
                   listTagAttr += result.attrStr;
                 }
               } else {
-                listTagVal += this.processTextOrObjNode(item, key, level, ajPath);
+                listTagVal += this.processTextOrObjNode(
+                  item,
+                  key,
+                  level,
+                  ajPath,
+                );
               }
             } else {
               if (this.options.oneListGroup) {
@@ -1973,11 +3909,19 @@ var require_json2xml = __commonJS({
             }
           }
           if (this.options.oneListGroup) {
-            listTagVal = this.buildObjectNode(listTagVal, key, listTagAttr, level);
+            listTagVal = this.buildObjectNode(
+              listTagVal,
+              key,
+              listTagAttr,
+              level,
+            );
           }
           val += listTagVal;
         } else {
-          if (this.options.attributesGroupName && key === this.options.attributesGroupName) {
+          if (
+            this.options.attributesGroupName &&
+            key === this.options.attributesGroupName
+          ) {
             const Ks = Object.keys(jObj[key]);
             const L = Ks.length;
             for (let j = 0; j < L; j++) {
@@ -1990,7 +3934,7 @@ var require_json2xml = __commonJS({
       }
       return { attrStr, val };
     };
-    Builder.prototype.buildAttrPairStr = function(attrName, val) {
+    Builder.prototype.buildAttrPairStr = function (attrName, val) {
       val = this.options.attributeValueProcessor(attrName, "" + val);
       val = this.replaceEntitiesValue(val);
       if (this.options.suppressBooleanAttributes && val === "true") {
@@ -1999,18 +3943,36 @@ var require_json2xml = __commonJS({
     };
     function processTextOrObjNode(object, key, level, ajPath) {
       const result = this.j2x(object, level + 1, ajPath.concat(key));
-      if (object[this.options.textNodeName] !== void 0 && Object.keys(object).length === 1) {
-        return this.buildTextValNode(object[this.options.textNodeName], key, result.attrStr, level);
+      if (
+        object[this.options.textNodeName] !== void 0 &&
+        Object.keys(object).length === 1
+      ) {
+        return this.buildTextValNode(
+          object[this.options.textNodeName],
+          key,
+          result.attrStr,
+          level,
+        );
       } else {
         return this.buildObjectNode(result.val, key, result.attrStr, level);
       }
     }
     __name(processTextOrObjNode, "processTextOrObjNode");
-    Builder.prototype.buildObjectNode = function(val, key, attrStr, level) {
+    Builder.prototype.buildObjectNode = function (val, key, attrStr, level) {
       if (val === "") {
-        if (key[0] === "?") return this.indentate(level) + "<" + key + attrStr + "?" + this.tagEndChar;
+        if (key[0] === "?")
+          return (
+            this.indentate(level) + "<" + key + attrStr + "?" + this.tagEndChar
+          );
         else {
-          return this.indentate(level) + "<" + key + attrStr + this.closeTag(key) + this.tagEndChar;
+          return (
+            this.indentate(level) +
+            "<" +
+            key +
+            attrStr +
+            this.closeTag(key) +
+            this.tagEndChar
+          );
         }
       } else {
         let tagEndExp = "</" + key + this.tagEndChar;
@@ -2020,15 +3982,38 @@ var require_json2xml = __commonJS({
           tagEndExp = "";
         }
         if ((attrStr || attrStr === "") && val.indexOf("<") === -1) {
-          return this.indentate(level) + "<" + key + attrStr + piClosingChar + ">" + val + tagEndExp;
-        } else if (this.options.commentPropName !== false && key === this.options.commentPropName && piClosingChar.length === 0) {
+          return (
+            this.indentate(level) +
+            "<" +
+            key +
+            attrStr +
+            piClosingChar +
+            ">" +
+            val +
+            tagEndExp
+          );
+        } else if (
+          this.options.commentPropName !== false &&
+          key === this.options.commentPropName &&
+          piClosingChar.length === 0
+        ) {
           return this.indentate(level) + `<!--${val}-->` + this.newLine;
         } else {
-          return this.indentate(level) + "<" + key + attrStr + piClosingChar + this.tagEndChar + val + this.indentate(level) + tagEndExp;
+          return (
+            this.indentate(level) +
+            "<" +
+            key +
+            attrStr +
+            piClosingChar +
+            this.tagEndChar +
+            val +
+            this.indentate(level) +
+            tagEndExp
+          );
         }
       }
     };
-    Builder.prototype.closeTag = function(key) {
+    Builder.prototype.closeTag = function (key) {
       let closeTag = "";
       if (this.options.unpairedTags.indexOf(key) !== -1) {
         if (!this.options.suppressUnpairedNode) closeTag = "/";
@@ -2039,24 +4024,49 @@ var require_json2xml = __commonJS({
       }
       return closeTag;
     };
-    Builder.prototype.buildTextValNode = function(val, key, attrStr, level) {
-      if (this.options.cdataPropName !== false && key === this.options.cdataPropName) {
+    Builder.prototype.buildTextValNode = function (val, key, attrStr, level) {
+      if (
+        this.options.cdataPropName !== false &&
+        key === this.options.cdataPropName
+      ) {
         return this.indentate(level) + `<![CDATA[${val}]]>` + this.newLine;
-      } else if (this.options.commentPropName !== false && key === this.options.commentPropName) {
+      } else if (
+        this.options.commentPropName !== false &&
+        key === this.options.commentPropName
+      ) {
         return this.indentate(level) + `<!--${val}-->` + this.newLine;
       } else if (key[0] === "?") {
-        return this.indentate(level) + "<" + key + attrStr + "?" + this.tagEndChar;
+        return (
+          this.indentate(level) + "<" + key + attrStr + "?" + this.tagEndChar
+        );
       } else {
         let textValue = this.options.tagValueProcessor(key, val);
         textValue = this.replaceEntitiesValue(textValue);
         if (textValue === "") {
-          return this.indentate(level) + "<" + key + attrStr + this.closeTag(key) + this.tagEndChar;
+          return (
+            this.indentate(level) +
+            "<" +
+            key +
+            attrStr +
+            this.closeTag(key) +
+            this.tagEndChar
+          );
         } else {
-          return this.indentate(level) + "<" + key + attrStr + ">" + textValue + "</" + key + this.tagEndChar;
+          return (
+            this.indentate(level) +
+            "<" +
+            key +
+            attrStr +
+            ">" +
+            textValue +
+            "</" +
+            key +
+            this.tagEndChar
+          );
         }
       }
     };
-    Builder.prototype.replaceEntitiesValue = function(textValue) {
+    Builder.prototype.replaceEntitiesValue = function (textValue) {
       if (textValue && textValue.length > 0 && this.options.processEntities) {
         for (let i = 0; i < this.options.entities.length; i++) {
           const entity = this.options.entities[i];
@@ -2070,7 +4080,10 @@ var require_json2xml = __commonJS({
     }
     __name(indentate, "indentate");
     function isAttribute(name) {
-      if (name.startsWith(this.options.attributeNamePrefix) && name !== this.options.textNodeName) {
+      if (
+        name.startsWith(this.options.attributeNamePrefix) &&
+        name !== this.options.textNodeName
+      ) {
         return name.substr(this.attrPrefixLen);
       } else {
         return false;
@@ -2078,23 +4091,26 @@ var require_json2xml = __commonJS({
     }
     __name(isAttribute, "isAttribute");
     module.exports = Builder;
-  }
+  },
 });
 
 // ../node_modules/fast-xml-parser/src/fxp.js
 var require_fxp = __commonJS({
   "../node_modules/fast-xml-parser/src/fxp.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     var validator = require_validator();
     var XMLParser2 = require_XMLParser();
     var XMLBuilder = require_json2xml();
     module.exports = {
       XMLParser: XMLParser2,
       XMLValidator: validator,
-      XMLBuilder
+      XMLBuilder,
     };
-  }
+  },
 });
 
 // ../shared/plex-client.ts
@@ -2102,22 +4118,23 @@ function toArray(value) {
   if (!value) return [];
   return Array.isArray(value) ? value : [value];
 }
-function getRequiredEnv(env, name) {
-  const value = env[name];
+function getRequiredEnv(env2, name) {
+  const value = env2[name];
   if (!value) throw new Error(`Missing required env var: ${name}`);
   return value;
 }
-function cachePrefix(env) {
-  return `${env.PLEX_URL ?? "missing-url"}::${env.PLEX_COLLECTION_ID ?? env.PLEX_COLLECTION_TITLE ?? "no-collection"}`;
+function cachePrefix(env2) {
+  return `${env2.PLEX_URL ?? "missing-url"}::${env2.PLEX_COLLECTION_ID ?? env2.PLEX_COLLECTION_TITLE ?? "no-collection"}`;
 }
 function normalizeBaseUrl(raw) {
   const url = new URL(raw);
   if (!url.pathname.endsWith("/")) url.pathname += "/";
   return url;
 }
-function plexFetchTimeoutMs(env) {
-  const configured2 = Number(env.PLEX_FETCH_TIMEOUT_MS);
-  if (!Number.isFinite(configured2) || configured2 <= 0) return DEFAULT_PLEX_FETCH_TIMEOUT_MS;
+function plexFetchTimeoutMs(env2) {
+  const configured2 = Number(env2.PLEX_FETCH_TIMEOUT_MS);
+  if (!Number.isFinite(configured2) || configured2 <= 0)
+    return DEFAULT_PLEX_FETCH_TIMEOUT_MS;
   return Math.max(1e3, Math.min(3e4, Math.trunc(configured2)));
 }
 async function fetchWithTimeout(input, init, timeoutMs) {
@@ -2126,13 +4143,13 @@ async function fetchWithTimeout(input, init, timeoutMs) {
   try {
     return await fetch(input, {
       ...init,
-      signal: controller.signal
+      signal: controller.signal,
     });
-  } catch (error) {
-    if (error instanceof Error && error.name === "AbortError") {
+  } catch (error3) {
+    if (error3 instanceof Error && error3.name === "AbortError") {
       throw new Error(`Plex request timed out after ${timeoutMs}ms`);
     }
-    throw error;
+    throw error3;
   } finally {
     clearTimeout(timeout);
   }
@@ -2153,7 +4170,8 @@ function parseNumber(value) {
 }
 function parseString(value) {
   if (typeof value === "string") return value.length ? value : null;
-  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (typeof value === "number" || typeof value === "boolean")
+    return String(value);
   return null;
 }
 function pickFirstString(obj, keys) {
@@ -2183,29 +4201,38 @@ function parseDurationMinutes(value) {
   return Math.max(1, Math.round(milliseconds / 6e4));
 }
 function extractEntryId(entry) {
-  const raw = pickFirstString(entry, ["@_ratingKey", "ratingKey"]) ?? pickFirstString(entry, ["@_key", "key"]);
+  const raw =
+    pickFirstString(entry, ["@_ratingKey", "ratingKey"]) ??
+    pickFirstString(entry, ["@_key", "key"]);
   if (!raw) return null;
   const match2 = raw.match(/\/(\d+)(?:\/items)?(?:[/?#].*)?$/);
   return match2?.[1] ?? raw;
 }
 function extractTags(entry, key) {
-  return toArray(entry[key]).map((tag) => pickFirstString(tag, ["@_tag", "tag", "@_title", "title"])).filter((tag) => Boolean(tag));
+  return toArray(entry[key])
+    .map((tag) => pickFirstString(tag, ["@_tag", "tag", "@_title", "title"]))
+    .filter((tag) => Boolean(tag));
 }
 function getMediaContainerEntries(parsed) {
   const mediaContainer = parsed.MediaContainer ?? parsed;
   return [
     ...toArray(mediaContainer?.Metadata),
     ...toArray(mediaContainer?.Video),
-    ...toArray(mediaContainer?.Directory)
+    ...toArray(mediaContainer?.Directory),
   ];
 }
 function mapPreviewItem(entry) {
   const id = extractEntryId(entry);
-  const title = pickFirstString(entry, ["@_title", "title", "@_originalTitle", "originalTitle"]);
-  if (!id || !title) return null;
+  const title2 = pickFirstString(entry, [
+    "@_title",
+    "title",
+    "@_originalTitle",
+    "originalTitle",
+  ]);
+  if (!id || !title2) return null;
   return {
     id,
-    title,
+    title: title2,
     year: pickFirstNumber(entry, ["@_year", "year"]),
     rating: pickFirstNumber(entry, [
       "@_audienceRating",
@@ -2213,33 +4240,50 @@ function mapPreviewItem(entry) {
       "@_rating",
       "rating",
       "@_userRating",
-      "userRating"
+      "userRating",
     ]),
-    posterPath: pickFirstString(entry, ["@_thumb", "thumb", "@_parentThumb", "parentThumb", "@_art", "art"]),
-    seasons: pickFirstNumber(entry, ["@_childCount", "childCount"])
+    posterPath: pickFirstString(entry, [
+      "@_thumb",
+      "thumb",
+      "@_parentThumb",
+      "parentThumb",
+      "@_art",
+      "art",
+    ]),
+    seasons: pickFirstNumber(entry, ["@_childCount", "childCount"]),
   };
 }
 function mapCollectionSummary(entry) {
   const id = extractEntryId(entry);
-  const title = pickFirstString(entry, ["@_title", "title"]);
-  if (!id || !title) return null;
+  const title2 = pickFirstString(entry, ["@_title", "title"]);
+  if (!id || !title2) return null;
   return {
     id,
-    title,
+    title: title2,
     summary: pickFirstString(entry, ["@_summary", "summary"]),
-    posterPath: pickFirstString(entry, ["@_thumb", "thumb", "@_composite", "composite"]),
+    posterPath: pickFirstString(entry, [
+      "@_thumb",
+      "thumb",
+      "@_composite",
+      "composite",
+    ]),
     artPath: pickFirstString(entry, ["@_art", "art"]),
     itemCount: pickFirstNumber(entry, ["@_childCount", "childCount"]),
-    updatedAt: parseUnixTimestamp(entry["@_updatedAt"] ?? entry.updatedAt)
+    updatedAt: parseUnixTimestamp(entry["@_updatedAt"] ?? entry.updatedAt),
   };
 }
 function mapCollectionMovie(entry) {
   const id = extractEntryId(entry);
-  const title = pickFirstString(entry, ["@_title", "title", "@_originalTitle", "originalTitle"]);
-  if (!id || !title) return null;
+  const title2 = pickFirstString(entry, [
+    "@_title",
+    "title",
+    "@_originalTitle",
+    "originalTitle",
+  ]);
+  if (!id || !title2) return null;
   return {
     id,
-    title,
+    title: title2,
     year: pickFirstNumber(entry, ["@_year", "year"]),
     rating: pickFirstNumber(entry, [
       "@_audienceRating",
@@ -2247,19 +4291,52 @@ function mapCollectionMovie(entry) {
       "@_rating",
       "rating",
       "@_userRating",
-      "userRating"
+      "userRating",
     ]),
-    posterPath: pickFirstString(entry, ["@_thumb", "thumb", "@_parentThumb", "parentThumb", "@_art", "art"]),
-    summary: pickFirstString(entry, ["@_summary", "summary", "@_tagline", "tagline"]),
-    durationMinutes: parseDurationMinutes(entry["@_duration"] ?? entry.duration),
+    posterPath: pickFirstString(entry, [
+      "@_thumb",
+      "thumb",
+      "@_parentThumb",
+      "parentThumb",
+      "@_art",
+      "art",
+    ]),
+    summary: pickFirstString(entry, [
+      "@_summary",
+      "summary",
+      "@_tagline",
+      "tagline",
+    ]),
+    durationMinutes: parseDurationMinutes(
+      entry["@_duration"] ?? entry.duration,
+    ),
     genres: extractTags(entry, "Genre"),
     contentRating: pickFirstString(entry, ["@_contentRating", "contentRating"]),
-    studio: pickFirstString(entry, ["@_studio", "studio"]) ?? extractTags(entry, "Studio")[0] ?? null
+    studio:
+      pickFirstString(entry, ["@_studio", "studio"]) ??
+      extractTags(entry, "Studio")[0] ??
+      null,
   };
 }
-async function plexRequest(env, pathname, params) {
-  const baseUrl = normalizeBaseUrl(getRequiredEnv(env, "PLEX_URL"));
-  const token = getRequiredEnv(env, "PLEX_TOKEN");
+function mapLibraryShow(entry) {
+  const item = mapCollectionMovie(entry);
+  if (!item) return null;
+  return {
+    id: item.id,
+    title: item.title,
+    year: item.year,
+    rating: item.rating,
+    posterPath: item.posterPath,
+    summary: item.summary,
+    genres: item.genres,
+    seasons: pickFirstNumber(entry, ["@_childCount", "childCount"]),
+    contentRating: item.contentRating,
+    studio: item.studio,
+  };
+}
+async function plexRequest(env2, pathname, params) {
+  const baseUrl = normalizeBaseUrl(getRequiredEnv(env2, "PLEX_URL"));
+  const token = getRequiredEnv(env2, "PLEX_TOKEN");
   const url = new URL(pathname.replace(/^\//, ""), baseUrl);
   url.searchParams.set("X-Plex-Token", token);
   if (params) {
@@ -2267,13 +4344,17 @@ async function plexRequest(env, pathname, params) {
       url.searchParams.set(key, String(value));
     }
   }
-  const res = await fetchWithTimeout(url, {
-    headers: {
-      Accept: "application/json, text/xml, application/xml;q=0.9, */*;q=0.8"
-    }
-  }, plexFetchTimeoutMs(env));
+  const res = await fetchWithTimeout(
+    url,
+    {
+      headers: {
+        Accept: "application/json, text/xml, application/xml;q=0.9, */*;q=0.8",
+      },
+    },
+    plexFetchTimeoutMs(env2),
+  );
   if (!res.ok) {
-    const body = await res.text().catch(() => "") || res.statusText;
+    const body = (await res.text().catch(() => "")) || res.statusText;
     throw new Error(`Plex request failed (${res.status}): ${body}`);
   }
   const contentType = res.headers.get("content-type") || "";
@@ -2283,128 +4364,175 @@ async function plexRequest(env, pathname, params) {
   }
   return parser.parse(text);
 }
-async function plexFetchImage(env, path, options = {}) {
-  const baseUrl = normalizeBaseUrl(getRequiredEnv(env, "PLEX_URL"));
-  const token = getRequiredEnv(env, "PLEX_TOKEN");
+async function plexFetchImage(env2, path, options = {}) {
+  const baseUrl = normalizeBaseUrl(getRequiredEnv(env2, "PLEX_URL"));
+  const token = getRequiredEnv(env2, "PLEX_TOKEN");
   const safePath = path.startsWith("/") ? path : `/${path}`;
   const width = options.width;
   const height = options.height;
-  const url = width || height ? (() => {
-    const transcodeUrl = new URL("photo/:/transcode", baseUrl);
-    if (width) transcodeUrl.searchParams.set("width", String(width));
-    if (height) transcodeUrl.searchParams.set("height", String(height));
-    transcodeUrl.searchParams.set("minSize", "1");
-    transcodeUrl.searchParams.set("upscale", "1");
-    transcodeUrl.searchParams.set("url", safePath);
-    return transcodeUrl;
-  })() : new URL(safePath.slice(1), baseUrl);
+  const url =
+    width || height
+      ? (() => {
+          const transcodeUrl = new URL("photo/:/transcode", baseUrl);
+          if (width) transcodeUrl.searchParams.set("width", String(width));
+          if (height) transcodeUrl.searchParams.set("height", String(height));
+          transcodeUrl.searchParams.set("minSize", "1");
+          transcodeUrl.searchParams.set("upscale", "1");
+          transcodeUrl.searchParams.set("url", safePath);
+          return transcodeUrl;
+        })()
+      : new URL(safePath.slice(1), baseUrl);
   url.searchParams.set("X-Plex-Token", token);
-  return fetchWithTimeout(url, {}, plexFetchTimeoutMs(env));
+  return fetchWithTimeout(url, {}, plexFetchTimeoutMs(env2));
 }
-async function getPlexSections(env) {
-  const key = `${cachePrefix(env)}::sections`;
+async function getPlexSections(env2) {
+  const key = `${cachePrefix(env2)}::sections`;
   return cached(key, 6e4, async () => {
-    const parsed = await plexRequest(env, "/library/sections");
+    const parsed = await plexRequest(env2, "/library/sections");
     const mediaContainer = parsed.MediaContainer ?? parsed;
     const directories = toArray(mediaContainer?.Directory);
-    return directories.map((directory) => ({
-      key: pickFirstString(directory, ["@_key", "key"]) ?? "",
-      title: pickFirstString(directory, ["@_title", "title"]) ?? "",
-      type: pickFirstString(directory, ["@_type", "type"]) ?? ""
-    })).filter(
-      (directory) => directory.key && directory.title && (directory.type === "movie" || directory.type === "show")
-    );
+    return directories
+      .map((directory) => ({
+        key: pickFirstString(directory, ["@_key", "key"]) ?? "",
+        title: pickFirstString(directory, ["@_title", "title"]) ?? "",
+        type: pickFirstString(directory, ["@_type", "type"]) ?? "",
+      }))
+      .filter(
+        (directory) =>
+          directory.key &&
+          directory.title &&
+          (directory.type === "movie" || directory.type === "show"),
+      );
   });
 }
-async function resolveSectionId(env, forType) {
-  const envKey = forType === "tv" ? "PLEX_TV_SECTION_ID" : "PLEX_MOVIE_SECTION_ID";
-  const explicit = env[envKey]?.trim();
+async function resolveSectionId(env2, forType) {
+  const envKey =
+    forType === "tv" ? "PLEX_TV_SECTION_ID" : "PLEX_MOVIE_SECTION_ID";
+  const explicit = env2[envKey]?.trim();
   if (explicit) return explicit;
-  const sections = await getPlexSections(env);
+  const sections = await getPlexSections(env2);
   const desired = forType === "tv" ? "show" : "movie";
   const desiredTitle = DEFAULT_LIBRARY_TITLES[forType].toLowerCase();
-  const matchingSections = sections.filter((section) => section.type === desired);
-  const match2 = matchingSections.find((section) => section.title.trim().toLowerCase() === desiredTitle) ?? matchingSections[0];
+  const matchingSections = sections.filter(
+    (section) => section.type === desired,
+  );
+  const match2 =
+    matchingSections.find(
+      (section) => section.title.trim().toLowerCase() === desiredTitle,
+    ) ?? matchingSections[0];
   if (!match2) {
-    throw new Error(`Could not auto-detect Plex ${forType} library. Set ${envKey} to the library section id.`);
+    throw new Error(
+      `Could not auto-detect Plex ${forType} library. Set ${envKey} to the library section id.`,
+    );
   }
   return match2.key;
 }
-async function resolveCountSectionIds(env, forType) {
-  return [await resolveSectionId(env, forType)];
+async function resolveCountSectionIds(env2, forType) {
+  return [await resolveSectionId(env2, forType)];
 }
-async function getLibrarySectionItemCount(env, type, sectionId) {
+async function getLibrarySectionItemCount(env2, type, sectionId) {
   const plexType = type === "tv" ? 2 : 1;
-  const key = `${cachePrefix(env)}::libraryCount:${type}:${sectionId}`;
+  const key = `${cachePrefix(env2)}::libraryCount:${type}:${sectionId}`;
   return cached(key, 6e4, async () => {
-    const parsed = await plexRequest(env, `/library/sections/${sectionId}/all`, {
-      type: plexType,
-      "X-Plex-Container-Start": 0,
-      "X-Plex-Container-Size": 1
-    });
+    const parsed = await plexRequest(
+      env2,
+      `/library/sections/${sectionId}/all`,
+      {
+        type: plexType,
+        "X-Plex-Container-Start": 0,
+        "X-Plex-Container-Size": 1,
+      },
+    );
     const mediaContainer = parsed.MediaContainer ?? parsed;
-    const total = pickFirstNumber(mediaContainer, ["@_totalSize", "totalSize", "@_size", "size"]) ?? getMediaContainerEntries(parsed).length;
+    const total =
+      pickFirstNumber(mediaContainer, [
+        "@_totalSize",
+        "totalSize",
+        "@_size",
+        "size",
+      ]) ?? getMediaContainerEntries(parsed).length;
     return total;
   });
 }
-async function getLibraryItemCount(env, type) {
-  const sectionIds = await resolveCountSectionIds(env, type);
+async function getLibraryItemCount(env2, type) {
+  const sectionIds = await resolveCountSectionIds(env2, type);
   const counts = await Promise.all(
-    sectionIds.map((sectionId) => getLibrarySectionItemCount(env, type, sectionId))
+    sectionIds.map((sectionId) =>
+      getLibrarySectionItemCount(env2, type, sectionId),
+    ),
   );
-  return counts.reduce((total, count) => total + count, 0);
+  return counts.reduce((total, count3) => total + count3, 0);
 }
-async function getPlexLibraryCounts(env) {
+async function getPlexLibraryCounts(env2) {
   const safeCount = /* @__PURE__ */ __name(async (type) => {
     try {
-      return await getLibraryItemCount(env, type);
+      return await getLibraryItemCount(env2, type);
     } catch {
       return null;
     }
   }, "safeCount");
-  const [movies, shows] = await Promise.all([safeCount("movie"), safeCount("tv")]);
+  const [movies, shows] = await Promise.all([
+    safeCount("movie"),
+    safeCount("tv"),
+  ]);
   return { movies, shows };
 }
-async function getTopRated(env, options) {
+async function getTopRated(env2, options) {
   const { type, limit } = options;
-  const sectionId = await resolveSectionId(env, type);
+  const sectionId = await resolveSectionId(env2, type);
   const plexType = type === "tv" ? 2 : 1;
-  const key = `${cachePrefix(env)}::topRated:${type}:${limit}:${sectionId}`;
+  const key = `${cachePrefix(env2)}::topRated:${type}:${limit}:${sectionId}`;
   return cached(key, 6e4, async () => {
-    const parsed = await plexRequest(env, `/library/sections/${sectionId}/all`, {
-      type: plexType,
-      sort: "audienceRating:desc",
-      "X-Plex-Container-Start": 0,
-      "X-Plex-Container-Size": limit
-    });
-    return getMediaContainerEntries(parsed).map(mapPreviewItem).filter((item) => Boolean(item)).slice(0, limit);
+    const parsed = await plexRequest(
+      env2,
+      `/library/sections/${sectionId}/all`,
+      {
+        type: plexType,
+        sort: "audienceRating:desc",
+        "X-Plex-Container-Start": 0,
+        "X-Plex-Container-Size": limit,
+      },
+    );
+    return getMediaContainerEntries(parsed)
+      .map(mapPreviewItem)
+      .filter((item) => Boolean(item))
+      .slice(0, limit);
   });
 }
 function normalizeLibraryLimit(limit) {
   if (limit == null || !Number.isFinite(limit)) return null;
   return Math.max(1, Math.min(1e4, Math.trunc(limit)));
 }
-async function getPlexMovies(env, options = {}) {
-  const sectionId = await resolveSectionId(env, "movie");
+async function getPlexMovies(env2, options = {}) {
+  const sectionId = await resolveSectionId(env2, "movie");
   const limit = normalizeLibraryLimit(options.limit);
-  const key = `${cachePrefix(env)}::movies:${sectionId}:${limit ?? "all"}`;
+  const key = `${cachePrefix(env2)}::movies:${sectionId}:${limit ?? "all"}`;
   return cached(key, 6e4, async () => {
     const pageSize = 200;
     const items = [];
     let start = 0;
     let totalSize = null;
     while (true) {
-      const remaining = limit == null ? pageSize : Math.min(pageSize, limit - items.length);
+      const remaining =
+        limit == null ? pageSize : Math.min(pageSize, limit - items.length);
       if (remaining <= 0) break;
-      const parsed = await plexRequest(env, `/library/sections/${sectionId}/all`, {
-        type: 1,
-        "X-Plex-Container-Start": start,
-        "X-Plex-Container-Size": remaining
-      });
+      const parsed = await plexRequest(
+        env2,
+        `/library/sections/${sectionId}/all`,
+        {
+          type: 1,
+          "X-Plex-Container-Start": start,
+          "X-Plex-Container-Size": remaining,
+        },
+      );
       const mediaContainer = parsed.MediaContainer ?? parsed;
-      const pageItems = getMediaContainerEntries(parsed).map(mapCollectionMovie).filter((item) => Boolean(item));
+      const pageItems = getMediaContainerEntries(parsed)
+        .map(mapCollectionMovie)
+        .filter((item) => Boolean(item));
       items.push(...pageItems);
-      totalSize = pickFirstNumber(mediaContainer, ["@_totalSize", "totalSize"]) ?? totalSize;
+      totalSize =
+        pickFirstNumber(mediaContainer, ["@_totalSize", "totalSize"]) ??
+        totalSize;
       if (pageItems.length === 0) break;
       start += pageItems.length;
       if (limit != null && items.length >= limit) break;
@@ -2414,38 +4542,91 @@ async function getPlexMovies(env, options = {}) {
     return items;
   });
 }
-async function getPlexCollections(env, options = {}) {
-  const sectionId = options.sectionId ?? await resolveSectionId(env, "movie");
-  const key = `${cachePrefix(env)}::collections:${sectionId}`;
+async function getPlexShows(env2, options = {}) {
+  const sectionId = await resolveSectionId(env2, "tv");
+  const limit = normalizeLibraryLimit(options.limit);
+  const key = `${cachePrefix(env2)}::shows:${sectionId}:${limit ?? "all"}`;
   return cached(key, 6e4, async () => {
-    const parsed = await plexRequest(env, `/library/sections/${sectionId}/collections`);
-    return getMediaContainerEntries(parsed).map(mapCollectionSummary).filter((collection) => Boolean(collection));
+    const pageSize = 200;
+    const items = [];
+    let start = 0;
+    let totalSize = null;
+    while (true) {
+      const remaining =
+        limit == null ? pageSize : Math.min(pageSize, limit - items.length);
+      if (remaining <= 0) break;
+      const parsed = await plexRequest(
+        env2,
+        `/library/sections/${sectionId}/all`,
+        {
+          type: 2,
+          "X-Plex-Container-Start": start,
+          "X-Plex-Container-Size": remaining,
+        },
+      );
+      const mediaContainer = parsed?.MediaContainer ?? parsed;
+      const pageItems = getMediaContainerEntries(parsed)
+        .map(mapLibraryShow)
+        .filter((item) => Boolean(item));
+      items.push(...pageItems);
+      totalSize =
+        pickFirstNumber(mediaContainer, ["@_totalSize", "totalSize"]) ??
+        totalSize;
+      if (pageItems.length === 0) break;
+      start += pageItems.length;
+      if (limit != null && items.length >= limit) break;
+      if (totalSize != null && start >= totalSize) break;
+      if (pageItems.length < remaining) break;
+    }
+    return items;
   });
 }
-async function getCollectionMetadata(env, collectionId) {
-  const key = `${cachePrefix(env)}::collectionMeta:${collectionId}`;
+async function getPlexCollections(env2, options = {}) {
+  const sectionId =
+    options.sectionId ?? (await resolveSectionId(env2, "movie"));
+  const key = `${cachePrefix(env2)}::collections:${sectionId}`;
   return cached(key, 6e4, async () => {
-    const parsed = await plexRequest(env, `/library/metadata/${collectionId}`);
+    const parsed = await plexRequest(
+      env2,
+      `/library/sections/${sectionId}/collections`,
+    );
+    return getMediaContainerEntries(parsed)
+      .map(mapCollectionSummary)
+      .filter((collection) => Boolean(collection));
+  });
+}
+async function getCollectionMetadata(env2, collectionId) {
+  const key = `${cachePrefix(env2)}::collectionMeta:${collectionId}`;
+  return cached(key, 6e4, async () => {
+    const parsed = await plexRequest(env2, `/library/metadata/${collectionId}`);
     const [entry] = getMediaContainerEntries(parsed);
     return entry ? mapCollectionSummary(entry) : null;
   });
 }
-async function getCollectionItems(env, collectionId) {
-  const key = `${cachePrefix(env)}::collectionItems:${collectionId}`;
+async function getCollectionItems(env2, collectionId) {
+  const key = `${cachePrefix(env2)}::collectionItems:${collectionId}`;
   return cached(key, 6e4, async () => {
     const pageSize = 100;
     const items = [];
     let start = 0;
     let totalSize = null;
     while (true) {
-      const parsed = await plexRequest(env, `/library/collections/${collectionId}/items`, {
-        "X-Plex-Container-Start": start,
-        "X-Plex-Container-Size": pageSize
-      });
+      const parsed = await plexRequest(
+        env2,
+        `/library/collections/${collectionId}/items`,
+        {
+          "X-Plex-Container-Start": start,
+          "X-Plex-Container-Size": pageSize,
+        },
+      );
       const mediaContainer = parsed.MediaContainer ?? parsed;
-      const pageItems = getMediaContainerEntries(parsed).map(mapCollectionMovie).filter((item) => Boolean(item));
+      const pageItems = getMediaContainerEntries(parsed)
+        .map(mapCollectionMovie)
+        .filter((item) => Boolean(item));
       items.push(...pageItems);
-      totalSize = pickFirstNumber(mediaContainer, ["@_totalSize", "totalSize"]) ?? totalSize;
+      totalSize =
+        pickFirstNumber(mediaContainer, ["@_totalSize", "totalSize"]) ??
+        totalSize;
       if (pageItems.length === 0) break;
       start += pageItems.length;
       if (totalSize != null && start >= totalSize) break;
@@ -2462,57 +4643,84 @@ function normalizeText(value) {
   const normalized = value?.trim();
   return normalized ? normalized : null;
 }
-async function resolveFeaturedCollectionTarget(env, options) {
-  const desiredId = normalizeText(options.collectionId ?? env.PLEX_COLLECTION_ID);
-  const desiredTitle = normalizeText(options.collectionTitle ?? env.PLEX_COLLECTION_TITLE);
+async function resolveFeaturedCollectionTarget(env2, options) {
+  const desiredId = normalizeText(
+    options.collectionId ?? env2.PLEX_COLLECTION_ID,
+  );
+  const desiredTitle = normalizeText(
+    options.collectionTitle ?? env2.PLEX_COLLECTION_TITLE,
+  );
   if (!desiredId && !desiredTitle) {
-    throw new Error("Set PLEX_COLLECTION_ID or PLEX_COLLECTION_TITLE to choose which Plex collection to display.");
+    throw new Error(
+      "Set PLEX_COLLECTION_ID or PLEX_COLLECTION_TITLE to choose which Plex collection to display.",
+    );
   }
-  const collections = await getPlexCollections(env);
+  const collections = await getPlexCollections(env2);
   if (desiredId) {
-    const summary2 = collections.find((collection) => collection.id === desiredId) ?? null;
+    const summary2 =
+      collections.find((collection) => collection.id === desiredId) ?? null;
     return { collectionId: desiredId, summary: summary2 };
   }
-  const summary = collections.find((collection) => collection.title.trim().toLowerCase() === desiredTitle.toLowerCase()) ?? null;
+  const summary =
+    collections.find(
+      (collection) =>
+        collection.title.trim().toLowerCase() === desiredTitle.toLowerCase(),
+    ) ?? null;
   if (!summary) {
-    throw new Error(`Could not find Plex collection '${desiredTitle}'. Check /api/plex/collections or set PLEX_COLLECTION_ID.`);
+    throw new Error(
+      `Could not find Plex collection '${desiredTitle}'. Check /api/plex/collections or set PLEX_COLLECTION_ID.`,
+    );
   }
   return { collectionId: summary.id, summary };
 }
-async function getFeaturedCollection(env, options = {}) {
-  const { collectionId, summary } = await resolveFeaturedCollectionTarget(env, options);
+async function getFeaturedCollection(env2, options = {}) {
+  const { collectionId, summary } = await resolveFeaturedCollectionTarget(
+    env2,
+    options,
+  );
   const limit = normalizeLimit(options.limit);
   const [metadata, allItems] = await Promise.all([
-    summary ? Promise.resolve(summary) : getCollectionMetadata(env, collectionId),
-    getCollectionItems(env, collectionId)
+    summary
+      ? Promise.resolve(summary)
+      : getCollectionMetadata(env2, collectionId),
+    getCollectionItems(env2, collectionId),
   ]);
   const resolvedSummary = metadata ?? summary;
   const items = limit == null ? allItems : allItems.slice(0, limit);
   return {
     id: collectionId,
-    title: resolvedSummary?.title ?? normalizeText(options.collectionTitle ?? env.PLEX_COLLECTION_TITLE) ?? "Featured Collection",
+    title:
+      resolvedSummary?.title ??
+      normalizeText(options.collectionTitle ?? env2.PLEX_COLLECTION_TITLE) ??
+      "Featured Collection",
     summary: resolvedSummary?.summary ?? null,
     posterPath: resolvedSummary?.posterPath ?? null,
     artPath: resolvedSummary?.artPath ?? null,
     itemCount: resolvedSummary?.itemCount ?? allItems.length,
     updatedAt: resolvedSummary?.updatedAt ?? null,
-    items
+    items,
   };
 }
-var import_fast_xml_parser, parser, cache, DEFAULT_PLEX_FETCH_TIMEOUT_MS, DEFAULT_LIBRARY_TITLES;
+var import_fast_xml_parser,
+  parser,
+  cache,
+  DEFAULT_PLEX_FETCH_TIMEOUT_MS,
+  DEFAULT_LIBRARY_TITLES;
 var init_plex_client = __esm({
   "../shared/plex-client.ts"() {
-    "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     import_fast_xml_parser = __toESM(require_fxp(), 1);
     parser = new import_fast_xml_parser.XMLParser({
-      ignoreAttributes: false
+      ignoreAttributes: false,
     });
     cache = /* @__PURE__ */ new Map();
     DEFAULT_PLEX_FETCH_TIMEOUT_MS = 8e3;
     DEFAULT_LIBRARY_TITLES = {
       movie: "Movies",
-      tv: "Shows"
+      tv: "Shows",
     };
     __name(toArray, "toArray");
     __name(getRequiredEnv, "getRequiredEnv");
@@ -2533,6 +4741,7 @@ var init_plex_client = __esm({
     __name(mapPreviewItem, "mapPreviewItem");
     __name(mapCollectionSummary, "mapCollectionSummary");
     __name(mapCollectionMovie, "mapCollectionMovie");
+    __name(mapLibraryShow, "mapLibraryShow");
     __name(plexRequest, "plexRequest");
     __name(plexFetchImage, "plexFetchImage");
     __name(getPlexSections, "getPlexSections");
@@ -2544,6 +4753,7 @@ var init_plex_client = __esm({
     __name(getTopRated, "getTopRated");
     __name(normalizeLibraryLimit, "normalizeLibraryLimit");
     __name(getPlexMovies, "getPlexMovies");
+    __name(getPlexShows, "getPlexShows");
     __name(getPlexCollections, "getPlexCollections");
     __name(getCollectionMetadata, "getCollectionMetadata");
     __name(getCollectionItems, "getCollectionItems");
@@ -2551,7 +4761,7 @@ var init_plex_client = __esm({
     __name(normalizeText, "normalizeText");
     __name(resolveFeaturedCollectionTarget, "resolveFeaturedCollectionTarget");
     __name(getFeaturedCollection, "getFeaturedCollection");
-  }
+  },
 });
 
 // _lib/pages.ts
@@ -2562,11 +4772,11 @@ function json(data, init = {}) {
   }
   return new Response(JSON.stringify(data), {
     ...init,
-    headers
+    headers,
   });
 }
-function errorMessage(error, fallback) {
-  return error instanceof Error ? error.message : fallback;
+function errorMessage(error3, fallback) {
+  return error3 instanceof Error ? error3.message : fallback;
 }
 function cloneWithHeader(response, name, value) {
   const headers = new Headers(response.headers);
@@ -2574,247 +4784,339 @@ function cloneWithHeader(response, name, value) {
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
-    headers
+    headers,
   });
 }
 function cachedJsonResponse(data, cacheStatus) {
   return json(data, {
     headers: {
-      "Cache-Control": "public, max-age=60, s-maxage=86400, stale-while-revalidate=86400",
+      "Cache-Control":
+        "public, max-age=60, s-maxage=86400, stale-while-revalidate=86400",
       "X-PlexPoint-Cache": cacheStatus,
-      "X-PlexPoint-Cached-At": (/* @__PURE__ */ new Date()).toISOString()
-    }
+      "X-PlexPoint-Cached-At": /* @__PURE__ */ new Date().toISOString(),
+    },
   });
 }
-async function cachedJson(context, options) {
+async function cachedJson(context2, options) {
   const cache2 = await caches.open(options.cacheName);
   const cacheUrl = new URL(String(options.cacheKey));
   cacheUrl.searchParams.set("__plexpoint_cache", PLEX_API_CACHE_VERSION);
   const cacheKey = new Request(cacheUrl.toString(), { method: "GET" });
   const cached2 = await cache2.match(cacheKey);
   if (cached2) {
-    context.waitUntil(
-      options.load().then((data) => cache2.put(cacheKey, cachedJsonResponse(data, "refresh"))).catch(() => void 0)
+    context2.waitUntil(
+      options
+        .load()
+        .then((data) =>
+          cache2.put(cacheKey, cachedJsonResponse(data, "refresh")),
+        )
+        .catch(() => void 0),
     );
     return cloneWithHeader(cached2, "X-PlexPoint-Cache", "hit");
   }
   try {
     const data = await options.load();
     const response = cachedJsonResponse(data, "miss");
-    context.waitUntil(cache2.put(cacheKey, response.clone()));
+    context2.waitUntil(cache2.put(cacheKey, response.clone()));
     return response;
-  } catch (error) {
+  } catch (error3) {
     return json(
       {
-        message: errorMessage(error, options.fallbackMessage)
+        message: errorMessage(error3, options.fallbackMessage),
       },
-      { status: 501 }
+      { status: 501 },
     );
   }
 }
 var PLEX_API_CACHE_VERSION;
 var init_pages = __esm({
   "_lib/pages.ts"() {
-    "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     PLEX_API_CACHE_VERSION = "v4-optional-limit-parsing";
     __name(json, "json");
     __name(errorMessage, "errorMessage");
     __name(cloneWithHeader, "cloneWithHeader");
     __name(cachedJsonResponse, "cachedJsonResponse");
     __name(cachedJson, "cachedJson");
-  }
+  },
 });
 
 // api/plex/collections.ts
-async function onRequestGet(context) {
-  const url = new URL(context.request.url);
+async function onRequestGet(context2) {
+  const url = new URL(context2.request.url);
   const sectionId = url.searchParams.get("sectionId") ?? void 0;
-  return cachedJson(context, {
+  return cachedJson(context2, {
     cacheName: "plex-api",
-    cacheKey: context.request.url,
-    load: /* @__PURE__ */ __name(() => getPlexCollections(context.env, { sectionId }), "load"),
-    fallbackMessage: "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)"
+    cacheKey: context2.request.url,
+    load: /* @__PURE__ */ __name(
+      () => getPlexCollections(context2.env, { sectionId }),
+      "load",
+    ),
+    fallbackMessage:
+      "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)",
   });
 }
 var init_collections = __esm({
   "api/plex/collections.ts"() {
-    "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     init_plex_client();
     init_pages();
     __name(onRequestGet, "onRequestGet");
-  }
+  },
 });
 
 // api/plex/counts.ts
-async function onRequestGet2(context) {
-  return cachedJson(context, {
+async function onRequestGet2(context2) {
+  return cachedJson(context2, {
     cacheName: "plex-api",
-    cacheKey: context.request.url,
-    load: /* @__PURE__ */ __name(() => getPlexLibraryCounts(context.env), "load"),
-    fallbackMessage: "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)"
+    cacheKey: context2.request.url,
+    load: /* @__PURE__ */ __name(
+      () => getPlexLibraryCounts(context2.env),
+      "load",
+    ),
+    fallbackMessage:
+      "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)",
   });
 }
 var init_counts = __esm({
   "api/plex/counts.ts"() {
-    "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     init_plex_client();
     init_pages();
     __name(onRequestGet2, "onRequestGet");
-  }
+  },
 });
 
 // api/plex/featured-collection.ts
-async function onRequestGet3(context) {
-  const url = new URL(context.request.url);
+async function onRequestGet3(context2) {
+  const url = new URL(context2.request.url);
   const collectionId = url.searchParams.get("id") ?? void 0;
   const collectionTitle = url.searchParams.get("title") ?? void 0;
   const limitParam = url.searchParams.get("limit");
   const limitRaw = limitParam == null ? NaN : Number(limitParam);
-  const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(500, Math.trunc(limitRaw))) : void 0;
-  return cachedJson(context, {
+  const limit = Number.isFinite(limitRaw)
+    ? Math.max(1, Math.min(500, Math.trunc(limitRaw)))
+    : void 0;
+  return cachedJson(context2, {
     cacheName: "plex-api",
-    cacheKey: context.request.url,
-    load: /* @__PURE__ */ __name(() => getFeaturedCollection(context.env, {
-      collectionId,
-      collectionTitle,
-      limit
-    }), "load"),
-    fallbackMessage: "Plex integration not configured (set PLEX_URL, PLEX_TOKEN, and a collection id or title)"
+    cacheKey: context2.request.url,
+    load: /* @__PURE__ */ __name(
+      () =>
+        getFeaturedCollection(context2.env, {
+          collectionId,
+          collectionTitle,
+          limit,
+        }),
+      "load",
+    ),
+    fallbackMessage:
+      "Plex integration not configured (set PLEX_URL, PLEX_TOKEN, and a collection id or title)",
   });
 }
 var init_featured_collection = __esm({
   "api/plex/featured-collection.ts"() {
-    "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     init_plex_client();
     init_pages();
     __name(onRequestGet3, "onRequestGet");
-  }
+  },
 });
 
 // api/plex/image.ts
-async function onRequestGet4(context) {
+async function onRequestGet4(context2) {
   try {
-    const url = new URL(context.request.url);
+    const url = new URL(context2.request.url);
     const path = url.searchParams.get("path");
     if (typeof path !== "string" || !path.startsWith("/")) {
-      return json({ message: "Query param 'path' must be a Plex path starting with '/'" }, { status: 400 });
+      return json(
+        { message: "Query param 'path' must be a Plex path starting with '/'" },
+        { status: 400 },
+      );
     }
     const widthRaw = Number(url.searchParams.get("w"));
     const heightRaw = Number(url.searchParams.get("h"));
-    const width = Number.isFinite(widthRaw) && widthRaw > 0 ? Math.max(40, Math.min(2e3, Math.trunc(widthRaw))) : void 0;
-    const height = Number.isFinite(heightRaw) && heightRaw > 0 ? Math.max(40, Math.min(2e3, Math.trunc(heightRaw))) : void 0;
-    const cacheKey = new Request(url.toString(), context.request);
+    const width =
+      Number.isFinite(widthRaw) && widthRaw > 0
+        ? Math.max(40, Math.min(2e3, Math.trunc(widthRaw)))
+        : void 0;
+    const height =
+      Number.isFinite(heightRaw) && heightRaw > 0
+        ? Math.max(40, Math.min(2e3, Math.trunc(heightRaw)))
+        : void 0;
+    const cacheKey = new Request(url.toString(), context2.request);
     const cache2 = await caches.open("plex-images");
     const cached2 = await cache2.match(cacheKey);
     if (cached2) return cached2;
-    const upstream = await plexFetchImage(context.env, path, { width, height });
+    const upstream = await plexFetchImage(context2.env, path, {
+      width,
+      height,
+    });
     if (!upstream.ok) {
-      const body = await upstream.text().catch(() => "") || upstream.statusText;
+      const body =
+        (await upstream.text().catch(() => "")) || upstream.statusText;
       return new Response(body, {
         status: upstream.status,
-        headers: upstream.headers
+        headers: upstream.headers,
       });
     }
     const headers = new Headers(upstream.headers);
-    headers.set("Cache-Control", "public, max-age=604800, stale-while-revalidate=86400, immutable");
+    headers.set(
+      "Cache-Control",
+      "public, max-age=604800, stale-while-revalidate=86400, immutable",
+    );
     const response = new Response(upstream.body, {
       status: upstream.status,
-      headers
+      headers,
     });
-    context.waitUntil(cache2.put(cacheKey, response.clone()));
+    context2.waitUntil(cache2.put(cacheKey, response.clone()));
     return response;
-  } catch (error) {
+  } catch (error3) {
     return json(
       {
-        message: errorMessage(error, "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)")
+        message: errorMessage(
+          error3,
+          "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)",
+        ),
       },
-      { status: 501 }
+      { status: 501 },
     );
   }
 }
 var init_image = __esm({
   "api/plex/image.ts"() {
-    "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     init_plex_client();
     init_pages();
     __name(onRequestGet4, "onRequestGet");
-  }
+  },
 });
 
 // api/plex/movies.ts
-async function onRequestGet5(context) {
-  const url = new URL(context.request.url);
+async function onRequestGet5(context2) {
+  const url = new URL(context2.request.url);
   const limitParam = url.searchParams.get("limit");
   const limitRaw = limitParam == null ? NaN : Number(limitParam);
-  const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(1e4, Math.trunc(limitRaw))) : void 0;
-  return cachedJson(context, {
+  const limit = Number.isFinite(limitRaw)
+    ? Math.max(1, Math.min(1e4, Math.trunc(limitRaw)))
+    : void 0;
+  return cachedJson(context2, {
     cacheName: "plex-api",
-    cacheKey: context.request.url,
-    load: /* @__PURE__ */ __name(() => getPlexMovies(context.env, { limit }), "load"),
-    fallbackMessage: "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)"
+    cacheKey: context2.request.url,
+    load: /* @__PURE__ */ __name(
+      () => getPlexMovies(context2.env, { limit }),
+      "load",
+    ),
+    fallbackMessage:
+      "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)",
   });
 }
 var init_movies = __esm({
   "api/plex/movies.ts"() {
-    "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     init_plex_client();
     init_pages();
     __name(onRequestGet5, "onRequestGet");
-  }
+  },
 });
 
 // api/plex/sections.ts
-async function onRequestGet6(context) {
-  return cachedJson(context, {
+async function onRequestGet6(context2) {
+  return cachedJson(context2, {
     cacheName: "plex-api",
-    cacheKey: context.request.url,
-    load: /* @__PURE__ */ __name(() => getPlexSections(context.env), "load"),
-    fallbackMessage: "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)"
+    cacheKey: context2.request.url,
+    load: /* @__PURE__ */ __name(() => getPlexSections(context2.env), "load"),
+    fallbackMessage:
+      "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)",
   });
 }
 var init_sections = __esm({
   "api/plex/sections.ts"() {
-    "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     init_plex_client();
     init_pages();
     __name(onRequestGet6, "onRequestGet");
-  }
+  },
+});
+
+// api/plex/shows.ts
+async function onRequestGet7(context2) {
+  const url = new URL(context2.request.url);
+  const limitParam = url.searchParams.get("limit");
+  const limitRaw = limitParam == null ? NaN : Number(limitParam);
+  const limit = Number.isFinite(limitRaw)
+    ? Math.max(1, Math.min(1e4, Math.trunc(limitRaw)))
+    : void 0;
+  return cachedJson(context2, {
+    cacheName: "plex-api",
+    cacheKey: context2.request.url,
+    load: /* @__PURE__ */ __name(
+      () => getPlexShows(context2.env, { limit }),
+      "load",
+    ),
+    fallbackMessage:
+      "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)",
+  });
+}
+var init_shows = __esm({
+  "api/plex/shows.ts"() {
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_plex_client();
+    init_pages();
+    __name(onRequestGet7, "onRequestGet");
+  },
 });
 
 // api/plex/status.ts
 function configured(value) {
   return Boolean(value && value.trim().length > 0);
 }
-function publicMessage(error) {
-  if (!(error instanceof Error)) {
+function publicMessage(error3) {
+  if (!(error3 instanceof Error)) {
     return "Cloudflare could not reach Plex.";
   }
-  if (error.message.startsWith("Missing required env var:")) {
-    return error.message;
+  if (error3.message.startsWith("Missing required env var:")) {
+    return error3.message;
   }
   return "Cloudflare could not reach Plex. Check that PLEX_URL is reachable from Cloudflare and PLEX_TOKEN is valid.";
 }
-async function onRequestGet7(context) {
+async function onRequestGet8(context2) {
   const startedAt = Date.now();
   const envStatus = {
-    plexUrl: configured(context.env.PLEX_URL),
-    plexToken: configured(context.env.PLEX_TOKEN),
-    movieSectionId: configured(context.env.PLEX_MOVIE_SECTION_ID),
-    tvSectionId: configured(context.env.PLEX_TV_SECTION_ID),
-    collectionId: configured(context.env.PLEX_COLLECTION_ID),
-    collectionTitle: configured(context.env.PLEX_COLLECTION_TITLE)
+    plexUrl: configured(context2.env.PLEX_URL),
+    plexToken: configured(context2.env.PLEX_TOKEN),
+    movieSectionId: configured(context2.env.PLEX_MOVIE_SECTION_ID),
+    tvSectionId: configured(context2.env.PLEX_TV_SECTION_ID),
+    collectionId: configured(context2.env.PLEX_COLLECTION_ID),
+    collectionTitle: configured(context2.env.PLEX_COLLECTION_TITLE),
   };
   try {
     const [sections, counts] = await Promise.all([
-      getPlexSections(context.env),
-      getPlexLibraryCounts(context.env)
+      getPlexSections(context2.env),
+      getPlexLibraryCounts(context2.env),
     ]);
     return json({
       ok: true,
@@ -2822,72 +5124,82 @@ async function onRequestGet7(context) {
       env: envStatus,
       sections: {
         movies: sections.filter((section) => section.type === "movie").length,
-        shows: sections.filter((section) => section.type === "show").length
+        shows: sections.filter((section) => section.type === "show").length,
       },
       counts,
-      durationMs: Date.now() - startedAt
+      durationMs: Date.now() - startedAt,
     });
-  } catch (error) {
+  } catch (error3) {
     return json(
       {
         ok: false,
         reachable: false,
         env: envStatus,
-        message: publicMessage(error),
-        durationMs: Date.now() - startedAt
+        message: publicMessage(error3),
+        durationMs: Date.now() - startedAt,
       },
-      { status: 503 }
+      { status: 503 },
     );
   }
 }
 var init_status = __esm({
   "api/plex/status.ts"() {
-    "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     init_plex_client();
     init_pages();
     __name(configured, "configured");
     __name(publicMessage, "publicMessage");
-    __name(onRequestGet7, "onRequestGet");
-  }
+    __name(onRequestGet8, "onRequestGet");
+  },
 });
 
 // api/plex/top-rated.ts
-async function onRequestGet8(context) {
-  const url = new URL(context.request.url);
+async function onRequestGet9(context2) {
+  const url = new URL(context2.request.url);
   const typeParam = String(url.searchParams.get("type") ?? "tv").toLowerCase();
   const type = typeParam === "movie" ? "movie" : "tv";
   const limitParam = url.searchParams.get("limit");
   const limitRaw = limitParam == null ? NaN : Number(limitParam);
-  const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(30, Math.trunc(limitRaw))) : 12;
-  return cachedJson(context, {
+  const limit = Number.isFinite(limitRaw)
+    ? Math.max(1, Math.min(30, Math.trunc(limitRaw)))
+    : 12;
+  return cachedJson(context2, {
     cacheName: "plex-api",
-    cacheKey: context.request.url,
-    load: /* @__PURE__ */ __name(() => getTopRated(context.env, { type, limit }), "load"),
-    fallbackMessage: "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)"
+    cacheKey: context2.request.url,
+    load: /* @__PURE__ */ __name(
+      () => getTopRated(context2.env, { type, limit }),
+      "load",
+    ),
+    fallbackMessage:
+      "Plex integration not configured (set PLEX_URL and PLEX_TOKEN)",
   });
 }
 var init_top_rated = __esm({
   "api/plex/top-rated.ts"() {
-    "use strict";
-    init_functionsRoutes_0_7931910114310042();
+    init_functionsRoutes_0_5277810449847653();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     init_plex_client();
     init_pages();
-    __name(onRequestGet8, "onRequestGet");
-  }
+    __name(onRequestGet9, "onRequestGet");
+  },
 });
 
-// ../.wrangler/tmp/pages-C65zgE/functionsRoutes-0.7931910114310042.mjs
+// ../.wrangler/tmp/pages-KKAamF/functionsRoutes-0.5277810449847653.mjs
 var routes;
-var init_functionsRoutes_0_7931910114310042 = __esm({
-  "../.wrangler/tmp/pages-C65zgE/functionsRoutes-0.7931910114310042.mjs"() {
-    "use strict";
+var init_functionsRoutes_0_5277810449847653 = __esm({
+  "../.wrangler/tmp/pages-KKAamF/functionsRoutes-0.5277810449847653.mjs"() {
     init_collections();
     init_counts();
     init_featured_collection();
     init_image();
     init_movies();
     init_sections();
+    init_shows();
     init_status();
     init_top_rated();
     routes = [
@@ -2896,66 +5208,79 @@ var init_functionsRoutes_0_7931910114310042 = __esm({
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
-        modules: [onRequestGet]
+        modules: [onRequestGet],
       },
       {
         routePath: "/api/plex/counts",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
-        modules: [onRequestGet2]
+        modules: [onRequestGet2],
       },
       {
         routePath: "/api/plex/featured-collection",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
-        modules: [onRequestGet3]
+        modules: [onRequestGet3],
       },
       {
         routePath: "/api/plex/image",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
-        modules: [onRequestGet4]
+        modules: [onRequestGet4],
       },
       {
         routePath: "/api/plex/movies",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
-        modules: [onRequestGet5]
+        modules: [onRequestGet5],
       },
       {
         routePath: "/api/plex/sections",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
-        modules: [onRequestGet6]
+        modules: [onRequestGet6],
+      },
+      {
+        routePath: "/api/plex/shows",
+        mountPath: "/api/plex",
+        method: "GET",
+        middlewares: [],
+        modules: [onRequestGet7],
       },
       {
         routePath: "/api/plex/status",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
-        modules: [onRequestGet7]
+        modules: [onRequestGet8],
       },
       {
         routePath: "/api/plex/top-rated",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
-        modules: [onRequestGet8]
-      }
+        modules: [onRequestGet9],
+      },
     ];
-  }
+  },
 });
 
-// C:/Users/jacob/AppData/Roaming/npm/node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_7931910114310042();
+// ../node_modules/wrangler/templates/pages-template-worker.ts
+init_functionsRoutes_0_5277810449847653();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+init_performance2();
 
-// C:/Users/jacob/AppData/Roaming/npm/node_modules/wrangler/node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_7931910114310042();
+// ../node_modules/path-to-regexp/dist.es2015/index.js
+init_functionsRoutes_0_5277810449847653();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+init_performance2();
 function lexer(str) {
   var tokens = [];
   var i = 0;
@@ -2984,9 +5309,9 @@ function lexer(str) {
         var code = str.charCodeAt(j);
         if (
           // `0-9`
-          code >= 48 && code <= 57 || // `A-Z`
-          code >= 65 && code <= 90 || // `a-z`
-          code >= 97 && code <= 122 || // `_`
+          (code >= 48 && code <= 57) || // `A-Z`
+          (code >= 65 && code <= 90) || // `a-z`
+          (code >= 97 && code <= 122) || // `_`
           code === 95
         ) {
           name += str[j++];
@@ -2994,14 +5319,13 @@ function lexer(str) {
         }
         break;
       }
-      if (!name)
-        throw new TypeError("Missing parameter name at ".concat(i));
+      if (!name) throw new TypeError("Missing parameter name at ".concat(i));
       tokens.push({ type: "NAME", index: i, value: name });
       i = j;
       continue;
     }
     if (char === "(") {
-      var count = 1;
+      var count3 = 1;
       var pattern = "";
       var j = i + 1;
       if (str[j] === "?") {
@@ -3013,23 +5337,23 @@ function lexer(str) {
           continue;
         }
         if (str[j] === ")") {
-          count--;
-          if (count === 0) {
+          count3--;
+          if (count3 === 0) {
             j++;
             break;
           }
         } else if (str[j] === "(") {
-          count++;
+          count3++;
           if (str[j + 1] !== "?") {
-            throw new TypeError("Capturing groups are not allowed at ".concat(j));
+            throw new TypeError(
+              "Capturing groups are not allowed at ".concat(j),
+            );
           }
         }
         pattern += str[j++];
       }
-      if (count)
-        throw new TypeError("Unbalanced pattern at ".concat(i));
-      if (!pattern)
-        throw new TypeError("Missing pattern at ".concat(i));
+      if (count3) throw new TypeError("Unbalanced pattern at ".concat(i));
+      if (!pattern) throw new TypeError("Missing pattern at ".concat(i));
       tokens.push({ type: "PATTERN", index: i, value: pattern });
       i = j;
       continue;
@@ -3045,47 +5369,61 @@ function parse(str, options) {
     options = {};
   }
   var tokens = lexer(str);
-  var _a = options.prefixes, prefixes = _a === void 0 ? "./" : _a, _b = options.delimiter, delimiter = _b === void 0 ? "/#?" : _b;
+  var _a = options.prefixes,
+    prefixes = _a === void 0 ? "./" : _a,
+    _b = options.delimiter,
+    delimiter = _b === void 0 ? "/#?" : _b;
   var result = [];
   var key = 0;
   var i = 0;
   var path = "";
-  var tryConsume = /* @__PURE__ */ __name(function(type) {
-    if (i < tokens.length && tokens[i].type === type)
-      return tokens[i++].value;
+  var tryConsume = /* @__PURE__ */ __name(function (type) {
+    if (i < tokens.length && tokens[i].type === type) return tokens[i++].value;
   }, "tryConsume");
-  var mustConsume = /* @__PURE__ */ __name(function(type) {
+  var mustConsume = /* @__PURE__ */ __name(function (type) {
     var value2 = tryConsume(type);
-    if (value2 !== void 0)
-      return value2;
-    var _a2 = tokens[i], nextType = _a2.type, index = _a2.index;
-    throw new TypeError("Unexpected ".concat(nextType, " at ").concat(index, ", expected ").concat(type));
+    if (value2 !== void 0) return value2;
+    var _a2 = tokens[i],
+      nextType = _a2.type,
+      index = _a2.index;
+    throw new TypeError(
+      "Unexpected "
+        .concat(nextType, " at ")
+        .concat(index, ", expected ")
+        .concat(type),
+    );
   }, "mustConsume");
-  var consumeText = /* @__PURE__ */ __name(function() {
+  var consumeText = /* @__PURE__ */ __name(function () {
     var result2 = "";
     var value2;
-    while (value2 = tryConsume("CHAR") || tryConsume("ESCAPED_CHAR")) {
+    while ((value2 = tryConsume("CHAR") || tryConsume("ESCAPED_CHAR"))) {
       result2 += value2;
     }
     return result2;
   }, "consumeText");
-  var isSafe = /* @__PURE__ */ __name(function(value2) {
+  var isSafe = /* @__PURE__ */ __name(function (value2) {
     for (var _i = 0, delimiter_1 = delimiter; _i < delimiter_1.length; _i++) {
       var char2 = delimiter_1[_i];
-      if (value2.indexOf(char2) > -1)
-        return true;
+      if (value2.indexOf(char2) > -1) return true;
     }
     return false;
   }, "isSafe");
-  var safePattern = /* @__PURE__ */ __name(function(prefix2) {
+  var safePattern = /* @__PURE__ */ __name(function (prefix2) {
     var prev = result[result.length - 1];
     var prevText = prefix2 || (prev && typeof prev === "string" ? prev : "");
     if (prev && !prevText) {
-      throw new TypeError('Must have text between two parameters, missing text after "'.concat(prev.name, '"'));
+      throw new TypeError(
+        'Must have text between two parameters, missing text after "'.concat(
+          prev.name,
+          '"',
+        ),
+      );
     }
     if (!prevText || isSafe(prevText))
       return "[^".concat(escapeString(delimiter), "]+?");
-    return "(?:(?!".concat(escapeString(prevText), ")[^").concat(escapeString(delimiter), "])+?");
+    return "(?:(?!"
+      .concat(escapeString(prevText), ")[^")
+      .concat(escapeString(delimiter), "])+?");
   }, "safePattern");
   while (i < tokens.length) {
     var char = tryConsume("CHAR");
@@ -3106,7 +5444,7 @@ function parse(str, options) {
         prefix,
         suffix: "",
         pattern: pattern || safePattern(prefix),
-        modifier: tryConsume("MODIFIER") || ""
+        modifier: tryConsume("MODIFIER") || "",
       });
       continue;
     }
@@ -3131,7 +5469,7 @@ function parse(str, options) {
         pattern: name_1 && !pattern_1 ? safePattern(prefix) : pattern_1,
         prefix,
         suffix,
-        modifier: tryConsume("MODIFIER") || ""
+        modifier: tryConsume("MODIFIER") || "",
       });
       continue;
     }
@@ -3150,23 +5488,28 @@ function regexpToFunction(re, keys, options) {
   if (options === void 0) {
     options = {};
   }
-  var _a = options.decode, decode = _a === void 0 ? function(x) {
-    return x;
-  } : _a;
-  return function(pathname) {
+  var _a = options.decode,
+    decode =
+      _a === void 0
+        ? function (x) {
+            return x;
+          }
+        : _a;
+  return function (pathname) {
     var m = re.exec(pathname);
-    if (!m)
-      return false;
-    var path = m[0], index = m.index;
+    if (!m) return false;
+    var path = m[0],
+      index = m.index;
     var params = /* @__PURE__ */ Object.create(null);
-    var _loop_1 = /* @__PURE__ */ __name(function(i2) {
-      if (m[i2] === void 0)
-        return "continue";
+    var _loop_1 = /* @__PURE__ */ __name(function (i2) {
+      if (m[i2] === void 0) return "continue";
       var key = keys[i2 - 1];
       if (key.modifier === "*" || key.modifier === "+") {
-        params[key.name] = m[i2].split(key.prefix + key.suffix).map(function(value) {
-          return decode(value, key);
-        });
+        params[key.name] = m[i2]
+          .split(key.prefix + key.suffix)
+          .map(function (value) {
+            return decode(value, key);
+          });
       } else {
         params[key.name] = decode(m[i2], key);
       }
@@ -3187,8 +5530,7 @@ function flags(options) {
 }
 __name(flags, "flags");
 function regexpToRegexp(path, keys) {
-  if (!keys)
-    return path;
+  if (!keys) return path;
   var groupsRegex = /\((?:\?<(.*?)>)?(?!\?)/g;
   var index = 0;
   var execResult = groupsRegex.exec(path.source);
@@ -3199,7 +5541,7 @@ function regexpToRegexp(path, keys) {
       prefix: "",
       suffix: "",
       modifier: "",
-      pattern: ""
+      pattern: "",
     });
     execResult = groupsRegex.exec(path.source);
   }
@@ -3207,7 +5549,7 @@ function regexpToRegexp(path, keys) {
 }
 __name(regexpToRegexp, "regexpToRegexp");
 function arrayToRegexp(paths, keys, options) {
-  var parts = paths.map(function(path) {
+  var parts = paths.map(function (path) {
     return pathToRegexp(path, keys, options).source;
   });
   return new RegExp("(?:".concat(parts.join("|"), ")"), flags(options));
@@ -3221,9 +5563,23 @@ function tokensToRegexp(tokens, keys, options) {
   if (options === void 0) {
     options = {};
   }
-  var _a = options.strict, strict = _a === void 0 ? false : _a, _b = options.start, start = _b === void 0 ? true : _b, _c = options.end, end = _c === void 0 ? true : _c, _d = options.encode, encode = _d === void 0 ? function(x) {
-    return x;
-  } : _d, _e = options.delimiter, delimiter = _e === void 0 ? "/#?" : _e, _f = options.endsWith, endsWith = _f === void 0 ? "" : _f;
+  var _a = options.strict,
+    strict = _a === void 0 ? false : _a,
+    _b = options.start,
+    start = _b === void 0 ? true : _b,
+    _c = options.end,
+    end = _c === void 0 ? true : _c,
+    _d = options.encode,
+    encode =
+      _d === void 0
+        ? function (x) {
+            return x;
+          }
+        : _d,
+    _e = options.delimiter,
+    delimiter = _e === void 0 ? "/#?" : _e,
+    _f = options.endsWith,
+    endsWith = _f === void 0 ? "" : _f;
   var endsWithRe = "[".concat(escapeString(endsWith), "]|$");
   var delimiterRe = "[".concat(escapeString(delimiter), "]");
   var route = start ? "^" : "";
@@ -3235,33 +5591,53 @@ function tokensToRegexp(tokens, keys, options) {
       var prefix = escapeString(encode(token.prefix));
       var suffix = escapeString(encode(token.suffix));
       if (token.pattern) {
-        if (keys)
-          keys.push(token);
+        if (keys) keys.push(token);
         if (prefix || suffix) {
           if (token.modifier === "+" || token.modifier === "*") {
             var mod = token.modifier === "*" ? "?" : "";
-            route += "(?:".concat(prefix, "((?:").concat(token.pattern, ")(?:").concat(suffix).concat(prefix, "(?:").concat(token.pattern, "))*)").concat(suffix, ")").concat(mod);
+            route += "(?:"
+              .concat(prefix, "((?:")
+              .concat(token.pattern, ")(?:")
+              .concat(suffix)
+              .concat(prefix, "(?:")
+              .concat(token.pattern, "))*)")
+              .concat(suffix, ")")
+              .concat(mod);
           } else {
-            route += "(?:".concat(prefix, "(").concat(token.pattern, ")").concat(suffix, ")").concat(token.modifier);
+            route += "(?:"
+              .concat(prefix, "(")
+              .concat(token.pattern, ")")
+              .concat(suffix, ")")
+              .concat(token.modifier);
           }
         } else {
           if (token.modifier === "+" || token.modifier === "*") {
-            throw new TypeError('Can not repeat "'.concat(token.name, '" without a prefix and suffix'));
+            throw new TypeError(
+              'Can not repeat "'.concat(
+                token.name,
+                '" without a prefix and suffix',
+              ),
+            );
           }
           route += "(".concat(token.pattern, ")").concat(token.modifier);
         }
       } else {
-        route += "(?:".concat(prefix).concat(suffix, ")").concat(token.modifier);
+        route += "(?:"
+          .concat(prefix)
+          .concat(suffix, ")")
+          .concat(token.modifier);
       }
     }
   }
   if (end) {
-    if (!strict)
-      route += "".concat(delimiterRe, "?");
+    if (!strict) route += "".concat(delimiterRe, "?");
     route += !options.endsWith ? "$" : "(?=".concat(endsWithRe, ")");
   } else {
     var endToken = tokens[tokens.length - 1];
-    var isEndDelimited = typeof endToken === "string" ? delimiterRe.indexOf(endToken[endToken.length - 1]) > -1 : endToken === void 0;
+    var isEndDelimited =
+      typeof endToken === "string"
+        ? delimiterRe.indexOf(endToken[endToken.length - 1]) > -1
+        : endToken === void 0;
     if (!strict) {
       route += "(?:".concat(delimiterRe, "(?=").concat(endsWithRe, "))?");
     }
@@ -3273,15 +5649,13 @@ function tokensToRegexp(tokens, keys, options) {
 }
 __name(tokensToRegexp, "tokensToRegexp");
 function pathToRegexp(path, keys, options) {
-  if (path instanceof RegExp)
-    return regexpToRegexp(path, keys);
-  if (Array.isArray(path))
-    return arrayToRegexp(path, keys, options);
+  if (path instanceof RegExp) return regexpToRegexp(path, keys);
+  if (Array.isArray(path)) return arrayToRegexp(path, keys, options);
   return stringToRegexp(path, keys, options);
 }
 __name(pathToRegexp, "pathToRegexp");
 
-// C:/Users/jacob/AppData/Roaming/npm/node_modules/wrangler/templates/pages-template-worker.ts
+// ../node_modules/wrangler/templates/pages-template-worker.ts
 var escapeRegex = /[.+?^${}()|[\]\\]/g;
 function* executeRequest(request) {
   const requestPath = new URL(request.url).pathname;
@@ -3290,10 +5664,10 @@ function* executeRequest(request) {
       continue;
     }
     const routeMatcher = match(route.routePath.replace(escapeRegex, "\\$&"), {
-      end: false
+      end: false,
     });
     const mountMatcher = match(route.mountPath.replace(escapeRegex, "\\$&"), {
-      end: false
+      end: false,
     });
     const matchResult = routeMatcher(requestPath);
     const mountMatchResult = mountMatcher(requestPath);
@@ -3302,7 +5676,7 @@ function* executeRequest(request) {
         yield {
           handler,
           params: matchResult.params,
-          path: mountMatchResult.path
+          path: mountMatchResult.path,
         };
       }
     }
@@ -3312,10 +5686,10 @@ function* executeRequest(request) {
       continue;
     }
     const routeMatcher = match(route.routePath.replace(escapeRegex, "\\$&"), {
-      end: true
+      end: true,
     });
     const mountMatcher = match(route.mountPath.replace(escapeRegex, "\\$&"), {
-      end: false
+      end: false,
     });
     const matchResult = routeMatcher(requestPath);
     const mountMatchResult = mountMatcher(requestPath);
@@ -3324,7 +5698,7 @@ function* executeRequest(request) {
         yield {
           handler,
           params: matchResult.params,
-          path: matchResult.path
+          path: matchResult.path,
         };
       }
       break;
@@ -3333,7 +5707,7 @@ function* executeRequest(request) {
 }
 __name(executeRequest, "executeRequest");
 var pages_template_worker_default = {
-  async fetch(originalRequest, env, workerContext) {
+  async fetch(originalRequest, env2, workerContext) {
     let request = originalRequest;
     const handlerIterator = executeRequest(request);
     let data = {};
@@ -3349,7 +5723,7 @@ var pages_template_worker_default = {
       const result = handlerIterator.next();
       if (result.done === false) {
         const { handler, params, path } = result.value;
-        const context = {
+        const context2 = {
           request: new Request(request.clone()),
           functionPath: path,
           next,
@@ -3363,19 +5737,19 @@ var pages_template_worker_default = {
             }
             data = value;
           },
-          env,
+          env: env2,
           waitUntil: workerContext.waitUntil.bind(workerContext),
           passThroughOnException: /* @__PURE__ */ __name(() => {
             isFailOpen = true;
-          }, "passThroughOnException")
+          }, "passThroughOnException"),
         };
-        const response = await handler(context);
+        const response = await handler(context2);
         if (!(response instanceof Response)) {
           throw new Error("Your Pages function should return a Response");
         }
         return cloneResponse(response);
       } else if ("ASSETS") {
-        const response = await env["ASSETS"].fetch(request);
+        const response = await env2["ASSETS"].fetch(request);
         return cloneResponse(response);
       } else {
         const response = await fetch(request);
@@ -3384,22 +5758,22 @@ var pages_template_worker_default = {
     }, "next");
     try {
       return await next();
-    } catch (error) {
+    } catch (error3) {
       if (isFailOpen) {
-        const response = await env["ASSETS"].fetch(request);
+        const response = await env2["ASSETS"].fetch(request);
         return cloneResponse(response);
       }
-      throw error;
+      throw error3;
     }
-  }
+  },
 };
-var cloneResponse = /* @__PURE__ */ __name((response) => (
-  // https://fetch.spec.whatwg.org/#null-body-status
-  new Response(
-    [101, 204, 205, 304].includes(response.status) ? null : response.body,
-    response
-  )
-), "cloneResponse");
-export {
-  pages_template_worker_default as default
-};
+var cloneResponse = /* @__PURE__ */ __name(
+  (response) =>
+    // https://fetch.spec.whatwg.org/#null-body-status
+    new Response(
+      [101, 204, 205, 304].includes(response.status) ? null : response.body,
+      response,
+    ),
+  "cloneResponse",
+);
+export { pages_template_worker_default as default };
