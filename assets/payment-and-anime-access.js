@@ -15,6 +15,28 @@ let plexShowsLoadPromise = null;
 let plexShowsError = null;
 let activePlexLibraryTab = "movies";
 const plexShowsFilters = { query: "", genre: "all", sort: "library" };
+const plexAnimeLibraries = {
+  "anime-movies": {
+    label: "Anime Movies",
+    singularLabel: "anime movie",
+    mediaType: "movie",
+    endpoint: "/api/plex/anime-movies",
+    items: null,
+    loadPromise: null,
+    error: null,
+    filters: { query: "", genre: "all", sort: "library" },
+  },
+  "anime-shows": {
+    label: "Anime Shows",
+    singularLabel: "anime show",
+    mediaType: "show",
+    endpoint: "/api/plex/anime-shows",
+    items: null,
+    loadPromise: null,
+    error: null,
+    filters: { query: "", genre: "all", sort: "library" },
+  },
+};
 
 function formatHomepageLibraryCount(count, label) {
   if (typeof count !== "number" || !Number.isFinite(count) || count < 0) return null;
@@ -214,8 +236,13 @@ function normalizePlexShow(item) {
     year: numberOrNull(item.year),
     rating: numberOrNull(item.rating),
     seasons: numberOrNull(item.seasons),
+    durationMinutes: numberOrNull(item.durationMinutes),
     posterPath: typeof item.posterPath === "string" ? item.posterPath : null,
     posterUrl: typeof item.posterUrl === "string" ? item.posterUrl : null,
+    summary: typeof item.summary === "string" ? item.summary.trim() : "",
+    contentRating:
+      typeof item.contentRating === "string" ? item.contentRating.trim() : "",
+    studio: typeof item.studio === "string" ? item.studio.trim() : "",
     genres: Array.isArray(item.genres)
       ? item.genres.filter((genre) => typeof genre === "string" && genre.trim())
       : [],
@@ -275,13 +302,125 @@ async function loadPlexShows() {
   }
 }
 
-function createPlexShowCard(show, index) {
+function formatPlexDuration(minutes) {
+  if (typeof minutes !== "number" || !Number.isFinite(minutes) || minutes <= 0) return null;
+  const total = Math.round(minutes);
+  const hours = Math.floor(total / 60);
+  const remainder = total % 60;
+  if (!hours) return `${remainder}m`;
+  return `${hours}h${remainder ? ` ${remainder}m` : ""}`;
+}
+
+function openPlexMediaPreview(item, mediaType = "show") {
+  document.querySelector("[data-plex-media-preview]")?.remove();
+
+  const dialog = createPlexElement("dialog", {
+    className: "plex-media-preview",
+    attributes: {
+      "data-plex-media-preview": "true",
+      "aria-labelledby": "plex-media-preview-title",
+    },
+  });
+  const close = createPlexElement("button", {
+    className: "plex-media-preview__close",
+    text: "×",
+    attributes: { type: "button", "aria-label": "Close details" },
+  });
+  close.addEventListener("click", () => dialog.close());
+
+  const layout = createPlexElement("div", { className: "plex-media-preview__layout" });
+  const poster = createPlexElement("div", { className: "plex-media-preview__poster" });
+  const posterUrl = plexShowPosterUrl(item);
+  if (posterUrl) {
+    poster.append(
+      createPlexElement("img", {
+        attributes: {
+          src: posterUrl,
+          alt: `${item.title} poster`,
+          width: "440",
+          height: "660",
+        },
+      }),
+    );
+  } else {
+    poster.append(createPlexElement("span", { text: "Poster unavailable" }));
+  }
+
+  const content = createPlexElement("div", { className: "plex-media-preview__content" });
+  const title = createPlexElement("h3", {
+    text: item.title,
+    attributes: { id: "plex-media-preview-title" },
+  });
+  const meta = createPlexElement("div", { className: "plex-media-preview__meta" });
+  const metaParts = [item.year];
+  if (mediaType === "show" && item.seasons != null) {
+    const seasons = Math.max(0, Math.trunc(item.seasons));
+    metaParts.push(`${seasons} ${seasons === 1 ? "season" : "seasons"}`);
+  }
+  if (mediaType === "movie") metaParts.push(formatPlexDuration(item.durationMinutes));
+  metaParts.push(item.contentRating);
+  const metaText = metaParts.filter(Boolean).join(" • ");
+  if (metaText) meta.append(createPlexElement("span", { text: metaText }));
+  if (item.rating != null) {
+    meta.append(
+      createPlexElement("span", {
+        className: "plex-media-preview__rating",
+        text: `★ ${item.rating.toFixed(1)}`,
+      }),
+    );
+  }
+  content.append(title, meta);
+
+  if (item.studio) {
+    const studio = createPlexElement("p", { className: "plex-media-preview__studio" });
+    studio.append(
+      createPlexElement("strong", { text: "Studio: " }),
+      document.createTextNode(item.studio),
+    );
+    content.append(studio);
+  }
+
+  if (item.genres.length) {
+    const genres = createPlexElement("div", { className: "plex-media-preview__genres" });
+    item.genres.slice(0, 8).forEach((genre) =>
+      genres.append(createPlexElement("span", { text: genre })),
+    );
+    content.append(genres);
+  }
+  if (item.summary) {
+    content.append(
+      createPlexElement("p", { className: "plex-media-preview__summary", text: item.summary }),
+    );
+  }
+
+  layout.append(poster, content);
+  dialog.append(close, layout);
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+  dialog.addEventListener("close", () => dialog.remove(), { once: true });
+  document.body.append(dialog);
+  dialog.showModal();
+}
+
+function createPlexShowCard(show, index, mediaType = "show", testIdPrefix = "collection-show") {
   const card = createPlexElement("article", {
     className:
-      "border bg-card text-card-foreground shadow-sm movie-library-card group rounded-xl p-1.5 sm:rounded-2xl sm:p-2",
-    attributes: { "data-testid": `collection-show-${show.id}` },
+      "border bg-card text-card-foreground shadow-sm movie-library-card group cursor-pointer rounded-xl p-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:rounded-2xl sm:p-2",
+    attributes: {
+      "data-testid": `${testIdPrefix}-${show.id}`,
+      role: "button",
+      tabindex: "0",
+      "aria-label": `View details for ${show.title}`,
+    },
   });
   card.title = show.title;
+  card.addEventListener("click", () => openPlexMediaPreview(show, mediaType));
+  card.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    openPlexMediaPreview(show, mediaType);
+  });
 
   const poster = createPlexElement("div", {
     className: "movie-library-poster relative aspect-[2/3] overflow-hidden rounded-lg sm:rounded-xl",
@@ -329,9 +468,13 @@ function createPlexShowCard(show, index) {
   });
   const details = [];
   if (show.year != null) details.push(String(Math.trunc(show.year)));
-  if (show.seasons != null) {
+  if (mediaType === "show" && show.seasons != null) {
     const seasons = Math.max(0, Math.trunc(show.seasons));
     details.push(`${seasons} ${seasons === 1 ? "season" : "seasons"}`);
+  }
+  if (mediaType === "movie") {
+    const duration = formatPlexDuration(show.durationMinutes);
+    if (duration) details.push(duration);
   }
   if (show.genres[0]) details.push(show.genres[0]);
 
@@ -342,11 +485,20 @@ function createPlexShowCard(show, index) {
     }),
     createPlexElement("p", {
       className: "truncate text-[10px] text-muted-foreground sm:text-[11px]",
-      text: details.join(" • ") || "TV show",
+      text: details.join(" • ") || (mediaType === "movie" ? "Movie" : "TV show"),
     }),
   );
   card.append(poster, body);
   return card;
+}
+
+function stylePlexSelectOptions(select) {
+  if (!select) return;
+  select.style.colorScheme = "dark";
+  for (const option of select.options) {
+    option.style.backgroundColor = option.selected ? "#ff7b00" : "#171c26";
+    option.style.color = option.selected ? "#ffffff" : "#f8fafc";
+  }
 }
 
 function updatePlexShowsGenreOptions(panel) {
@@ -357,13 +509,17 @@ function updatePlexShowsGenreOptions(panel) {
     a.localeCompare(b),
   );
   const currentOptions = [...select.options].slice(1).map((option) => option.value);
-  if (currentOptions.join("\n") === genres.join("\n")) return;
+  if (currentOptions.join("\n") === genres.join("\n")) {
+    stylePlexSelectOptions(select);
+    return;
+  }
 
   select.replaceChildren(createPlexElement("option", { text: "All genres", attributes: { value: "all" } }));
   for (const genre of genres) {
     select.append(createPlexElement("option", { text: genre, attributes: { value: genre } }));
   }
   select.value = genres.includes(plexShowsFilters.genre) ? plexShowsFilters.genre : "all";
+  stylePlexSelectOptions(select);
 }
 
 function renderPlexShowsPanel(panel) {
@@ -468,8 +624,10 @@ function createPlexShowsPanel() {
   });
   genre.append(createPlexElement("option", { text: "All genres", attributes: { value: "all" } }));
   genre.value = plexShowsFilters.genre;
+  stylePlexSelectOptions(genre);
   genre.addEventListener("change", () => {
     plexShowsFilters.genre = genre.value;
+    stylePlexSelectOptions(genre);
     renderPlexShowsPanel(panel);
   });
 
@@ -486,8 +644,10 @@ function createPlexShowsPanel() {
     sort.append(createPlexElement("option", { text, attributes: { value } }));
   }
   sort.value = plexShowsFilters.sort;
+  stylePlexSelectOptions(sort);
   sort.addEventListener("change", () => {
     plexShowsFilters.sort = sort.value;
+    stylePlexSelectOptions(sort);
     renderPlexShowsPanel(panel);
   });
   filterRow.append(genre, sort);
@@ -509,6 +669,223 @@ function createPlexShowsPanel() {
   return panel;
 }
 
+function updatePlexAnimeGenreOptions(panel, library) {
+  const select = panel.querySelector("[data-plex-anime-genre]");
+  if (!select || !library.items) return;
+  const genres = [...new Set(library.items.flatMap((item) => item.genres))].sort((a, b) =>
+    a.localeCompare(b),
+  );
+  const currentOptions = [...select.options].slice(1).map((option) => option.value);
+  if (currentOptions.join("\n") !== genres.join("\n")) {
+    select.replaceChildren(
+      createPlexElement("option", { text: "All genres", attributes: { value: "all" } }),
+    );
+    genres.forEach((genre) =>
+      select.append(createPlexElement("option", { text: genre, attributes: { value: genre } })),
+    );
+  }
+  select.value = genres.includes(library.filters.genre) ? library.filters.genre : "all";
+  stylePlexSelectOptions(select);
+}
+
+function renderPlexAnimePanel(panel, libraryKey) {
+  const library = plexAnimeLibraries[libraryKey];
+  const grid = panel.querySelector("[data-plex-anime-grid]");
+  const status = panel.querySelector("[data-plex-anime-status]");
+  if (!library || !grid || !status) return;
+
+  if (library.loadPromise && library.items == null) {
+    status.hidden = false;
+    status.textContent = `Loading the PlexPoint ${library.label.toLowerCase()} library…`;
+    grid.hidden = true;
+    return;
+  }
+  if (library.error) {
+    status.hidden = false;
+    status.textContent = library.error;
+    grid.hidden = true;
+    return;
+  }
+  if (!library.items) {
+    status.hidden = false;
+    status.textContent = `Open ${library.label} to load the library.`;
+    grid.hidden = true;
+    return;
+  }
+
+  updatePlexAnimeGenreOptions(panel, library);
+  const query = library.filters.query.trim().toLowerCase();
+  let filtered = library.items.filter((item) => {
+    const matchesGenre =
+      library.filters.genre === "all" || item.genres.includes(library.filters.genre);
+    const matchesQuery =
+      !query ||
+      item.title.toLowerCase().includes(query) ||
+      String(item.year ?? "").includes(query) ||
+      item.genres.some((genre) => genre.toLowerCase().includes(query));
+    return matchesGenre && matchesQuery;
+  });
+  if (library.filters.sort === "rating-desc") {
+    filtered = [...filtered].sort((a, b) => (b.rating ?? -1) - (a.rating ?? -1));
+  } else if (library.filters.sort === "year-desc") {
+    filtered = [...filtered].sort((a, b) => (b.year ?? 0) - (a.year ?? 0));
+  } else if (library.filters.sort === "title-asc") {
+    filtered = [...filtered].sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  grid.replaceChildren();
+  if (!filtered.length) {
+    status.hidden = false;
+    status.textContent = `No ${library.label.toLowerCase()} match those filters.`;
+    grid.hidden = true;
+    return;
+  }
+  const fragment = document.createDocumentFragment();
+  filtered.forEach((item, index) =>
+    fragment.append(
+      createPlexShowCard(
+        item,
+        index,
+        library.mediaType,
+        libraryKey === "anime-movies" ? "collection-anime-movie" : "collection-anime-show",
+      ),
+    ),
+  );
+  grid.append(fragment);
+  grid.hidden = false;
+  status.hidden = true;
+}
+
+function renderAllPlexAnimePanels(libraryKey) {
+  document
+    .querySelectorAll(`[data-plex-anime-panel="${libraryKey}"]`)
+    .forEach((panel) => renderPlexAnimePanel(panel, libraryKey));
+}
+
+async function loadPlexAnimeLibrary(libraryKey) {
+  const library = plexAnimeLibraries[libraryKey];
+  if (!library || library.loadPromise) return library?.loadPromise;
+  library.error = null;
+
+  const request = (async () => {
+    try {
+      const response = await fetch(library.endpoint);
+      if (!response.ok) throw new Error("Live anime library unavailable");
+      const data = await response.json();
+      if (!Array.isArray(data)) throw new Error("Invalid anime library response");
+      library.items = data.map(normalizePlexShow).filter(Boolean);
+    } catch {
+      try {
+        const response = await fetch("/plex-preview.json");
+        if (!response.ok) throw new Error("Preview unavailable");
+        const data = await response.json();
+        const fallback =
+          library.mediaType === "movie"
+            ? (Array.isArray(data.movies) ? data.movies : []).filter((item) =>
+                Array.isArray(item.genres)
+                  ? item.genres.some((genre) => /anime|animation/i.test(String(genre)))
+                  : false,
+              )
+            : Array.isArray(data.tv)
+              ? data.tv
+              : [];
+        library.items = fallback.map(normalizePlexShow).filter(Boolean);
+        if (!library.items.length) throw new Error("No preview items");
+      } catch {
+        library.items = null;
+        library.error = `The ${library.label.toLowerCase()} library could not be loaded. Please try again shortly.`;
+      }
+    }
+    renderAllPlexAnimePanels(libraryKey);
+    return library.items;
+  })();
+
+  library.loadPromise = request;
+  renderAllPlexAnimePanels(libraryKey);
+  try {
+    return await request;
+  } finally {
+    if (library.loadPromise === request) library.loadPromise = null;
+  }
+}
+
+function createPlexAnimePanel(libraryKey) {
+  const library = plexAnimeLibraries[libraryKey];
+  const panel = createPlexElement("div", {
+    className: "movie-library-panel rounded-2xl p-3 sm:rounded-[1.75rem] sm:p-5",
+    attributes: { "data-plex-anime-panel": libraryKey },
+  });
+  const searchRow = createPlexElement("div", { className: "flex" });
+  const search = createPlexElement("input", {
+    className:
+      "flex w-full flex-1 border px-4 py-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 h-10 rounded-xl border-white/10 bg-white/[0.035] text-sm text-foreground placeholder:text-slate-500 focus-visible:ring-primary/40 sm:h-12 sm:text-base",
+    attributes: {
+      type: "search",
+      placeholder: `Search ${library.label.toLowerCase()} (title, year, genre)…`,
+      "aria-label": `Search ${library.label}`,
+      "data-plex-anime-search": libraryKey,
+    },
+  });
+  search.value = library.filters.query;
+  search.addEventListener("input", () => {
+    library.filters.query = search.value;
+    renderPlexAnimePanel(panel, libraryKey);
+  });
+  searchRow.append(search);
+
+  const filterRow = createPlexElement("div", {
+    className: "mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:flex sm:flex-row sm:gap-3",
+    attributes: { "data-plex-library-filter-row": "true" },
+  });
+  const selectClass =
+    "h-10 w-full rounded-xl border border-white/10 bg-white/[0.035] px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary/30 sm:h-12 sm:w-72 sm:text-base";
+  const genre = createPlexElement("select", {
+    className: selectClass,
+    attributes: { "aria-label": `Filter ${library.label} by genre`, "data-plex-anime-genre": libraryKey },
+  });
+  genre.append(createPlexElement("option", { text: "All genres", attributes: { value: "all" } }));
+  genre.addEventListener("change", () => {
+    library.filters.genre = genre.value;
+    stylePlexSelectOptions(genre);
+    renderPlexAnimePanel(panel, libraryKey);
+  });
+  const sort = createPlexElement("select", {
+    className: selectClass,
+    attributes: { "aria-label": `Sort ${library.label}`, "data-plex-anime-sort": libraryKey },
+  });
+  for (const [value, text] of [
+    ["library", "Library order"],
+    ["rating-desc", "Rating: high to low"],
+    ["year-desc", "Newest first"],
+    ["title-asc", "Title: A to Z"],
+  ]) {
+    sort.append(createPlexElement("option", { text, attributes: { value } }));
+  }
+  sort.addEventListener("change", () => {
+    library.filters.sort = sort.value;
+    stylePlexSelectOptions(sort);
+    renderPlexAnimePanel(panel, libraryKey);
+  });
+  stylePlexSelectOptions(genre);
+  stylePlexSelectOptions(sort);
+  filterRow.append(genre, sort);
+
+  const status = createPlexElement("div", {
+    className:
+      "mt-4 rounded-xl border border-white/10 bg-white/[0.035] px-4 py-10 text-center text-sm text-muted-foreground sm:mt-6",
+    text: `Open ${library.label} to load the library.`,
+    attributes: { "data-plex-anime-status": libraryKey, "aria-live": "polite" },
+  });
+  const grid = createPlexElement("div", {
+    className:
+      "movie-library-grid grid grid-cols-2 gap-3 pt-4 sm:grid-cols-4 sm:gap-4 sm:pt-6 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8",
+    attributes: { "data-plex-anime-grid": libraryKey },
+  });
+  grid.hidden = true;
+  panel.append(searchRow, filterRow, status, grid);
+  return panel;
+}
+
 function createPlexLibrarySwitcher() {
   const select = createPlexElement("select", {
     className:
@@ -521,31 +898,60 @@ function createPlexLibrarySwitcher() {
   select.append(
     createPlexElement("option", { text: "Movies", attributes: { value: "movies" } }),
     createPlexElement("option", { text: "Shows", attributes: { value: "shows" } }),
+    createPlexElement("option", {
+      text: "Anime Movies",
+      attributes: { value: "anime-movies" },
+    }),
+    createPlexElement("option", {
+      text: "Anime Shows",
+      attributes: { value: "anime-shows" },
+    }),
   );
   select.value = activePlexLibraryTab;
+  stylePlexSelectOptions(select);
   select.addEventListener("change", () => setPlexLibraryTab(select.value));
   return select;
 }
 
 function setPlexLibraryTab(tab) {
-  activePlexLibraryTab = tab === "shows" ? "shows" : "movies";
+  const validTabs = new Set(["movies", "shows", "anime-movies", "anime-shows"]);
+  activePlexLibraryTab = validTabs.has(tab) ? tab : "movies";
   const section = document.querySelector('[data-testid="plex-collection-section"]');
-  const moviePanel = section?.querySelector(".movie-library-panel:not([data-plex-shows-panel])");
+  const moviePanel = section?.querySelector(
+    ".movie-library-panel:not([data-plex-shows-panel]):not([data-plex-anime-panel])",
+  );
   const showsPanel = section?.querySelector("[data-plex-shows-panel]");
   if (moviePanel) moviePanel.style.display = activePlexLibraryTab === "movies" ? "" : "none";
   if (showsPanel) showsPanel.style.display = activePlexLibraryTab === "shows" ? "" : "none";
+  for (const [libraryKey] of Object.entries(plexAnimeLibraries)) {
+    const panel = section?.querySelector(`[data-plex-anime-panel="${libraryKey}"]`);
+    if (panel) panel.style.display = activePlexLibraryTab === libraryKey ? "" : "none";
+  }
+
+  const pickerTrigger = section?.querySelector('[data-testid="open-movie-quiz"]');
+  if (pickerTrigger) {
+    const showPicker = activePlexLibraryTab === "movies";
+    pickerTrigger.hidden = !showPicker;
+    pickerTrigger.setAttribute("aria-hidden", String(!showPicker));
+  }
 
   section?.querySelectorAll("[data-plex-library-switcher]").forEach((select) => {
     if (select.value !== activePlexLibraryTab) select.value = activePlexLibraryTab;
+    stylePlexSelectOptions(select);
   });
 
   if (activePlexLibraryTab === "shows" && plexShows == null) void loadPlexShows();
+  if (plexAnimeLibraries[activePlexLibraryTab]?.items == null) {
+    void loadPlexAnimeLibrary(activePlexLibraryTab);
+  }
 }
 
 function ensurePlexShowsSection() {
   const section = document.querySelector('[data-testid="plex-collection-section"]');
   const container = section?.querySelector(".container");
-  const moviePanel = container?.querySelector(".movie-library-panel:not([data-plex-shows-panel])");
+  const moviePanel = container?.querySelector(
+    ".movie-library-panel:not([data-plex-shows-panel]):not([data-plex-anime-panel])",
+  );
   if (!section || !container || !moviePanel) return;
 
   const description = [...section.querySelectorAll("p")].find((element) =>
@@ -574,6 +980,21 @@ function ensurePlexShowsSection() {
   const showsFilterRow = showsPanel.querySelector("[data-plex-library-filter-row]");
   if (showsFilterRow && !showsFilterRow.querySelector("[data-plex-library-switcher]")) {
     showsFilterRow.append(createPlexLibrarySwitcher());
+  }
+
+  let previousPanel = showsPanel;
+  for (const [libraryKey] of Object.entries(plexAnimeLibraries)) {
+    let animePanel = container.querySelector(`[data-plex-anime-panel="${libraryKey}"]`);
+    if (!animePanel) {
+      animePanel = createPlexAnimePanel(libraryKey);
+      animePanel.id = `plex-${libraryKey}-panel`;
+      previousPanel.insertAdjacentElement("afterend", animePanel);
+    }
+    const animeFilterRow = animePanel.querySelector("[data-plex-library-filter-row]");
+    if (animeFilterRow && !animeFilterRow.querySelector("[data-plex-library-switcher]")) {
+      animeFilterRow.append(createPlexLibrarySwitcher());
+    }
+    previousPanel = animePanel;
   }
 
   setPlexLibraryTab(activePlexLibraryTab);

@@ -8,6 +8,8 @@ export type PlexEnv = {
   PLEX_TOKEN?: string;
   PLEX_MOVIE_SECTION_ID?: string;
   PLEX_TV_SECTION_ID?: string;
+  PLEX_ANIME_MOVIE_SECTION_ID?: string;
+  PLEX_ANIME_TV_SECTION_ID?: string;
   PLEX_COLLECTION_ID?: string;
   PLEX_COLLECTION_TITLE?: string;
   PLEX_FETCH_TIMEOUT_MS?: string;
@@ -403,6 +405,37 @@ async function resolveSectionId(env: PlexEnv, forType: PlexMediaType): Promise<s
   return match.key;
 }
 
+async function resolveAnimeSectionId(env: PlexEnv, forType: PlexMediaType): Promise<string> {
+  const envKey =
+    forType === "tv" ? "PLEX_ANIME_TV_SECTION_ID" : "PLEX_ANIME_MOVIE_SECTION_ID";
+  const explicit = env[envKey]?.trim();
+  if (explicit) return explicit;
+
+  const sections = await getPlexSections(env);
+  const desired: PlexLibraryType = forType === "tv" ? "show" : "movie";
+  const matchingSections = sections.filter(
+    (section) => section.type === desired && /anime/i.test(section.title),
+  );
+  const preferredTitles =
+    forType === "tv"
+      ? ["anime shows", "anime tv", "anime"]
+      : ["anime movies", "anime films", "anime"];
+  const match =
+    preferredTitles
+      .map((title) =>
+        matchingSections.find((section) => section.title.trim().toLowerCase() === title),
+      )
+      .find(Boolean) ?? matchingSections[0];
+
+  if (!match) {
+    throw new Error(
+      `Could not auto-detect the Plex anime ${forType} library. Set ${envKey} to its library section id.`,
+    );
+  }
+
+  return match.key;
+}
+
 async function resolveCountSectionIds(env: PlexEnv, forType: PlexMediaType): Promise<string[]> {
   return [await resolveSectionId(env, forType)];
 }
@@ -480,9 +513,9 @@ function normalizeLibraryLimit(limit: number | null | undefined): number | null 
 
 export async function getPlexMovies(
   env: PlexEnv,
-  options: { limit?: number | null } = {},
+  options: { limit?: number | null; sectionId?: string } = {},
 ): Promise<PlexCollectionMovie[]> {
-  const sectionId = await resolveSectionId(env, "movie");
+  const sectionId = options.sectionId ?? (await resolveSectionId(env, "movie"));
   const limit = normalizeLibraryLimit(options.limit);
   const key = `${cachePrefix(env)}::movies:${sectionId}:${limit ?? "all"}`;
 
@@ -526,9 +559,9 @@ export async function getPlexMovies(
 
 export async function getPlexShows(
   env: PlexEnv,
-  options: { limit?: number | null } = {},
+  options: { limit?: number | null; sectionId?: string } = {},
 ): Promise<PlexLibraryShow[]> {
-  const sectionId = await resolveSectionId(env, "tv");
+  const sectionId = options.sectionId ?? (await resolveSectionId(env, "tv"));
   const limit = normalizeLibraryLimit(options.limit);
   const key = `${cachePrefix(env)}::shows:${sectionId}:${limit ?? "all"}`;
 
@@ -569,6 +602,22 @@ export async function getPlexShows(
 
     return items;
   });
+}
+
+export async function getPlexAnimeMovies(
+  env: PlexEnv,
+  options: { limit?: number | null } = {},
+): Promise<PlexCollectionMovie[]> {
+  const sectionId = await resolveAnimeSectionId(env, "movie");
+  return getPlexMovies(env, { ...options, sectionId });
+}
+
+export async function getPlexAnimeShows(
+  env: PlexEnv,
+  options: { limit?: number | null } = {},
+): Promise<PlexLibraryShow[]> {
+  const sectionId = await resolveAnimeSectionId(env, "tv");
+  return getPlexShows(env, { ...options, sectionId });
 }
 
 export async function getPlexCollections(

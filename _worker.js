@@ -59,7 +59,7 @@ var __toESM = (mod, isNodeMode, target) => (
 var require_util = __commonJS({
   "../node_modules/fast-xml-parser/src/util.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     var nameStartChar =
       ":A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD";
     var nameChar =
@@ -136,7 +136,7 @@ var require_util = __commonJS({
 var require_validator = __commonJS({
   "../node_modules/fast-xml-parser/src/validator.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     var util = require_util();
     var defaultOptions = {
       allowBooleanAttributes: false,
@@ -601,7 +601,7 @@ var require_validator = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
 var require_OptionsBuilder = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"(exports) {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     var { DANGEROUS_PROPERTY_NAMES, criticalProperties } = require_util();
     var defaultOnDangerousProperty = /* @__PURE__ */ __name((name) => {
       if (DANGEROUS_PROPERTY_NAMES.includes(name)) {
@@ -739,7 +739,7 @@ var require_OptionsBuilder = __commonJS({
 var require_xmlNode = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     var XmlNode = class {
       static {
         __name(this, "XmlNode");
@@ -772,7 +772,7 @@ var require_DocTypeReader = __commonJS({
     exports,
     module,
   ) {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     var util = require_util();
     var DocTypeReader = class {
       static {
@@ -1132,7 +1132,7 @@ var require_DocTypeReader = __commonJS({
 // ../node_modules/strnum/strnum.js
 var require_strnum = __commonJS({
   "../node_modules/strnum/strnum.js"(exports, module) {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     var hexRegex = /^[-+]?0x[a-fA-F0-9]+$/;
     var numRegex = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/;
     var consider = {
@@ -1248,7 +1248,7 @@ var require_strnum = __commonJS({
 // ../node_modules/fast-xml-parser/src/ignoreAttributes.js
 var require_ignoreAttributes = __commonJS({
   "../node_modules/fast-xml-parser/src/ignoreAttributes.js"(exports, module) {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     function getIgnoreAttributesFn(ignoreAttributes) {
       if (typeof ignoreAttributes === "function") {
         return ignoreAttributes;
@@ -1279,7 +1279,7 @@ var require_OrderedObjParser = __commonJS({
     module,
   ) {
     "use strict";
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     var util = require_util();
     var xmlNode = require_xmlNode();
     var DocTypeReader = require_DocTypeReader();
@@ -2084,7 +2084,7 @@ var require_OrderedObjParser = __commonJS({
 var require_node2json = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/node2json.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     function prettify(node, options) {
       return compress(node, options);
     }
@@ -2191,7 +2191,7 @@ var require_XMLParser = __commonJS({
     exports,
     module,
   ) {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     var { buildOptions } = require_OptionsBuilder();
     var OrderedObjParser = require_OrderedObjParser();
     var { prettify } = require_node2json();
@@ -2261,7 +2261,7 @@ var require_orderedJs2Xml = __commonJS({
     exports,
     module,
   ) {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     var EOL = "\n";
     function toXml(jArray, options) {
       let indentation = "";
@@ -2423,7 +2423,7 @@ var require_json2xml = __commonJS({
     module,
   ) {
     "use strict";
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     var buildFromOrderedJs = require_orderedJs2Xml();
     var getIgnoreAttributesFn = require_ignoreAttributes();
     var defaultOptions = {
@@ -2772,7 +2772,7 @@ var require_json2xml = __commonJS({
 var require_fxp = __commonJS({
   "../node_modules/fast-xml-parser/src/fxp.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     var validator = require_validator();
     var XMLParser2 = require_XMLParser();
     var XMLBuilder = require_json2xml();
@@ -3098,6 +3098,37 @@ async function resolveSectionId(env, forType) {
   }
   return match2.key;
 }
+async function resolveAnimeSectionId(env, forType) {
+  const envKey =
+    forType === "tv"
+      ? "PLEX_ANIME_TV_SECTION_ID"
+      : "PLEX_ANIME_MOVIE_SECTION_ID";
+  const explicit = env[envKey]?.trim();
+  if (explicit) return explicit;
+  const sections = await getPlexSections(env);
+  const desired = forType === "tv" ? "show" : "movie";
+  const matchingSections = sections.filter(
+    (section) => section.type === desired && /anime/i.test(section.title),
+  );
+  const preferredTitles =
+    forType === "tv"
+      ? ["anime shows", "anime tv", "anime"]
+      : ["anime movies", "anime films", "anime"];
+  const match2 =
+    preferredTitles
+      .map((title) =>
+        matchingSections.find(
+          (section) => section.title.trim().toLowerCase() === title,
+        ),
+      )
+      .find(Boolean) ?? matchingSections[0];
+  if (!match2) {
+    throw new Error(
+      `Could not auto-detect the Plex anime ${forType} library. Set ${envKey} to its library section id.`,
+    );
+  }
+  return match2.key;
+}
 async function resolveCountSectionIds(env, forType) {
   return [await resolveSectionId(env, forType)];
 }
@@ -3175,7 +3206,7 @@ function normalizeLibraryLimit(limit) {
   return Math.max(1, Math.min(1e4, Math.trunc(limit)));
 }
 async function getPlexMovies(env, options = {}) {
-  const sectionId = await resolveSectionId(env, "movie");
+  const sectionId = options.sectionId ?? (await resolveSectionId(env, "movie"));
   const limit = normalizeLibraryLimit(options.limit);
   const key = `${cachePrefix(env)}::movies:${sectionId}:${limit ?? "all"}`;
   return cached(key, 6e4, async () => {
@@ -3214,7 +3245,7 @@ async function getPlexMovies(env, options = {}) {
   });
 }
 async function getPlexShows(env, options = {}) {
-  const sectionId = await resolveSectionId(env, "tv");
+  const sectionId = options.sectionId ?? (await resolveSectionId(env, "tv"));
   const limit = normalizeLibraryLimit(options.limit);
   const key = `${cachePrefix(env)}::shows:${sectionId}:${limit ?? "all"}`;
   return cached(key, 6e4, async () => {
@@ -3251,6 +3282,14 @@ async function getPlexShows(env, options = {}) {
     }
     return items;
   });
+}
+async function getPlexAnimeMovies(env, options = {}) {
+  const sectionId = await resolveAnimeSectionId(env, "movie");
+  return getPlexMovies(env, { ...options, sectionId });
+}
+async function getPlexAnimeShows(env, options = {}) {
+  const sectionId = await resolveAnimeSectionId(env, "tv");
+  return getPlexShows(env, { ...options, sectionId });
 }
 async function getPlexCollections(env, options = {}) {
   const sectionId = options.sectionId ?? (await resolveSectionId(env, "movie"));
@@ -3378,7 +3417,7 @@ var import_fast_xml_parser,
   DEFAULT_LIBRARY_TITLES;
 var init_plex_client = __esm({
   "../shared/plex-client.ts"() {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     import_fast_xml_parser = __toESM(require_fxp(), 1);
     parser = new import_fast_xml_parser.XMLParser({
       ignoreAttributes: false,
@@ -3413,6 +3452,7 @@ var init_plex_client = __esm({
     __name(plexFetchImage, "plexFetchImage");
     __name(getPlexSections, "getPlexSections");
     __name(resolveSectionId, "resolveSectionId");
+    __name(resolveAnimeSectionId, "resolveAnimeSectionId");
     __name(resolveCountSectionIds, "resolveCountSectionIds");
     __name(getLibrarySectionItemCount, "getLibrarySectionItemCount");
     __name(getLibraryItemCount, "getLibraryItemCount");
@@ -3421,6 +3461,8 @@ var init_plex_client = __esm({
     __name(normalizeLibraryLimit, "normalizeLibraryLimit");
     __name(getPlexMovies, "getPlexMovies");
     __name(getPlexShows, "getPlexShows");
+    __name(getPlexAnimeMovies, "getPlexAnimeMovies");
+    __name(getPlexAnimeShows, "getPlexAnimeShows");
     __name(getPlexCollections, "getPlexCollections");
     __name(getCollectionMetadata, "getCollectionMetadata");
     __name(getCollectionItems, "getCollectionItems");
@@ -3498,7 +3540,7 @@ async function cachedJson(context, options) {
 var PLEX_API_CACHE_VERSION;
 var init_pages = __esm({
   "_lib/pages.ts"() {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     PLEX_API_CACHE_VERSION = "v4-optional-limit-parsing";
     __name(json, "json");
     __name(errorMessage, "errorMessage");
@@ -3508,8 +3550,62 @@ var init_pages = __esm({
   },
 });
 
-// api/plex/collections.ts
+// api/plex/anime-movies.ts
 async function onRequestGet(context) {
+  const url = new URL(context.request.url);
+  const limitParam = url.searchParams.get("limit");
+  const limitRaw = limitParam == null ? NaN : Number(limitParam);
+  const limit = Number.isFinite(limitRaw)
+    ? Math.max(1, Math.min(1e4, Math.trunc(limitRaw)))
+    : void 0;
+  return cachedJson(context, {
+    cacheName: "plex-api",
+    cacheKey: context.request.url,
+    load: /* @__PURE__ */ __name(
+      () => getPlexAnimeMovies(context.env, { limit }),
+      "load",
+    ),
+    fallbackMessage: "The Plex anime movies library is not configured",
+  });
+}
+var init_anime_movies = __esm({
+  "api/plex/anime-movies.ts"() {
+    init_functionsRoutes_0_7270336323406671();
+    init_plex_client();
+    init_pages();
+    __name(onRequestGet, "onRequestGet");
+  },
+});
+
+// api/plex/anime-shows.ts
+async function onRequestGet2(context) {
+  const url = new URL(context.request.url);
+  const limitParam = url.searchParams.get("limit");
+  const limitRaw = limitParam == null ? NaN : Number(limitParam);
+  const limit = Number.isFinite(limitRaw)
+    ? Math.max(1, Math.min(1e4, Math.trunc(limitRaw)))
+    : void 0;
+  return cachedJson(context, {
+    cacheName: "plex-api",
+    cacheKey: context.request.url,
+    load: /* @__PURE__ */ __name(
+      () => getPlexAnimeShows(context.env, { limit }),
+      "load",
+    ),
+    fallbackMessage: "The Plex anime shows library is not configured",
+  });
+}
+var init_anime_shows = __esm({
+  "api/plex/anime-shows.ts"() {
+    init_functionsRoutes_0_7270336323406671();
+    init_plex_client();
+    init_pages();
+    __name(onRequestGet2, "onRequestGet");
+  },
+});
+
+// api/plex/collections.ts
+async function onRequestGet3(context) {
   const url = new URL(context.request.url);
   const sectionId = url.searchParams.get("sectionId") ?? void 0;
   return cachedJson(context, {
@@ -3525,15 +3621,15 @@ async function onRequestGet(context) {
 }
 var init_collections = __esm({
   "api/plex/collections.ts"() {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     init_plex_client();
     init_pages();
-    __name(onRequestGet, "onRequestGet");
+    __name(onRequestGet3, "onRequestGet");
   },
 });
 
 // api/plex/counts.ts
-async function onRequestGet2(context) {
+async function onRequestGet4(context) {
   return cachedJson(context, {
     cacheName: "plex-api",
     cacheKey: context.request.url,
@@ -3547,15 +3643,15 @@ async function onRequestGet2(context) {
 }
 var init_counts = __esm({
   "api/plex/counts.ts"() {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     init_plex_client();
     init_pages();
-    __name(onRequestGet2, "onRequestGet");
+    __name(onRequestGet4, "onRequestGet");
   },
 });
 
 // api/plex/featured-collection.ts
-async function onRequestGet3(context) {
+async function onRequestGet5(context) {
   const url = new URL(context.request.url);
   const collectionId = url.searchParams.get("id") ?? void 0;
   const collectionTitle = url.searchParams.get("title") ?? void 0;
@@ -3582,15 +3678,15 @@ async function onRequestGet3(context) {
 }
 var init_featured_collection = __esm({
   "api/plex/featured-collection.ts"() {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     init_plex_client();
     init_pages();
-    __name(onRequestGet3, "onRequestGet");
+    __name(onRequestGet5, "onRequestGet");
   },
 });
 
 // api/plex/image.ts
-async function onRequestGet4(context) {
+async function onRequestGet6(context) {
   try {
     const url = new URL(context.request.url);
     const path = url.searchParams.get("path");
@@ -3648,15 +3744,15 @@ async function onRequestGet4(context) {
 }
 var init_image = __esm({
   "api/plex/image.ts"() {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     init_plex_client();
     init_pages();
-    __name(onRequestGet4, "onRequestGet");
+    __name(onRequestGet6, "onRequestGet");
   },
 });
 
 // api/plex/movies.ts
-async function onRequestGet5(context) {
+async function onRequestGet7(context) {
   const url = new URL(context.request.url);
   const limitParam = url.searchParams.get("limit");
   const limitRaw = limitParam == null ? NaN : Number(limitParam);
@@ -3676,15 +3772,15 @@ async function onRequestGet5(context) {
 }
 var init_movies = __esm({
   "api/plex/movies.ts"() {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     init_plex_client();
     init_pages();
-    __name(onRequestGet5, "onRequestGet");
+    __name(onRequestGet7, "onRequestGet");
   },
 });
 
 // api/plex/sections.ts
-async function onRequestGet6(context) {
+async function onRequestGet8(context) {
   return cachedJson(context, {
     cacheName: "plex-api",
     cacheKey: context.request.url,
@@ -3695,15 +3791,15 @@ async function onRequestGet6(context) {
 }
 var init_sections = __esm({
   "api/plex/sections.ts"() {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     init_plex_client();
     init_pages();
-    __name(onRequestGet6, "onRequestGet");
+    __name(onRequestGet8, "onRequestGet");
   },
 });
 
 // api/plex/shows.ts
-async function onRequestGet7(context) {
+async function onRequestGet9(context) {
   const url = new URL(context.request.url);
   const limitParam = url.searchParams.get("limit");
   const limitRaw = limitParam == null ? NaN : Number(limitParam);
@@ -3723,10 +3819,10 @@ async function onRequestGet7(context) {
 }
 var init_shows = __esm({
   "api/plex/shows.ts"() {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     init_plex_client();
     init_pages();
-    __name(onRequestGet7, "onRequestGet");
+    __name(onRequestGet9, "onRequestGet");
   },
 });
 
@@ -3743,7 +3839,7 @@ function publicMessage(error) {
   }
   return "Cloudflare could not reach Plex. Check that PLEX_URL is reachable from Cloudflare and PLEX_TOKEN is valid.";
 }
-async function onRequestGet8(context) {
+async function onRequestGet10(context) {
   const startedAt = Date.now();
   const envStatus = {
     plexUrl: configured(context.env.PLEX_URL),
@@ -3784,17 +3880,17 @@ async function onRequestGet8(context) {
 }
 var init_status = __esm({
   "api/plex/status.ts"() {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     init_plex_client();
     init_pages();
     __name(configured, "configured");
     __name(publicMessage, "publicMessage");
-    __name(onRequestGet8, "onRequestGet");
+    __name(onRequestGet10, "onRequestGet");
   },
 });
 
 // api/plex/top-rated.ts
-async function onRequestGet9(context) {
+async function onRequestGet11(context) {
   const url = new URL(context.request.url);
   const typeParam = String(url.searchParams.get("type") ?? "tv").toLowerCase();
   const type = typeParam === "movie" ? "movie" : "tv";
@@ -3816,17 +3912,19 @@ async function onRequestGet9(context) {
 }
 var init_top_rated = __esm({
   "api/plex/top-rated.ts"() {
-    init_functionsRoutes_0_44629216370293023();
+    init_functionsRoutes_0_7270336323406671();
     init_plex_client();
     init_pages();
-    __name(onRequestGet9, "onRequestGet");
+    __name(onRequestGet11, "onRequestGet");
   },
 });
 
-// ../.wrangler/tmp/pages-VXq9Km/functionsRoutes-0.44629216370293023.mjs
+// ../.wrangler/tmp/pages-Ley2IK/functionsRoutes-0.7270336323406671.mjs
 var routes;
-var init_functionsRoutes_0_44629216370293023 = __esm({
-  "../.wrangler/tmp/pages-VXq9Km/functionsRoutes-0.44629216370293023.mjs"() {
+var init_functionsRoutes_0_7270336323406671 = __esm({
+  "../.wrangler/tmp/pages-Ley2IK/functionsRoutes-0.7270336323406671.mjs"() {
+    init_anime_movies();
+    init_anime_shows();
     init_collections();
     init_counts();
     init_featured_collection();
@@ -3838,77 +3936,91 @@ var init_functionsRoutes_0_44629216370293023 = __esm({
     init_top_rated();
     routes = [
       {
-        routePath: "/api/plex/collections",
+        routePath: "/api/plex/anime-movies",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
         modules: [onRequestGet],
       },
       {
-        routePath: "/api/plex/counts",
+        routePath: "/api/plex/anime-shows",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
         modules: [onRequestGet2],
       },
       {
-        routePath: "/api/plex/featured-collection",
+        routePath: "/api/plex/collections",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
         modules: [onRequestGet3],
       },
       {
-        routePath: "/api/plex/image",
+        routePath: "/api/plex/counts",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
         modules: [onRequestGet4],
       },
       {
-        routePath: "/api/plex/movies",
+        routePath: "/api/plex/featured-collection",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
         modules: [onRequestGet5],
       },
       {
-        routePath: "/api/plex/sections",
+        routePath: "/api/plex/image",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
         modules: [onRequestGet6],
       },
       {
-        routePath: "/api/plex/shows",
+        routePath: "/api/plex/movies",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
         modules: [onRequestGet7],
       },
       {
-        routePath: "/api/plex/status",
+        routePath: "/api/plex/sections",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
         modules: [onRequestGet8],
       },
       {
-        routePath: "/api/plex/top-rated",
+        routePath: "/api/plex/shows",
         mountPath: "/api/plex",
         method: "GET",
         middlewares: [],
         modules: [onRequestGet9],
+      },
+      {
+        routePath: "/api/plex/status",
+        mountPath: "/api/plex",
+        method: "GET",
+        middlewares: [],
+        modules: [onRequestGet10],
+      },
+      {
+        routePath: "/api/plex/top-rated",
+        mountPath: "/api/plex",
+        method: "GET",
+        middlewares: [],
+        modules: [onRequestGet11],
       },
     ];
   },
 });
 
 // ../node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_44629216370293023();
+init_functionsRoutes_0_7270336323406671();
 
 // ../node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_44629216370293023();
+init_functionsRoutes_0_7270336323406671();
 function lexer(str) {
   var tokens = [];
   var i = 0;
