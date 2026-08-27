@@ -13,7 +13,6 @@ let plexStatusHasLoaded = false;
 let plexShows = null;
 let plexShowsLoadPromise = null;
 let plexShowsError = null;
-let plexShowsUsingFallback = false;
 let activePlexLibraryTab = "movies";
 const plexShowsFilters = { query: "", genre: "all", sort: "library" };
 
@@ -250,7 +249,6 @@ async function loadPlexShows() {
       const data = await response.json();
       if (!Array.isArray(data)) throw new Error("Invalid Plex shows response");
       plexShows = data.map(normalizePlexShow).filter(Boolean);
-      plexShowsUsingFallback = false;
     } catch {
       try {
         const response = await fetch("/plex-preview.json", { cache: "no-store" });
@@ -258,7 +256,6 @@ async function loadPlexShows() {
         const data = await response.json();
         if (!Array.isArray(data?.tv)) throw new Error("TV preview is invalid");
         plexShows = data.tv.map(normalizePlexShow).filter(Boolean);
-        plexShowsUsingFallback = true;
       } catch {
         plexShows = null;
         plexShowsError = "The shows library could not be loaded. Please try again shortly.";
@@ -372,14 +369,12 @@ function updatePlexShowsGenreOptions(panel) {
 function renderPlexShowsPanel(panel) {
   const grid = panel.querySelector("[data-plex-shows-grid]");
   const status = panel.querySelector("[data-plex-shows-status]");
-  const count = panel.querySelector("[data-plex-shows-count]");
-  if (!grid || !status || !count) return;
+  if (!grid || !status) return;
 
   if (plexShowsLoadPromise && plexShows == null) {
     status.hidden = false;
     status.textContent = "Loading the PlexPoint shows library…";
     grid.hidden = true;
-    count.textContent = "Loading…";
     return;
   }
 
@@ -387,7 +382,6 @@ function renderPlexShowsPanel(panel) {
     status.hidden = false;
     status.textContent = plexShowsError;
     grid.hidden = true;
-    count.textContent = "Unavailable";
     return;
   }
 
@@ -395,7 +389,6 @@ function renderPlexShowsPanel(panel) {
     status.hidden = false;
     status.textContent = "Open the Shows tab to load the TV library.";
     grid.hidden = true;
-    count.textContent = "Ready";
     return;
   }
 
@@ -420,9 +413,6 @@ function renderPlexShowsPanel(panel) {
     filtered = [...filtered].sort((a, b) => a.title.localeCompare(b.title));
   }
 
-  count.textContent = `${filtered.length.toLocaleString()}${plexShowsUsingFallback ? " preview" : ""} ${
-    filtered.length === 1 ? "show" : "shows"
-  }`;
   grid.replaceChildren();
   if (filtered.length === 0) {
     status.hidden = false;
@@ -448,27 +438,7 @@ function createPlexShowsPanel() {
     attributes: { "data-plex-shows-panel": "true" },
   });
 
-  const headingRow = createPlexElement("div", {
-    className: "mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between",
-  });
-  const headingCopy = createPlexElement("div");
-  headingCopy.append(
-    createPlexElement("h3", { className: "text-lg font-semibold text-white sm:text-xl", text: "TV Shows" }),
-    createPlexElement("p", {
-      className: "mt-1 text-xs text-muted-foreground sm:text-sm",
-      text: "Browse the TV library separately, then search, filter, or sort the results.",
-    }),
-  );
-  headingRow.append(
-    headingCopy,
-    createPlexElement("div", {
-      className: "text-xs font-medium text-muted-foreground sm:text-sm",
-      text: "Ready",
-      attributes: { "data-plex-shows-count": "true", "aria-live": "polite" },
-    }),
-  );
-
-  const searchRow = createPlexElement("div", { className: "flex flex-col gap-2 sm:flex-row sm:gap-3" });
+  const searchRow = createPlexElement("div", { className: "flex" });
   const search = createPlexElement("input", {
     className:
       "flex w-full flex-1 border px-4 py-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 h-10 rounded-xl border-white/10 bg-white/[0.035] text-sm text-foreground placeholder:text-slate-500 focus-visible:ring-primary/40 sm:h-12 sm:text-base",
@@ -484,26 +454,11 @@ function createPlexShowsPanel() {
     plexShowsFilters.query = search.value;
     renderPlexShowsPanel(panel);
   });
-
-  const reset = createPlexElement("button", {
-    className:
-      "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium border px-4 py-2 h-10 rounded-xl border-white/10 bg-white/[0.04] text-sm hover:border-primary/40 hover:bg-primary/5 sm:h-12",
-    text: "Reset",
-    attributes: { type: "button" },
-  });
-  reset.addEventListener("click", () => {
-    plexShowsFilters.query = "";
-    plexShowsFilters.genre = "all";
-    plexShowsFilters.sort = "library";
-    search.value = "";
-    panel.querySelector("[data-plex-shows-genre]").value = "all";
-    panel.querySelector("[data-plex-shows-sort]").value = "library";
-    renderPlexShowsPanel(panel);
-  });
-  searchRow.append(search, reset);
+  searchRow.append(search);
 
   const filterRow = createPlexElement("div", {
     className: "mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:flex sm:flex-row sm:gap-3",
+    attributes: { "data-plex-library-filter-row": "true" },
   });
   const selectClass =
     "h-10 w-full rounded-xl border border-white/10 bg-white/[0.035] px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary/30 sm:h-12 sm:w-72 sm:text-base";
@@ -550,28 +505,38 @@ function createPlexShowsPanel() {
   });
   grid.hidden = true;
 
-  panel.append(headingRow, searchRow, filterRow, status, grid);
+  panel.append(searchRow, filterRow, status, grid);
   return panel;
+}
+
+function createPlexLibrarySwitcher() {
+  const select = createPlexElement("select", {
+    className:
+      "plex-library-switcher h-10 w-full rounded-xl border border-white/10 bg-white/[0.035] px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary/30 sm:h-12 sm:w-72 sm:text-base",
+    attributes: {
+      "aria-label": "Choose Plex library",
+      "data-plex-library-switcher": "true",
+    },
+  });
+  select.append(
+    createPlexElement("option", { text: "Movies", attributes: { value: "movies" } }),
+    createPlexElement("option", { text: "Shows", attributes: { value: "shows" } }),
+  );
+  select.value = activePlexLibraryTab;
+  select.addEventListener("change", () => setPlexLibraryTab(select.value));
+  return select;
 }
 
 function setPlexLibraryTab(tab) {
   activePlexLibraryTab = tab === "shows" ? "shows" : "movies";
-  document.querySelectorAll("[data-plex-library-tabs]").forEach((tabs) => {
-    const moviePanel = tabs.parentElement?.querySelector(".movie-library-panel:not([data-plex-shows-panel])");
-    const showsPanel = tabs.parentElement?.querySelector("[data-plex-shows-panel]");
-    if (moviePanel) moviePanel.style.display = activePlexLibraryTab === "movies" ? "" : "none";
-    if (showsPanel) showsPanel.style.display = activePlexLibraryTab === "shows" ? "" : "none";
+  const section = document.querySelector('[data-testid="plex-collection-section"]');
+  const moviePanel = section?.querySelector(".movie-library-panel:not([data-plex-shows-panel])");
+  const showsPanel = section?.querySelector("[data-plex-shows-panel]");
+  if (moviePanel) moviePanel.style.display = activePlexLibraryTab === "movies" ? "" : "none";
+  if (showsPanel) showsPanel.style.display = activePlexLibraryTab === "shows" ? "" : "none";
 
-    tabs.querySelectorAll("button").forEach((button) => {
-      const selected = button.dataset.plexLibraryTab === activePlexLibraryTab;
-      button.setAttribute("aria-selected", String(selected));
-      button.classList.toggle("btn-primary-gradient", selected);
-      button.classList.toggle("text-white", selected);
-      button.classList.toggle("border", !selected);
-      button.classList.toggle("border-white/10", !selected);
-      button.classList.toggle("bg-white/[0.04]", !selected);
-      button.classList.toggle("text-muted-foreground", !selected);
-    });
+  section?.querySelectorAll("[data-plex-library-switcher]").forEach((select) => {
+    if (select.value !== activePlexLibraryTab) select.value = activePlexLibraryTab;
   });
 
   if (activePlexLibraryTab === "shows" && plexShows == null) void loadPlexShows();
@@ -581,7 +546,7 @@ function ensurePlexShowsSection() {
   const section = document.querySelector('[data-testid="plex-collection-section"]');
   const container = section?.querySelector(".container");
   const moviePanel = container?.querySelector(".movie-library-panel:not([data-plex-shows-panel])");
-  if (!section || !container || !moviePanel || container.querySelector("[data-plex-library-tabs]")) return;
+  if (!section || !container || !moviePanel) return;
 
   const description = [...section.querySelectorAll("p")].find((element) =>
     element.textContent?.startsWith("See live PlexPoint movie and show counts"),
@@ -591,33 +556,27 @@ function ensurePlexShowsSection() {
       "See live PlexPoint movie and show counts, browse each library separately, filter by genre, search by title or year, and explore every poster.";
   }
 
-  const tabs = createPlexElement("div", {
-    className: "glass-card mb-4 grid max-w-sm grid-cols-2 gap-2 rounded-2xl p-1.5 sm:mb-5",
-    attributes: { "data-plex-library-tabs": "true", role: "tablist", "aria-label": "Plex library" },
-  });
-  for (const tab of ["movies", "shows"]) {
-    const button = createPlexElement("button", {
-      className:
-        "inline-flex min-h-[44px] items-center justify-center rounded-xl px-5 py-2 text-sm font-semibold transition-colors",
-      text: tab === "movies" ? "Movies" : "Shows",
-      attributes: {
-        type: "button",
-        role: "tab",
-        "data-plex-library-tab": tab,
-        "aria-controls": tab === "movies" ? "plex-movies-panel" : "plex-shows-panel",
-      },
-    });
-    button.addEventListener("click", () => setPlexLibraryTab(tab));
-    tabs.append(button);
+  moviePanel.id = "plex-movies-panel";
+  const movieFilterRow = moviePanel.querySelector('[data-testid="movie-filter-genre"]')?.parentElement;
+  if (movieFilterRow && !movieFilterRow.querySelector("[data-plex-library-switcher]")) {
+    movieFilterRow.dataset.plexLibraryFilterRow = "true";
+    movieFilterRow.append(createPlexLibrarySwitcher());
   }
 
-  moviePanel.id = "plex-movies-panel";
-  const showsPanel = createPlexShowsPanel();
-  showsPanel.id = "plex-shows-panel";
-  container.insertBefore(tabs, moviePanel);
-  moviePanel.insertAdjacentElement("afterend", showsPanel);
+  let showsPanel = container.querySelector("[data-plex-shows-panel]");
+  const showsPanelWasCreated = !showsPanel;
+  if (!showsPanel) {
+    showsPanel = createPlexShowsPanel();
+    showsPanel.id = "plex-shows-panel";
+    moviePanel.insertAdjacentElement("afterend", showsPanel);
+  }
+  const showsFilterRow = showsPanel.querySelector("[data-plex-library-filter-row]");
+  if (showsFilterRow && !showsFilterRow.querySelector("[data-plex-library-switcher]")) {
+    showsFilterRow.append(createPlexLibrarySwitcher());
+  }
+
   setPlexLibraryTab(activePlexLibraryTab);
-  renderPlexShowsPanel(showsPanel);
+  if (showsPanelWasCreated) renderPlexShowsPanel(showsPanel);
 }
 
 function addAnimeAccessNotice() {
