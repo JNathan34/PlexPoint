@@ -1,5 +1,5 @@
 const WATCH_PICKER_HISTORY_KEY = "plexpoint-watch-picker-history-v1";
-const WATCH_PICKER_MAX_HISTORY = 120;
+const WATCH_PICKER_MAX_HISTORY = 5000;
 
 const watchPickerState = {
   movies: null,
@@ -16,34 +16,34 @@ const watchPickerState = {
 };
 
 const runtimeOptions = [
-  { value: "any", label: "Any length", description: "Keep the evening flexible", icon: "✦" },
-  { value: "short", label: "Quick watch", description: "Under 100 minutes", icon: "↗" },
-  { value: "standard", label: "Movie night", description: "100–130 minutes", icon: "◒" },
-  { value: "epic", label: "Go big", description: "More than 130 minutes", icon: "◆" },
+  { value: "any", label: "Any length", description: "Keep the evening flexible", icon: "shuffle" },
+  { value: "short", label: "Quick watch", description: "Under 100 minutes", icon: "timer" },
+  { value: "standard", label: "Movie night", description: "100–130 minutes", icon: "clock" },
+  { value: "epic", label: "Go big", description: "More than 130 minutes", icon: "hourglass" },
 ];
 
 const eraOptions = [
-  { value: "any", label: "Any era", description: "Let the picker decide", icon: "✦" },
-  { value: "classic", label: "Throwback", description: "Released before 2000", icon: "◴" },
-  { value: "modern", label: "Modern", description: "Released from 2000–2019", icon: "◫" },
-  { value: "recent", label: "Fresh", description: "Released in 2020 or later", icon: "●" },
+  { value: "any", label: "Any era", description: "Let the picker decide", icon: "shuffle" },
+  { value: "classic", label: "Throwback", description: "Released before 2000", icon: "history" },
+  { value: "modern", label: "Modern", description: "Released from 2000–2019", icon: "calendar" },
+  { value: "recent", label: "Fresh", description: "Released in 2020 or later", icon: "sunrise" },
 ];
 
 const genreIcons = {
-  action: "⚡",
-  adventure: "⌁",
-  animation: "◇",
-  comedy: "☺",
-  crime: "◎",
-  documentary: "▣",
-  drama: "◐",
-  family: "♡",
-  fantasy: "✧",
-  horror: "◑",
-  mystery: "?",
-  romance: "♥",
-  "science fiction": "◉",
-  thriller: "△",
+  action: "bolt",
+  adventure: "compass",
+  animation: "wand",
+  comedy: "smile",
+  crime: "shield",
+  documentary: "file",
+  drama: "theatre",
+  family: "users",
+  fantasy: "sparkles",
+  horror: "ghost",
+  mystery: "search",
+  romance: "heart",
+  "science fiction": "orbit",
+  thriller: "alert",
 };
 
 function pickerElement(tagName, { className = "", text = "", attributes = {} } = {}) {
@@ -54,6 +54,50 @@ function pickerElement(tagName, { className = "", text = "", attributes = {} } =
     element.setAttribute(name, String(value));
   }
   return element;
+}
+
+const pickerIconMarkup = {
+  shuffle: '<path d="m16 3 5 0 0 5"/><path d="M4 20 21 3"/><path d="m21 16 0 5-5 0"/><path d="m15 15 6 6"/><path d="m4 4 5 5"/>',
+  timer: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9 2h6M12 2v3"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  hourglass: '<path d="M7 3h10M7 21h10M8 3c0 4 1.5 6 4 9-2.5 3-4 5-4 9M16 3c0 4-1.5 6-4 9 2.5 3 4 5 4 9"/>',
+  history: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
+  calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/>',
+  sunrise: '<path d="M4 18h16M6 14a6 6 0 0 1 12 0M12 2v3M4.2 6.2l2.1 2.1M19.8 6.2l-2.1 2.1M2 14h2M20 14h2"/>',
+  bolt: '<path d="m13 2-8 12h7l-1 8 8-12h-7l1-8Z"/>',
+  compass: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5 5-2Z"/>',
+  wand: '<path d="m4 20 10-10M12 4l1-2 1 2 2 1-2 1-1 2-1-2-2-1 2-1ZM18 11l.8-1.5.7 1.5 1.5.7-1.5.8-.7 1.5-.8-1.5-1.5-.8 1.5-.7Z"/>',
+  smile: '<circle cx="12" cy="12" r="9"/><path d="M8.5 10h.01M15.5 10h.01M8 14c1 2 2.3 3 4 3s3-1 4-3"/>',
+  shield: '<path d="M12 3 5 6v5c0 4.7 2.8 8.1 7 10 4.2-1.9 7-5.3 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/>',
+  file: '<path d="M6 3h8l4 4v14H6V3Z"/><path d="M14 3v5h4M9 13h6M9 17h6"/>',
+  theatre: '<path d="M4 5c3-1 5-1 8 0v6c0 3-1.6 5-4 6-2.4-1-4-3-4-6V5Z"/><path d="M12 7c3-1 5-1 8 0v6c0 3-1.6 5-4 6-1.1-.5-2-1.1-2.7-2M6.5 9h.01M9.5 9h.01M6 13c1 .8 3 .8 4 0M14.5 11h.01M17.5 11h.01M14 15c1-.8 3-.8 4 0"/>',
+  users: '<path d="M16 20v-2c0-2-1.8-3.5-4-3.5S8 16 8 18v2M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM18 8a2.5 2.5 0 0 1 0 5M19 15c1.5.4 2.5 1.5 2.5 3v2M6 8a2.5 2.5 0 0 0 0 5M5 15c-1.5.4-2.5 1.5-2.5 3v2"/>',
+  sparkles: '<path d="m12 3 1.2 3.3L16.5 7.5l-3.3 1.2L12 12l-1.2-3.3-3.3-1.2 3.3-1.2L12 3ZM18.5 13l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2ZM6 14l.7 1.8 1.8.7-1.8.7L6 19l-.7-1.8-1.8-.7 1.8-.7L6 14Z"/>',
+  ghost: '<path d="M5 20V11a7 7 0 0 1 14 0v9l-3-2-2 2-2-2-2 2-2-2-3 2Z"/><path d="M9.5 11h.01M14.5 11h.01"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/>',
+  heart: '<path d="M20.8 5.8a5.5 5.5 0 0 0-7.8 0L12 6.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 22l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z"/>',
+  orbit: '<circle cx="12" cy="12" r="2"/><path d="M19.5 4.5c2.2 2.2-1.6 9.6-6.7 14.7-3.2 3.2-6.2 4.7-7.5 3.4-1.3-1.3.2-4.3 3.4-7.5 5.1-5.1 12.5-8.9 14.7-6.7M4.5 4.5c-2.2 2.2 1.6 9.6 6.7 14.7 3.2 3.2 6.2 4.7 7.5 3.4"/>',
+  alert: '<path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 9v5M12 17h.01"/>',
+  film: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M17 9h4M3 15h4M17 15h4"/>',
+  close: '<path d="M18 6 6 18M6 6l12 12"/>',
+  check: '<path d="m5 12 4 4L19 6"/>',
+  star: '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2-4.5-4.4 6.2-.9L12 3Z"/>',
+  refresh: '<path d="M20 6v5h-5M4 18v-5h5M6.1 9a7 7 0 0 1 11.8-2.6L20 11M4 13l2.1 4.6A7 7 0 0 0 17.9 15"/>',
+};
+
+function pickerIcon(name, className = "") {
+  const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  icon.setAttribute("viewBox", "0 0 24 24");
+  icon.setAttribute("fill", "none");
+  icon.setAttribute("stroke", "currentColor");
+  icon.setAttribute("stroke-width", "1.8");
+  icon.setAttribute("stroke-linecap", "round");
+  icon.setAttribute("stroke-linejoin", "round");
+  icon.setAttribute("aria-hidden", "true");
+  icon.classList.add("pp-picker-icon");
+  if (className) icon.classList.add(...className.split(/\s+/).filter(Boolean));
+  icon.innerHTML = pickerIconMarkup[name] || pickerIconMarkup.film;
+  return icon;
 }
 
 function pickerNumber(value) {
@@ -224,11 +268,11 @@ function pickerGenreOptions() {
       value: genre,
       label: genre,
       description: `${count.toLocaleString()} ${count === 1 ? "movie" : "movies"} available`,
-      icon: genreIcons[genre.toLowerCase()] || "○",
+      icon: genreIcons[genre.toLowerCase()] || "film",
     }));
 
   return [
-    { value: "surprise", label: "Surprise me", description: "Open up the whole library", icon: "✦" },
+    { value: "surprise", label: "Surprise me", description: "Open up the whole library", icon: "shuffle" },
     ...genres,
   ];
 }
@@ -285,6 +329,21 @@ function pickerScore(movie) {
   return { score, genreMatch, runtimeMatch, eraMatch };
 }
 
+function pickerMatchesAnswers(movie) {
+  const { genre, runtime, era } = watchPickerState.answers;
+  const genreMatch =
+    genre === "surprise" || movie.genres.some((item) => item.toLowerCase() === genre.toLowerCase());
+  const runtimeMatch = runtime === "any" || pickerRuntimeBucket(movie.durationMinutes) === runtime;
+  const eraMatch = era === "any" || pickerEraBucket(movie.year) === era;
+  return genreMatch && runtimeMatch && eraMatch;
+}
+
+function pickerUnseenMatchingMovies() {
+  return (watchPickerState.movies || []).filter(
+    (movie) => pickerMatchesAnswers(movie) && !watchPickerState.history.has(pickerMovieKey(movie)),
+  );
+}
+
 function pickerMatchReasons(movie) {
   const { genre, runtime, era } = watchPickerState.answers;
   const scored = pickerScore(movie);
@@ -320,20 +379,15 @@ function selectDiversePickerMovies(candidates, count) {
 }
 
 function generatePickerRecommendations() {
-  const movies = watchPickerState.movies || [];
-  const currentKeys = new Set(watchPickerState.currentPicks.map(pickerMovieKey));
-  let candidates = movies.filter(
-    (movie) => !watchPickerState.history.has(pickerMovieKey(movie)) && !currentKeys.has(pickerMovieKey(movie)),
-  );
-
-  if (candidates.length < 3) {
-    watchPickerState.history = new Set(currentKeys);
-    candidates = movies.filter((movie) => !currentKeys.has(pickerMovieKey(movie)));
+  const candidates = pickerUnseenMatchingMovies();
+  if (candidates.length === 0) {
+    watchPickerState.currentPicks = [];
+    watchPickerState.view = "exhausted";
+    return;
   }
-  if (candidates.length < 3) candidates = movies;
 
   watchPickerState.shuffle += 1;
-  watchPickerState.currentPicks = selectDiversePickerMovies(candidates, 3);
+  watchPickerState.currentPicks = selectDiversePickerMovies(candidates, Math.min(3, candidates.length));
   for (const movie of watchPickerState.currentPicks) {
     watchPickerState.history.add(pickerMovieKey(movie));
   }
@@ -373,10 +427,11 @@ function injectWatchPickerStyles() {
     .pp-picker-shell {
       position: relative;
       display: grid;
-      grid-template-columns: minmax(250px, 310px) minmax(0, 1fr);
-      width: min(1080px, 96vw);
-      height: min(760px, calc(100dvh - 28px));
-      max-height: min(760px, calc(100dvh - 28px));
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
+      width: min(940px, 96vw);
+      height: min(700px, calc(100dvh - 28px));
+      max-height: min(700px, calc(100dvh - 28px));
       overflow: clip;
       border: 1px solid rgba(255,255,255,.11);
       border-radius: 28px;
@@ -405,29 +460,18 @@ function injectWatchPickerStyles() {
       transition: .18s ease;
     }
     .pp-picker-close:hover { border-color: rgba(255,132,52,.5); color: #fff; background: rgba(255,113,20,.12); }
+    .pp-picker-icon { display: block; width: 18px; height: 18px; flex: 0 0 auto; }
     .pp-picker-aside {
       position: relative;
-      display: flex;
-      min-height: 590px;
-      flex-direction: column;
+      display: block;
+      min-height: 0;
       overflow: clip;
-      padding: 32px 28px 28px;
-      border-right: 1px solid rgba(255,255,255,.08);
+      padding: 20px 28px 17px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
       background:
         radial-gradient(circle at 0% 0%, rgba(255,126,37,.28), transparent 38%),
         radial-gradient(circle at 100% 100%, rgba(123,45,255,.14), transparent 42%),
         rgba(255,255,255,.018);
-    }
-    .pp-picker-aside::after {
-      content: "";
-      position: absolute;
-      right: -80px;
-      bottom: -95px;
-      width: 260px;
-      height: 260px;
-      border: 52px solid rgba(255,123,25,.055);
-      border-radius: 50%;
-      pointer-events: none;
     }
     .pp-picker-brand, .pp-picker-content { position: relative; z-index: 1; }
     .pp-picker-kicker {
@@ -446,9 +490,9 @@ function injectWatchPickerStyles() {
       text-transform: uppercase;
     }
     .pp-picker-kicker-dot { width: 6px; height: 6px; border-radius: 50%; background: #ff7a1a; box-shadow: 0 0 14px #ff7a1a; }
-    .pp-picker-aside h2 { margin: 22px 0 10px; max-width: 250px; font-size: clamp(28px, 3vw, 40px); line-height: 1.04; letter-spacing: -.035em; font-weight: 720; }
-    .pp-picker-aside-copy { max-width: 250px; color: #aeb8c7; font-size: 14px; line-height: 1.65; }
-    .pp-picker-steps { display: grid; gap: 10px; margin: 30px 0 0; }
+    .pp-picker-aside h2 { margin: 9px 56px 0 0; max-width: none; font-size: clamp(25px, 3vw, 31px); line-height: 1.04; letter-spacing: -.035em; font-weight: 720; }
+    .pp-picker-aside-copy, .pp-picker-steps, .pp-picker-surprise { display: none; }
+    .pp-picker-steps { gap: 10px; margin: 30px 0 0; }
     .pp-picker-step {
       display: grid;
       grid-template-columns: 30px 1fr;
@@ -471,7 +515,7 @@ function injectWatchPickerStyles() {
     .pp-picker-surprise {
       position: relative;
       z-index: 1;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
@@ -490,24 +534,24 @@ function injectWatchPickerStyles() {
     .pp-picker-surprise strong, .pp-picker-surprise small { display: block; }
     .pp-picker-surprise strong { font-size: 12px; }
     .pp-picker-surprise small { margin-top: 2px; color: #8490a2; font-size: 10px; }
-    .pp-picker-surprise span:last-child { color: #ff8b39; font-size: 19px; }
-    .pp-picker-main { min-width: 0; min-height: 0; overflow-y: auto; padding: 46px 42px 36px; }
-    .pp-picker-content { min-height: 500px; }
-    .pp-picker-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; padding-right: 44px; }
+    .pp-picker-surprise > .pp-picker-icon { width: 19px; height: 19px; color: #ff8b39; }
+    .pp-picker-main { min-width: 0; min-height: 0; overflow-y: auto; padding: 28px 34px 32px; }
+    .pp-picker-content { min-height: 0; }
+    .pp-picker-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; padding-right: 44px; }
     .pp-picker-progress-track { height: 4px; flex: 1; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.07); }
     .pp-picker-progress-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #ff6818, #ffad5e); box-shadow: 0 0 16px rgba(255,112,24,.3); transition: width .28s ease; }
     .pp-picker-progress-label { color: #7f8a9c; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
     .pp-picker-eyebrow { margin: 0 0 8px; color: #ff8f43; font-size: 11px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
     .pp-picker-title { margin: 0; max-width: 660px; color: #fff; font-size: clamp(26px, 3.3vw, 38px); line-height: 1.12; letter-spacing: -.035em; font-weight: 720; }
     .pp-picker-description { margin: 10px 0 0; max-width: 600px; color: #929daf; font-size: 14px; line-height: 1.65; }
-    .pp-picker-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 27px; }
+    .pp-picker-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 22px; }
     .pp-picker-option {
       position: relative;
       display: grid;
       grid-template-columns: 42px 1fr 18px;
       align-items: center;
       gap: 12px;
-      min-height: 82px;
+      min-height: 74px;
       padding: 14px;
       border: 1px solid rgba(255,255,255,.09);
       border-radius: 18px;
@@ -517,7 +561,7 @@ function injectWatchPickerStyles() {
       transition: transform .18s ease, border-color .18s ease, background .18s ease;
     }
     .pp-picker-option:hover { transform: translateY(-2px); border-color: rgba(255,133,49,.38); background: rgba(255,119,26,.065); }
-    .pp-picker-option-icon { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(255,255,255,.085); border-radius: 13px; color: #ff9b55; background: rgba(255,255,255,.035); font-size: 17px; }
+    .pp-picker-option-icon { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(255,255,255,.085); border-radius: 13px; color: #ff9b55; background: rgba(255,255,255,.035); }
     .pp-picker-option strong, .pp-picker-option small { display: block; }
     .pp-picker-option strong { font-size: 14px; font-weight: 700; }
     .pp-picker-option small { margin-top: 3px; color: #7f8a9c; font-size: 11px; line-height: 1.35; }
@@ -527,6 +571,7 @@ function injectWatchPickerStyles() {
     .pp-picker-actions { display: flex; align-items: center; gap: 10px; margin-top: 28px; }
     .pp-picker-button { display: inline-flex; min-height: 43px; align-items: center; justify-content: center; gap: 8px; padding: 0 16px; border: 1px solid rgba(255,255,255,.11); border-radius: 13px; color: #e7ebf1; background: rgba(255,255,255,.035); font-size: 12px; font-weight: 700; transition: .18s ease; }
     .pp-picker-button:hover { border-color: rgba(255,137,53,.38); background: rgba(255,120,28,.075); }
+    .pp-picker-button:disabled { cursor: not-allowed; opacity: .58; transform: none; }
     .pp-picker-button--primary { border-color: rgba(255,133,46,.44); color: #fff; background: linear-gradient(135deg, #f66a16, #ff8c31); box-shadow: 0 12px 25px rgba(245,102,19,.19); }
     .pp-picker-button--primary:hover { background: linear-gradient(135deg, #ff7420, #ff9a45); }
     .pp-picker-results-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px; }
@@ -540,6 +585,7 @@ function injectWatchPickerStyles() {
     .pp-picker-poster img { width: 100%; height: 100%; object-fit: cover; }
     .pp-picker-poster::after { content: ""; position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, rgba(7,9,14,.88)); pointer-events: none; }
     .pp-picker-rating { position: absolute; top: 10px; right: 10px; z-index: 1; display: flex; align-items: center; gap: 4px; padding: 5px 7px; border: 1px solid rgba(255,255,255,.14); border-radius: 9px; color: #fff; background: rgba(7,9,13,.72); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); font-size: 10px; font-weight: 750; }
+    .pp-picker-rating .pp-picker-icon { width: 12px; height: 12px; color: #ffc857; }
     .pp-picker-result-body { padding: 13px 13px 15px; }
     .pp-picker-result h4 { margin: 0; overflow: hidden; color: #fff; font-size: 13px; font-weight: 720; text-overflow: ellipsis; white-space: nowrap; }
     .pp-picker-meta { margin: 4px 0 0; color: #778296; font-size: 10px; }
@@ -547,6 +593,8 @@ function injectWatchPickerStyles() {
     .pp-picker-reason { padding: 4px 6px; border-radius: 7px; color: #ff9a53; background: rgba(255,119,24,.085); font-size: 9px; font-weight: 700; }
     .pp-picker-summary { display: -webkit-box; min-height: 47px; margin: 10px 0 0; overflow: hidden; color: #8792a4; font-size: 10px; line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
     .pp-picker-empty { display: grid; min-height: 380px; place-items: center; text-align: center; }
+    .pp-picker-empty-icon { display: grid; width: 52px; height: 52px; margin: 0 auto 17px; place-items: center; border: 1px solid rgba(255,137,53,.25); border-radius: 16px; color: #ff9450; background: rgba(255,119,24,.075); }
+    .pp-picker-empty-icon .pp-picker-icon { width: 23px; height: 23px; }
     .pp-picker-spinner { width: 32px; height: 32px; margin: 0 auto 18px; border: 3px solid rgba(255,255,255,.1); border-top-color: #ff812d; border-radius: 50%; animation: pp-picker-spin .8s linear infinite; }
     .pp-picker-empty h3 { margin: 0; color: #fff; font-size: 21px; }
     .pp-picker-empty p { max-width: 380px; margin: 8px auto 0; color: #8792a4; font-size: 13px; line-height: 1.6; }
@@ -567,46 +615,38 @@ function injectWatchPickerStyles() {
         overflow: hidden;
       }
       .pp-picker-close { position: fixed; top: 10px; right: 10px; width: 42px; height: 42px; border-radius: 14px; }
-      .pp-picker-aside { min-height: 0; padding: 14px 14px 12px; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+      .pp-picker-aside { min-height: 0; padding: 12px 14px 10px; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.08); }
       .pp-picker-kicker { padding: 5px 8px; font-size: 9px; }
-      .pp-picker-aside h2 { max-width: none; margin: 9px 50px 2px 0; font-size: 22px; line-height: 1.08; }
+      .pp-picker-aside h2 { max-width: none; margin: 8px 50px 0 0; font-size: 21px; line-height: 1.08; }
       .pp-picker-aside-copy { display: none; }
-      .pp-picker-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 11px; }
-      .pp-picker-step { display: flex; min-width: 0; min-height: 34px; gap: 6px; padding: 4px 5px; border-radius: 12px; }
-      .pp-picker-step-number { width: 25px; height: 25px; flex: 0 0 auto; border-radius: 8px; font-size: 10px; }
-      .pp-picker-step strong { overflow: hidden; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
-      .pp-picker-step small { display: none; }
-      .pp-picker-surprise { min-height: 38px; margin-top: 9px; padding: 8px 11px; border-radius: 12px; }
-      .pp-picker-surprise strong { font-size: 11px; }
-      .pp-picker-surprise small { display: none; }
-      .pp-picker-surprise span:last-child { font-size: 16px; }
+      .pp-picker-steps, .pp-picker-surprise { display: none; }
       .pp-picker-main { min-height: 0; overflow-y: auto; padding: 14px 14px max(22px, env(safe-area-inset-bottom)); overscroll-behavior: contain; }
       .pp-picker-content { min-height: 0; }
-      .pp-picker-progress { margin-bottom: 15px; padding-right: 0; }
+      .pp-picker-progress { margin-bottom: 13px; padding-right: 0; }
       .pp-picker-progress-label { font-size: 9px; }
-      .pp-picker-eyebrow { margin-bottom: 5px; font-size: 9px; }
+      .pp-picker-eyebrow { display: none; }
       .pp-picker-title { font-size: clamp(23px, 7.2vw, 28px); line-height: 1.1; }
       .pp-picker-description { margin-top: 7px; font-size: 12px; line-height: 1.45; }
-      .pp-picker-options { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
-      .pp-picker-option { grid-template-columns: 32px minmax(0, 1fr) 13px; gap: 8px; min-height: 64px; padding: 9px; border-radius: 15px; }
+      .pp-picker-options { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+      .pp-picker-option { grid-template-columns: 32px minmax(0, 1fr); gap: 8px; min-height: 56px; padding: 9px; border-radius: 15px; }
       .pp-picker-option:hover { transform: none; }
-      .pp-picker-option-icon { width: 32px; height: 32px; border-radius: 10px; font-size: 14px; }
+      .pp-picker-option-icon { width: 32px; height: 32px; border-radius: 10px; }
+      .pp-picker-option-icon .pp-picker-icon { width: 16px; height: 16px; }
       .pp-picker-option-copy { min-width: 0; }
       .pp-picker-option strong { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-      .pp-picker-option small { overflow: hidden; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
-      .pp-picker-option-radio { width: 13px; height: 13px; }
+      .pp-picker-option small, .pp-picker-option-radio { display: none; }
       .pp-picker-actions { gap: 8px; margin-top: 18px; }
       .pp-picker-actions .pp-picker-button { flex: 1; }
       .pp-picker-results-head { display: block; }
       .pp-picker-results-head .pp-picker-button { width: 100%; margin-top: 13px; }
-      .pp-picker-answer-chips { margin-top: 11px; }
-      .pp-picker-results { grid-template-columns: 1fr; gap: 10px; margin-top: 16px; }
-      .pp-picker-result { display: grid; grid-template-columns: 92px minmax(0, 1fr); min-height: 136px; }
+      .pp-picker-results-head .pp-picker-description, .pp-picker-answer-chips { display: none; }
+      .pp-picker-results { grid-template-columns: 1fr; gap: 10px; margin-top: 12px; }
+      .pp-picker-result { display: grid; grid-template-columns: 80px minmax(0, 1fr); min-height: 112px; }
       .pp-picker-result:hover { transform: none; }
-      .pp-picker-poster { height: 100%; min-height: 136px; aspect-ratio: auto; }
+      .pp-picker-poster { height: 100%; min-height: 112px; aspect-ratio: auto; }
       .pp-picker-result-body { align-self: center; padding: 12px; }
       .pp-picker-result h4 { font-size: 13px; }
-      .pp-picker-summary { min-height: 0; -webkit-line-clamp: 2; }
+      .pp-picker-reasons, .pp-picker-summary { display: none; }
       .pp-picker-empty { min-height: 320px; }
     }
     @media (max-width: 350px) {
@@ -626,14 +666,19 @@ function createPickerProgress() {
   const track = pickerElement("div", { className: "pp-picker-progress-track" });
   const fill = pickerElement("div", { className: "pp-picker-progress-fill" });
   const questions = pickerQuestions();
-  const complete = watchPickerState.view === "results";
+  const complete = watchPickerState.view === "results" || watchPickerState.view === "exhausted";
   fill.style.width = `${complete ? 100 : ((watchPickerState.step + 1) / questions.length) * 100}%`;
   track.append(fill);
   progress.append(
     track,
     pickerElement("span", {
       className: "pp-picker-progress-label",
-      text: complete ? "Your picks" : `${watchPickerState.step + 1} of ${questions.length}`,
+      text:
+        watchPickerState.view === "exhausted"
+          ? "No more matches"
+          : complete
+            ? "Your picks"
+            : `${watchPickerState.step + 1} of ${questions.length}`,
     }),
   );
   return progress;
@@ -648,15 +693,15 @@ function updatePickerAside() {
   const options = { genre: pickerGenreOptions(), runtime: runtimeOptions, era: eraOptions };
   list.replaceChildren();
   pickerQuestions().forEach((question, index) => {
-    const answered = watchPickerState.view === "results" || index < watchPickerState.step;
-    const current = watchPickerState.view !== "results" && index === watchPickerState.step;
+    const finished = watchPickerState.view === "results" || watchPickerState.view === "exhausted";
+    const answered = finished || index < watchPickerState.step;
+    const current = !finished && index === watchPickerState.step;
     const step = pickerElement("div", {
       className: `pp-picker-step${current ? " is-current" : ""}${answered ? " is-done" : ""}`,
     });
-    const number = pickerElement("span", {
-      className: "pp-picker-step-number",
-      text: answered ? "✓" : String(index + 1),
-    });
+    const number = pickerElement("span", { className: "pp-picker-step-number" });
+    if (answered) number.append(pickerIcon("check"));
+    else number.textContent = String(index + 1);
     const copy = pickerElement("div");
     copy.append(
       pickerElement("strong", { text: labels[question.key] }),
@@ -740,8 +785,10 @@ function renderPickerQuestion(content) {
       pickerElement("strong", { text: option.label }),
       pickerElement("small", { text: option.description }),
     );
+    const optionIcon = pickerElement("span", { className: "pp-picker-option-icon" });
+    optionIcon.append(pickerIcon(option.icon));
     button.append(
-      pickerElement("span", { className: "pp-picker-option-icon", text: option.icon }),
+      optionIcon,
       copy,
       pickerElement("span", { className: "pp-picker-option-radio", attributes: { "aria-hidden": "true" } }),
     );
@@ -763,7 +810,7 @@ function renderPickerQuestion(content) {
     const actions = pickerElement("div", { className: "pp-picker-actions" });
     const back = pickerElement("button", {
       className: "pp-picker-button",
-      text: "← Back",
+      text: "Back",
       attributes: { type: "button", "data-testid": "watch-picker-back" },
     });
     back.addEventListener("click", () => {
@@ -811,12 +858,9 @@ function createPickerResultCard(movie, index) {
     }),
   );
   if (movie.rating != null) {
-    poster.append(
-      pickerElement("span", {
-        className: "pp-picker-rating",
-        text: `★ ${movie.rating.toFixed(1)}`,
-      }),
-    );
+    const rating = pickerElement("span", { className: "pp-picker-rating" });
+    rating.append(pickerIcon("star"), document.createTextNode(movie.rating.toFixed(1)));
+    poster.append(rating);
   }
 
   const body = pickerElement("div", { className: "pp-picker-result-body" });
@@ -838,23 +882,44 @@ function createPickerResultCard(movie, index) {
 }
 
 function renderPickerResults(content) {
+  const remainingMatches = pickerUnseenMatchingMovies().length;
+  const pickCount = watchPickerState.currentPicks.length;
   const head = pickerElement("div", { className: "pp-picker-results-head" });
   const copy = pickerElement("div");
   copy.append(
     pickerElement("p", { className: "pp-picker-eyebrow", text: "Fresh from your library" }),
-    pickerElement("h3", { className: "pp-picker-title", text: "Three picks. No repeats." }),
+    pickerElement("h3", {
+      className: "pp-picker-title",
+      text: pickCount === 3 ? "Three picks. No repeats." : `${pickCount} final ${pickCount === 1 ? "pick" : "picks"}.`,
+    }),
     pickerElement("p", {
       className: "pp-picker-description",
-      text: `${watchPickerState.history.size.toLocaleString()} different ${
-        watchPickerState.history.size === 1 ? "film has" : "films have"
-      } been recommended recently, and these picks avoid repeats.`,
+      text:
+        remainingMatches === 0
+          ? "There are no more unseen movies matching these choices. Change the choices or clear the seen list to begin again."
+          : `${watchPickerState.history.size.toLocaleString()} different ${
+              watchPickerState.history.size === 1 ? "film has" : "films have"
+            } been recommended recently, and these picks avoid repeats.`,
     }),
   );
   const another = pickerElement("button", {
     className: "pp-picker-button pp-picker-button--primary",
-    text: "↻ Another 3",
-    attributes: { type: "button", "data-testid": "watch-picker-another" },
+    attributes: {
+      type: "button",
+      "data-testid": "watch-picker-another",
+      ...(remainingMatches === 0 ? { disabled: "disabled" } : {}),
+    },
   });
+  const anotherLabel =
+    remainingMatches === 0
+      ? "No more matches"
+      : remainingMatches < 3
+        ? `Show final ${remainingMatches}`
+        : "Another 3";
+  another.append(
+    pickerIcon(remainingMatches === 0 ? "search" : "refresh"),
+    document.createTextNode(anotherLabel),
+  );
   another.addEventListener("click", () => {
     generatePickerRecommendations();
     renderWatchPicker();
@@ -913,6 +978,50 @@ function renderPickerResults(content) {
   content.append(actions);
 }
 
+function renderPickerExhausted(content) {
+  const empty = pickerElement("div", { className: "pp-picker-empty" });
+  const wrapper = pickerElement("div");
+  const icon = pickerElement("div", { className: "pp-picker-empty-icon" });
+  icon.append(pickerIcon("search"));
+  wrapper.append(
+    icon,
+    pickerElement("h3", { text: "No more matching movies" }),
+    pickerElement("p", {
+      text: "There are no more unseen movies matching those choices. Change the choices, or clear the seen list to recommend them again.",
+    }),
+  );
+
+  const actions = pickerElement("div", { className: "pp-picker-actions" });
+  actions.style.justifyContent = "center";
+  const edit = pickerElement("button", {
+    className: "pp-picker-button pp-picker-button--primary",
+    text: "Change choices",
+    attributes: { type: "button", "data-testid": "watch-picker-exhausted-edit" },
+  });
+  edit.addEventListener("click", () => {
+    watchPickerState.step = 0;
+    watchPickerState.view = "question";
+    renderWatchPicker();
+  });
+  const clear = pickerElement("button", {
+    className: "pp-picker-button",
+    text: "Clear seen list",
+    attributes: { type: "button", "data-testid": "watch-picker-exhausted-clear" },
+  });
+  clear.addEventListener("click", () => {
+    watchPickerState.history.clear();
+    watchPickerState.currentPicks = [];
+    watchPickerState.step = 0;
+    watchPickerState.view = "question";
+    savePickerHistory();
+    renderWatchPicker();
+  });
+  actions.append(edit, clear);
+  wrapper.append(actions);
+  empty.append(wrapper);
+  content.append(empty);
+}
+
 function renderWatchPicker() {
   const modal = document.querySelector("[data-plex-watch-picker]");
   const content = modal?.querySelector("[data-picker-content]");
@@ -928,6 +1037,8 @@ function renderWatchPicker() {
     renderPickerLoading(content);
   } else if (watchPickerState.view === "results") {
     renderPickerResults(content);
+  } else if (watchPickerState.view === "exhausted") {
+    renderPickerExhausted(content);
   } else {
     renderPickerQuestion(content);
   }
@@ -994,9 +1105,9 @@ async function openWatchPicker(trigger) {
   });
   const close = pickerElement("button", {
     className: "pp-picker-close",
-    text: "×",
     attributes: { type: "button", "aria-label": "Close watch picker", "data-testid": "watch-picker-close" },
   });
+  close.append(pickerIcon("close"));
   close.addEventListener("click", closeWatchPicker);
 
   const aside = pickerElement("aside", { className: "pp-picker-aside" });
@@ -1024,7 +1135,7 @@ async function openWatchPicker(trigger) {
     pickerElement("strong", { text: "Skip the questions" }),
     pickerElement("small", { text: "Give me three wildcards" }),
   );
-  surprise.append(surpriseCopy, pickerElement("span", { text: "✦", attributes: { "aria-hidden": "true" } }));
+  surprise.append(surpriseCopy, pickerIcon("shuffle"));
   surprise.addEventListener("click", () => {
     watchPickerState.answers = { genre: "surprise", runtime: "any", era: "any" };
     generatePickerRecommendations();
