@@ -551,9 +551,10 @@ function ensurePlexShowsSection() {
   const description = [...section.querySelectorAll("p")].find((element) =>
     element.textContent?.startsWith("See live PlexPoint movie and show counts"),
   );
-  if (description) {
-    description.textContent =
-      "See live PlexPoint movie and show counts, browse each library separately, filter by genre, search by title or year, and explore every poster.";
+  const libraryDescription =
+    "See live PlexPoint movie and show counts, browse each library separately, filter by genre, search by title or year, and explore every poster.";
+  if (description && description.textContent !== libraryDescription) {
+    description.textContent = libraryDescription;
   }
 
   moviePanel.id = "plex-movies-panel";
