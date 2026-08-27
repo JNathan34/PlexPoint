@@ -54,6 +54,19 @@ function updateHomepageLibraryCounts() {
   }
 }
 
+function updateNavigationBrand() {
+  const logoButton = document.querySelector('[data-testid="logo-button"]');
+  if (!logoButton) return;
+
+  const title = [...logoButton.querySelectorAll("span")].find(
+    (element) => element.textContent?.trim() === "Plex Point",
+  );
+  if (title) title.textContent = "PlexPoint";
+
+  const logo = logoButton.querySelector('img[alt="Plex Point Logo"]');
+  if (logo) logo.alt = "PlexPoint Logo";
+}
+
 async function loadHomepageLibraryCounts() {
   if (plexLibraryCountsRequested) return;
   plexLibraryCountsRequested = true;
@@ -95,19 +108,29 @@ function findHomepageStatusCard() {
   return card || null;
 }
 
+function findPlexLibraryStatusCard() {
+  const library = document.querySelector('[data-testid="plex-collection-section"]');
+  if (!library) return null;
+
+  const card =
+    library.querySelector('[data-testid="library-stat-uptime"]') ||
+    library.querySelector("[data-plex-library-status-card]");
+  if (card) card.dataset.plexLibraryStatusCard = "true";
+  return card || null;
+}
+
 function updateHomepagePlexStatus() {
-  const card = findHomepageStatusCard();
-  if (!card) return;
+  for (const card of [findHomepageStatusCard(), findPlexLibraryStatusCard()].filter(Boolean)) {
+    const textElements = [...card.children].filter((child) => child.matches("div"));
+    const valueElement = textElements.at(-2);
+    const labelElement = textElements.at(-1);
 
-  const textElements = [...card.children].filter((child) => child.matches("div"));
-  const valueElement = textElements.at(-2);
-  const labelElement = textElements.at(-1);
-
-  if (valueElement && valueElement.textContent !== plexStatusState.value) {
-    valueElement.textContent = plexStatusState.value;
-  }
-  if (labelElement && labelElement.textContent !== plexStatusState.label) {
-    labelElement.textContent = plexStatusState.label;
+    if (valueElement && valueElement.textContent !== plexStatusState.value) {
+      valueElement.textContent = plexStatusState.value;
+    }
+    if (labelElement && labelElement.textContent !== plexStatusState.label) {
+      labelElement.textContent = plexStatusState.label;
+    }
   }
 }
 
@@ -725,6 +748,7 @@ document.addEventListener(
 );
 
 function applyEnhancements() {
+  updateNavigationBrand();
   ensurePlexShowsSection();
   addAnimeAccessNotice();
   addRevolutPaymentOption();
