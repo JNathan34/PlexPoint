@@ -142,7 +142,7 @@ async function refreshHomepagePlexStatus() {
     if (statusText.includes("maintenance")) {
       setHomepagePlexStatus("Maintenance", "Plex status");
     } else if (statusText.includes("down") || statusText.includes("offline")) {
-      setHomepagePlexStatus("Maintenance", "Plex status");
+      setHomepagePlexStatus("Offline", "Plex status");
     } else if (statusText.includes("up") || statusText.includes("online")) {
       setHomepagePlexStatus(uptimePercent ? `${uptimePercent}%` : "Online", "Uptime");
     } else if (uptimePercent) {
