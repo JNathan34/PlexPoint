@@ -1,0 +1,39 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile, readdir, stat } from "node:fs/promises";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
+
+const root = fileURLToPath(new URL('../', import.meta.url));
+const output = resolve(root, 'dist');
+async function compare(path) {
+  if ((await stat(resolve(root, path))).isDirectory()) {
+    for (const name of await readdir(resolve(root, path))) await compare(`${path}/${name}`);
+  } else {
+    assert.deepEqual(await readFile(resolve(output, path)), await readFile(resolve(root, path)), path);
+  }
+}
+
+test('the public website is copied byte-for-byte without rewriting its bundle', async () => {
+  for (const path of ['index.html','account','assets','icons','plex-posters','preview-pictures','plex-preview.json',
+    'plexpoint-logo.png','homepage.png','request.jpg','manifest.webmanifest','sw.js','_routes.json']) {
+    await compare(path);
+  }
+});
+
+test('only intended public assets and the generated worker are shipped', async () => {
+  assert.deepEqual((await readdir(output)).sort(), [
+    'index.html','account','assets','icons','plex-posters','preview-pictures','plex-preview.json',
+    'plexpoint-logo.png','homepage.png','request.jpg','manifest.webmanifest','sw.js','_routes.json','_worker.js',
+  ].sort());
+  const entry = resolve(output, '_worker.js/index.js');
+  const syntax = spawnSync(process.execPath, ['--check', entry], { encoding: 'utf8' });
+  assert.equal(syntax.status, 0, syntax.stderr);
+  const worker = await readFile(entry, 'utf8');
+  assert.ok(worker.includes('/api/portal/content'));
+  for (const endpoint of ['anime-movies','anime-shows','collections','counts','featured-collection',
+    'image','movies','sections','shows','status','top-rated']) {
+    assert.ok(worker.includes(`/api/plex/${endpoint}`), `Missing endpoint: ${endpoint}`);
+  }
+});

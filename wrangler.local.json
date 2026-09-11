@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "plexpoint-local",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-08-25",
+  "d1_databases": [
+    {
+      "binding": "PORTAL_DB",
+      "database_name": "plexpoint-local",
+      "database_id": "plexpoint-local",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

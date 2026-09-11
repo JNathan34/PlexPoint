@@ -2,10 +2,18 @@
   "name": "plexpoint-pages-functions",
   "private": true,
   "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "npm run build && node scripts/prepare-local-db.mjs && wrangler pages dev dist --d1=PORTAL_DB=plexpoint-local --compatibility-date=2026-08-25 --persist-to=.wrangler/portal-local",
+    "test": "node --test tests/portal-*.test.mjs",
+    "test:build": "node --test tests/build.verify.mjs",
+    "test:browser": "playwright test"
+  },
   "dependencies": {
     "fast-xml-parser": "^4.5.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "wrangler": "^4.126.0"
   }
 }
