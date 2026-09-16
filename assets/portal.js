@@ -1,7 +1,7 @@
 import "./portal-auth.js";
 import "./portal-navigation.js";
 import { defaultLinks, defaultArticles, supportContact } from "./portal-content.js";
-import { normalizeContent, publicHref, filterArticles, portalRoute, articleBlocks, supportMessage } from "./portal-utils.js";
+import { normalizeContent, publicHref, filterArticles, guideSlug, articleBlocks, supportMessage } from "./portal-utils.js";
 
 const iconPaths = {
   home: ["m3 10 9-7 9 7", "M5 9v12h14V9M9 21v-8h6v8"],
@@ -59,11 +59,9 @@ function serviceCard(link) {
 }
 
 function renderServices() {
-  for (const [id, links] of [["quick-links", content.links.slice(0, 3)], ["service-links", content.links]]) {
-    const container = document.getElementById(id);
-    container.replaceChildren(...links.map(serviceCard));
-    if (!links.length) container.append(element("p", "pp-muted", "No services are currently listed."));
-  }
+  const container = document.getElementById("service-links");
+  container.replaceChildren(...content.links.map(serviceCard));
+  if (!content.links.length) container.append(element("p", "pp-muted", "No services are currently listed."));
 }
 
 async function copyText(text, success, target = announcements) {
@@ -96,7 +94,7 @@ function articleCard(article) {
   shareStatus.setAttribute("role", "status");
   share.addEventListener("click", () => {
     const url = new URL(location.href);
-    url.hash = `help/${article.slug}`;
+    url.hash = `guide-${article.slug}`;
     url.search = "";
     void copyText(url.href, "Guide link copied.", shareStatus);
   });
@@ -129,14 +127,6 @@ function renderCategories() {
   document.getElementById("help-categories").replaceChildren(...buttons);
 }
 
-const pageCopy = {
-  account: ["Account", "Welcome to My PlexPoint.", "Your Plex account. Your services, setup guides and support. All in one familiar place."],
-  overview: ["Overview", "Your PlexPoint, in one place.", "Your services, setup guides and support. Ready when you are."],
-  services: ["Services", "Go straight to the good stuff.", "Open Plex, browse the library and discover your next favourite."],
-  help: ["Help centre", "A little help goes a long way.", "Quick answers and practical guides, from first sign-in to movie night."],
-  support: ["Contact support", "Need a hand? Let’s talk.", "Get help with your membership, your devices or what you’re watching."],
-};
-
 function openGuide(slug, focus = false) {
   const guide = document.getElementById(`guide-${slug}`);
   if (!guide) {
@@ -150,30 +140,12 @@ function openGuide(slug, focus = false) {
   }
 }
 
-function showRoute(focus = false) {
-  if (location.hash === "#portal-main") return;
-  const { view, slug } = portalRoute(location.hash);
-  const [label, title, description] = pageCopy[view];
-  document.body.dataset.portalView = view;
-  document.getElementById(view === "account" ? "account-heading-slot" : "page-heading-slot").append(document.getElementById("page-heading"));
-  const noticeContainer = view === "account" ? document.querySelector(".pp-account-container") : document.getElementById("page-heading-slot");
-  noticeContainer.append(document.getElementById("content-notice"));
-  document.getElementById("breadcrumb").textContent = label;
-  document.getElementById("page-title").textContent = title;
-  document.getElementById("page-description").textContent = description;
-  document.title = `${label} · My PlexPoint`;
-  document.querySelectorAll("[data-panel]").forEach((panel) => { panel.hidden = panel.dataset.panel !== view; });
-  document.querySelectorAll("[data-view]").forEach((link) => {
-    if (link.dataset.view === view) link.setAttribute("aria-current", "page");
-    else link.removeAttribute("aria-current");
-  });
-  if (view === "help" && slug) {
+function openHashGuide(focus = false) {
+  const slug = guideSlug(location.hash);
+  if (slug) {
     query = ""; category = "all"; search.value = "";
     renderArticles();
     openGuide(slug, focus);
-  } else if (focus) {
-    document.getElementById("page-title").focus({ preventScroll: true });
-    window.scrollTo({ top: 0, behavior: "instant" });
   }
 }
 
@@ -181,7 +153,7 @@ search.addEventListener("input", () => { query = search.value; renderArticles();
 document.getElementById("clear-search").addEventListener("click", () => {
   query = ""; category = "all"; search.value = ""; renderArticles(); search.focus();
 });
-window.addEventListener("hashchange", () => showRoute(true));
+window.addEventListener("hashchange", () => openHashGuide(true));
 
 async function refreshContent() {
   if (loading) return;
@@ -199,8 +171,7 @@ async function refreshContent() {
     if (JSON.stringify(updated) !== JSON.stringify(content)) {
       content = updated;
       renderServices(); renderCategories(); renderArticles();
-      const route = portalRoute(location.hash);
-      if (route.slug) openGuide(route.slug);
+      openHashGuide();
     }
     document.getElementById("content-notice").hidden = true;
   } catch {
@@ -253,5 +224,5 @@ document.getElementById("copy-support").addEventListener("click", () => {
 renderServices();
 renderCategories();
 renderArticles();
-showRoute();
+openHashGuide(true);
 void refreshContent();

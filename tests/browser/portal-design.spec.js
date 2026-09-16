@@ -76,7 +76,7 @@ for (const width of [320, 390]) {
   });
 }
 
-test("mobile navigation supports keyboard opening, Escape, route changes and resizing", async ({ page }) => {
+test("mobile main-site navigation supports keyboard opening, Escape and resizing", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/account/");
   const toggle = page.locator("#portal-menu-toggle");
@@ -89,27 +89,23 @@ test("mobile navigation supports keyboard opening, Escape, route changes and res
   await expect(toggle).toBeFocused();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
   await toggle.click();
-  await page.locator('[data-view="help"]').click();
+  await page.getByRole("navigation", { name: "Main website navigation" }).getByRole("link", { name: "Account", exact: true }).click();
   await expect(page.locator("#portal-navigation")).toBeHidden();
-  await expect(page.locator("h1")).toHaveText("A little help goes a long way.");
-  await expect(page.locator("h1")).toBeFocused();
+  await expect(page.locator("h1")).toHaveText("Welcome to My PlexPoint.");
   await toggle.click();
   await page.setViewportSize({ width: 1440, height: 900 });
   await expect(toggle).toBeHidden();
   await expect(page.locator("#portal-navigation")).toBeVisible();
-  await page.locator('[data-view="account"]').click();
   await expect(page.locator("#account-heading-slot h1")).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.locator("#portal-navigation")).toBeHidden();
 });
 
-test("content failure notices stay below the header when switching between landing and help", async ({ page }) => {
+test("content failure notices stay below the account hero without hiding the guides", async ({ page }) => {
   await page.route("**/api/portal/content", (route) => route.fulfill({ status: 503, json: { message: "Unavailable" } }));
   await page.goto("/account/");
-  await expect(page.locator(".pp-account-container > #content-notice")).toBeVisible();
+  await expect(page.locator("#content-notice")).toBeVisible();
   await expect(page.locator("#plex-sign-in")).toBeEnabled();
-  await page.locator('[data-view="help"]').click();
-  await expect(page.locator("#page-heading-slot > #content-notice")).toBeVisible();
   const notice = await page.locator("#content-notice").boundingBox();
   const header = await page.locator(".pp-site-header").boundingBox();
   expect(notice.y).toBeGreaterThanOrEqual(header.y + header.height);

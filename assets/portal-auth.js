@@ -65,7 +65,6 @@ function renderUser(next) {
   if (user) byId("email-option").open = false;
   byId("auth-guest").hidden = Boolean(user);
   byId("auth-user").hidden = !user;
-  byId("account-link").textContent = user ? "My account" : "Sign in";
   byId("activity-panel").hidden = !user;
   byId("billing-panel").hidden = !user;
   byId("admin-panel").hidden = !user?.isAdmin;

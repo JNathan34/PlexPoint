@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/assets/portal.css" />
     <script type="module" src="/assets/portal.js"></script>
   </head>
-  <body class="pp-portal" data-portal-view="account">
+  <body class="pp-portal">
     <a class="pp-skip" href="#portal-main">Skip to content</a>
     <div class="pp-layout">
       <header class="pp-site-header">
@@ -25,51 +25,24 @@
           <img src="/plexpoint-logo.png" alt="" width="42" height="42" />
           <span>Plex Point</span>
         </a>
-        <nav id="portal-navigation" class="pp-navigation glass" aria-label="Portal navigation">
-          <a href="#overview" data-view="overview"><span data-icon="home"></span>Overview</a>
-          <a href="#account" data-view="account" aria-current="page"><span data-icon="membership"></span>Account</a>
-          <a href="#services" data-view="services"><span data-icon="grid"></span>Services</a>
-          <a href="#help" data-view="help"><span data-icon="book"></span>Help centre</a>
-          <a href="#support" data-view="support"><span data-icon="message"></span>Contact support</a>
+        <nav id="portal-navigation" class="pp-navigation glass" aria-label="Main website navigation">
+          <a href="/"><span data-icon="home"></span>Home</a>
+          <a href="/#membership"><span data-icon="membership"></span>Membership</a>
+          <a href="/#addons"><span data-icon="grid"></span>Add-ons</a>
+          <a href="/#requests"><span data-icon="search"></span>Requests</a>
+          <a href="/#tutorials"><span data-icon="book"></span>Tutorials</a>
+          <a href="/account/" aria-current="page"><span data-icon="membership"></span>Account</a>
         </nav>
-        <a class="pp-home-button pp-button pp-button-primary" href="/">Main website <span aria-hidden="true">↗</span></a>
         <button id="portal-menu-toggle" class="pp-menu-toggle" type="button" aria-controls="portal-navigation" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path class="pp-menu-bars" d="M4 6h16M4 12h16M4 18h16" /><path class="pp-menu-close" d="m6 6 12 12M6 18 18 6" /></svg></button>
         </div>
       </header>
       <div class="pp-main-wrap">
-        <header class="pp-topbar">
-          <span>MY PLEXPOINT <span class="pp-topbar-separator">/</span> <span id="breadcrumb">Account</span></span>
-          <a id="account-link" class="pp-badge" href="#account">Sign in</a>
-        </header>
         <main id="portal-main" tabindex="-1">
-          <div id="page-heading-slot" class="container"><div id="page-heading" class="pp-page-heading"><h1 id="page-title" tabindex="-1">Welcome to My PlexPoint.</h1><p id="page-description">Your Plex account. Your services, setup guides and support. All in one familiar place.</p></div></div>
-          <div id="content-notice" class="pp-content-notice" role="status" hidden><span id="content-notice-text"></span><button id="retry-content" type="button">Try again</button></div>
-
-          <section class="container" data-panel="overview" aria-label="Account overview" hidden>
-            <div class="pp-hero">
-              <div><span class="pp-badge">MAKE YOURSELF AT HOME</span><h2>Everything you need.<br /><span>One familiar place.</span></h2><p>Jump into Plex, find something new, or get a hand setting things up.</p><div class="pp-actions"><a class="pp-button pp-button-primary" href="#services"><span data-icon="play"></span>Explore services</a><a class="pp-button" href="#help">Get set up <span aria-hidden="true">→</span></a></div></div>
-              <img class="pp-overview-preview" src="/preview-pictures/desktop-library.DZI9fyUp.avif" alt="PlexPoint library preview" width="1170" height="731" loading="lazy" />
-            </div>
-            <div class="pp-section-heading"><h2>Your account at a glance</h2><span class="pp-muted">Not connected</span></div>
-            <div class="pp-metrics">
-              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="membership"></span><h3>Current subscription</h3><strong id="overview-plan">Sign in to view</strong><p id="overview-plan-note">Your current plan and access status appear here.</p></article>
-              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="clock"></span><h3>Next payment</h3><strong id="overview-renewal">Sign in to view</strong><p id="overview-renewal-note">See when your next payment is due.</p></article>
-              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="payment"></span><h3>Payment status</h3><strong id="overview-payment">Sign in to view</strong><p id="overview-payment-note">Your latest confirmed payment appears here.</p></article>
-              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="film"></span><h3>Watch time</h3><strong id="overview-watch-time">Sign in to view</strong><p id="overview-watch-time-note">Your selected activity period appears here.</p></article>
-            </div>
-            <div class="pp-section-heading"><h2>Go straight to the good stuff</h2><a href="#services">All services <span aria-hidden="true">→</span></a></div>
-            <div id="quick-links" class="pp-services-grid" aria-label="Quick links"></div>
-            <div class="pp-lower-grid">
-              <section class="pp-card glass-card pp-activity"><div class="pp-section-heading"><h2>Recently watched</h2><span class="pp-pill">Plex activity</span></div><div class="pp-empty"><span class="pp-empty-icon" data-icon="film"></span><h3>Your watch history belongs here.</h3><p>Recent movies, shows and viewing time will appear after your account and Plex activity are connected.</p><a class="pp-text-link" href="#services">Open your services →</a></div></section>
-              <section class="pp-card glass-card pp-start"><p class="pp-eyebrow">FIRST TIME HERE?</p><h2>Let’s get you watching.</h2><ol><li><a href="#help/install-plex"><span>01</span><div>Install Plex<small>Find the application for your device.</small></div><span aria-hidden="true">↗</span></a></li><li><a href="#help/sign-in-to-plex"><span>02</span><div>Sign in to Plex<small>Connect the account with your invitation.</small></div><span aria-hidden="true">↗</span></a></li><li><a href="#help/request-content"><span>03</span><div>Find your next favourite<small>Learn how content requests work.</small></div><span aria-hidden="true">↗</span></a></li></ol></section>
-            </div>
-          </section>
-
-          <section data-panel="account" class="pp-account-hero hero-section" aria-label="Your account">
+          <section id="account" class="pp-account-hero hero-section" aria-label="Your account">
             <div class="pp-account-backdrop hero-backdrop" aria-hidden="true"><img src="/homepage.png" alt="" decoding="async" /><div></div></div>
             <div class="container pp-account-container"><div class="pp-auth-grid">
               <div class="pp-auth-intro">
-                <div id="account-heading-slot"></div>
+                <div id="account-heading-slot"><div id="page-heading" class="pp-page-heading"><h1 id="page-title" tabindex="-1">Welcome to My PlexPoint.</h1><p id="page-description">Your account, membership, Plex activity, services and support—all together on one page.</p></div></div>
                 <div class="pp-card glass-card pp-auth-card">
                 <p id="auth-status" role="status" tabindex="-1">Checking your session…</p>
                 <button id="auth-retry" type="button" class="pp-button" hidden>Retry connection</button>
@@ -95,7 +68,7 @@
                 </div>
                 <div id="auth-user" hidden>
                   <span class="pp-badge">WELCOME BACK</span><h2 id="auth-user-name"></h2><p id="auth-user-email"></p><p id="auth-user-since" class="pp-small"></p>
-                  <div class="pp-actions"><a href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer" class="pp-button pp-button-primary">Open Overseerr ↗</a><a href="#overview" class="pp-button">Go to overview →</a><button id="auth-logout" type="button" class="pp-button">Sign out</button></div>
+                  <div class="pp-actions"><a href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer" class="pp-button pp-button-primary">Open Overseerr ↗</a><a href="#billing-panel" class="pp-button">View membership →</a><button id="auth-logout" type="button" class="pp-button">Sign out</button></div>
                 </div>
                 </div>
               </div>
@@ -105,13 +78,23 @@
                 <div class="hero-device-showcase__tablet"><img src="/preview-pictures/tablet-library.DoKL6xiL.avif" alt="PlexPoint tablet library preview" width="1280" height="800" decoding="async" /></div>
                 <div class="hero-device-showcase__phone"><img src="/preview-pictures/phone-home.SM7zECzK.avif" alt="PlexPoint phone home preview" width="540" height="1212" decoding="async" /></div>
               </div>
-            </div>
+            </div></div>
+          </section>
+          <div id="content-notice" class="pp-content-notice" role="status" hidden><span id="content-notice-text"></span><button id="retry-content" type="button">Try again</button></div>
+          <section id="dashboard" class="container pp-account-dashboard" aria-label="Account dashboard">
             <nav class="pp-account-shortcuts" aria-label="Explore PlexPoint">
               <a class="pp-card glass-card" href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer"><span data-icon="search"></span><div><strong>Request on Overseerr</strong><p>Ask for a movie or show.</p></div><span aria-hidden="true">↗</span></a>
               <a class="pp-card glass-card" href="/movies"><span data-icon="film"></span><div><strong>Browse the library</strong><p>Find your next movie night.</p></div><span aria-hidden="true">→</span></a>
               <a class="pp-card glass-card" href="#help"><span data-icon="book"></span><div><strong>Get set up</strong><p>Guides for every device.</p></div><span aria-hidden="true">→</span></a>
               <a class="pp-card glass-card" href="#support"><span data-icon="message"></span><div><strong>Need a hand?</strong><p>Get in touch with Jacob.</p></div><span aria-hidden="true">→</span></a>
             </nav>
+            <div class="pp-section-heading"><div><p class="pp-eyebrow">YOUR ACCOUNT</p><h2>Everything at a glance</h2></div></div>
+            <div class="pp-metrics">
+              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="membership"></span><h3>Current subscription</h3><strong id="overview-plan">Sign in to view</strong><p id="overview-plan-note">Your current plan and access status appear here.</p></article>
+              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="clock"></span><h3>Next payment</h3><strong id="overview-renewal">Sign in to view</strong><p id="overview-renewal-note">See when your next payment is due.</p></article>
+              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="payment"></span><h3>Payment status</h3><strong id="overview-payment">Sign in to view</strong><p id="overview-payment-note">Your latest confirmed payment appears here.</p></article>
+              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="film"></span><h3>Watch time</h3><strong id="overview-watch-time">Sign in to view</strong><p id="overview-watch-time-note">Your selected activity period appears here.</p></article>
+            </div>
             <section id="billing-panel" class="pp-card glass-card pp-billing-panel" aria-labelledby="billing-heading" hidden>
               <div class="pp-billing-heading"><div><span class="pp-badge">MEMBERSHIP</span><h2 id="billing-heading">Your plan and payments</h2><p>Your membership is managed manually. No card or bank details are stored here.</p></div><span id="billing-state" class="pp-billing-state" data-status="none">No plan</span></div>
               <p id="billing-status" class="pp-small" role="status"></p><button id="billing-retry" type="button" class="pp-button" hidden>Retry membership</button>
@@ -160,12 +143,13 @@
                   <div class="pp-payment-history"><h4>Payment history</h4><div class="pp-admin-table-wrap"><table class="pp-admin-table"><thead><tr><th scope="col">Date</th><th scope="col">Amount</th><th scope="col">Method</th><th scope="col">Reference</th><th scope="col">Status</th><th scope="col"><span class="pp-sr-only">Actions</span></th></tr></thead><tbody id="admin-billing-payments"></tbody></table></div></div>
                 </div>
               </section>
-            </section></div>
+            </section>
           </section>
 
-          <section class="container" data-panel="services" aria-label="Services" hidden><div id="service-links" class="pp-services-grid"></div><div class="pp-card glass-card pp-inline-help"><div><h2>Not sure where to start?</h2><p>The help centre walks you through installation, sign-in and requests.</p></div><a class="pp-button" href="#help">Browse guides →</a></div></section>
+          <section id="services" class="container pp-content-section" aria-labelledby="services-heading"><div class="pp-content-heading"><p class="pp-eyebrow">PLEXPOINT SERVICES</p><h2 id="services-heading">Open what you need</h2><p>Plex, requests and the full library are one tap away.</p></div><div id="service-links" class="pp-services-grid"></div><div class="pp-card glass-card pp-inline-help"><div><h2>Not sure where to start?</h2><p>The setup guides below cover installation, sign-in and requests.</p></div><a class="pp-button" href="#help">Browse guides →</a></div></section>
 
-          <section class="container" data-panel="help" aria-label="Help centre" hidden>
+          <section id="help" class="container pp-content-section" aria-labelledby="help-heading">
+            <div class="pp-content-heading"><p class="pp-eyebrow">HELP &amp; SETUP</p><h2 id="help-heading">Quick answers when you need them</h2><p>Search the guides without leaving your account page.</p></div>
             <div class="pp-card glass-card pp-search-box"><label for="help-search">What can we help you with?</label><div class="pp-search-input"><span data-icon="search"></span><input id="help-search" type="search" placeholder="Try buffering, TV setup, payment…" maxlength="200" autocomplete="off" /></div><div id="help-categories" class="pp-categories" aria-label="Filter guides by category"></div></div>
             <p id="help-count" class="pp-result-count" role="status"></p>
             <div id="help-articles" class="pp-articles"></div>
@@ -173,12 +157,13 @@
             <div class="pp-card glass-card pp-inline-help"><div><h2>Still need a hand?</h2><p>Send Jacob a message with the details of the problem.</p></div><a class="pp-button" href="#support">Contact support →</a></div>
           </section>
 
-          <section class="container" data-panel="support" aria-label="Contact support" hidden>
+          <section id="support" class="container pp-content-section" aria-labelledby="support-heading">
+            <div class="pp-content-heading"><p class="pp-eyebrow">CONTACT SUPPORT</p><h2 id="support-heading">Need a hand?</h2><p>Send Jacob the details and keep everything in one place.</p></div>
             <div class="pp-support-grid"><div><div class="pp-card glass-card pp-support-card"><span class="pp-icon-tile" data-icon="message"></span><h2>A real person, ready to help.</h2><p>Contact Jacob for help with Plex, library access, requests or your membership.</p><a id="support-whatsapp" class="pp-button pp-button-primary">Open WhatsApp ↗</a><a id="support-email" class="pp-button">Open email ↗</a><p class="pp-small">These links open your messaging application. This portal does not submit or store support tickets.</p></div><div class="pp-card glass-card pp-support-tip"><h3>Make it easy to investigate</h3><p>Include the title or episode, your device and any error message. Never include passwords or payment card details.</p><a class="pp-text-link" href="#help/playback-help">Try the playback checklist →</a></div></div>
             <form id="support-form" class="pp-card glass-card pp-support-form"><p class="pp-eyebrow">SAVE A LITTLE BACK-AND-FORTH</p><h2>Prepare a support message</h2><p>Fill this in, then choose email or copy the message to send yourself.</p><label for="support-topic">What do you need help with?</label><select id="support-topic" name="topic"><option>Plex setup</option><option>Playback problem</option><option>Missing library access</option><option>Content request</option><option>Payment or renewal</option><option>Something else</option></select><label for="support-device">Device <span class="pp-muted">(optional)</span></label><input id="support-device" name="device" type="text" maxlength="120" placeholder="For example, Samsung TV or iPhone" /><label for="support-details">What is happening?</label><textarea id="support-details" name="details" rows="6" minlength="10" maxlength="1200" required placeholder="Describe the problem and anything you have already tried."></textarea><div class="pp-actions"><button type="submit" class="pp-button pp-button-primary">Prepare email <span aria-hidden="true">→</span></button><button type="button" id="copy-support" class="pp-button">Copy message</button></div><div id="prepared-email" class="pp-prepared-email" hidden><p>Your message is ready. Open it in your email application and review it before sending.</p><a id="prepared-email-link" class="pp-text-link">Open prepared email →</a></div><p id="support-status" class="pp-small" role="status"></p></form></div>
           </section>
           <div class="container pp-notice-wrap"><div class="pp-notice" role="note"><span data-icon="info"></span><p><strong>Sign in with Plex. Keep your existing library access.</strong> Signing in does not purchase a subscription or grant new library access. Membership and payment records shown here are maintained manually by Jacob.</p></div></div>
-          <footer class="pp-footer container"><a class="pp-footer-brand" href="/"><img src="/plexpoint-logo.png" width="28" height="28" alt="" />Plex Point</a><span>A better place to press play.</span><div><a href="/privacy-policy">Privacy</a><a href="/terms-of-service">Terms</a><a href="/">Main website ↗</a></div></footer>
+          <footer class="pp-footer container"><a class="pp-footer-brand" href="/"><img src="/plexpoint-logo.png" width="28" height="28" alt="" />Plex Point</a><span>A better place to press play.</span><div><a href="/">Home</a><a href="/privacy-policy">Privacy</a><a href="/terms-of-service">Terms</a></div></footer>
         </main>
       </div>
     </div>

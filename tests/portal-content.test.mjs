@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
 import { defaultLinks, defaultArticles } from "../assets/portal-content.js";
-import { publicHref, normalizeContent, filterArticles, portalRoute, articleBlocks, supportMessage } from "../assets/portal-utils.js";
+import { publicHref, normalizeContent, filterArticles, guideSlug, articleBlocks, supportMessage } from "../assets/portal-utils.js";
 import { loadPublicContent, publicContentResponse } from "../shared/portal/content.js";
 
 function database(t) {
@@ -33,13 +33,10 @@ test('search matches all words across title, summary, category and body', () => 
   assert.equal(filterArticles(defaultArticles, 'definitely-no-such-guide').length, 0);
 });
 
-test('routes support shared guides and reject unknown views or malformed slugs', () => {
-  assert.deepEqual(portalRoute('#help/install-plex'), { view: 'help', slug: 'install-plex' });
-  assert.deepEqual(portalRoute('#support'), { view: 'support', slug: null });
-  assert.deepEqual(portalRoute('#unknown'), { view: 'overview', slug: null });
-  assert.deepEqual(portalRoute('#help/%broken'), { view: 'help', slug: null });
-  assert.deepEqual(portalRoute(''), { view: 'account', slug: null });
-  assert.deepEqual(portalRoute('#'), { view: 'account', slug: null });
+test('single-page guide links support current and legacy hashes safely', () => {
+  assert.equal(guideSlug('#guide-install-plex'), 'install-plex');
+  assert.equal(guideSlug('#help/install-plex'), 'install-plex');
+  for (const hash of ['#support', '#unknown', '#help/%broken', '', '#', null]) assert.equal(guideSlug(hash), null);
 });
 
 test('service addresses accept HTTPS or local paths', () => {

@@ -11,28 +11,28 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test('overview distinguishes portal accounts from Plex access and links to real services', async ({ page }) => {
+test('the account, membership and services share one continuous page', async ({ page }) => {
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('/account/#overview');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Your PlexPoint, in one place.');
+  await page.goto('/account/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to My PlexPoint.');
   await expect(page.getByText('Sign in with Plex. Keep your existing library access.', { exact: true })).toBeVisible();
   await expect(page.locator('.pp-metric > strong')).toHaveText(['Sign in to view', 'Sign in to view', 'Sign in to view', 'Sign in to view']);
-  await expect(page.locator('#quick-links > a')).toHaveCount(3);
-  await expect(page.locator('#quick-links > a').first()).toHaveAttribute('href', 'https://app.plex.tv/');
-  await expect(page.locator('#quick-links > a').first()).toHaveAttribute('rel', 'noopener noreferrer');
+  await expect(page.locator('#service-links > a')).toHaveCount(5);
+  await expect(page.locator('#service-links > a').first()).toHaveAttribute('href', 'https://app.plex.tv/');
+  await expect(page.locator('#service-links > a').first()).toHaveAttribute('rel', 'noopener noreferrer');
+  for (const id of ['account', 'dashboard', 'services', 'help', 'support']) await expect(page.locator(`#${id}`)).toBeVisible();
   expect(errors).toEqual([]);
 });
 
-test('services navigation, deep links and back navigation work', async ({ page }) => {
+test('main-site navigation, legacy guide links and back navigation work', async ({ page }) => {
   await page.goto('/account/');
-  await page.getByRole('navigation', { name: 'Portal navigation' }).getByRole('link', { name: 'Services', exact: true }).click();
-  await expect(page.locator('#service-links > a')).toHaveCount(5);
-  await expect(page.locator('[data-panel="overview"]')).toBeHidden();
-  await expect(page.locator('[data-view="services"]')).toHaveAttribute('aria-current', 'page');
+  const navigation = page.getByRole('navigation', { name: 'Main website navigation' });
+  await expect(navigation.getByRole('link', { name: 'Account', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect(navigation.getByRole('link', { name: 'Membership', exact: true })).toHaveAttribute('href', '/#membership');
   await page.goto('/account/#help/request-content');
   await expect(page.locator('#guide-request-content')).toHaveAttribute('open', '');
-  await page.getByRole('link', { name: 'Contact support', exact: true }).click();
+  await page.locator('a[href="#support"]').last().click();
   await expect(page.locator('#support-form')).toBeVisible();
   await page.goBack();
   await expect(page.locator('#guide-request-content')).toHaveAttribute('open', '');
@@ -62,7 +62,7 @@ test('guide accordions work with the keyboard and guide links copy', async ({ pa
   await page.getByRole('button', { name: 'Copy guide link' }).first().click();
   await expect(page.getByText('Guide link copied.', { exact: true })).toBeVisible();
   const text = await page.evaluate(() => navigator.clipboard.readText());
-  expect(text).toBe('http://127.0.0.1:8791/account/#help/install-plex');
+  expect(text).toBe('http://127.0.0.1:8791/account/#guide-install-plex');
 });
 
 test('support prepares an email without sending anything, and clears stale drafts', async ({ page }) => {
@@ -106,7 +106,7 @@ test('content failure keeps built-in guides available and supports retry', async
 });
 
 test('a missing shared guide gives a clear message', async ({ page }) => {
-  await page.goto('/account/#help/not-a-guide');
+  await page.goto('/account/#guide-not-a-guide');
   await expect(page.locator('#help-count')).toContainText('That guide is not available.');
 });
 
@@ -114,7 +114,7 @@ test('server-managed empty content stays empty', async ({ page }) => {
   await page.route('**/api/portal/content', (route) => route.fulfill({ json: { links: [], articles: [] } }));
   await page.goto('/account/#services');
   await expect(page.locator('#service-links')).toHaveText('No services are currently listed.');
-  await page.getByRole('link', { name: 'Help centre', exact: true }).click();
+  await page.locator('#help').scrollIntoViewIfNeeded();
   await expect(page.locator('#help-empty')).toBeVisible();
 });
 
@@ -122,12 +122,11 @@ for (const width of [360, 768, 1440]) {
   test(`portal has no horizontal overflow at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/account/');
-    for (const view of ['overview', 'account', 'services', 'help', 'support']) {
-      if (width < 768) await page.getByRole('button', { name: 'Open navigation' }).click();
-      await page.locator(`[data-view="${view}"]`).click();
+    for (const section of ['account', 'dashboard', 'services', 'help', 'support']) {
+      await page.locator(`#${section}`).scrollIntoViewIfNeeded();
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-      await expect(page.locator('h1')).toBeVisible();
     }
+    await expect(page.locator('h1')).toHaveCount(1);
   });
 }
 

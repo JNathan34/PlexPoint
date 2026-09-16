@@ -75,9 +75,8 @@ test("unavailable service offers retry and leaves public guides usable", async (
   await page.goto("/account/#account");
   await expect(page.locator("#auth-status")).toContainText("temporarily unavailable");
   await expect(page.locator("#auth-submit")).toBeDisabled();
-  await page.locator('[data-view="help"]').click();
+  await page.locator("#help").scrollIntoViewIfNeeded();
   await expect(page.locator("#help-articles details")).toHaveCount(6);
-  await page.locator('[data-view="account"]').click();
   unavailable = false;
   await page.getByRole("button", { name: "Retry connection" }).click();
   await expect(page.locator("#auth-submit")).toBeEnabled();
@@ -160,7 +159,6 @@ test("members can see their plan, payment due state and confirmed payment histor
   await expect(page.locator("#billing-state")).toHaveText("Overdue");
   await expect(page.locator("#billing-balance")).toContainText("£3.00 outstanding");
   await expect(page.locator("#billing-payments tr")).toHaveCount(1);
-  await page.locator('[data-view="overview"]').click();
   await expect(page.locator("#overview-plan")).toHaveText("Gold Tier");
   await expect(page.locator("#overview-payment")).toHaveText("Overdue");
 });

@@ -40,11 +40,10 @@ export function filterArticles(articles, query = "", category = "all") {
   });
 }
 
-export function portalRoute(hash) {
-  if (!hash || hash === "#") return { view: "account", slug: null };
-  const [view = "overview", slug] = hash.replace(/^#/, "").split("/");
-  if (!["overview", "account", "services", "help", "support"].includes(view)) return { view: "overview", slug: null };
-  return { view, slug: view === "help" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug || "") ? slug : null };
+export function guideSlug(hash) {
+  if (typeof hash !== "string") return null;
+  const match = /^#(?:help\/|guide-)([a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(hash);
+  return match ? match[1] : null;
 }
 
 // Deliberately small Markdown subset: headings, lists and paragraphs. No raw HTML.

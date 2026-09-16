@@ -36,18 +36,15 @@
 .pp-portal main { max-width: none; margin: 0; padding: 0; }
 .pp-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; max-width: 1280px; padding: 112px 16px 12px; margin: auto; font-size: 12px; color: var(--muted-foreground); }
 .pp-topbar-separator { margin-inline: 10px; opacity: .5; }
-[data-portal-view="account"] .pp-topbar { display: none; }
-#page-heading-slot { padding-inline: 16px; }
-#page-heading-slot:empty { display: none; }
 .pp-page-heading { margin: 24px 0 32px; }
 .pp-page-heading h1 { font-size: 40px; font-weight: 600; line-height: 1.15; letter-spacing: normal; }
 .pp-page-heading > p { font-size: 16px; line-height: 28px; margin-top: 16px; max-width: 672px; }
-.pp-portal [data-panel]:not([data-panel="account"]) { padding-inline: 16px; }
 .pp-account-hero { position: relative; isolation: isolate; min-height: 92vh; padding-top: 96px; overflow: clip; }
 .pp-account-backdrop { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 .pp-account-backdrop > img { width: 100%; height: 100%; object-fit: cover; opacity: .25; }
 .pp-account-backdrop > div { position: absolute; inset: 0; background: linear-gradient(90deg, hsl(222,34%,5%) 0%, hsla(222,34%,5%,.9) 36%, hsla(222,34%,5%,.55) 100%); }
 .pp-account-container { padding: 64px 16px; }
+.pp-account-dashboard { padding: 48px 16px 0; scroll-margin-top: 96px; }
 .pp-auth-grid { display: grid; grid-template-columns: .95fr 1.05fr; align-items: center; gap: 40px; min-height: calc(92vh - 9rem); }
 .pp-auth-intro { min-width: 0; max-width: 768px; transform: translateY(-40px); }
 .pp-auth-intro .pp-page-heading { margin: 0 0 32px; }
@@ -95,6 +92,10 @@
 .pp-account-shortcuts > a > span:last-child { margin-left: auto; color: var(--muted-foreground); }
 .pp-account-shortcuts strong { font-size: 15px; font-weight: 600; }
 .pp-account-shortcuts p { font-size: 13px; margin-top: 4px; }
+.pp-content-section { padding: 80px 16px 0; scroll-margin-top: 84px; }
+.pp-content-heading { max-width: 720px; margin-bottom: 24px; }
+.pp-content-heading h2 { margin-top: 8px; color: #fff; font-size: 30px; line-height: 1.2; font-weight: 600; }
+.pp-content-heading > p:last-child { margin-top: 10px; font-size: 15px; line-height: 1.7; }
 .pp-viewing-panel { margin-top: 24px; padding: 28px; }
 .pp-viewing-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
 .pp-viewing-heading h2 { margin-top: 12px; font-size: 24px; }
@@ -257,8 +258,6 @@
 .pp-prepared-email p { margin-bottom: 12px; font-size: 14px; }
 .pp-content-notice { display: flex; align-items: center; justify-content: space-between; gap: 12px; max-width: 1248px; margin: 0 auto 24px; padding: 0 16px; color: #e4b986; font-size: 13px; }
 .pp-content-notice button { min-height: 44px; padding: 8px 12px; border: 1px solid #e4b98640; border-radius: 8px; white-space: nowrap; }
-.pp-account-container > .pp-content-notice { margin: 24px 0 0; padding: 0; }
-#page-heading-slot > .pp-content-notice { padding-inline: 0; }
 .pp-notice-wrap { padding: 0 16px; margin-top: 32px; }
 .pp-notice { display: flex; align-items: flex-start; gap: 12px; padding: 20px; border: 1px solid var(--border); border-radius: 16px; background: #ffffff02; }
 .pp-notice > span { color: var(--muted-foreground); flex-shrink: 0; margin-top: 2px; }
@@ -304,6 +303,7 @@
   .pp-navigation a > span { display: block; margin-right: 12px; }
   .pp-navigation a[aria-current="page"] { color: var(--primary); background: #ff7b001a; }
   .pp-account-container { padding-top: 32px; padding-bottom: 48px; }
+  .pp-account-dashboard { padding-top: 32px; }
   .pp-auth-intro h1 { font-size: 48px; line-height: 1; }
   .pp-auth-intro .pp-page-heading > p { font-size: 16px; }
   .pp-account-shortcuts { grid-template-columns: 1fr; gap: 12px; margin-top: 24px; }
@@ -322,6 +322,8 @@
   .pp-admin-editor-heading { flex-direction: column; }
   .pp-form-grid { grid-template-columns: 1fr; }
   .pp-page-heading h1 { font-size: 32px; }
+  .pp-content-section { padding-top: 56px; }
+  .pp-content-heading h2 { font-size: 25px; }
   .pp-services-grid, .pp-lower-grid, .pp-support-grid { grid-template-columns: 1fr; }
   .pp-hero { grid-template-columns: 1fr; padding: 24px; }
   .pp-overview-preview { display: none; }
