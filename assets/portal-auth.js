@@ -9,6 +9,8 @@ let busy = false;
 let available = false;
 let plexPending = false;
 let adminBusy = false;
+let activityBusy = false;
+let activityRange = "7";
 const returnUrl = new URL(location.href);
 let plexReturning = returnUrl.searchParams.get("plex") === "return";
 if (plexReturning) {
@@ -29,6 +31,8 @@ function controls() {
   for (const id of ["auth-retry", "plex-check", "plex-cancel"]) byId(id).disabled = busy;
   byId("plex-sign-in").disabled = busy || !available || plexPending;
   byId("admin-retry").disabled = adminBusy;
+  byId("activity-retry").disabled = activityBusy;
+  for (const button of byId("activity-range").querySelectorAll("button")) button.disabled = activityBusy || !user;
   byId("plex-pending").hidden = !plexPending;
   form.setAttribute("aria-busy", String(busy));
   byId("auth-submit").textContent = busy ? "Please wait…" : mode === "register" ? "Create account" : "Sign in";
@@ -50,6 +54,7 @@ function renderUser(next) {
   byId("auth-guest").hidden = Boolean(user);
   byId("auth-user").hidden = !user;
   byId("account-link").textContent = user ? "My account" : "Sign in";
+  byId("activity-panel").hidden = !user;
   byId("admin-panel").hidden = !user?.isAdmin;
   if (user) {
     byId("auth-user-name").textContent = user.displayName;
@@ -60,6 +65,101 @@ function renderUser(next) {
     byId("admin-users").replaceChildren();
     byId("admin-table-wrap").hidden = true;
     byId("admin-status").textContent = "";
+    byId("activity-results").hidden = true;
+    byId("activity-status").textContent = "";
+    byId("popular-movies").replaceChildren();
+    byId("popular-shows").replaceChildren();
+    byId("overview-watch-time").textContent = "Sign in to view";
+    byId("overview-watch-time-note").textContent = "Your selected activity period appears here.";
+  }
+}
+
+function durationText(seconds) {
+  const total = Math.max(0, Number(seconds) || 0);
+  if (total < 3600) return `${Math.floor(total / 60)}m`;
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  return `${hours}h${minutes ? ` ${minutes}m` : ""}`;
+}
+
+function renderPopular(target, items) {
+  const rows = items.map((item, index) => {
+    const row = document.createElement("li");
+    const rank = document.createElement("span");
+    rank.className = "pp-popular-rank";
+    rank.textContent = String(index + 1).padStart(2, "0");
+    const details = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = item.title;
+    details.append(title);
+    if (item.year) {
+      const year = document.createElement("small");
+      year.textContent = String(item.year);
+      details.append(year);
+    }
+    const metric = document.createElement("small");
+    metric.textContent = item.viewers ? `${item.viewers} viewer${item.viewers === 1 ? "" : "s"}` : `${item.plays} play${item.plays === 1 ? "" : "s"}`;
+    row.append(rank, details, metric);
+    return row;
+  });
+  if (!rows.length) {
+    const empty = document.createElement("li");
+    empty.className = "pp-popular-empty";
+    empty.textContent = "Nothing watched in this period yet.";
+    rows.push(empty);
+  }
+  byId(target).replaceChildren(...rows);
+}
+
+function renderActivity(data) {
+  if (!Array.isArray(data?.popularMovies) || !Array.isArray(data?.popularShows) || typeof data.periodLabel !== "string") {
+    throw new Error("Viewing activity returned an unexpected response.");
+  }
+  renderPopular("popular-movies", data.popularMovies);
+  renderPopular("popular-shows", data.popularShows);
+  const hasWatchTime = data.watchTime && Number.isFinite(Number(data.watchTime.seconds));
+  const watchText = hasWatchTime ? durationText(data.watchTime.seconds) : "Not linked";
+  const watchNote = hasWatchTime
+    ? `${data.watchTime.plays} play${data.watchTime.plays === 1 ? "" : "s"} · ${data.periodLabel}`
+    : "Personal watch time is not linked to this account.";
+  byId("activity-watch-time").textContent = watchText;
+  byId("activity-watch-count").textContent = watchNote;
+  byId("overview-watch-time").textContent = watchText;
+  byId("overview-watch-time-note").textContent = hasWatchTime ? data.periodLabel : watchNote;
+  byId("activity-status").textContent = hasWatchTime ? "" : watchNote;
+  byId("activity-status").dataset.error = "false";
+  byId("activity-results").hidden = false;
+}
+
+async function loadActivity(range = activityRange) {
+  if (!user || activityBusy || !["1", "7", "30", "0"].includes(range)) return;
+  activityRange = range;
+  for (const button of byId("activity-range").querySelectorAll("button")) {
+    button.setAttribute("aria-pressed", String(button.dataset.range === activityRange));
+  }
+  const userId = user.id;
+  activityBusy = true;
+  byId("activity-panel").setAttribute("aria-busy", "true");
+  byId("activity-status").textContent = "Loading viewing activity…";
+  byId("activity-status").dataset.error = "false";
+  byId("activity-retry").hidden = true;
+  controls();
+  try {
+    const data = await request(`activity?range=${encodeURIComponent(activityRange)}`, undefined, "");
+    if (user?.id === userId) renderActivity(data);
+  } catch (error) {
+    if (user?.id === userId) {
+      byId("activity-results").hidden = true;
+      byId("activity-status").textContent = error.message;
+      byId("activity-status").dataset.error = "true";
+      byId("activity-retry").hidden = false;
+      byId("overview-watch-time").textContent = "Unavailable";
+      byId("overview-watch-time-note").textContent = "Viewing activity could not be loaded.";
+    }
+  } finally {
+    activityBusy = false;
+    byId("activity-panel").setAttribute("aria-busy", "false");
+    controls();
   }
 }
 
@@ -140,7 +240,7 @@ async function loadAdminUsers() {
 
 async function acceptUser(next) {
   renderUser(next);
-  if (next?.isAdmin) await loadAdminUsers();
+  if (next) await Promise.all([loadActivity(), next.isAdmin ? loadAdminUsers() : Promise.resolve()]);
 }
 
 function setMode(value) {
@@ -167,7 +267,8 @@ async function request(action, body, group = "auth") {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
   try {
-    const response = await fetch(`/api/portal/${group}/${action}`, {
+    const route = group ? `/api/portal/${group}/${action}` : `/api/portal/${action}`;
+    const response = await fetch(route, {
       method: body === undefined ? "GET" : "POST",
       credentials: "same-origin", cache: "no-store", signal: controller.signal,
       ...(body === undefined ? {} : { headers: { "Content-Type": "application/json", "X-PlexPoint-Request": "1" }, body: JSON.stringify(body) }),
@@ -309,6 +410,11 @@ async function initializeSession() {
 }
 byId("auth-retry").addEventListener("click", () => void initializeSession());
 byId("admin-retry").addEventListener("click", () => void loadAdminUsers());
+byId("activity-retry").addEventListener("click", () => void loadActivity());
+byId("activity-range").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-range]");
+  if (button) void loadActivity(button.dataset.range);
+});
 window.addEventListener("focus", () => void refreshSession());
 window.addEventListener("pageshow", (event) => { if (event.persisted) void initializeSession(); });
 void initializeSession();

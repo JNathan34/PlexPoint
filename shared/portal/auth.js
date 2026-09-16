@@ -178,9 +178,11 @@ async function login(db, request, body, now) {
 
 async function sessionUser(db, request, now = Date.now()) {
   const token = readToken(request);
-  return token ? await db.prepare(`SELECT u.id, u.email, u.display_name, u.created_at, p.username AS plex_username
+  return token ? await db.prepare(`SELECT u.id, u.email, u.display_name, u.created_at,
+    p.plex_id, p.username AS plex_username, l.tautulli_user_id
     FROM auth_sessions s JOIN users u ON u.id = s.user_id
     LEFT JOIN plex_identities p ON p.user_id = u.id
+    LEFT JOIN plex_account_links l ON l.user_id = u.id
     WHERE s.token_hash = ? AND s.expires_at > ? AND u.account_status = 'enabled'`)
     .bind(await digest(token), now).first() : null;
 }

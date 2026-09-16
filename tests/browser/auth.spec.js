@@ -141,3 +141,33 @@ test("ordinary accounts never request or reveal the admin dashboard", async ({ p
   await expect(page.locator("#admin-panel")).toBeHidden();
   expect(adminRequests).toBe(0);
 });
+
+test("viewing activity shares one period across popular titles and personal watch time", async ({ page }) => {
+  const ranges = [];
+  await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
+    id: "viewer", email: "viewer@example.test", displayName: "Viewer", createdAt: Date.now(),
+  } } }));
+  await page.route("**/api/portal/activity?**", (route) => {
+    const range = new URL(route.request().url()).searchParams.get("range");
+    ranges.push(range);
+    const allTime = range === "0";
+    return route.fulfill({ json: {
+      range,
+      periodLabel: allTime ? "All time" : "Last 7 days",
+      popularMovies: [{ title: allTime ? "All-time Movie" : "Weekly Movie", year: 2026, plays: 12, viewers: 5 }],
+      popularShows: [{ title: allTime ? "All-time Show" : "Weekly Show", year: 2025, plays: 8, viewers: 3 }],
+      watchTime: { seconds: allTime ? 90000 : 7384, plays: allTime ? 40 : 4 },
+    } });
+  });
+  await page.goto("/account/#account");
+  await expect(page.locator("#activity-panel")).toBeVisible();
+  await expect(page.locator("#activity-watch-time")).toHaveText("2h 3m");
+  await expect(page.locator("#popular-movies")).toContainText("Weekly Movie");
+  await expect(page.locator("#popular-shows")).toContainText("Weekly Show");
+  await page.getByRole("button", { name: "All time", exact: true }).click();
+  await expect(page.locator("#activity-watch-time")).toHaveText("25h");
+  await expect(page.locator("#popular-movies")).toContainText("All-time Movie");
+  await expect(page.locator("#popular-shows")).toContainText("All-time Show");
+  await expect(page.getByRole("button", { name: "All time", exact: true })).toHaveAttribute("aria-pressed", "true");
+  expect(ranges).toEqual(["7", "0"]);
+});

@@ -55,7 +55,7 @@
               <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="membership"></span><h3>Current subscription</h3><strong>Not available</strong><p>Your plan and access status will appear here.</p></article>
               <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="clock"></span><h3>Time remaining</h3><strong>Not available</strong><p>Start, expiry and renewal dates are not connected.</p></article>
               <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="payment"></span><h3>Payment status</h3><strong>Not available</strong><p>Contact Jacob to confirm a payment or renewal.</p></article>
-              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="film"></span><h3>Total watch time</h3><strong>Not available</strong><p>Personal Plex history is not connected.</p></article>
+              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="film"></span><h3>Watch time</h3><strong id="overview-watch-time">Sign in to view</strong><p id="overview-watch-time-note">Your selected activity period appears here.</p></article>
             </div>
             <div class="pp-section-heading"><h2>Go straight to the good stuff</h2><a href="#services">All services <span aria-hidden="true">→</span></a></div>
             <div id="quick-links" class="pp-services-grid" aria-label="Quick links"></div>
@@ -112,6 +112,19 @@
               <a class="pp-card glass-card" href="#help"><span data-icon="book"></span><div><strong>Get set up</strong><p>Guides for every device.</p></div><span aria-hidden="true">→</span></a>
               <a class="pp-card glass-card" href="#support"><span data-icon="message"></span><div><strong>Need a hand?</strong><p>Get in touch with Jacob.</p></div><span aria-hidden="true">→</span></a>
             </nav>
+            <section id="activity-panel" class="pp-card glass-card pp-viewing-panel" aria-labelledby="activity-heading" hidden>
+              <div class="pp-viewing-heading"><div><span class="pp-badge">PLEX ACTIVITY</span><h2 id="activity-heading">What everyone’s watching</h2><p>Popular picks across PlexPoint, plus your own watch time.</p></div>
+                <div id="activity-range" class="pp-range-picker" role="group" aria-label="Viewing period">
+                  <button type="button" data-range="1" aria-pressed="false">Last day</button><button type="button" data-range="7" aria-pressed="true">Last 7 days</button><button type="button" data-range="30" aria-pressed="false">Last 30 days</button><button type="button" data-range="0" aria-pressed="false">All time</button>
+                </div>
+              </div>
+              <p id="activity-status" class="pp-small" role="status"></p><button id="activity-retry" type="button" class="pp-button" hidden>Retry activity</button>
+              <div id="activity-results" class="pp-viewing-grid" hidden>
+                <article class="pp-viewing-card pp-watch-time"><span class="pp-icon-tile" data-icon="clock"></span><p>Your watch time</p><strong id="activity-watch-time">—</strong><small id="activity-watch-count">Select a period</small></article>
+                <article class="pp-viewing-card"><div class="pp-viewing-card-title"><span class="pp-icon-tile" data-icon="film"></span><h3>Popular movies</h3></div><ol id="popular-movies" class="pp-popular-list"></ol></article>
+                <article class="pp-viewing-card"><div class="pp-viewing-card-title"><span class="pp-icon-tile" data-icon="play"></span><h3>Popular shows</h3></div><ol id="popular-shows" class="pp-popular-list"></ol></article>
+              </div>
+            </section>
             <section id="admin-panel" class="pp-card glass-card pp-admin-panel" aria-labelledby="admin-heading" hidden>
               <div class="pp-admin-heading"><div><span class="pp-badge">ADMIN</span><h2 id="admin-heading">User accounts</h2><p>Portal access and subscription details for every account.</p></div><div class="pp-admin-summary" aria-label="Account summary"><span><strong id="admin-total">0</strong>Total</span><span><strong id="admin-enabled">0</strong>Enabled</span><span><strong id="admin-subscribed">0</strong>With a plan</span></div></div>
               <p id="admin-status" class="pp-small" role="status"></p><button id="admin-retry" type="button" class="pp-button" hidden>Retry user list</button>
