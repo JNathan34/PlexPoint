@@ -60,7 +60,7 @@ function notImplementedClass(name) {
 }
 var init_utils = __esm({
   "../node_modules/unenv/dist/runtime/_internal/utils.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -74,7 +74,7 @@ var init_utils = __esm({
 var _timeOrigin, _performanceNow, nodeTiming, PerformanceEntry, PerformanceMark, PerformanceMeasure, PerformanceResourceTiming, PerformanceObserverEntryList, Performance, PerformanceObserver, performance;
 var init_performance = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -321,7 +321,7 @@ var init_performance = __esm({
 // ../node_modules/unenv/dist/runtime/node/perf_hooks.mjs
 var init_perf_hooks = __esm({
   "../node_modules/unenv/dist/runtime/node/perf_hooks.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -359,7 +359,7 @@ var init_performance2 = __esm({
 var noop_default;
 var init_noop = __esm({
   "../node_modules/unenv/dist/runtime/mock/noop.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -373,7 +373,7 @@ import { Writable } from "node:stream";
 var _console, _ignoreErrors, _stderr, _stdout, log, info, trace, debug, table, error, warn, createTask, clear, count, countReset, dir, dirxml, group, groupEnd, groupCollapsed, profile, profileEnd, time, timeEnd, timeLog, timeStamp, Console, _times, _stdoutErrorHandler, _stderrErrorHandler;
 var init_console = __esm({
   "../node_modules/unenv/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -416,7 +416,7 @@ var init_console = __esm({
 var workerdConsole, assert, clear2, context, count2, countReset2, createTask2, debug2, dir2, dirxml2, error2, group2, groupCollapsed2, groupEnd2, info2, log2, profile2, profileEnd2, table2, time2, timeEnd2, timeLog2, timeStamp2, trace2, warn2, console_default;
 var init_console2 = __esm({
   "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -479,7 +479,7 @@ var init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console = __
 var hrtime;
 var init_hrtime = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -507,7 +507,7 @@ var init_hrtime = __esm({
 var ReadStream;
 var init_read_stream = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -533,7 +533,7 @@ var init_read_stream = __esm({
 var WriteStream;
 var init_write_stream = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -591,7 +591,7 @@ var init_write_stream = __esm({
 // ../node_modules/unenv/dist/runtime/node/tty.mjs
 var init_tty = __esm({
   "../node_modules/unenv/dist/runtime/node/tty.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -604,7 +604,7 @@ var init_tty = __esm({
 var NODE_VERSION;
 var init_node_version = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/node-version.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -617,7 +617,7 @@ import { EventEmitter } from "node:events";
 var Process;
 var init_process = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/process.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -864,7 +864,7 @@ var init_process = __esm({
 var globalProcess, getBuiltinModule, workerdProcess, unenvProcess, exit, features, platform, _channel, _debugEnd, _debugProcess, _disconnect, _events, _eventsCount, _exiting, _fatalException, _getActiveHandles, _getActiveRequests, _handleQueue, _kill, _linkedBinding, _maxListeners, _pendingMessage, _preload_modules, _rawDebug, _send, _startProfilerIdleNotifier, _stopProfilerIdleNotifier, _tickCallback, abort, addListener, allowedNodeEnvironmentFlags, arch, argv, argv0, assert2, availableMemory, binding, channel, chdir, config, connected, constrainedMemory, cpuUsage, cwd, debugPort, disconnect, dlopen, domain, emit, emitWarning, env, eventNames, execArgv, execPath, exitCode, finalization, getActiveResourcesInfo, getegid, geteuid, getgid, getgroups, getMaxListeners, getuid, hasUncaughtExceptionCaptureCallback, hrtime3, initgroups, kill, listenerCount, listeners, loadEnvFile, mainModule, memoryUsage, moduleLoadList, nextTick, off, on, once, openStdin, permission, pid, ppid, prependListener, prependOnceListener, rawListeners, reallyExit, ref, release, removeAllListeners, removeListener, report, resourceUsage, send, setegid, seteuid, setgid, setgroups, setMaxListeners, setSourceMapsEnabled, setuid, setUncaughtExceptionCaptureCallback, sourceMapsEnabled, stderr, stdin, stdout, throwDeprecation, title, traceDeprecation, umask, unref, uptime, version, versions, _process, process_default;
 var init_process2 = __esm({
   "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1228,6 +1228,18 @@ function publicUser(row) {
     } } : {}
   };
 }
+async function plexAvatarColumnAvailable(db) {
+  try {
+    return Boolean(await db.prepare("SELECT name FROM pragma_table_info('plex_identities') WHERE name = 'avatar_url'").first());
+  } catch {
+    return false;
+  }
+}
+async function withPlexAvatar(db, row) {
+  if (!row?.id || !row.plex_username || !await plexAvatarColumnAvailable(db)) return row;
+  const identity = await db.prepare("SELECT avatar_url FROM plex_identities WHERE user_id = ?").bind(row.id).first();
+  return { ...row, plex_avatar_url: identity?.avatar_url || null };
+}
 async function sessionStatements(db, request, userId, now) {
   const token = randomHex(32);
   const statements = [db.prepare("INSERT INTO auth_sessions(token_hash, user_id, created_at, expires_at) VALUES (?, ?, ?, ?)").bind(await digest(token), userId, now, now + SESSION_SECONDS * 1e3)];
@@ -1266,7 +1278,7 @@ async function login(db, request, body, now) {
   const { email, password } = credentials(body, false);
   await rateLimit(db, request, "login", email, now);
   const row = await db.prepare(`SELECT u.id, u.email, u.display_name, u.created_at, u.account_status,
-    c.salt, c.password_hash, c.iterations, p.username AS plex_username, p.avatar_url AS plex_avatar_url FROM users u
+    c.salt, c.password_hash, c.iterations, p.username AS plex_username FROM users u
     LEFT JOIN password_credentials c ON c.user_id = u.id
     LEFT JOIN plex_identities p ON p.user_id = u.id WHERE u.email = ?`).bind(email).first();
   const hash = await passwordHash(password, row?.salt || "00".repeat(16), row?.iterations || ITERATIONS);
@@ -1275,12 +1287,12 @@ async function login(db, request, body, now) {
   }
   const session = await sessionStatements(db, request, row.id, now);
   await db.batch(session.statements);
-  return reply({ user: publicUser(row) }, 200, { "Set-Cookie": sessionCookie(request, session.token) });
+  return reply({ user: publicUser(await withPlexAvatar(db, row)) }, 200, { "Set-Cookie": sessionCookie(request, session.token) });
 }
 async function sessionUser(db, request, now = Date.now()) {
   const token = readToken(request);
   return token ? await db.prepare(`SELECT u.id, u.email, u.display_name, u.created_at,
-    p.plex_id, p.username AS plex_username, p.avatar_url AS plex_avatar_url, l.tautulli_user_id
+    p.plex_id, p.username AS plex_username, l.tautulli_user_id
     FROM auth_sessions s JOIN users u ON u.id = s.user_id
     LEFT JOIN plex_identities p ON p.user_id = u.id
     LEFT JOIN plex_account_links l ON l.user_id = u.id
@@ -1289,7 +1301,7 @@ async function sessionUser(db, request, now = Date.now()) {
 async function currentSession(db, request, now) {
   const row = await sessionUser(db, request, now);
   return reply(
-    { user: row ? publicUser(row) : null },
+    { user: row ? publicUser(await withPlexAvatar(db, row)) : null },
     200,
     !row && readToken(request) ? { "Set-Cookie": sessionCookie(request, "", 0) } : {}
   );
@@ -1314,6 +1326,7 @@ async function authResponse(request, env2, action) {
     if (token) await db.prepare("DELETE FROM auth_sessions WHERE token_hash = ?").bind(await digest(token)).run();
     return reply({ user: null }, 200, { "Set-Cookie": sessionCookie(request, "", 0) });
   } catch (error3) {
+    if (!(error3 instanceof AuthError)) console.error(JSON.stringify({ event: "portal_auth_error", action, errorType: error3?.name || "UnknownError" }));
     return reply(
       { message: error3 instanceof AuthError ? error3.message : "Account services are temporarily unavailable. Please try again later." },
       error3 instanceof AuthError ? error3.status : 503,
@@ -1324,7 +1337,7 @@ async function authResponse(request, env2, action) {
 var SESSION_SECONDS, ITERATIONS, WINDOW_MS, ADMIN_EMAIL, encoder, hex, randomHex, digest, AuthError;
 var init_auth = __esm({
   "../shared/portal/auth.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1356,6 +1369,8 @@ var init_auth = __esm({
     __name(rateLimit, "rateLimit");
     __name(isAdminEmail, "isAdminEmail");
     __name(publicUser, "publicUser");
+    __name(plexAvatarColumnAvailable, "plexAvatarColumnAvailable");
+    __name(withPlexAvatar, "withPlexAvatar");
     __name(sessionStatements, "sessionStatements");
     __name(register, "register");
     __name(login, "login");
@@ -1650,7 +1665,7 @@ async function adminBillingResponse(request, env2) {
 var DAY_MS, ACCESS_STATUSES, PAYMENT_METHODS;
 var init_billing = __esm({
   "../shared/portal/billing.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1683,7 +1698,7 @@ async function onRequest({ request, env: env2 }) {
 }
 var init_billing2 = __esm({
   "api/portal/admin/billing.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1745,10 +1760,11 @@ async function adminUsersResponse(request, env2) {
     const current = await sessionUser(env2.PORTAL_DB, request);
     if (!current) throw new AuthError(401, "Please sign in to continue.");
     if (!isAdminEmail(current.email)) throw new AuthError(403, "Administrator access is required.");
+    const avatarSelect = await plexAvatarColumnAvailable(env2.PORTAL_DB) ? "p.avatar_url AS plex_avatar_url" : "NULL AS plex_avatar_url";
     const result = await env2.PORTAL_DB.prepare(`SELECT
       u.id, u.email, u.display_name, u.account_status, u.created_at, u.updated_at,
       CASE WHEN c.user_id IS NULL THEN 0 ELSE 1 END AS has_password,
-      p.username AS plex_username, p.avatar_url AS plex_avatar_url,
+      p.username AS plex_username, ${avatarSelect},
       s.access_status AS subscription_status, s.starts_at, s.ends_at,
       t.name AS tier_name,
       bp.id AS billing_period_id, bp.ends_at AS billing_ends_at,
@@ -1790,7 +1806,7 @@ async function adminUsersResponse(request, env2) {
 }
 var init_admin = __esm({
   "../shared/portal/admin.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1807,7 +1823,7 @@ async function onRequest2({ request, env: env2 }) {
 }
 var init_users = __esm({
   "api/portal/admin/users.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1822,7 +1838,7 @@ async function onRequest3({ request, env: env2, params }) {
 }
 var init_action = __esm({
   "api/portal/auth/[action].js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1969,10 +1985,11 @@ async function complete(request, db, fetcher) {
   if (!consumed) throw expired();
   const row = current || linked || { id: crypto.randomUUID(), email: profile3.email, display_name: profile3.username, created_at: now };
   const session = await sessionStatements(db, request, row.id, now);
+  const avatarSupported = await plexAvatarColumnAvailable(db);
   const statements = [];
   if (!current && !linked) statements.push(db.prepare("INSERT INTO users(id, email, display_name, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)").bind(row.id, row.email, row.display_name, isAdminEmail(row.email) ? "admin" : "user", now, now));
-  if (!linked) statements.push(db.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at, avatar_url) VALUES (?, ?, ?, ?, ?)").bind(profile3.id, row.id, profile3.username, now, profile3.avatarUrl || null));
-  else statements.push(db.prepare("UPDATE plex_identities SET username = ?, avatar_url = ? WHERE plex_id = ?").bind(profile3.username, profile3.avatarUrl || null, profile3.id));
+  if (!linked) statements.push(avatarSupported ? db.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at, avatar_url) VALUES (?, ?, ?, ?, ?)").bind(profile3.id, row.id, profile3.username, now, profile3.avatarUrl || null) : db.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at) VALUES (?, ?, ?, ?)").bind(profile3.id, row.id, profile3.username, now));
+  else statements.push(avatarSupported ? db.prepare("UPDATE plex_identities SET username = ?, avatar_url = ? WHERE plex_id = ?").bind(profile3.username, profile3.avatarUrl || null, profile3.id) : db.prepare("UPDATE plex_identities SET username = ? WHERE plex_id = ?").bind(profile3.username, profile3.id));
   try {
     await db.batch([...statements, ...session.statements]);
   } catch {
@@ -2010,7 +2027,7 @@ async function plexAuthResponse(request, env2, action, fetcher = fetch) {
 var MAX_AGE;
 var init_plex_auth = __esm({
   "../shared/portal/plex-auth.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2034,7 +2051,7 @@ async function onRequest4({ request, env: env2, params }) {
 }
 var init_action2 = __esm({
   "api/portal/plex/[action].js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2047,7 +2064,7 @@ var init_action2 = __esm({
 var require_util = __commonJS({
   "../node_modules/fast-xml-parser/src/util.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2125,7 +2142,7 @@ var require_util = __commonJS({
 var require_validator = __commonJS({
   "../node_modules/fast-xml-parser/src/validator.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2452,7 +2469,7 @@ var require_validator = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
 var require_OptionsBuilder = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"(exports) {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2585,7 +2602,7 @@ var require_OptionsBuilder = __commonJS({
 var require_xmlNode = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2618,7 +2635,7 @@ var require_xmlNode = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js
 var require_DocTypeReader = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js"(exports, module) {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2915,7 +2932,7 @@ var require_DocTypeReader = __commonJS({
 // ../node_modules/strnum/strnum.js
 var require_strnum = __commonJS({
   "../node_modules/strnum/strnum.js"(exports, module) {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3010,7 +3027,7 @@ var require_strnum = __commonJS({
 // ../node_modules/fast-xml-parser/src/ignoreAttributes.js
 var require_ignoreAttributes = __commonJS({
   "../node_modules/fast-xml-parser/src/ignoreAttributes.js"(exports, module) {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3041,7 +3058,7 @@ var require_ignoreAttributes = __commonJS({
 var require_OrderedObjParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3667,7 +3684,7 @@ var require_OrderedObjParser = __commonJS({
 var require_node2json = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/node2json.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3762,7 +3779,7 @@ var require_node2json = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js
 var require_XMLParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js"(exports, module) {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3827,7 +3844,7 @@ var require_XMLParser = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js
 var require_orderedJs2Xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js"(exports, module) {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3971,7 +3988,7 @@ var require_orderedJs2Xml = __commonJS({
 var require_json2xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4225,7 +4242,7 @@ var require_json2xml = __commonJS({
 var require_fxp = __commonJS({
   "../node_modules/fast-xml-parser/src/fxp.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4719,7 +4736,7 @@ async function getFeaturedCollection(env2, options = {}) {
 var import_fast_xml_parser, parser, cache, DEFAULT_PLEX_FETCH_TIMEOUT_MS, DEFAULT_LIBRARY_TITLES;
 var init_plex_client = __esm({
   "../shared/plex-client.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4839,7 +4856,7 @@ async function cachedJson(context2, options) {
 var PLEX_API_CACHE_VERSION;
 var init_pages = __esm({
   "_lib/pages.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4867,7 +4884,7 @@ async function onRequestGet(context2) {
 }
 var init_anime_movies = __esm({
   "api/plex/anime-movies.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4892,7 +4909,7 @@ async function onRequestGet2(context2) {
 }
 var init_anime_shows = __esm({
   "api/plex/anime-shows.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4915,7 +4932,7 @@ async function onRequestGet3(context2) {
 }
 var init_collections = __esm({
   "api/plex/collections.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4936,7 +4953,7 @@ async function onRequestGet4(context2) {
 }
 var init_counts = __esm({
   "api/plex/counts.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4967,7 +4984,7 @@ async function onRequestGet5(context2) {
 }
 var init_featured_collection = __esm({
   "api/plex/featured-collection.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5020,7 +5037,7 @@ async function onRequestGet6(context2) {
 }
 var init_image = __esm({
   "api/plex/image.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5045,7 +5062,7 @@ async function onRequestGet7(context2) {
 }
 var init_movies = __esm({
   "api/plex/movies.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5066,7 +5083,7 @@ async function onRequestGet8(context2) {
 }
 var init_sections = __esm({
   "api/plex/sections.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5091,7 +5108,7 @@ async function onRequestGet9(context2) {
 }
 var init_shows = __esm({
   "api/plex/shows.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5155,7 +5172,7 @@ async function onRequestGet10(context2) {
 }
 var init_status = __esm({
   "api/plex/status.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5184,7 +5201,7 @@ async function onRequestGet11(context2) {
 }
 var init_top_rated = __esm({
   "api/plex/top-rated.ts"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5198,7 +5215,7 @@ var init_top_rated = __esm({
 var defaultLinks, defaultArticles;
 var init_portal_content = __esm({
   "../assets/portal-content.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5290,7 +5307,7 @@ function normalizeContent(content) {
 }
 var init_portal_utils = __esm({
   "../assets/portal-utils.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5326,7 +5343,7 @@ async function publicContentResponse(env2) {
 var publicContentQueries;
 var init_content = __esm({
   "../shared/portal/content.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5347,7 +5364,7 @@ async function onRequestGet12(context2) {
 }
 var init_content2 = __esm({
   "api/portal/content.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5449,7 +5466,7 @@ async function activityResponse(request, env2, fetcher = fetch) {
 var DEFAULT_TAUTULLI_URL, PERIODS, count3;
 var init_activity = __esm({
   "../shared/portal/activity.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5479,7 +5496,7 @@ async function onRequest5({ request, env: env2 }) {
 }
 var init_activity2 = __esm({
   "api/portal/activity.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5494,7 +5511,7 @@ async function onRequest6({ request, env: env2 }) {
 }
 var init_billing3 = __esm({
   "api/portal/billing.js"() {
-    init_functionsRoutes_0_6896880096788067();
+    init_functionsRoutes_0_37438613289721445();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5503,10 +5520,10 @@ var init_billing3 = __esm({
   }
 });
 
-// ../.wrangler/tmp/pages-YOapj5/functionsRoutes-0.6896880096788067.mjs
+// ../.wrangler/tmp/pages-Q22EYJ/functionsRoutes-0.37438613289721445.mjs
 var routes;
-var init_functionsRoutes_0_6896880096788067 = __esm({
-  "../.wrangler/tmp/pages-YOapj5/functionsRoutes-0.6896880096788067.mjs"() {
+var init_functionsRoutes_0_37438613289721445 = __esm({
+  "../.wrangler/tmp/pages-Q22EYJ/functionsRoutes-0.37438613289721445.mjs"() {
     init_billing2();
     init_users();
     init_action();
@@ -5657,13 +5674,13 @@ var init_functionsRoutes_0_6896880096788067 = __esm({
 });
 
 // ../node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_6896880096788067();
+init_functionsRoutes_0_37438613289721445();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
 init_performance2();
 
 // ../node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_6896880096788067();
+init_functionsRoutes_0_37438613289721445();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
 init_performance2();

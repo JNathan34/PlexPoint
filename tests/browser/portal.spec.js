@@ -23,7 +23,7 @@ test("the account page contains only the account dashboard", async ({ page }) =>
   await page.goto("/account/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Your Account");
   await expect(page.locator(".pp-metric")).toHaveCount(4);
-  await expect(page.locator(".pp-account-shortcuts a")).toHaveCount(4);
+  await expect(page.locator(".pp-account-shortcuts")).toHaveCount(0);
   for (const id of ["services", "help", "support", "content-notice"]) {
     await expect(page.locator(`#${id}`)).toHaveCount(0);
   }

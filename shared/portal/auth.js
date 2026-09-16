@@ -126,6 +126,20 @@ function publicUser(row) {
   };
 }
 
+async function plexAvatarColumnAvailable(db) {
+  try {
+    return Boolean(await db.prepare("SELECT name FROM pragma_table_info('plex_identities') WHERE name = 'avatar_url'").first());
+  } catch {
+    return false;
+  }
+}
+
+async function withPlexAvatar(db, row) {
+  if (!row?.id || !row.plex_username || !await plexAvatarColumnAvailable(db)) return row;
+  const identity = await db.prepare("SELECT avatar_url FROM plex_identities WHERE user_id = ?").bind(row.id).first();
+  return { ...row, plex_avatar_url: identity?.avatar_url || null };
+}
+
 async function sessionStatements(db, request, userId, now) {
   const token = randomHex(32);
   const statements = [db.prepare("INSERT INTO auth_sessions(token_hash, user_id, created_at, expires_at) VALUES (?, ?, ?, ?)")
@@ -166,7 +180,7 @@ async function login(db, request, body, now) {
   const { email, password } = credentials(body, false);
   await rateLimit(db, request, "login", email, now);
   const row = await db.prepare(`SELECT u.id, u.email, u.display_name, u.created_at, u.account_status,
-    c.salt, c.password_hash, c.iterations, p.username AS plex_username, p.avatar_url AS plex_avatar_url FROM users u
+    c.salt, c.password_hash, c.iterations, p.username AS plex_username FROM users u
     LEFT JOIN password_credentials c ON c.user_id = u.id
     LEFT JOIN plex_identities p ON p.user_id = u.id WHERE u.email = ?`).bind(email).first();
   // Unknown accounts perform the same password derivation as existing accounts.
@@ -176,13 +190,13 @@ async function login(db, request, body, now) {
   }
   const session = await sessionStatements(db, request, row.id, now);
   await db.batch(session.statements);
-  return reply({ user: publicUser(row) }, 200, { "Set-Cookie": sessionCookie(request, session.token) });
+  return reply({ user: publicUser(await withPlexAvatar(db, row)) }, 200, { "Set-Cookie": sessionCookie(request, session.token) });
 }
 
 async function sessionUser(db, request, now = Date.now()) {
   const token = readToken(request);
   return token ? await db.prepare(`SELECT u.id, u.email, u.display_name, u.created_at,
-    p.plex_id, p.username AS plex_username, p.avatar_url AS plex_avatar_url, l.tautulli_user_id
+    p.plex_id, p.username AS plex_username, l.tautulli_user_id
     FROM auth_sessions s JOIN users u ON u.id = s.user_id
     LEFT JOIN plex_identities p ON p.user_id = u.id
     LEFT JOIN plex_account_links l ON l.user_id = u.id
@@ -192,11 +206,11 @@ async function sessionUser(db, request, now = Date.now()) {
 
 async function currentSession(db, request, now) {
   const row = await sessionUser(db, request, now);
-  return reply({ user: row ? publicUser(row) : null }, 200,
+  return reply({ user: row ? publicUser(await withPlexAvatar(db, row)) : null }, 200,
     !row && readToken(request) ? { "Set-Cookie": sessionCookie(request, "", 0) } : {});
 }
 
-export { ADMIN_EMAIL, AuthError, randomHex, digest, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail };
+export { ADMIN_EMAIL, AuthError, randomHex, digest, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail, plexAvatarColumnAvailable };
 
 export async function authResponse(request, env, action) {
   try {
@@ -218,6 +232,7 @@ export async function authResponse(request, env, action) {
     if (token) await db.prepare("DELETE FROM auth_sessions WHERE token_hash = ?").bind(await digest(token)).run();
     return reply({ user: null }, 200, { "Set-Cookie": sessionCookie(request, "", 0) });
   } catch (error) {
+    if (!(error instanceof AuthError)) console.error(JSON.stringify({ event: "portal_auth_error", action, errorType: error?.name || "UnknownError" }));
     return reply({ message: error instanceof AuthError ? error.message : "Account services are temporarily unavailable. Please try again later." },
       error instanceof AuthError ? error.status : 503, error.status === 429 ? { "Retry-After": "900" } : {});
   }

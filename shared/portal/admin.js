@@ -1,4 +1,4 @@
-import { AuthError, isAdminEmail, reply, sessionUser } from "./auth.js";
+import { AuthError, isAdminEmail, plexAvatarColumnAvailable, reply, sessionUser } from "./auth.js";
 import { paymentState } from "./billing.js";
 
 function adminUser(row, now) {
@@ -55,10 +55,13 @@ export async function adminUsersResponse(request, env) {
     if (!current) throw new AuthError(401, "Please sign in to continue.");
     if (!isAdminEmail(current.email)) throw new AuthError(403, "Administrator access is required.");
 
+    const avatarSelect = await plexAvatarColumnAvailable(env.PORTAL_DB)
+      ? "p.avatar_url AS plex_avatar_url"
+      : "NULL AS plex_avatar_url";
     const result = await env.PORTAL_DB.prepare(`SELECT
       u.id, u.email, u.display_name, u.account_status, u.created_at, u.updated_at,
       CASE WHEN c.user_id IS NULL THEN 0 ELSE 1 END AS has_password,
-      p.username AS plex_username, p.avatar_url AS plex_avatar_url,
+      p.username AS plex_username, ${avatarSelect},
       s.access_status AS subscription_status, s.starts_at, s.ends_at,
       t.name AS tier_name,
       bp.id AS billing_period_id, bp.ends_at AS billing_ends_at,

@@ -12,10 +12,12 @@ function request(action, cookie, body = {}, headers = {}) {
     headers: { Origin: origin, "Content-Type": "application/json", "X-PlexPoint-Request": "1", ...(cookie ? { Cookie: cookie } : {}), ...headers }, body: JSON.stringify(body) });
 }
 const cookies = (response) => response.headers.getSetCookie().map((value) => value.split(";")[0]);
-function setup(t) {
+function setup(t, { avatars = true } = {}) {
   const db = new DatabaseSync(":memory:");
   t.after(() => db.close());
-  for (const file of ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql"]) {
+  const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql"];
+  if (avatars) migrations.push("0006_plex_avatars.sql");
+  for (const file of migrations) {
     db.exec(readFileSync(new URL(`../migrations/${file}`, import.meta.url), "utf8"));
   }
   const prepare = (sql) => {
@@ -113,6 +115,18 @@ test("Plex identity creates a normal portal session without persisting the Plex 
   }
   assert.ok(!JSON.stringify(data).includes(accessToken));
   assert.equal((await call("complete", cookie)).status, 410);
+});
+
+test("Plex sign-in still creates a session before the avatar migration is applied", async (t) => {
+  const { call, db, env } = setup(t, { avatars: false });
+  const { cookie } = await begin(call);
+  const response = await call("complete", cookie);
+  assert.equal(response.status, 200);
+  const session = cookies(response).find((value) => value.startsWith("__Host-plexpoint_session="));
+  assert.ok(session);
+  assert.equal(db.prepare("SELECT username FROM plex_identities").get().username, "PlexMovieFan");
+  const current = await authResponse(new Request(`${origin}/api/portal/auth/session`, { headers: { Cookie: session } }), env, "session");
+  assert.deepEqual((await current.json()).user.plex, { username: "PlexMovieFan" });
 });
 
 test("returning Plex users resolve by immutable provider ID even when their email changes", async (t) => {

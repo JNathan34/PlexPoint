@@ -1,11 +1,7 @@
 const byId = (id) => document.getElementById(id);
 const profileAvatar = byId("profile-avatar");
 const fallbackAvatar = "/plexpoint-logo.png";
-const form = byId("auth-form");
-const password = byId("auth-password");
-const confirm = byId("auth-confirm");
 const status = byId("auth-status");
-let mode = "login";
 let user = null;
 let busy = false;
 let available = false;
@@ -31,8 +27,7 @@ function message(text, error = false, focus = false) {
 }
 
 function controls() {
-  byId("auth-fields").disabled = busy || !available || plexPending;
-  for (const id of ["auth-login-mode", "auth-register-mode", "auth-logout"]) byId(id).disabled = busy || plexPending;
+  byId("auth-logout").disabled = busy || plexPending;
   for (const id of ["auth-retry", "plex-check", "plex-cancel"]) byId(id).disabled = busy;
   byId("plex-sign-in").disabled = busy || !available || plexPending;
   byId("admin-retry").disabled = adminBusy;
@@ -48,17 +43,6 @@ function controls() {
   for (const button of byId("admin-billing-payments").querySelectorAll("button")) button.disabled = adminBillingBusy;
   for (const button of byId("activity-range").querySelectorAll("button")) button.disabled = activityBusy || !user;
   byId("plex-pending").hidden = !plexPending;
-  form.setAttribute("aria-busy", String(busy));
-  byId("auth-submit").textContent = busy ? "Please wait…" : mode === "register" ? "Create account" : "Sign in";
-}
-
-function clearPasswords() {
-  password.value = "";
-  confirm.value = "";
-  confirm.setCustomValidity("");
-  password.type = confirm.type = "password";
-  byId("auth-show-password").textContent = "Show password";
-  byId("auth-show-password").setAttribute("aria-pressed", "false");
 }
 
 const tierIconPaths = {
@@ -133,9 +117,7 @@ function configureAvatar(image, value, name, holder) {
 }
 
 function renderUser(next) {
-  if (user?.id !== next?.id) clearPasswords();
   user = next;
-  if (user) byId("email-option").open = false;
   byId("auth-guest").hidden = Boolean(user);
   byId("auth-user").hidden = !user;
   byId("activity-panel").hidden = !user;
@@ -650,26 +632,6 @@ async function acceptUser(next) {
   if (next) await Promise.all([loadBilling(), loadActivity(), next.isAdmin ? loadAdminUsers() : Promise.resolve()]);
 }
 
-function setMode(value) {
-  mode = value;
-  const registering = mode === "register";
-  byId("auth-name-field").hidden = !registering;
-  byId("auth-confirm-field").hidden = !registering;
-  byId("auth-name").required = registering;
-  confirm.required = registering;
-  password.minLength = registering ? 15 : 1;
-  password.autocomplete = registering ? "new-password" : "current-password";
-  byId("auth-heading").textContent = registering ? "Your account starts here." : "Welcome back.";
-  byId("auth-password-hint").textContent = registering
-    ? "Use 15–128 characters. A long, unique passphrase works well."
-    : "Enter the password for your My PlexPoint account.";
-  byId("auth-login-mode").setAttribute("aria-pressed", String(!registering));
-  byId("auth-register-mode").setAttribute("aria-pressed", String(registering));
-  clearPasswords();
-  if (available) message("");
-  controls();
-}
-
 async function request(action, body, group = "auth") {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
@@ -712,35 +674,6 @@ async function refreshSession() {
   } finally { busy = false; controls(); }
 }
 
-byId("auth-login-mode").addEventListener("click", () => setMode("login"));
-byId("auth-register-mode").addEventListener("click", () => setMode("register"));
-byId("auth-show-password").addEventListener("click", () => {
-  const show = password.type === "password";
-  password.type = confirm.type = show ? "text" : "password";
-  byId("auth-show-password").textContent = show ? "Hide password" : "Show password";
-  byId("auth-show-password").setAttribute("aria-pressed", String(show));
-});
-form.addEventListener("input", () => confirm.setCustomValidity(""));
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  if (busy || !available) return;
-  confirm.setCustomValidity(mode === "register" && password.value !== confirm.value ? "Passwords do not match." : "");
-  if (!form.reportValidity()) return;
-  const body = { email: byId("auth-email").value, password: password.value };
-  if (mode === "register") body.displayName = byId("auth-name").value;
-  busy = true;
-  controls();
-  message(mode === "register" ? "Creating your account…" : "Signing in…");
-  try {
-    await acceptUser(await request(mode, body));
-    clearPasswords();
-    message(mode === "register" ? "Your account is ready. You are signed in." : "Welcome back. You are signed in.", false, true);
-    channel?.postMessage("session-changed");
-  } catch (error) {
-    clearPasswords();
-    message(error.message, true, true);
-  } finally { busy = false; controls(); }
-});
 byId("auth-logout").addEventListener("click", async () => {
   if (busy) return;
   busy = true;
@@ -748,8 +681,6 @@ byId("auth-logout").addEventListener("click", async () => {
   try {
     await request("logout", {});
     renderUser(null);
-    form.reset();
-    setMode("login");
     message("You have signed out.", false, true);
     channel?.postMessage("session-changed");
   } catch (error) { message(error.message, true, true); }
@@ -758,7 +689,6 @@ byId("auth-logout").addEventListener("click", async () => {
 async function startPlex() {
   if (busy || !available || plexPending) return;
   busy = true;
-  clearPasswords();
   controls();
   message("Opening Plex sign-in…");
   try {
@@ -785,7 +715,6 @@ async function completePlex() {
     if (plexPending) message("Waiting for Plex approval. Check again after you finish signing in.");
     else if (data.user) {
       await acceptUser(data.user);
-      clearPasswords();
       message("You are signed in with Plex.", false, true);
       channel?.postMessage("session-changed");
     } else throw new Error("Plex sign-in returned an unexpected response. Please start again.");
@@ -804,7 +733,7 @@ byId("plex-cancel").addEventListener("click", async () => {
   try {
     await request("cancel", {}, "plex");
     plexPending = false;
-    message("Plex sign-in cancelled. You can start again or use your portal email.", false, true);
+    message("Plex sign-in cancelled. You can start again whenever you are ready.", false, true);
   } catch (error) { message(error.message, true, true); }
   finally { busy = false; controls(); }
 });

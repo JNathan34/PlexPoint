@@ -1,4 +1,4 @@
-import { AuthError, randomHex, digest, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail } from "./auth.js";
+import { AuthError, randomHex, digest, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail, plexAvatarColumnAvailable } from "./auth.js";
 
 const MAX_AGE = 600;
 function stateName(request) {
@@ -126,13 +126,20 @@ async function complete(request, db, fetcher) {
   if (!consumed) throw expired();
   const row = current || linked || { id: crypto.randomUUID(), email: profile.email, display_name: profile.username, created_at: now };
   const session = await sessionStatements(db, request, row.id, now);
+  const avatarSupported = await plexAvatarColumnAvailable(db);
   const statements = [];
   if (!current && !linked) statements.push(db.prepare("INSERT INTO users(id, email, display_name, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)")
     .bind(row.id, row.email, row.display_name, isAdminEmail(row.email) ? "admin" : "user", now, now));
-  if (!linked) statements.push(db.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at, avatar_url) VALUES (?, ?, ?, ?, ?)")
-    .bind(profile.id, row.id, profile.username, now, profile.avatarUrl || null));
-  else statements.push(db.prepare("UPDATE plex_identities SET username = ?, avatar_url = ? WHERE plex_id = ?")
-    .bind(profile.username, profile.avatarUrl || null, profile.id));
+  if (!linked) statements.push(avatarSupported
+    ? db.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at, avatar_url) VALUES (?, ?, ?, ?, ?)")
+      .bind(profile.id, row.id, profile.username, now, profile.avatarUrl || null)
+    : db.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at) VALUES (?, ?, ?, ?)")
+      .bind(profile.id, row.id, profile.username, now));
+  else statements.push(avatarSupported
+    ? db.prepare("UPDATE plex_identities SET username = ?, avatar_url = ? WHERE plex_id = ?")
+      .bind(profile.username, profile.avatarUrl || null, profile.id)
+    : db.prepare("UPDATE plex_identities SET username = ? WHERE plex_id = ?")
+      .bind(profile.username, profile.id));
   try { await db.batch([...statements, ...session.statements]); }
   catch { throw new AuthError(409, "The account could not be connected. Please start sign-in again or contact support."); }
   const response = reply({ user: publicUser({ ...row, plex_username: profile.username, plex_avatar_url: profile.avatarUrl }) }, 200,

@@ -37,8 +37,7 @@ test("the account landing page offers Plex first and redirects in the same tab",
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Your Account");
   const plex = page.getByRole("button", { name: "Continue with Plex" });
   await expect(plex).toBeEnabled();
-  await expect(page.locator("#email-option")).not.toHaveAttribute("open");
-  expect((await plex.boundingBox()).y).toBeLessThan((await page.locator("#email-option > summary").boundingBox()).y);
+  await expect(page.locator("#email-option, #auth-form")).toHaveCount(0);
   await plex.click();
   await expect(page).toHaveURL(authorizationUrl);
   expect(posted).toEqual({});
@@ -68,11 +67,11 @@ test("pending approval can be checked again or cancelled", async ({ page }) => {
   await page.route("**/api/portal/plex/cancel", (route) => route.fulfill({ json: { cancelled: true } }));
   await page.goto("/account/?plex=return#account");
   await expect(page.locator("#plex-pending")).toBeVisible();
-  await expect(page.locator("#auth-submit")).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Continue with Plex" })).toBeDisabled();
   await page.getByRole("button", { name: "Cancel Plex sign-in" }).click();
   await expect(page.locator("#plex-pending")).toBeHidden();
   await expect(page.locator("#auth-status")).toContainText("cancelled");
-  await expect(page.locator("#auth-submit")).toBeEnabled();
+  await expect(page.getByRole("button", { name: "Continue with Plex" })).toBeEnabled();
   await page.goto("/account/?plex=return#account");
   await expect(page.locator("#plex-pending")).toBeVisible();
   approved = true;
@@ -81,14 +80,14 @@ test("pending approval can be checked again or cancelled", async ({ page }) => {
   await expect(page.locator("#plex-pending")).toBeHidden();
 });
 
-test("expired attempts and Plex outages show actionable errors and preserve email login", async ({ page }) => {
+test("expired attempts and Plex outages show actionable errors and allow Plex retry", async ({ page }) => {
   await page.route("**/api/portal/plex/complete", (route) => route.fulfill({ status: 410, json: { message: "This Plex sign-in has expired or was cancelled. Please start again." } }));
   await page.route("**/api/portal/plex/start", (route) => route.fulfill({ status: 502, json: { message: "Plex is not responding. Please try again shortly." } }));
   await page.goto("/account/?plex=return#account");
   await expect(page.locator("#auth-status")).toContainText("expired");
   await page.getByRole("button", { name: "Continue with Plex" }).click();
   await expect(page.locator("#auth-status")).toContainText("Plex is not responding");
-  await expect(page.locator("#auth-submit")).toBeEnabled();
+  await expect(page.getByRole("button", { name: "Continue with Plex" })).toBeEnabled();
 });
 
 test("signed-in accounts show account actions without Plex connection messaging", async ({ page }) => {

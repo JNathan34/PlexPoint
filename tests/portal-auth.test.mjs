@@ -4,10 +4,12 @@ import { DatabaseSync } from "node:sqlite";
 import { readFileSync } from "node:fs";
 import { authResponse } from "../shared/portal/auth.js";
 
-function setup(t) {
+function setup(t, { avatars = true } = {}) {
   const sqlite = new DatabaseSync(":memory:");
   t.after(() => sqlite.close());
-  for (const file of ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql"]) {
+  const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql"];
+  if (avatars) migrations.push("0006_plex_avatars.sql");
+  for (const file of migrations) {
     sqlite.exec(readFileSync(new URL(`../migrations/${file}`, import.meta.url), "utf8"));
   }
   const prepare = (sql) => {
@@ -72,6 +74,17 @@ test("the configured owner email is returned and stored as an administrator", as
   assert.equal(data.user.email, "jacobnathan1718@gmail.com");
   assert.equal(data.user.isAdmin, true);
   assert.equal(sqlite.prepare("SELECT role FROM users WHERE id = ?").get(data.user.id).role, "admin");
+});
+
+test("sessions remain available while the optional Plex avatar migration is pending", async (t) => {
+  const { call, sqlite } = setup(t, { avatars: false });
+  const registered = await call("register", details);
+  const user = (await registered.clone().json()).user;
+  sqlite.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at) VALUES (?, ?, ?, ?)")
+    .run("plex-before-avatar", user.id, "PlexBeforeAvatar", Date.now());
+  const response = await call("session", undefined, { cookie: cookieOf(registered) });
+  assert.equal(response.status, 200);
+  assert.deepEqual((await response.json()).user.plex, { username: "PlexBeforeAvatar" });
 });
 
 test("login rotates the presented session and logout revokes it server-side", async (t) => {

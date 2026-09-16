@@ -8,10 +8,10 @@ import { authResponse } from "../shared/portal/auth.js";
 const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql"];
 const password = "A very long unique passphrase";
 
-function setup(t) {
+function setup(t, { avatars = true } = {}) {
   const sqlite = new DatabaseSync(":memory:");
   t.after(() => sqlite.close());
-  for (const file of migrations) sqlite.exec(readFileSync(new URL(`../migrations/${file}`, import.meta.url), "utf8"));
+  for (const file of avatars ? migrations : migrations.slice(0, -1)) sqlite.exec(readFileSync(new URL(`../migrations/${file}`, import.meta.url), "utf8"));
   const prepare = (sql) => {
     let values = [];
     return {
@@ -89,4 +89,17 @@ test("the admin user list requires an authenticated owner and GET", async (t) =>
   assert.equal(method.status, 405);
   assert.equal(method.headers.get("Allow"), "GET");
   assert.equal((await adminUsersResponse(new Request("http://portal.example.test/api/portal/admin/users"), env)).status, 400);
+});
+
+test("the admin user list remains available before the avatar migration", async (t) => {
+  const { sqlite, env } = setup(t, { avatars: false });
+  const registration = await authResponse(authRequest("register", account("jacobnathan1718@gmail.com", "Jacob")), env, "register");
+  const owner = (await registration.clone().json()).user;
+  sqlite.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at) VALUES (?, ?, ?, ?)")
+    .run("owner-plex", owner.id, "JNathan34", Date.now());
+  const response = await adminUsersResponse(adminRequest(cookieOf(registration)), env);
+  assert.equal(response.status, 200);
+  const listed = (await response.json()).users[0];
+  assert.equal(listed.plexUsername, "JNathan34");
+  assert.equal("plexAvatarUrl" in listed, false);
 });

@@ -50,14 +50,14 @@ test("desktop account reuses the home backdrop and presents the compact dashboar
   await expect(page.locator(".pp-account-backdrop img")).toHaveAttribute("src", backdrop);
   await expect(page.locator(".pp-account-art")).toHaveCount(0);
   await expect(page.locator(".pp-metric")).toHaveCount(4);
-  await expect(page.locator(".pp-account-shortcuts a")).toHaveCount(4);
+  await expect(page.locator(".pp-account-shortcuts")).toHaveCount(0);
   const intro = await page.locator(".pp-auth-intro").boundingBox();
   const profile = await page.locator(".pp-auth-card").boundingBox();
   expect(intro.x + intro.width).toBeLessThan(profile.x);
 });
 
 for (const width of [320, 390]) {
-  test(`mobile sign-in is on the first screen at ${width}px and email expands accessibly`, async ({ page }) => {
+  test(`mobile Plex sign-in is on the first screen at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 667 });
     await page.goto("/account/");
     await expect(page.locator("#plex-sign-in")).toBeEnabled();
@@ -65,12 +65,8 @@ for (const width of [320, 390]) {
     expect(action.y + action.height).toBeLessThan(667);
     expect((await page.locator(".pp-site-header").boundingBox()).height).toBeLessThanOrEqual(70);
     await expect(page.locator(".pp-account-art")).toBeHidden();
-    await expect(page.locator("#auth-email")).toBeHidden();
-    await page.locator("#email-option > summary").focus();
-    await page.keyboard.press("Enter");
-    await expect(page.locator("#auth-email")).toBeVisible();
-    await page.getByRole("button", { name: "Create account", exact: true }).click();
-    await expect(page.getByLabel("Display name", { exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Continue with Plex" })).toBeVisible();
+    await expect(page.locator("#email-option, #auth-form")).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 }
