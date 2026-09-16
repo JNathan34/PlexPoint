@@ -13,8 +13,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/index-GJ5txONd.css" />
-    <link rel="stylesheet" href="/assets/portal.css?v=20260916-dashboard-1" />
-    <script type="module" src="/assets/portal-auth.js?v=20260916-dashboard-1"></script>
+    <link rel="stylesheet" href="/assets/portal.css?v=20260916-uniform-2" />
+    <script type="module" src="/assets/portal-auth.js?v=20260916-uniform-2"></script>
     <script type="module" src="/assets/portal-navigation.js?v=20260916-dashboard-1"></script>
     <script type="module" src="/assets/portal.js?v=20260916-dashboard-1"></script>
   </head>
@@ -55,7 +55,7 @@
                     <a class="pp-button" href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer"><span data-icon="search"></span><strong>Request on Overseerr</strong></a>
                   </nav>
                   <div class="pp-metrics" aria-label="Account summary">
-                    <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="membership"></span><h3>Active plan</h3><strong id="overview-plan">Sign in to view</strong><p id="overview-plan-note">Your current plan and access status appear here.</p></article>
+                    <article class="pp-card glass-card pp-metric"><span id="overview-tier-icon" class="pp-tier-icon" data-tier="none" aria-hidden="true"></span><h3>Active plan</h3><strong id="overview-plan">Sign in to view</strong><p id="overview-plan-note">Your current plan and access status appear here.</p></article>
                     <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="clock"></span><h3>Time remaining</h3><strong id="overview-renewal">Sign in to view</strong><p id="overview-renewal-note">See when your next payment is due.</p></article>
                     <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="payment"></span><h3>Payment status</h3><strong id="overview-payment">Sign in to view</strong><p id="overview-payment-note">Your latest confirmed payment appears here.</p></article>
                     <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="film"></span><h3>Watch time</h3><strong id="overview-watch-time">Sign in to view</strong><p id="overview-watch-time-note">Your selected activity period appears here.</p></article>
@@ -85,9 +85,9 @@
                     </details>
                   </div>
                   <div id="auth-user" hidden>
-                    <div class="pp-profile-header"><div class="pp-profile-avatar"><img src="/plexpoint-logo.png" alt="" width="80" height="80" /></div><div class="pp-profile-copy"><h2 id="auth-user-name"></h2><p id="auth-user-email"></p><p id="auth-user-since" class="pp-small"></p><span class="pp-profile-active"><span aria-hidden="true"></span>Active member</span></div></div>
+                    <div class="pp-profile-header"><div class="pp-profile-avatar"><img id="profile-avatar" src="/plexpoint-logo.png" alt="" width="96" height="96" referrerpolicy="no-referrer" /></div><div class="pp-profile-copy"><h2 id="auth-user-name"></h2><p id="auth-user-email"></p><p id="auth-user-since" class="pp-small"></p><span class="pp-profile-active"><span aria-hidden="true"></span>Active member</span></div></div>
                     <div class="pp-profile-membership">
-                      <div class="pp-profile-plan"><span class="pp-icon-tile" data-icon="membership"></span><div><strong id="profile-plan">Membership</strong><small id="profile-plan-note">Loading your plan…</small></div></div>
+                      <div class="pp-profile-plan"><span id="profile-tier-icon" class="pp-tier-icon" data-tier="none" aria-hidden="true"></span><div><strong id="profile-plan">Membership</strong><small id="profile-plan-note">Loading your plan…</small></div></div>
                       <dl><div><dt><span data-icon="clock"></span>Renews on</dt><dd id="profile-renewal">—</dd></div><div><dt><span data-icon="payment"></span>Last payment</dt><dd id="profile-last-payment">—</dd></div><div><dt><span data-icon="info"></span>Payment status</dt><dd><span id="profile-payment-state" class="pp-billing-state" data-status="none">Checking</span></dd></div><div><dt><span data-icon="grid"></span>Account status</dt><dd><span id="profile-access" class="pp-account-status" data-status="enabled">Active</span></dd></div></dl>
                     </div>
                     <div class="pp-actions pp-profile-actions"><a href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer" class="pp-button pp-button-primary">Open Overseerr ↗</a><a href="#billing-panel" class="pp-button">Membership</a><button id="auth-logout" type="button" class="pp-button">Sign out</button></div>
@@ -100,7 +100,7 @@
               <p id="billing-status" class="pp-small" role="status"></p><button id="billing-retry" type="button" class="pp-button" hidden>Retry membership</button>
               <div id="billing-results" hidden>
                 <div class="pp-billing-summary">
-                  <article><span>Current plan</span><strong id="billing-plan">—</strong><small id="billing-access">—</small></article>
+                  <article class="pp-billing-plan-summary"><span id="billing-tier-icon" class="pp-tier-icon pp-tier-icon-small" data-tier="none" aria-hidden="true"></span><div><span>Current plan</span><strong id="billing-plan">—</strong><small id="billing-access">—</small></div></article>
                   <article><span>Last payment</span><strong id="billing-last-paid">—</strong><small id="billing-last-amount">—</small></article>
                   <article><span>Next payment due</span><strong id="billing-next-due">—</strong><small id="billing-balance">—</small></article>
                 </div>

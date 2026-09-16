@@ -15,7 +15,7 @@ const cookies = (response) => response.headers.getSetCookie().map((value) => val
 function setup(t) {
   const db = new DatabaseSync(":memory:");
   t.after(() => db.close());
-  for (const file of ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql"]) {
+  for (const file of ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql"]) {
     db.exec(readFileSync(new URL(`../migrations/${file}`, import.meta.url), "utf8"));
   }
   const prepare = (sql) => {
@@ -33,7 +33,7 @@ function setup(t) {
     catch (error) { db.exec("ROLLBACK"); throw error; }
   } } };
   const provider = { authorized: true, failure: false, redirect: false, invalidPin: false,
-    user: { id: 4321, username: "PlexMovieFan", email: "plex@example.test" }, calls: [] };
+    user: { id: 4321, username: "PlexMovieFan", email: "plex@example.test", thumb: "https://plex.tv/users/4321/avatar" }, calls: [] };
   const fetcher = async (url, options) => {
     provider.calls.push({ url, options });
     assert.equal(new URL(url).origin, "https://plex.tv");
@@ -96,11 +96,14 @@ test("Plex identity creates a normal portal session without persisting the Plex 
   const data = await response.json();
   assert.equal(data.user.displayName, "PlexMovieFan");
   assert.equal(data.user.plex.username, "PlexMovieFan");
+  assert.equal(data.user.plex.avatarUrl, "https://plex.tv/users/4321/avatar");
   assert.equal(data.user.email, "plex@example.test");
   const session = cookies(response).find((value) => value.startsWith("__Host-plexpoint_session="));
   assert.ok(session);
   const me = await authResponse(new Request(`${origin}/api/portal/auth/session`, { headers: { Cookie: session } }), env, "session");
-  assert.equal((await me.json()).user.plex.username, "PlexMovieFan");
+  const sessionUser = (await me.json()).user;
+  assert.equal(sessionUser.plex.username, "PlexMovieFan");
+  assert.equal(sessionUser.plex.avatarUrl, "https://plex.tv/users/4321/avatar");
   assert.equal(db.prepare("SELECT role FROM users").get().role, "user");
   for (const table of ["subscriptions", "password_credentials", "plex_account_links", "plex_login_attempts"]) {
     assert.equal(db.prepare(`SELECT count(*) AS n FROM ${table}`).get().n, 0);
@@ -118,12 +121,14 @@ test("returning Plex users resolve by immutable provider ID even when their emai
   const user = (await (await call("complete", first.cookie)).json()).user;
   provider.user.email = "changed@example.test";
   provider.user.username = "NewName";
+  provider.user.thumb = "https://plex.tv/users/4321/new-avatar";
   const second = await begin(call);
   const returning = await call("complete", second.cookie);
   assert.equal(returning.status, 200);
   assert.equal((await returning.json()).user.id, user.id);
   assert.equal(db.prepare("SELECT count(*) AS n FROM users").get().n, 1);
   assert.equal(db.prepare("SELECT username FROM plex_identities").get().username, "NewName");
+  assert.equal(db.prepare("SELECT avatar_url FROM plex_identities").get().avatar_url, "https://plex.tv/users/4321/new-avatar");
   db.exec("UPDATE users SET account_status='disabled'");
   const third = await begin(call);
   assert.equal((await call("complete", third.cookie)).status, 403);

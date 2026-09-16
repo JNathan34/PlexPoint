@@ -119,7 +119,10 @@ function isAdminEmail(value) {
 function publicUser(row) {
   return { id: row.id, email: row.email, displayName: row.display_name, createdAt: row.created_at,
     ...(isAdminEmail(row.email) ? { isAdmin: true } : {}),
-    ...(row.plex_username ? { plex: { username: row.plex_username } } : {}),
+    ...(row.plex_username ? { plex: {
+      username: row.plex_username,
+      ...(row.plex_avatar_url ? { avatarUrl: row.plex_avatar_url } : {}),
+    } } : {}),
   };
 }
 
@@ -163,7 +166,7 @@ async function login(db, request, body, now) {
   const { email, password } = credentials(body, false);
   await rateLimit(db, request, "login", email, now);
   const row = await db.prepare(`SELECT u.id, u.email, u.display_name, u.created_at, u.account_status,
-    c.salt, c.password_hash, c.iterations, p.username AS plex_username FROM users u
+    c.salt, c.password_hash, c.iterations, p.username AS plex_username, p.avatar_url AS plex_avatar_url FROM users u
     LEFT JOIN password_credentials c ON c.user_id = u.id
     LEFT JOIN plex_identities p ON p.user_id = u.id WHERE u.email = ?`).bind(email).first();
   // Unknown accounts perform the same password derivation as existing accounts.
@@ -179,7 +182,7 @@ async function login(db, request, body, now) {
 async function sessionUser(db, request, now = Date.now()) {
   const token = readToken(request);
   return token ? await db.prepare(`SELECT u.id, u.email, u.display_name, u.created_at,
-    p.plex_id, p.username AS plex_username, l.tautulli_user_id
+    p.plex_id, p.username AS plex_username, p.avatar_url AS plex_avatar_url, l.tautulli_user_id
     FROM auth_sessions s JOIN users u ON u.id = s.user_id
     LEFT JOIN plex_identities p ON p.user_id = u.id
     LEFT JOIN plex_account_links l ON l.user_id = u.id

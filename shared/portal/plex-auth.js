@@ -75,7 +75,14 @@ function profileIdentity(profile) {
   if (!/^[1-9][0-9]{0,19}$/.test(id) || !username || username.length > 100 || /[\x00-\x1f\x7f]/.test(username)) {
     throw new AuthError(502, "Plex did not return a valid account identity.");
   }
-  return { id, username, email };
+  let avatarUrl = "";
+  if (typeof profile.thumb === "string" && profile.thumb.length <= 2048) {
+    try {
+      const candidate = new URL(profile.thumb);
+      if (candidate.protocol === "https:" && !candidate.username && !candidate.password) avatarUrl = candidate.href;
+    } catch {}
+  }
+  return { id, username, email, avatarUrl };
 }
 
 async function complete(request, db, fetcher) {
@@ -122,12 +129,13 @@ async function complete(request, db, fetcher) {
   const statements = [];
   if (!current && !linked) statements.push(db.prepare("INSERT INTO users(id, email, display_name, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)")
     .bind(row.id, row.email, row.display_name, isAdminEmail(row.email) ? "admin" : "user", now, now));
-  if (!linked) statements.push(db.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at) VALUES (?, ?, ?, ?)")
-    .bind(profile.id, row.id, profile.username, now));
-  else statements.push(db.prepare("UPDATE plex_identities SET username = ? WHERE plex_id = ?").bind(profile.username, profile.id));
+  if (!linked) statements.push(db.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at, avatar_url) VALUES (?, ?, ?, ?, ?)")
+    .bind(profile.id, row.id, profile.username, now, profile.avatarUrl || null));
+  else statements.push(db.prepare("UPDATE plex_identities SET username = ?, avatar_url = ? WHERE plex_id = ?")
+    .bind(profile.username, profile.avatarUrl || null, profile.id));
   try { await db.batch([...statements, ...session.statements]); }
   catch { throw new AuthError(409, "The account could not be connected. Please start sign-in again or contact support."); }
-  const response = reply({ user: publicUser({ ...row, plex_username: profile.username }) }, 200,
+  const response = reply({ user: publicUser({ ...row, plex_username: profile.username, plex_avatar_url: profile.avatarUrl }) }, 200,
     { "Set-Cookie": sessionCookie(request, session.token) });
   response.headers.append("Set-Cookie", stateCookie(request, "", 0));
   return response;

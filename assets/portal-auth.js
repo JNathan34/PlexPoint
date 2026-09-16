@@ -1,4 +1,6 @@
 const byId = (id) => document.getElementById(id);
+const profileAvatar = byId("profile-avatar");
+const fallbackAvatar = "/plexpoint-logo.png";
 const form = byId("auth-form");
 const password = byId("auth-password");
 const confirm = byId("auth-confirm");
@@ -59,6 +61,77 @@ function clearPasswords() {
   byId("auth-show-password").setAttribute("aria-pressed", "false");
 }
 
+const tierIconPaths = {
+  none: ["m12 3 9 6-9 12L3 9l9-6Z", "M3 9h18M8 9l4 12 4-12"],
+  bronze: ["M12 3 20 6v5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6l8-3Z", "M8.5 10.5 12 8l3.5 2.5L14 15h-4l-1.5-4.5Z"],
+  silver: ["M8 3h8l-1 6h-6L8 3Z", "M12 9a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z", "m9.5 15 1.6 1.6 3.4-3.4"],
+  gold: ["M3 7l4 5 5-8 5 8 4-5-2 12H5L3 7Z", "M6 16h12"],
+  diamond: ["m4 8 4-4h8l4 4-8 12L4 8Z", "m4 8 8 3 8-3M8 4l4 7 4-7"],
+  ruby: ["m12 3 7 5-2 10-5 3-5-3L5 8l7-5Z", "m5 8 7 3 7-3M8 5l4 6 4-6M7 18l5-7 5 7"],
+  platinum: ["m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"],
+};
+
+function tierKey(value) {
+  const normalized = String(value || "").toLowerCase();
+  return Object.keys(tierIconPaths).find((key) => key !== "none" && normalized.includes(key)) || "none";
+}
+
+function tierSvg(value) {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  for (const [key, attribute] of Object.entries({
+    viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "1.6",
+    "stroke-linecap": "round", "stroke-linejoin": "round", "aria-hidden": "true",
+  })) svg.setAttribute(key, attribute);
+  for (const d of tierIconPaths[tierKey(value)]) {
+    const path = document.createElementNS(svg.namespaceURI, "path");
+    path.setAttribute("d", d);
+    svg.append(path);
+  }
+  return svg;
+}
+
+function tierBadge(value, extraClass = "") {
+  const badge = document.createElement("span");
+  badge.className = `pp-tier-icon${extraClass ? ` ${extraClass}` : ""}`;
+  badge.dataset.tier = tierKey(value);
+  badge.setAttribute("aria-hidden", "true");
+  badge.append(tierSvg(value));
+  return badge;
+}
+
+function setTierBadge(id, value) {
+  const badge = byId(id);
+  badge.dataset.tier = tierKey(value);
+  badge.replaceChildren(tierSvg(value));
+}
+
+function safeAvatarUrl(value) {
+  if (typeof value !== "string" || value.length > 2048) return "";
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && !url.username && !url.password ? url.href : "";
+  } catch { return ""; }
+}
+
+function configureAvatar(image, value, name, holder) {
+  const avatarUrl = safeAvatarUrl(value);
+  const useFallback = () => {
+    holder.classList.remove("has-plex-avatar");
+    image.onerror = null;
+    image.src = fallbackAvatar;
+    image.alt = "";
+  };
+  if (!avatarUrl) {
+    useFallback();
+    return;
+  }
+  holder.classList.add("has-plex-avatar");
+  image.referrerPolicy = "no-referrer";
+  image.alt = `${name || "Member"}’s Plex profile picture`;
+  image.onerror = useFallback;
+  image.src = avatarUrl;
+}
+
 function renderUser(next) {
   if (user?.id !== next?.id) clearPasswords();
   user = next;
@@ -72,6 +145,8 @@ function renderUser(next) {
     byId("auth-user-name").textContent = user.displayName;
     byId("auth-user-email").textContent = user.email;
     byId("auth-user-since").textContent = `Member since ${new Date(user.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}`;
+    configureAvatar(profileAvatar, user.plex?.avatarUrl, user.displayName, profileAvatar.parentElement);
+    for (const id of ["overview-tier-icon", "profile-tier-icon", "billing-tier-icon"]) setTierBadge(id, null);
     byId("profile-plan").textContent = "Loading membership…";
     byId("profile-plan-note").textContent = "Checking your plan and payment details";
     byId("profile-renewal").textContent = "—";
@@ -81,6 +156,8 @@ function renderUser(next) {
     byId("profile-access").textContent = user.isAdmin ? "Administrator" : "Active";
     byId("profile-access").dataset.status = "enabled";
   } else {
+    configureAvatar(profileAvatar, "", "", profileAvatar.parentElement);
+    for (const id of ["overview-tier-icon", "profile-tier-icon", "billing-tier-icon"]) setTierBadge(id, null);
     for (const id of ["auth-user-name", "auth-user-email", "auth-user-since"]) byId(id).textContent = "";
     byId("admin-users").replaceChildren();
     byId("admin-table-wrap").hidden = true;
@@ -277,6 +354,8 @@ function renderBilling(data) {
   state.textContent = paymentLabel;
   state.dataset.status = paymentStatus;
   byId("billing-plan").textContent = subscription?.tier || "No plan assigned";
+  const tier = subscription?.tierId || subscription?.tier;
+  for (const id of ["overview-tier-icon", "profile-tier-icon", "billing-tier-icon"]) setTierBadge(id, tier);
   byId("billing-access").textContent = subscription ? (accessLabels[subscription.accessStatus] || subscription.accessStatus) : "Contact Jacob to choose a plan";
   byId("billing-last-paid").textContent = billing.lastPayment ? dateText(billing.lastPayment.receivedAt) : "No payment recorded";
   byId("billing-last-amount").textContent = billing.lastPayment
@@ -365,20 +444,61 @@ function adminCell(row, primary, secondary = "") {
   return { cell, strong };
 }
 
+function adminUserCell(row, account) {
+  const cell = document.createElement("td");
+  cell.className = "pp-admin-user-cell";
+  const identity = document.createElement("span");
+  identity.className = "pp-admin-user-identity";
+  const avatar = document.createElement("span");
+  avatar.className = "pp-admin-avatar";
+  const image = document.createElement("img");
+  image.width = 38;
+  image.height = 38;
+  configureAvatar(image, account.plexAvatarUrl, account.displayName, avatar);
+  avatar.append(image);
+  const copy = document.createElement("span");
+  const strong = document.createElement("strong");
+  strong.textContent = account.displayName || "Unnamed account";
+  if (account.isAdmin) {
+    const badge = document.createElement("span");
+    badge.className = "pp-admin-role";
+    badge.textContent = "ADMIN";
+    strong.append(badge);
+  }
+  const small = document.createElement("small");
+  small.textContent = account.email;
+  copy.append(strong, small);
+  identity.append(avatar, copy);
+  cell.append(identity);
+  row.append(cell);
+}
+
+function adminTierCell(row, subscription) {
+  const cell = document.createElement("td");
+  const tier = document.createElement("span");
+  tier.className = "pp-admin-tier";
+  tier.append(tierBadge(subscription?.tier), document.createElement("span"));
+  const copy = tier.lastElementChild;
+  const strong = document.createElement("strong");
+  strong.textContent = subscription?.tier || "No plan";
+  copy.append(strong);
+  if (subscription) {
+    const small = document.createElement("small");
+    small.textContent = accessLabels[subscription.status] || subscription.status;
+    copy.append(small);
+  }
+  cell.append(tier);
+  row.append(cell);
+}
+
 function renderAdminUsers(data) {
   if (!Array.isArray(data?.users)) throw new Error("The user list returned an unexpected response.");
   const body = byId("admin-users");
   const rows = data.users.map((account) => {
     const row = document.createElement("tr");
-    const userCell = adminCell(row, account.displayName || "Unnamed account", account.email);
-    if (account.isAdmin) {
-      const badge = document.createElement("span");
-      badge.className = "pp-admin-role";
-      badge.textContent = "ADMIN";
-      userCell.strong.append(badge);
-    }
+    adminUserCell(row, account);
     adminCell(row, account.signInMethods?.join(" + ") || "Not linked", account.plexUsername ? `Plex: ${account.plexUsername}` : "");
-    adminCell(row, account.subscription?.tier || "No plan", account.subscription ? (accessLabels[account.subscription.status] || account.subscription.status) : "");
+    adminTierCell(row, account.subscription);
     const billingLabel = paymentLabels[account.billing?.status || "none"] || "Unknown";
     const billingCell = adminCell(row, billingLabel, account.billing
       ? `${moneyText(account.billing.outstandingMinor, account.billing.currency)} due · ${dateText(account.billing.nextDueAt)}` : "Not scheduled");

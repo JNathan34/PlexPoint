@@ -7,7 +7,7 @@ import { authResponse } from "../shared/portal/auth.js";
 function setup(t) {
   const sqlite = new DatabaseSync(":memory:");
   t.after(() => sqlite.close());
-  for (const file of ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql"]) {
+  for (const file of ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql"]) {
     sqlite.exec(readFileSync(new URL(`../migrations/${file}`, import.meta.url), "utf8"));
   }
   const prepare = (sql) => {

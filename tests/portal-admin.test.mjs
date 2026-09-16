@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { adminUsersResponse } from "../shared/portal/admin.js";
 import { authResponse } from "../shared/portal/auth.js";
 
-const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql"];
+const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql"];
 const password = "A very long unique passphrase";
 
 function setup(t) {
@@ -57,8 +57,8 @@ test("the owner can view a safe account list with Plex and subscription details"
   const member = (await memberRegistration.json()).user;
   const memberCookie = cookieOf(memberRegistration);
   const now = Date.now();
-  sqlite.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at) VALUES (?, ?, ?, ?)")
-    .run("plex-member", member.id, "PlexMember", now);
+  sqlite.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at, avatar_url) VALUES (?, ?, ?, ?, ?)")
+    .run("plex-member", member.id, "PlexMember", now, "https://plex.tv/users/member/avatar");
   sqlite.prepare("INSERT INTO subscriptions(id, user_id, tier_id, access_status, starts_at, ends_at, created_at, updated_at) VALUES (?, ?, ?, 'enabled', ?, ?, ?, ?)")
     .run("sub-member", member.id, "gold", now, now + 86400000, now, now);
 
@@ -77,6 +77,7 @@ test("the owner can view a safe account list with Plex and subscription details"
   const listedMember = data.users.find((user) => user.id === member.id);
   assert.deepEqual(listedMember.signInMethods, ["Email", "Plex"]);
   assert.equal(listedMember.plexUsername, "PlexMember");
+  assert.equal(listedMember.plexAvatarUrl, "https://plex.tv/users/member/avatar");
   assert.deepEqual(listedMember.subscription, { tier: "Gold Tier", status: "enabled", startsAt: now, endsAt: now + 86400000 });
   assert.doesNotMatch(JSON.stringify(data), /password_hash|token_hash|pin_code|\"salt\"/i);
 });
