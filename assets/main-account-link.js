@@ -8,16 +8,16 @@ function accountLink(testId, className) {
 }
 
 function installAccountLinks() {
-  const desktopTrial = document.querySelector('[data-testid="nav-free-trial-link"]');
-  if (desktopTrial && !document.querySelector('[data-testid="nav-account-link"]')) {
-    desktopTrial.before(accountLink("nav-account-link",
-      "glass inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-semibold text-foreground transition-colors hover:text-primary"));
+  const desktopTutorials = document.querySelector('[data-testid="nav-link-tutorials"]');
+  if (desktopTutorials && !document.querySelector('[data-testid="nav-account-link"]')) {
+    desktopTutorials.after(accountLink("nav-account-link",
+      "relative inline-flex items-center rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-all duration-300 hover:text-foreground lg:px-5"));
   }
 
-  const mobileTrial = document.querySelector('[data-testid="mobile-free-trial-link"]');
-  if (mobileTrial && !document.querySelector('[data-testid="mobile-account-link"]')) {
-    mobileTrial.before(accountLink("mobile-account-link",
-      "glass mb-2 flex min-h-[48px] items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold text-primary"));
+  const mobileTutorials = document.querySelector('[data-testid="mobile-nav-link-tutorials"]');
+  if (mobileTutorials && !document.querySelector('[data-testid="mobile-account-link"]')) {
+    mobileTutorials.after(accountLink("mobile-account-link",
+      "flex min-h-[48px] items-center rounded-xl px-4 py-3 text-left text-sm text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground"));
   }
 }
 

@@ -15,6 +15,7 @@ const iconPaths = {
   payment: ["M3 5h18v14H3zM3 10h18M6 15h4"],
   film: ["M3 3h18v18H3zM7 3v18M17 3v18M3 8h4M3 16h4M17 8h4M17 16h4"],
   search: ["m16 16 5 5", "M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0"],
+  gift: ["M20 12v9H4v-9M2 7h20v5H2zM12 7v14", "M12 7H8.5a2.5 2.5 0 1 1 3.5-3.5L12 7Zm0 0h3.5A2.5 2.5 0 1 0 12 3.5V7Z"],
 };
 
 function element(tag, className = "", text = "") {

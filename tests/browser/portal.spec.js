@@ -130,14 +130,19 @@ for (const width of [360, 768, 1440]) {
   });
 }
 
-test('the main website exposes Account in desktop and mobile navigation', async ({ page }) => {
+test('the main and account headers keep Account attached and the trial visible', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
   const desktopLink = page.locator('[data-testid="nav-account-link"]');
   await expect(desktopLink).toBeVisible();
   await expect(desktopLink).toHaveAttribute('href', '/account/');
+  expect(await desktopLink.evaluate((node) => node.parentElement === document.querySelector('[data-testid="nav-link-tutorials"]')?.parentElement)).toBe(true);
+  await expect(page.locator('[data-testid="nav-free-trial-link"]')).toBeVisible();
   await desktopLink.click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to My PlexPoint.');
+  const accountTrial = page.locator('[data-testid="account-trial-link"]');
+  await expect(accountTrial).toBeVisible();
+  await expect(accountTrial).toHaveAttribute('href', 'https://wizarr.plexpoint.uk/j/FREE%20TRIAL');
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
@@ -145,8 +150,14 @@ test('the main website exposes Account in desktop and mobile navigation', async 
   const mobileLink = page.locator('[data-testid="mobile-account-link"]');
   await expect(mobileLink).toBeVisible();
   await expect(mobileLink).toHaveAttribute('href', '/account/');
+  expect(await mobileLink.evaluate((node) => node.parentElement === document.querySelector('[data-testid="mobile-nav-link-tutorials"]')?.parentElement)).toBe(true);
   await mobileLink.click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to My PlexPoint.');
+  await expect(page.locator('.pp-site-header')).toHaveAttribute('data-menu-open', 'false');
+  await page.locator('#portal-menu-toggle').click();
+  const mobileAccountTrial = page.locator('[data-testid="account-mobile-trial-link"]');
+  await expect(mobileAccountTrial).toBeVisible();
+  await expect(mobileAccountTrial).toHaveAttribute('href', 'https://wizarr.plexpoint.uk/j/FREE%20TRIAL');
 });
 
 test('public content is served by the actual Pages worker', async ({ request }) => {
