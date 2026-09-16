@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/assets/portal.css?v=20260916-uniform-2" />
     <script type="module" src="/assets/portal-auth.js?v=20260916-uniform-2"></script>
     <script type="module" src="/assets/portal-navigation.js?v=20260916-dashboard-1"></script>
-    <script type="module" src="/assets/portal.js?v=20260916-dashboard-1"></script>
+    <script type="module" src="/assets/portal.js?v=20260916-account-only-3"></script>
   </head>
   <body class="pp-portal">
     <a class="pp-skip" href="#portal-main">Skip to content</a>
@@ -147,30 +147,11 @@
               </section>
             </section>
           </section>
-          <div id="content-notice" class="pp-content-notice" role="status" hidden><span id="content-notice-text"></span><button id="retry-content" type="button">Try again</button></div>
-
-          <section id="services" class="container pp-content-section" aria-labelledby="services-heading"><div class="pp-content-heading"><p class="pp-eyebrow">PLEXPOINT SERVICES</p><h2 id="services-heading">Open what you need</h2><p>Plex, requests and the full library are one tap away.</p></div><div id="service-links" class="pp-services-grid"></div><div class="pp-card glass-card pp-inline-help"><div><h2>Not sure where to start?</h2><p>The setup guides below cover installation, sign-in and requests.</p></div><a class="pp-button" href="#help">Browse guides →</a></div></section>
-
-          <section id="help" class="container pp-content-section" aria-labelledby="help-heading">
-            <div class="pp-content-heading"><p class="pp-eyebrow">HELP &amp; SETUP</p><h2 id="help-heading">Quick answers when you need them</h2><p>Search the guides without leaving your account page.</p></div>
-            <div class="pp-card glass-card pp-search-box"><label for="help-search">What can we help you with?</label><div class="pp-search-input"><span data-icon="search"></span><input id="help-search" type="search" placeholder="Try buffering, TV setup, payment…" maxlength="200" autocomplete="off" /></div><div id="help-categories" class="pp-categories" aria-label="Filter guides by category"></div></div>
-            <p id="help-count" class="pp-result-count" role="status"></p>
-            <div id="help-articles" class="pp-articles"></div>
-            <div id="help-empty" class="pp-card glass-card pp-empty" hidden><span class="pp-empty-icon" data-icon="search"></span><h2>No matching guides</h2><p>Try another search or browse all categories.</p><button class="pp-button" id="clear-search" type="button">Clear filters</button></div>
-            <div class="pp-card glass-card pp-inline-help"><div><h2>Still need a hand?</h2><p>Send Jacob a message with the details of the problem.</p></div><a class="pp-button" href="#support">Contact support →</a></div>
-          </section>
-
-          <section id="support" class="container pp-content-section" aria-labelledby="support-heading">
-            <div class="pp-content-heading"><p class="pp-eyebrow">CONTACT SUPPORT</p><h2 id="support-heading">Need a hand?</h2><p>Send Jacob the details and keep everything in one place.</p></div>
-            <div class="pp-support-grid"><div><div class="pp-card glass-card pp-support-card"><span class="pp-icon-tile" data-icon="message"></span><h2>A real person, ready to help.</h2><p>Contact Jacob for help with Plex, library access, requests or your membership.</p><a id="support-whatsapp" class="pp-button pp-button-primary">Open WhatsApp ↗</a><a id="support-email" class="pp-button">Open email ↗</a><p class="pp-small">These links open your messaging application. This portal does not submit or store support tickets.</p></div><div class="pp-card glass-card pp-support-tip"><h3>Make it easy to investigate</h3><p>Include the title or episode, your device and any error message. Never include passwords or payment card details.</p><a class="pp-text-link" href="#help/playback-help">Try the playback checklist →</a></div></div>
-            <form id="support-form" class="pp-card glass-card pp-support-form"><p class="pp-eyebrow">SAVE A LITTLE BACK-AND-FORTH</p><h2>Prepare a support message</h2><p>Fill this in, then choose email or copy the message to send yourself.</p><label for="support-topic">What do you need help with?</label><select id="support-topic" name="topic"><option>Plex setup</option><option>Playback problem</option><option>Missing library access</option><option>Content request</option><option>Payment or renewal</option><option>Something else</option></select><label for="support-device">Device <span class="pp-muted">(optional)</span></label><input id="support-device" name="device" type="text" maxlength="120" placeholder="For example, Samsung TV or iPhone" /><label for="support-details">What is happening?</label><textarea id="support-details" name="details" rows="6" minlength="10" maxlength="1200" required placeholder="Describe the problem and anything you have already tried."></textarea><div class="pp-actions"><button type="submit" class="pp-button pp-button-primary">Prepare email <span aria-hidden="true">→</span></button><button type="button" id="copy-support" class="pp-button">Copy message</button></div><div id="prepared-email" class="pp-prepared-email" hidden><p>Your message is ready. Open it in your email application and review it before sending.</p><a id="prepared-email-link" class="pp-text-link">Open prepared email →</a></div><p id="support-status" class="pp-small" role="status"></p></form></div>
-          </section>
-          <div class="container pp-notice-wrap"><div class="pp-notice" role="note"><span data-icon="info"></span><p><strong>Sign in with Plex. Keep your existing library access.</strong> Signing in does not purchase a subscription or grant new library access. Membership and payment records shown here are maintained manually by Jacob.</p></div></div>
           <footer class="pp-footer container"><a class="pp-footer-brand" href="/"><img src="/plexpoint-logo.png" width="28" height="28" alt="" />Plex Point</a><span>A better place to press play.</span><div><a href="/">Home</a><a href="/privacy-policy">Privacy</a><a href="/terms-of-service">Terms</a></div></footer>
         </main>
       </div>
     </div>
     <div id="portal-announcement" class="pp-sr-only" role="status"></div>
-    <noscript><div class="pp-no-script">JavaScript is needed for the service directory and guide search. <a href="https://app.plex.tv/">Open Plex</a>, <a href="https://request.plexpoint.uk/">request content</a>, or <a href="/#tutorials">read the existing setup guides</a>.</div></noscript>
+    <noscript><div class="pp-no-script">JavaScript is needed to use your account dashboard. <a href="/">Return to PlexPoint</a>.</div></noscript>
   </body>
 </html>

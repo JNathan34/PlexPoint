@@ -67,7 +67,7 @@ test("confirmation validation and keyboard password visibility work without subm
   await expect(page.locator("#auth-confirm-field")).toBeHidden();
 });
 
-test("unavailable service offers retry and leaves public guides usable", async ({ page }) => {
+test("unavailable account service offers retry while the main navigation stays usable", async ({ page }) => {
   let unavailable = true;
   await page.route("**/api/portal/auth/session", (route) => unavailable
     ? route.fulfill({ status: 503, json: { message: "Account services are temporarily unavailable." } })
@@ -75,8 +75,8 @@ test("unavailable service offers retry and leaves public guides usable", async (
   await page.goto("/account/#account");
   await expect(page.locator("#auth-status")).toContainText("temporarily unavailable");
   await expect(page.locator("#auth-submit")).toBeDisabled();
-  await page.locator("#help").scrollIntoViewIfNeeded();
-  await expect(page.locator("#help-articles details")).toHaveCount(6);
+  await expect(page.getByRole("navigation", { name: "Main website navigation" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Request on Overseerr", exact: false })).toBeVisible();
   unavailable = false;
   await page.getByRole("button", { name: "Retry connection" }).click();
   await expect(page.locator("#auth-submit")).toBeEnabled();

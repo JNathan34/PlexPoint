@@ -148,13 +148,14 @@ function openHashGuide(focus = false) {
   }
 }
 
-search.addEventListener("input", () => { query = search.value; renderArticles(); });
-document.getElementById("clear-search").addEventListener("click", () => {
-  query = ""; category = "all"; search.value = ""; renderArticles(); search.focus();
-});
-window.addEventListener("hashchange", () => openHashGuide(true));
+if (search) {
+  search.addEventListener("input", () => { query = search.value; renderArticles(); });
+  document.getElementById("clear-search").addEventListener("click", () => {
+    query = ""; category = "all"; search.value = ""; renderArticles(); search.focus();
+  });
+  window.addEventListener("hashchange", () => openHashGuide(true));
 
-async function refreshContent() {
+  async function refreshContent() {
   if (loading) return;
   loading = true;
   const retry = document.getElementById("retry-content");
@@ -182,46 +183,47 @@ async function refreshContent() {
     retry.disabled = false;
     retry.textContent = "Try again";
   }
-}
-document.getElementById("retry-content").addEventListener("click", () => void refreshContent());
+  }
+  document.getElementById("retry-content").addEventListener("click", () => void refreshContent());
 
-const whatsapp = document.getElementById("support-whatsapp");
-whatsapp.href = publicHref(supportContact.whatsapp);
-whatsapp.target = "_blank";
-whatsapp.rel = "noopener noreferrer";
-document.getElementById("support-email").href = `mailto:${supportContact.email}`;
-const form = document.getElementById("support-form");
-const supportStatus = document.getElementById("support-status");
-const detailsInput = document.getElementById("support-details");
-function supportValues() { return Object.fromEntries(new FormData(form)); }
-function validateSupport() {
-  detailsInput.setCustomValidity(detailsInput.value.trim().length < 10 ? "Please describe the problem in at least 10 characters." : "");
-  return form.reportValidity();
-}
-form.addEventListener("input", () => {
-  detailsInput.setCustomValidity("");
-  document.getElementById("prepared-email").hidden = true;
-  document.getElementById("prepared-email-link").removeAttribute("href");
-  supportStatus.textContent = "";
-});
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  if (!validateSupport()) return;
-  const values = supportValues();
-  const subject = encodeURIComponent(`PlexPoint support: ${values.topic}`);
-  const body = encodeURIComponent(supportMessage(values));
-  const link = document.getElementById("prepared-email-link");
-  link.href = `mailto:${supportContact.email}?subject=${subject}&body=${body}`;
-  document.getElementById("prepared-email").hidden = false;
-  supportStatus.textContent = "Message prepared. Nothing has been sent.";
-  link.focus();
-});
-document.getElementById("copy-support").addEventListener("click", () => {
-  if (validateSupport()) void copyText(supportMessage(supportValues()), "Message copied. Paste it into email or WhatsApp to send it.", supportStatus);
-});
+  const whatsapp = document.getElementById("support-whatsapp");
+  whatsapp.href = publicHref(supportContact.whatsapp);
+  whatsapp.target = "_blank";
+  whatsapp.rel = "noopener noreferrer";
+  document.getElementById("support-email").href = `mailto:${supportContact.email}`;
+  const form = document.getElementById("support-form");
+  const supportStatus = document.getElementById("support-status");
+  const detailsInput = document.getElementById("support-details");
+  function supportValues() { return Object.fromEntries(new FormData(form)); }
+  function validateSupport() {
+    detailsInput.setCustomValidity(detailsInput.value.trim().length < 10 ? "Please describe the problem in at least 10 characters." : "");
+    return form.reportValidity();
+  }
+  form.addEventListener("input", () => {
+    detailsInput.setCustomValidity("");
+    document.getElementById("prepared-email").hidden = true;
+    document.getElementById("prepared-email-link").removeAttribute("href");
+    supportStatus.textContent = "";
+  });
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!validateSupport()) return;
+    const values = supportValues();
+    const subject = encodeURIComponent(`PlexPoint support: ${values.topic}`);
+    const body = encodeURIComponent(supportMessage(values));
+    const link = document.getElementById("prepared-email-link");
+    link.href = `mailto:${supportContact.email}?subject=${subject}&body=${body}`;
+    document.getElementById("prepared-email").hidden = false;
+    supportStatus.textContent = "Message prepared. Nothing has been sent.";
+    link.focus();
+  });
+  document.getElementById("copy-support").addEventListener("click", () => {
+    if (validateSupport()) void copyText(supportMessage(supportValues()), "Message copied. Paste it into email or WhatsApp to send it.", supportStatus);
+  });
 
-renderServices();
-renderCategories();
-renderArticles();
-openHashGuide(true);
-void refreshContent();
+  renderServices();
+  renderCategories();
+  renderArticles();
+  openHashGuide(true);
+  void refreshContent();
+}

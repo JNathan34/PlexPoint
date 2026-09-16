@@ -100,17 +100,6 @@ test("mobile main-site navigation supports keyboard opening, Escape and resizing
   await expect(page.locator("#portal-navigation")).toBeHidden();
 });
 
-test("content failure notices stay below the account hero without hiding the guides", async ({ page }) => {
-  await page.route("**/api/portal/content", (route) => route.fulfill({ status: 503, json: { message: "Unavailable" } }));
-  await page.goto("/account/");
-  await expect(page.locator("#content-notice")).toBeVisible();
-  await expect(page.locator("#plex-sign-in")).toBeEnabled();
-  const notice = await page.locator("#content-notice").boundingBox();
-  const header = await page.locator(".pp-site-header").boundingBox();
-  expect(notice.y).toBeGreaterThanOrEqual(header.y + header.height);
-  await expect(page.locator("#help-articles details")).toHaveCount(6);
-});
-
 test("reduced-motion preference disables portal transitions", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/account/");
