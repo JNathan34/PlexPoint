@@ -15,7 +15,7 @@ const cookies = (response) => response.headers.getSetCookie().map((value) => val
 function setup(t) {
   const db = new DatabaseSync(":memory:");
   t.after(() => db.close());
-  for (const file of ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql"]) {
+  for (const file of ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql"]) {
     db.exec(readFileSync(new URL(`../migrations/${file}`, import.meta.url), "utf8"));
   }
   const prepare = (sql) => {

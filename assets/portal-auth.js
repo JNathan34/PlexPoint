@@ -8,6 +8,7 @@ let user = null;
 let busy = false;
 let available = false;
 let plexPending = false;
+let adminBusy = false;
 const returnUrl = new URL(location.href);
 let plexReturning = returnUrl.searchParams.get("plex") === "return";
 if (plexReturning) {
@@ -26,7 +27,8 @@ function controls() {
   byId("auth-fields").disabled = busy || !available || plexPending;
   for (const id of ["auth-login-mode", "auth-register-mode", "auth-logout"]) byId(id).disabled = busy || plexPending;
   for (const id of ["auth-retry", "plex-check", "plex-cancel"]) byId(id).disabled = busy;
-  for (const id of ["plex-sign-in", "plex-connect"]) byId(id).disabled = busy || !available || plexPending;
+  byId("plex-sign-in").disabled = busy || !available || plexPending;
+  byId("admin-retry").disabled = adminBusy;
   byId("plex-pending").hidden = !plexPending;
   form.setAttribute("aria-busy", String(busy));
   byId("auth-submit").textContent = busy ? "Please wait…" : mode === "register" ? "Create account" : "Sign in";
@@ -47,20 +49,98 @@ function renderUser(next) {
   if (user) byId("email-option").open = false;
   byId("auth-guest").hidden = Boolean(user);
   byId("auth-user").hidden = !user;
-  byId("account-link").textContent = user ? "My account" : "Sign in with Plex";
-  byId("plex-connect").hidden = !user || Boolean(user.plex);
-  byId("plex-connected").hidden = !user?.plex;
-  byId("plex-connected").textContent = user?.plex ? `Plex connected · ${user.plex.username}` : "";
-  byId("auth-user-note").textContent = user?.plex
-    ? "Plex identity confirmed. Membership and library access remain managed separately."
-    : "Your portal email is not verified. Connect Plex to use Plex sign-in for this account.";
+  byId("account-link").textContent = user ? "My account" : "Sign in";
+  byId("admin-panel").hidden = !user?.isAdmin;
   if (user) {
     byId("auth-user-name").textContent = user.displayName;
     byId("auth-user-email").textContent = user.email;
     byId("auth-user-since").textContent = `Member since ${new Date(user.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}`;
   } else {
     for (const id of ["auth-user-name", "auth-user-email", "auth-user-since"]) byId(id).textContent = "";
+    byId("admin-users").replaceChildren();
+    byId("admin-table-wrap").hidden = true;
+    byId("admin-status").textContent = "";
   }
+}
+
+const dateText = (value) => new Date(value).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+function adminCell(row, primary, secondary = "") {
+  const cell = document.createElement("td");
+  const strong = document.createElement("strong");
+  strong.textContent = primary;
+  cell.append(strong);
+  if (secondary) {
+    const small = document.createElement("small");
+    small.textContent = secondary;
+    cell.append(small);
+  }
+  row.append(cell);
+  return { cell, strong };
+}
+
+function renderAdminUsers(data) {
+  if (!Array.isArray(data?.users)) throw new Error("The user list returned an unexpected response.");
+  const body = byId("admin-users");
+  const rows = data.users.map((account) => {
+    const row = document.createElement("tr");
+    const userCell = adminCell(row, account.displayName || "Unnamed account", account.email);
+    if (account.isAdmin) {
+      const badge = document.createElement("span");
+      badge.className = "pp-admin-role";
+      badge.textContent = "ADMIN";
+      userCell.strong.append(badge);
+    }
+    adminCell(row, account.signInMethods?.join(" + ") || "Not linked", account.plexUsername ? `Plex: ${account.plexUsername}` : "");
+    adminCell(row, account.subscription?.tier || "No plan", account.subscription?.status || "");
+    const statusCell = document.createElement("td");
+    const statusLabel = document.createElement("span");
+    statusLabel.className = "pp-account-status";
+    statusLabel.dataset.status = account.accountStatus;
+    statusLabel.textContent = account.accountStatus;
+    statusCell.append(statusLabel);
+    row.append(statusCell);
+    adminCell(row, dateText(account.createdAt));
+    return row;
+  });
+  if (!rows.length) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 5;
+    cell.textContent = "No user accounts were found.";
+    row.append(cell);
+    rows.push(row);
+  }
+  body.replaceChildren(...rows);
+  byId("admin-total").textContent = String(data.summary?.total ?? data.users.length);
+  byId("admin-enabled").textContent = String(data.summary?.enabled ?? data.users.filter((account) => account.accountStatus === "enabled").length);
+  byId("admin-subscribed").textContent = String(data.summary?.subscribed ?? data.users.filter((account) => account.subscription).length);
+  byId("admin-table-wrap").hidden = false;
+}
+
+async function loadAdminUsers() {
+  if (!user?.isAdmin || adminBusy) return;
+  adminBusy = true;
+  byId("admin-status").textContent = "Loading user accounts…";
+  byId("admin-status").dataset.error = "false";
+  byId("admin-retry").hidden = true;
+  controls();
+  try {
+    renderAdminUsers(await request("users", undefined, "admin"));
+    byId("admin-status").textContent = "";
+  } catch (error) {
+    byId("admin-table-wrap").hidden = true;
+    byId("admin-status").textContent = error.message;
+    byId("admin-status").dataset.error = "true";
+    byId("admin-retry").hidden = false;
+  } finally {
+    adminBusy = false;
+    controls();
+  }
+}
+
+async function acceptUser(next) {
+  renderUser(next);
+  if (next?.isAdmin) await loadAdminUsers();
 }
 
 function setMode(value) {
@@ -94,7 +174,7 @@ async function request(action, body, group = "auth") {
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || "Account services are temporarily unavailable.");
-    if (group === "plex") return data;
+    if (group !== "auth") return data;
     if (!("user" in data)) throw new Error("Account services returned an unexpected response.");
     return data.user;
   } catch (error) {
@@ -113,7 +193,7 @@ async function refreshSession() {
     const next = await request("session");
     const expired = user && !next;
     available = true;
-    renderUser(next);
+    await acceptUser(next);
     byId("auth-retry").hidden = true;
     message(expired ? "Your session has ended. Please sign in again." : "");
   } catch (error) {
@@ -144,7 +224,7 @@ form.addEventListener("submit", async (event) => {
   controls();
   message(mode === "register" ? "Creating your account…" : "Signing in…");
   try {
-    renderUser(await request(mode, body));
+    await acceptUser(await request(mode, body));
     clearPasswords();
     message(mode === "register" ? "Your account is ready. You are signed in." : "Welcome back. You are signed in.", false, true);
     channel?.postMessage("session-changed");
@@ -196,7 +276,7 @@ async function completePlex() {
     plexPending = Boolean(data.pending);
     if (plexPending) message("Waiting for Plex approval. Check again after you finish signing in.");
     else if (data.user) {
-      renderUser(data.user);
+      await acceptUser(data.user);
       clearPasswords();
       message("You are signed in with Plex.", false, true);
       channel?.postMessage("session-changed");
@@ -208,7 +288,6 @@ async function completePlex() {
 }
 
 byId("plex-sign-in").addEventListener("click", () => void startPlex());
-byId("plex-connect").addEventListener("click", () => void startPlex());
 byId("plex-check").addEventListener("click", () => void completePlex());
 byId("plex-cancel").addEventListener("click", async () => {
   if (busy) return;
@@ -229,6 +308,7 @@ async function initializeSession() {
   if (plexReturning && available) await completePlex();
 }
 byId("auth-retry").addEventListener("click", () => void initializeSession());
+byId("admin-retry").addEventListener("click", () => void loadAdminUsers());
 window.addEventListener("focus", () => void refreshSession());
 window.addEventListener("pageshow", (event) => { if (event.persisted) void initializeSession(); });
 void initializeSession();

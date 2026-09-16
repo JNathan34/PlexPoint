@@ -53,12 +53,12 @@ test("return from Plex completes sign-in, cleans the URL, and survives reload", 
   });
   await page.goto("/account/?plex=return#account");
   await expect(page.locator("#auth-status")).toHaveText("You are signed in with Plex.");
-  await expect(page.locator("#plex-connected")).toHaveText("Plex connected · PlexMovieFan");
-  await expect(page.locator("#plex-connect")).toBeHidden();
+  await expect(page.locator("#auth-user-name")).toHaveText(plexUser.displayName);
+  await expect(page.getByText("Plex connected", { exact: false })).toHaveCount(0);
   await expect(page).toHaveURL("http://127.0.0.1:8791/account/#account");
   await page.reload();
   await expect(page.locator("#auth-user-email")).toHaveText(plexUser.email);
-  await expect(page.locator("#plex-connected")).toBeVisible();
+  await expect(page.locator("#auth-user")).toBeVisible();
 });
 
 test("pending approval can be checked again or cancelled", async ({ page }) => {
@@ -77,7 +77,7 @@ test("pending approval can be checked again or cancelled", async ({ page }) => {
   await expect(page.locator("#plex-pending")).toBeVisible();
   approved = true;
   await page.getByRole("button", { name: "Check approval" }).click();
-  await expect(page.locator("#plex-connected")).toBeVisible();
+  await expect(page.locator("#auth-user-name")).toHaveText(plexUser.displayName);
   await expect(page.locator("#plex-pending")).toBeHidden();
 });
 
@@ -91,13 +91,13 @@ test("expired attempts and Plex outages show actionable errors and preserve emai
   await expect(page.locator("#auth-submit")).toBeEnabled();
 });
 
-test("existing portal accounts have an explicit Connect Plex action", async ({ page }) => {
+test("signed-in accounts show account actions without Plex connection messaging", async ({ page }) => {
   await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: localUser } }));
-  await page.route("**/api/portal/plex/start", (route) => route.fulfill({ json: { authorizationUrl } }));
   await page.goto("/account/");
   await expect(page.locator("#auth-user-name")).toHaveText(localUser.displayName);
-  await page.getByRole("button", { name: "Connect Plex", exact: true }).click();
-  await expect(page).toHaveURL(authorizationUrl);
+  await expect(page.getByText("Plex connected", { exact: false })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Connect Plex", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveAttribute("href", "https://request.plexpoint.uk/");
 });
 
 test("account page shares the main site's background, font, glass cards and gradient tokens", async ({ page }) => {
@@ -134,7 +134,7 @@ for (const width of [320, 768, 1440]) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: { ...plexUser, displayName: "A".repeat(100), plex: { username: "B".repeat(100) } } } }));
     await page.reload();
-    await expect(page.locator("#plex-connected")).toBeVisible();
+    await expect(page.locator("#auth-user-name")).toHaveText("A".repeat(100));
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 }

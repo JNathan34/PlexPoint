@@ -1,4 +1,4 @@
-import { AuthError, randomHex, digest, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser } from "./auth.js";
+import { AuthError, randomHex, digest, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail } from "./auth.js";
 
 const MAX_AGE = 600;
 function stateName(request) {
@@ -120,8 +120,8 @@ async function complete(request, db, fetcher) {
   const row = current || linked || { id: crypto.randomUUID(), email: profile.email, display_name: profile.username, created_at: now };
   const session = await sessionStatements(db, request, row.id, now);
   const statements = [];
-  if (!current && !linked) statements.push(db.prepare("INSERT INTO users(id, email, display_name, created_at, updated_at) VALUES (?, ?, ?, ?, ?)")
-    .bind(row.id, row.email, row.display_name, now, now));
+  if (!current && !linked) statements.push(db.prepare("INSERT INTO users(id, email, display_name, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)")
+    .bind(row.id, row.email, row.display_name, isAdminEmail(row.email) ? "admin" : "user", now, now));
   if (!linked) statements.push(db.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at) VALUES (?, ?, ?, ?)")
     .bind(profile.id, row.id, profile.username, now));
   else statements.push(db.prepare("UPDATE plex_identities SET username = ? WHERE plex_id = ?").bind(profile.username, profile.id));

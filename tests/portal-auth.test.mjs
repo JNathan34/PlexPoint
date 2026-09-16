@@ -7,7 +7,7 @@ import { authResponse } from "../shared/portal/auth.js";
 function setup(t) {
   const sqlite = new DatabaseSync(":memory:");
   t.after(() => sqlite.close());
-  for (const file of ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql"]) {
+  for (const file of ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql"]) {
     sqlite.exec(readFileSync(new URL(`../migrations/${file}`, import.meta.url), "utf8"));
   }
   const prepare = (sql) => {
@@ -62,6 +62,16 @@ test("registration normalizes email, persists hashes, and creates no privileges 
   assert.equal(sqlite.prepare("SELECT count(*) AS n FROM subscriptions").get().n, 0);
   assert.equal(sqlite.prepare("SELECT count(*) AS n FROM plex_account_links").get().n, 0);
   assert.equal((await (await call("session", undefined, { cookie: cookieOf(response) })).json()).user.id, data.user.id);
+});
+
+test("the configured owner email is returned and stored as an administrator", async (t) => {
+  const { call, sqlite } = setup(t);
+  const response = await call("register", { ...details, email: " JacobNathan1718@GMAIL.com " });
+  assert.equal(response.status, 201);
+  const data = await response.json();
+  assert.equal(data.user.email, "jacobnathan1718@gmail.com");
+  assert.equal(data.user.isAdmin, true);
+  assert.equal(sqlite.prepare("SELECT role FROM users WHERE id = ?").get(data.user.id).role, "admin");
 });
 
 test("login rotates the presented session and logout revokes it server-side", async (t) => {

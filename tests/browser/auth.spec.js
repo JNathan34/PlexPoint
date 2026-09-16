@@ -105,3 +105,39 @@ test("failed logout keeps the user informed instead of claiming success", async 
   await expect(page.locator("#auth-user")).toBeVisible();
   await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled();
 });
+
+test("the owner account sees the user dashboard and Overseerr shortcuts", async ({ page }) => {
+  const createdAt = Date.UTC(2026, 8, 16);
+  await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
+    id: "owner", email: "jacobnathan1718@gmail.com", displayName: "Jacob", createdAt, isAdmin: true,
+  } } }));
+  await page.route("**/api/portal/admin/users", (route) => route.fulfill({ json: {
+    summary: { total: 2, enabled: 1, disabled: 1, subscribed: 1 },
+    users: [
+      { id: "owner", displayName: "Jacob", email: "jacobnathan1718@gmail.com", isAdmin: true, accountStatus: "enabled", createdAt, updatedAt: createdAt, signInMethods: ["Plex"], plexUsername: "JNathan34", subscription: null },
+      { id: "member", displayName: "Movie Fan", email: "fan@example.test", isAdmin: false, accountStatus: "disabled", createdAt, updatedAt: createdAt, signInMethods: ["Email"], subscription: { tier: "Gold Tier", status: "enabled", startsAt: createdAt, endsAt: createdAt + 86400000 } },
+    ],
+  } }));
+  await page.goto("/account/#account");
+  await expect(page.locator("#admin-panel")).toBeVisible();
+  await expect(page.locator("#admin-total")).toHaveText("2");
+  await expect(page.locator("#admin-enabled")).toHaveText("1");
+  await expect(page.locator("#admin-subscribed")).toHaveText("1");
+  await expect(page.locator("#admin-users tr")).toHaveCount(2);
+  await expect(page.locator("#admin-users")).toContainText("Movie Fan");
+  await expect(page.locator("#admin-users")).toContainText("Gold Tier");
+  await expect(page.getByText("Plex connected", { exact: false })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Request on Overseerr", exact: false })).toHaveAttribute("href", "https://request.plexpoint.uk/");
+});
+
+test("ordinary accounts never request or reveal the admin dashboard", async ({ page }) => {
+  let adminRequests = 0;
+  await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
+    id: "member", email: "member@example.test", displayName: "Member", createdAt: Date.now(),
+  } } }));
+  await page.route("**/api/portal/admin/users", (route) => { adminRequests++; return route.abort(); });
+  await page.goto("/account/#account");
+  await expect(page.locator("#auth-user-name")).toHaveText("Member");
+  await expect(page.locator("#admin-panel")).toBeHidden();
+  expect(adminRequests).toBe(0);
+});

@@ -39,7 +39,7 @@
       <div class="pp-main-wrap">
         <header class="pp-topbar">
           <span>MY PLEXPOINT <span class="pp-topbar-separator">/</span> <span id="breadcrumb">Account</span></span>
-          <a id="account-link" class="pp-badge" href="#account">Sign in with Plex</a>
+          <a id="account-link" class="pp-badge" href="#account">Sign in</a>
         </header>
         <main id="portal-main" tabindex="-1">
           <div id="page-heading-slot" class="container"><div id="page-heading" class="pp-page-heading"><h1 id="page-title" tabindex="-1">Welcome to My PlexPoint.</h1><p id="page-description">Your Plex account. Your services, setup guides and support. All in one familiar place.</p></div></div>
@@ -94,8 +94,8 @@
                   </details>
                 </div>
                 <div id="auth-user" hidden>
-                  <span class="pp-badge">WELCOME BACK</span><h2 id="auth-user-name"></h2><p id="auth-user-email"></p><p id="auth-user-since" class="pp-small"></p><p id="auth-user-note" class="pp-small"></p><p id="plex-connected" class="pp-connected" hidden></p><button id="plex-connect" type="button" class="pp-button pp-button-primary">Connect Plex</button>
-                  <div class="pp-actions"><a href="#overview" class="pp-button pp-button-primary">Go to overview →</a><button id="auth-logout" type="button" class="pp-button">Sign out</button></div>
+                  <span class="pp-badge">WELCOME BACK</span><h2 id="auth-user-name"></h2><p id="auth-user-email"></p><p id="auth-user-since" class="pp-small"></p>
+                  <div class="pp-actions"><a href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer" class="pp-button pp-button-primary">Open Overseerr ↗</a><a href="#overview" class="pp-button">Go to overview →</a><button id="auth-logout" type="button" class="pp-button">Sign out</button></div>
                 </div>
                 </div>
               </div>
@@ -107,10 +107,16 @@
               </div>
             </div>
             <nav class="pp-account-shortcuts" aria-label="Explore PlexPoint">
+              <a class="pp-card glass-card" href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer"><span data-icon="search"></span><div><strong>Request on Overseerr</strong><p>Ask for a movie or show.</p></div><span aria-hidden="true">↗</span></a>
               <a class="pp-card glass-card" href="/movies"><span data-icon="film"></span><div><strong>Browse the library</strong><p>Find your next movie night.</p></div><span aria-hidden="true">→</span></a>
               <a class="pp-card glass-card" href="#help"><span data-icon="book"></span><div><strong>Get set up</strong><p>Guides for every device.</p></div><span aria-hidden="true">→</span></a>
               <a class="pp-card glass-card" href="#support"><span data-icon="message"></span><div><strong>Need a hand?</strong><p>Get in touch with Jacob.</p></div><span aria-hidden="true">→</span></a>
-            </nav></div>
+            </nav>
+            <section id="admin-panel" class="pp-card glass-card pp-admin-panel" aria-labelledby="admin-heading" hidden>
+              <div class="pp-admin-heading"><div><span class="pp-badge">ADMIN</span><h2 id="admin-heading">User accounts</h2><p>Portal access and subscription details for every account.</p></div><div class="pp-admin-summary" aria-label="Account summary"><span><strong id="admin-total">0</strong>Total</span><span><strong id="admin-enabled">0</strong>Enabled</span><span><strong id="admin-subscribed">0</strong>With a plan</span></div></div>
+              <p id="admin-status" class="pp-small" role="status"></p><button id="admin-retry" type="button" class="pp-button" hidden>Retry user list</button>
+              <div id="admin-table-wrap" class="pp-admin-table-wrap" hidden><table class="pp-admin-table"><thead><tr><th scope="col">User</th><th scope="col">Sign-in</th><th scope="col">Plan</th><th scope="col">Status</th><th scope="col">Joined</th></tr></thead><tbody id="admin-users"></tbody></table></div>
+            </section></div>
           </section>
 
           <section class="container" data-panel="services" aria-label="Services" hidden><div id="service-links" class="pp-services-grid"></div><div class="pp-card glass-card pp-inline-help"><div><h2>Not sure where to start?</h2><p>The help centre walks you through installation, sign-in and requests.</p></div><a class="pp-button" href="#help">Browse guides →</a></div></section>

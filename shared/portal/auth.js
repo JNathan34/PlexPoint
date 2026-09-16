@@ -2,6 +2,7 @@ const SESSION_SECONDS = 7 * 24 * 60 * 60;
 // Workers Web Crypto supports a maximum of 100,000 PBKDF2 iterations.
 const ITERATIONS = 100000;
 const WINDOW_MS = 15 * 60 * 1000;
+const ADMIN_EMAIL = "jacobnathan1718@gmail.com";
 const encoder = new TextEncoder();
 const hex = (bytes) => Array.from(new Uint8Array(bytes), (value) => value.toString(16).padStart(2, "0")).join("");
 const randomHex = (length) => hex(crypto.getRandomValues(new Uint8Array(length)));
@@ -111,8 +112,13 @@ async function rateLimit(db, request, action, email, now) {
   }
 }
 
+function isAdminEmail(value) {
+  return typeof value === "string" && value.trim().toLowerCase() === ADMIN_EMAIL;
+}
+
 function publicUser(row) {
   return { id: row.id, email: row.email, displayName: row.display_name, createdAt: row.created_at,
+    ...(isAdminEmail(row.email) ? { isAdmin: true } : {}),
     ...(row.plex_username ? { plex: { username: row.plex_username } } : {}),
   };
 }
@@ -139,7 +145,8 @@ async function register(db, request, body, now) {
   const session = await sessionStatements(db, request, id, now);
   try {
     await db.batch([
-      db.prepare("INSERT INTO users(id, email, display_name, created_at, updated_at) VALUES (?, ?, ?, ?, ?)").bind(id, email, displayName, now, now),
+      db.prepare("INSERT INTO users(id, email, display_name, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)")
+        .bind(id, email, displayName, isAdminEmail(email) ? "admin" : "user", now, now),
       db.prepare("INSERT INTO password_credentials(user_id, salt, password_hash, iterations, created_at) VALUES (?, ?, ?, ?, ?)").bind(id, salt, hash, ITERATIONS, now),
       ...session.statements,
     ]);
@@ -184,7 +191,7 @@ async function currentSession(db, request, now) {
     !row && readToken(request) ? { "Set-Cookie": sessionCookie(request, "", 0) } : {});
 }
 
-export { AuthError, randomHex, digest, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser };
+export { ADMIN_EMAIL, AuthError, randomHex, digest, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail };
 
 export async function authResponse(request, env, action) {
   try {

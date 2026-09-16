@@ -88,15 +88,33 @@
 .pp-plex-pending { padding: 16px; margin-bottom: 20px; border: 1px solid #ff7b003d; border-radius: 12px; font-size: 14px; }
 #auth-user h2 { margin: 16px 0 8px; font-size: 28px; line-height: 1.25; font-weight: 600; }
 #auth-user :is(h2,p) { overflow-wrap: anywhere; }
-#plex-connect { margin-top: 20px; }
-.pp-connected { margin-top: 20px !important; padding: 12px; border: 1px solid #66d99940; border-radius: 12px; background: #66d99909; color: #a1e8bc !important; font-size: 14px; overflow-wrap: anywhere; }
-.pp-account-shortcuts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; margin-top: 16px; }
+.pp-account-shortcuts { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; margin-top: 16px; }
 .pp-account-shortcuts > a { display: flex; align-items: center; gap: 16px; padding: 24px; transition: border-color 180ms, transform 180ms; }
 .pp-account-shortcuts > a:hover { border-color: #ff7b0060; transform: translateY(-3px); }
 .pp-account-shortcuts > a > span:first-child { color: var(--primary); }
 .pp-account-shortcuts > a > span:last-child { margin-left: auto; color: var(--muted-foreground); }
 .pp-account-shortcuts strong { font-size: 15px; font-weight: 600; }
 .pp-account-shortcuts p { font-size: 13px; margin-top: 4px; }
+.pp-admin-panel { margin-top: 24px; padding: 28px; }
+.pp-admin-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+.pp-admin-heading h2 { margin-top: 12px; font-size: 24px; }
+.pp-admin-heading p { margin-top: 6px; font-size: 14px; }
+.pp-admin-summary { display: flex; gap: 12px; }
+.pp-admin-summary > span { min-width: 88px; padding: 12px 14px; border: 1px solid #ffffff16; border-radius: 12px; color: var(--muted-foreground); font-size: 11px; text-align: center; }
+.pp-admin-summary strong { display: block; color: #fff; font-size: 20px; }
+.pp-admin-table-wrap { margin-top: 20px; overflow-x: auto; border: 1px solid #ffffff14; border-radius: 12px; }
+.pp-admin-table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 13px; }
+.pp-admin-table :is(th,td) { padding: 14px 16px; border-bottom: 1px solid #ffffff10; text-align: left; vertical-align: middle; }
+.pp-admin-table th { color: #94a3b8; background: #ffffff05; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.pp-admin-table tbody tr:last-child td { border-bottom: 0; }
+.pp-admin-table td strong { display: block; color: #f8fafc; font-weight: 600; }
+.pp-admin-table td small { display: block; margin-top: 3px; color: var(--muted-foreground); }
+.pp-admin-role { display: inline-block; margin-left: 8px; padding: 2px 6px; border-radius: 999px; color: #ffbd8b; background: #ff7b0017; font-size: 9px; letter-spacing: .06em; vertical-align: 2px; }
+.pp-account-status { display: inline-flex; align-items: center; gap: 7px; text-transform: capitalize; }
+.pp-account-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #67db9a; box-shadow: 0 0 10px #67db9a66; }
+.pp-account-status[data-status="disabled"]::before { background: #fb7185; box-shadow: 0 0 10px #fb718566; }
+#admin-status[data-error="true"] { color: #ffb5a5; }
+#admin-retry { margin-top: 12px; }
 .pp-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
 .pp-badge { display: inline-flex; align-items: center; padding: 5px 10px; border: 1px solid #ffffff1f; border-radius: 999px; background: #ffffff05; color: #cbd5e1; font-size: 11px; font-weight: 500; letter-spacing: .6px; }
 .pp-eyebrow { font-size: 12px; color: var(--primary) !important; font-weight: 600; letter-spacing: .18em; }
@@ -205,7 +223,9 @@
   .pp-auth-intro h1 { font-size: 60px; }
   .pp-account-art { display: none; }
   .pp-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .pp-account-shortcuts { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .pp-account-shortcuts > a { padding: 20px; gap: 12px; }
+  .pp-admin-heading { align-items: flex-start; flex-direction: column; }
 }
 @media (max-width: 767px) {
   .pp-site-header { padding-block: 12px; }
@@ -225,6 +245,9 @@
   .pp-account-shortcuts { grid-template-columns: 1fr; gap: 12px; margin-top: 24px; }
   .pp-account-shortcuts > a { padding: 20px; }
   .pp-account-shortcuts p { font-size: 13px; }
+  .pp-admin-panel { padding: 20px; }
+  .pp-admin-summary { width: 100%; }
+  .pp-admin-summary > span { flex: 1; min-width: 0; padding-inline: 8px; }
   .pp-page-heading h1 { font-size: 32px; }
   .pp-services-grid, .pp-lower-grid, .pp-support-grid { grid-template-columns: 1fr; }
   .pp-hero { grid-template-columns: 1fr; padding: 24px; }
