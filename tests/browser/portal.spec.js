@@ -131,11 +131,22 @@ for (const width of [360, 768, 1440]) {
   });
 }
 
-test('the main website exposes the additive portal link', async ({ page }) => {
+test('the main website exposes Account in desktop and mobile navigation', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
-  const link = page.getByRole('navigation', { name: 'Customer portal' }).getByRole('link');
-  await expect(link).toHaveAttribute('href', '/account/');
-  await link.click();
+  const desktopLink = page.locator('[data-testid="nav-account-link"]');
+  await expect(desktopLink).toBeVisible();
+  await expect(desktopLink).toHaveAttribute('href', '/account/');
+  await desktopLink.click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to My PlexPoint.');
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.locator('[data-testid="mobile-menu-button"]').click();
+  const mobileLink = page.locator('[data-testid="mobile-account-link"]');
+  await expect(mobileLink).toBeVisible();
+  await expect(mobileLink).toHaveAttribute('href', '/account/');
+  await mobileLink.click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to My PlexPoint.');
 });
 
