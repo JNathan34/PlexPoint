@@ -15,7 +15,7 @@ test('the account, membership and services share one continuous page', async ({ 
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/account/');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to My PlexPoint.');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Your Account');
   await expect(page.getByText('Sign in with Plex. Keep your existing library access.', { exact: true })).toBeVisible();
   await expect(page.locator('.pp-metric > strong')).toHaveText(['Sign in to view', 'Sign in to view', 'Sign in to view', 'Sign in to view']);
   await expect(page.locator('#service-links > a')).toHaveCount(5);
@@ -139,7 +139,7 @@ test('the main and account headers keep Account attached and the trial visible',
   expect(await desktopLink.evaluate((node) => node.parentElement === document.querySelector('[data-testid="nav-link-tutorials"]')?.parentElement)).toBe(true);
   await expect(page.locator('[data-testid="nav-free-trial-link"]')).toBeVisible();
   await desktopLink.click();
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to My PlexPoint.');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Your Account');
   const accountTrial = page.locator('[data-testid="account-trial-link"]');
   await expect(accountTrial).toBeVisible();
   await expect(accountTrial).toHaveAttribute('href', 'https://wizarr.plexpoint.uk/j/FREE%20TRIAL');
@@ -152,7 +152,7 @@ test('the main and account headers keep Account attached and the trial visible',
   await expect(mobileLink).toHaveAttribute('href', '/account/');
   expect(await mobileLink.evaluate((node) => node.parentElement === document.querySelector('[data-testid="mobile-nav-link-tutorials"]')?.parentElement)).toBe(true);
   await mobileLink.click();
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to My PlexPoint.');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Your Account');
   await expect(page.locator('.pp-site-header')).toHaveAttribute('data-menu-open', 'false');
   await page.locator('#portal-menu-toggle').click();
   const mobileAccountTrial = page.locator('[data-testid="account-mobile-trial-link"]');

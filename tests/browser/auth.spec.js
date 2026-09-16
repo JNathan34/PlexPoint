@@ -161,6 +161,9 @@ test("members can see their plan, payment due state and confirmed payment histor
   await expect(page.locator("#billing-payments tr")).toHaveCount(1);
   await expect(page.locator("#overview-plan")).toHaveText("Gold Tier");
   await expect(page.locator("#overview-payment")).toHaveText("Overdue");
+  await expect(page.locator("#profile-plan")).toHaveText("Gold Tier");
+  await expect(page.locator("#profile-payment-state")).toHaveText("Overdue");
+  await expect(page.locator("#profile-access")).toHaveText("Enabled");
 });
 
 test("the owner can edit a member plan and record a payment", async ({ page }) => {

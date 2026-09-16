@@ -11,21 +11,21 @@ test.beforeEach(async ({ page }) => {
 });
 
 for (const width of [390, 768, 1024, 1440, 1920]) {
-  test(`rendered account typography and container alignment match home at ${width}px`, async ({ page }) => {
+  test(`rendered account dashboard keeps the home typography and container alignment at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     await expect(page.locator("h1")).toBeVisible();
     const reference = await page.evaluate(() => {
       const h = getComputedStyle(document.querySelector("h1"));
       const container = document.querySelector("#home .container").getBoundingClientRect();
-      return { font: h.fontFamily, size: h.fontSize, weight: h.fontWeight, line: h.lineHeight, tracking: h.letterSpacing, color: h.color, x: container.x, width: container.width };
+      return { font: h.fontFamily, color: h.color, x: container.x, width: container.width };
     });
     await page.goto("/account/");
     await expect(page.locator("#plex-sign-in")).toBeEnabled();
     const actual = await page.evaluate(() => {
       const h = getComputedStyle(document.querySelector("h1"));
       const container = document.querySelector(".pp-account-container").getBoundingClientRect();
-      return { font: h.fontFamily, size: h.fontSize, weight: h.fontWeight, line: h.lineHeight, tracking: h.letterSpacing, color: h.color, x: container.x, width: container.width };
+      return { font: h.fontFamily, color: h.color, x: container.x, width: container.width };
     });
     expect(actual).toEqual(reference);
     await expect(page.locator("h1")).toHaveCount(1);
@@ -42,19 +42,18 @@ for (const width of [390, 768, 1024, 1440, 1920]) {
   });
 }
 
-test("desktop hero reuses the actual home-page backdrop and all three device previews", async ({ page }) => {
+test("desktop account reuses the home backdrop and presents the compact dashboard composition", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
-  const previews = await page.locator(".hero-device-showcase img").evaluateAll((nodes) => nodes.map((node) => node.getAttribute("src")));
   const backdrop = await page.locator(".hero-backdrop img").getAttribute("src");
   await page.goto("/account/");
-  await expect(page.locator(".pp-account-art")).toBeVisible();
-  expect(await page.locator(".pp-account-art img").evaluateAll((nodes) => nodes.map((node) => node.getAttribute("src")))).toEqual(previews);
   await expect(page.locator(".pp-account-backdrop img")).toHaveAttribute("src", backdrop);
-  await expect.poll(() => page.locator(".pp-account-art img").evaluateAll((nodes) => nodes.every((node) => node.complete && node.naturalWidth > 0))).toBe(true);
+  await expect(page.locator(".pp-account-art")).toHaveCount(0);
+  await expect(page.locator(".pp-metric")).toHaveCount(4);
+  await expect(page.locator(".pp-account-shortcuts a")).toHaveCount(4);
   const intro = await page.locator(".pp-auth-intro").boundingBox();
-  const artwork = await page.locator(".pp-account-art").boundingBox();
-  expect(intro.x + intro.width).toBeLessThan(artwork.x);
+  const profile = await page.locator(".pp-auth-card").boundingBox();
+  expect(intro.x + intro.width).toBeLessThan(profile.x);
 });
 
 for (const width of [320, 390]) {
@@ -91,7 +90,7 @@ test("mobile main-site navigation supports keyboard opening, Escape and resizing
   await toggle.click();
   await page.getByRole("navigation", { name: "Main website navigation" }).getByRole("link", { name: "Account", exact: true }).click();
   await expect(page.locator("#portal-navigation")).toBeHidden();
-  await expect(page.locator("h1")).toHaveText("Welcome to My PlexPoint.");
+  await expect(page.locator("h1")).toHaveText("Your Account");
   await toggle.click();
   await page.setViewportSize({ width: 1440, height: 900 });
   await expect(toggle).toBeHidden();

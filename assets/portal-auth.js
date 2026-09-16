@@ -72,6 +72,14 @@ function renderUser(next) {
     byId("auth-user-name").textContent = user.displayName;
     byId("auth-user-email").textContent = user.email;
     byId("auth-user-since").textContent = `Member since ${new Date(user.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}`;
+    byId("profile-plan").textContent = "Loading membership…";
+    byId("profile-plan-note").textContent = "Checking your plan and payment details";
+    byId("profile-renewal").textContent = "—";
+    byId("profile-last-payment").textContent = "—";
+    byId("profile-payment-state").textContent = "Checking";
+    byId("profile-payment-state").dataset.status = "none";
+    byId("profile-access").textContent = user.isAdmin ? "Administrator" : "Active";
+    byId("profile-access").dataset.status = "enabled";
   } else {
     for (const id of ["auth-user-name", "auth-user-email", "auth-user-since"]) byId(id).textContent = "";
     byId("admin-users").replaceChildren();
@@ -98,6 +106,14 @@ function renderUser(next) {
     byId("overview-renewal-note").textContent = "See when your next payment is due.";
     byId("overview-payment").textContent = "Sign in to view";
     byId("overview-payment-note").textContent = "Your latest confirmed payment appears here.";
+    byId("profile-plan").textContent = "Membership";
+    byId("profile-plan-note").textContent = "Loading your plan…";
+    byId("profile-renewal").textContent = "—";
+    byId("profile-last-payment").textContent = "—";
+    byId("profile-payment-state").textContent = "Checking";
+    byId("profile-payment-state").dataset.status = "none";
+    byId("profile-access").textContent = "Active";
+    byId("profile-access").dataset.status = "enabled";
   }
 }
 
@@ -272,14 +288,29 @@ function renderBilling(data) {
   renderPaymentRows("billing-payments", billing.payments.filter((payment) => payment.status !== "void"));
   byId("billing-results").hidden = false;
 
+  byId("profile-plan").textContent = subscription?.tier || "No plan assigned";
+  byId("profile-plan-note").textContent = subscription
+    ? (accessLabels[subscription.accessStatus] || subscription.accessStatus) : "Contact Jacob to choose a plan";
+  byId("profile-renewal").textContent = period ? dateText(period.endsAt) : "Not scheduled";
+  byId("profile-last-payment").textContent = billing.lastPayment
+    ? `${dateText(billing.lastPayment.receivedAt)} · ${moneyText(billing.lastPayment.amountMinor, billing.lastPayment.currency)}` : "None recorded";
+  byId("profile-payment-state").textContent = paymentLabel;
+  byId("profile-payment-state").dataset.status = paymentStatus;
+  const profileAccess = subscription
+    ? (accessLabels[subscription.accessStatus] || subscription.accessStatus).replace(/^Access /, "") : "Active account";
+  byId("profile-access").textContent = profileAccess.charAt(0).toUpperCase() + profileAccess.slice(1);
+  byId("profile-access").dataset.status = subscription?.accessStatus || "enabled";
+
   byId("overview-plan").textContent = subscription?.tier || "No plan";
   byId("overview-plan-note").textContent = subscription ? (accessLabels[subscription.accessStatus] || subscription.accessStatus) : "No membership has been assigned yet.";
-  byId("overview-renewal").textContent = period ? dateText(period.endsAt) : "Not scheduled";
   if (period) {
     const days = Math.ceil((period.endsAt - Date.now()) / 86_400_000);
-    byId("overview-renewal-note").textContent = days < 0 ? `${Math.abs(days)} day${Math.abs(days) === 1 ? "" : "s"} past due`
-      : days === 0 ? "Due today" : `Due in ${days} day${days === 1 ? "" : "s"}`;
-  } else byId("overview-renewal-note").textContent = "No payment date has been set.";
+    byId("overview-renewal").textContent = days < 0 ? "Overdue" : days === 0 ? "Due today" : `${days} day${days === 1 ? "" : "s"} left`;
+    byId("overview-renewal-note").textContent = `Renews ${dateText(period.endsAt)}`;
+  } else {
+    byId("overview-renewal").textContent = "Not scheduled";
+    byId("overview-renewal-note").textContent = "No payment date has been set.";
+  }
   byId("overview-payment").textContent = paymentLabel;
   byId("overview-payment-note").textContent = billing.lastPayment
     ? `Last paid ${dateText(billing.lastPayment.receivedAt)} · ${moneyText(billing.lastPayment.amountMinor, billing.lastPayment.currency)}`
@@ -308,6 +339,10 @@ async function loadBilling() {
       byId("billing-status").dataset.error = "true";
       byId("billing-retry").hidden = false;
       for (const id of ["overview-plan", "overview-renewal", "overview-payment"]) byId(id).textContent = "Unavailable";
+      for (const id of ["profile-plan", "profile-renewal", "profile-last-payment"]) byId(id).textContent = "Unavailable";
+      byId("profile-plan-note").textContent = "Membership details could not be loaded.";
+      byId("profile-payment-state").textContent = "Unavailable";
+      byId("profile-payment-state").dataset.status = "none";
     }
   } finally {
     billingBusy = false;

@@ -34,7 +34,7 @@ test("the account landing page offers Plex first and redirects in the same tab",
     return route.fulfill({ json: { authorizationUrl, expiresAt: Date.now() + 600000 } });
   });
   await page.goto("/account/");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Welcome to My PlexPoint.");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Your Account");
   const plex = page.getByRole("button", { name: "Continue with Plex" });
   await expect(plex).toBeEnabled();
   await expect(page.locator("#email-option")).not.toHaveAttribute("open");

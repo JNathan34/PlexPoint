@@ -25,6 +25,7 @@ test('the public website is copied byte-for-byte without rewriting its bundle', 
 test('the account session bootstrap is isolated and cache-versioned', async () => {
   const account = await readFile(resolve(root, 'account/index.html'), 'utf8');
   const portal = await readFile(resolve(root, 'assets/portal.js'), 'utf8');
+  assert.match(account, /href="\/assets\/portal\.css\?v=[^"]+"/);
   assert.match(account, /src="\/assets\/portal-auth\.js\?v=[^"]+"/);
   assert.match(account, /src="\/assets\/portal-navigation\.js\?v=[^"]+"/);
   assert.match(account, /src="\/assets\/portal\.js\?v=[^"]+"/);

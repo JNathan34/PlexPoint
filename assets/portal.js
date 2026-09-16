@@ -1,5 +1,5 @@
-import { defaultLinks, defaultArticles, supportContact } from "./portal-content.js?v=20260916-session-1";
-import { normalizeContent, publicHref, filterArticles, guideSlug, articleBlocks, supportMessage } from "./portal-utils.js?v=20260916-session-1";
+import { defaultLinks, defaultArticles, supportContact } from "./portal-content.js?v=20260916-dashboard-1";
+import { normalizeContent, publicHref, filterArticles, guideSlug, articleBlocks, supportMessage } from "./portal-utils.js?v=20260916-dashboard-1";
 
 const iconPaths = {
   home: ["m3 10 9-7 9 7", "M5 9v12h14V9M9 21v-8h6v8"],

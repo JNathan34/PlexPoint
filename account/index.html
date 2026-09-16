@@ -13,10 +13,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/index-GJ5txONd.css" />
-    <link rel="stylesheet" href="/assets/portal.css" />
-    <script type="module" src="/assets/portal-auth.js?v=20260916-session-1"></script>
-    <script type="module" src="/assets/portal-navigation.js?v=20260916-session-1"></script>
-    <script type="module" src="/assets/portal.js?v=20260916-session-1"></script>
+    <link rel="stylesheet" href="/assets/portal.css?v=20260916-dashboard-1" />
+    <script type="module" src="/assets/portal-auth.js?v=20260916-dashboard-1"></script>
+    <script type="module" src="/assets/portal-navigation.js?v=20260916-dashboard-1"></script>
+    <script type="module" src="/assets/portal.js?v=20260916-dashboard-1"></script>
   </head>
   <body class="pp-portal">
     <a class="pp-skip" href="#portal-main">Skip to content</a>
@@ -42,64 +42,60 @@
       </header>
       <div class="pp-main-wrap">
         <main id="portal-main" tabindex="-1">
-          <section id="account" class="pp-account-hero hero-section" aria-label="Your account">
-            <div class="pp-account-backdrop hero-backdrop" aria-hidden="true"><img src="/homepage.png" alt="" decoding="async" /><div></div></div>
-            <div class="container pp-account-container"><div class="pp-auth-grid">
-              <div class="pp-auth-intro">
-                <div id="account-heading-slot"><div id="page-heading" class="pp-page-heading"><h1 id="page-title" tabindex="-1">Welcome to My PlexPoint.</h1><p id="page-description">Your account, membership, Plex activity, services and support—all together on one page.</p></div></div>
-                <div class="pp-card glass-card pp-auth-card">
-                <p id="auth-status" role="status" tabindex="-1">Checking your session…</p>
-                <button id="auth-retry" type="button" class="pp-button" hidden>Retry connection</button>
-                <div id="plex-pending" class="pp-plex-pending" hidden><p>Finish signing in on Plex, then check your approval.</p><div class="pp-actions"><button id="plex-check" type="button" class="pp-button pp-button-primary">Check approval</button><button id="plex-cancel" type="button" class="pp-button">Cancel Plex sign-in</button></div></div>
-                <div id="auth-guest" hidden>
-                  <div class="pp-plex-option"><div class="pp-auth-label"><span data-icon="membership"></span><h2>Your PlexPoint account</h2></div><button id="plex-sign-in" type="button" class="pp-button pp-button-primary pp-plex-button" disabled><svg class="pp-plex-mark" viewBox="0 0 20 24" width="18" height="22" aria-hidden="true"><path fill="currentColor" d="M2 1h7l9 11-9 11H2l9-11z" /></svg>Continue with Plex<span aria-hidden="true">→</span></button><p class="pp-small">Sign in on Plex’s own page. Your Plex password stays with Plex.</p></div>
-                  <details id="email-option" class="pp-email-option"><summary>Use email instead <span aria-hidden="true">⌄</span></summary>
-                  <div class="pp-auth-switch" role="group" aria-label="Account action"><button id="auth-login-mode" type="button" aria-pressed="true">Sign in</button><button id="auth-register-mode" type="button" aria-pressed="false">Create account</button></div>
-                  <h2 id="auth-heading">Welcome back.</h2>
-                  <form id="auth-form">
-                    <fieldset id="auth-fields" disabled>
-                      <div id="auth-name-field" hidden><label for="auth-name">Display name</label><input id="auth-name" name="displayName" autocomplete="nickname" maxlength="100" /></div>
-                      <label for="auth-email">Email address</label><input id="auth-email" name="email" type="email" autocomplete="username" maxlength="254" required />
-                      <label for="auth-password">Password</label><input id="auth-password" name="password" type="password" autocomplete="current-password" maxlength="128" required aria-describedby="auth-password-hint" />
-                      <p id="auth-password-hint" class="pp-small">Enter the password for your My PlexPoint account.</p>
-                      <button id="auth-show-password" type="button" class="pp-text-link" aria-controls="auth-password auth-confirm" aria-pressed="false">Show password</button>
-                      <div id="auth-confirm-field" hidden><label for="auth-confirm">Confirm password</label><input id="auth-confirm" type="password" autocomplete="new-password" maxlength="128" /></div>
-                      <button id="auth-submit" type="submit" class="pp-button">Sign in</button>
-                    </fieldset>
-                  </form>
-                  <p class="pp-small">Email verification and portal password resets are not available yet. Plex manages recovery for Plex sign-in.</p>
-                  </details>
+          <section id="account" class="pp-account-hero" aria-label="Your account">
+            <div class="pp-account-backdrop" aria-hidden="true"><img src="/homepage.png" alt="" decoding="async" /><div></div></div>
+            <section id="dashboard" class="container pp-account-container pp-account-dashboard" aria-label="Account dashboard">
+              <div class="pp-dashboard-top">
+                <div class="pp-auth-intro">
+                  <div id="account-heading-slot"><div id="page-heading" class="pp-page-heading"><p class="pp-eyebrow">YOUR PLEXPOINT ACCOUNT</p><h1 id="page-title" tabindex="-1">Your Account</h1><p id="page-description">Manage your membership, Plex activity, requests and support from one dashboard.</p></div></div>
+                  <nav class="pp-account-shortcuts" aria-label="Account actions">
+                    <a class="pp-button" href="#billing-panel"><span data-icon="membership"></span><strong>Manage membership</strong></a>
+                    <a class="pp-button" href="#billing-history"><span data-icon="payment"></span><strong>Billing history</strong></a>
+                    <a class="pp-button" href="#activity-panel"><span data-icon="play"></span><strong>Plex activity</strong></a>
+                    <a class="pp-button" href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer"><span data-icon="search"></span><strong>Request on Overseerr</strong></a>
+                  </nav>
+                  <div class="pp-metrics" aria-label="Account summary">
+                    <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="membership"></span><h3>Active plan</h3><strong id="overview-plan">Sign in to view</strong><p id="overview-plan-note">Your current plan and access status appear here.</p></article>
+                    <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="clock"></span><h3>Time remaining</h3><strong id="overview-renewal">Sign in to view</strong><p id="overview-renewal-note">See when your next payment is due.</p></article>
+                    <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="payment"></span><h3>Payment status</h3><strong id="overview-payment">Sign in to view</strong><p id="overview-payment-note">Your latest confirmed payment appears here.</p></article>
+                    <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="film"></span><h3>Watch time</h3><strong id="overview-watch-time">Sign in to view</strong><p id="overview-watch-time-note">Your selected activity period appears here.</p></article>
+                  </div>
                 </div>
-                <div id="auth-user" hidden>
-                  <span class="pp-badge">WELCOME BACK</span><h2 id="auth-user-name"></h2><p id="auth-user-email"></p><p id="auth-user-since" class="pp-small"></p>
-                  <div class="pp-actions"><a href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer" class="pp-button pp-button-primary">Open Overseerr ↗</a><a href="#billing-panel" class="pp-button">View membership →</a><button id="auth-logout" type="button" class="pp-button">Sign out</button></div>
-                </div>
-                </div>
+                <aside class="pp-card glass-card pp-auth-card" aria-label="Profile and sign in">
+                  <p id="auth-status" role="status" tabindex="-1">Checking your session…</p>
+                  <button id="auth-retry" type="button" class="pp-button" hidden>Retry connection</button>
+                  <div id="plex-pending" class="pp-plex-pending" hidden><p>Finish signing in on Plex, then check your approval.</p><div class="pp-actions"><button id="plex-check" type="button" class="pp-button pp-button-primary">Check approval</button><button id="plex-cancel" type="button" class="pp-button">Cancel Plex sign-in</button></div></div>
+                  <div id="auth-guest" hidden>
+                    <div class="pp-plex-option"><div class="pp-auth-label"><span data-icon="membership"></span><h2>Your PlexPoint account</h2></div><button id="plex-sign-in" type="button" class="pp-button pp-button-primary pp-plex-button" disabled><svg class="pp-plex-mark" viewBox="0 0 20 24" width="18" height="22" aria-hidden="true"><path fill="currentColor" d="M2 1h7l9 11-9 11H2l9-11z" /></svg>Continue with Plex<span aria-hidden="true">→</span></button><p class="pp-small">Sign in on Plex’s own page. Your Plex password stays with Plex.</p></div>
+                    <details id="email-option" class="pp-email-option"><summary>Use email instead <span aria-hidden="true">⌄</span></summary>
+                    <div class="pp-auth-switch" role="group" aria-label="Account action"><button id="auth-login-mode" type="button" aria-pressed="true">Sign in</button><button id="auth-register-mode" type="button" aria-pressed="false">Create account</button></div>
+                    <h2 id="auth-heading">Welcome back.</h2>
+                    <form id="auth-form">
+                      <fieldset id="auth-fields" disabled>
+                        <div id="auth-name-field" hidden><label for="auth-name">Display name</label><input id="auth-name" name="displayName" autocomplete="nickname" maxlength="100" /></div>
+                        <label for="auth-email">Email address</label><input id="auth-email" name="email" type="email" autocomplete="username" maxlength="254" required />
+                        <label for="auth-password">Password</label><input id="auth-password" name="password" type="password" autocomplete="current-password" maxlength="128" required aria-describedby="auth-password-hint" />
+                        <p id="auth-password-hint" class="pp-small">Enter the password for your My PlexPoint account.</p>
+                        <button id="auth-show-password" type="button" class="pp-text-link" aria-controls="auth-password auth-confirm" aria-pressed="false">Show password</button>
+                        <div id="auth-confirm-field" hidden><label for="auth-confirm">Confirm password</label><input id="auth-confirm" type="password" autocomplete="new-password" maxlength="128" /></div>
+                        <button id="auth-submit" type="submit" class="pp-button">Sign in</button>
+                      </fieldset>
+                    </form>
+                    <p class="pp-small">Email verification and portal password resets are not available yet. Plex manages recovery for Plex sign-in.</p>
+                    </details>
+                  </div>
+                  <div id="auth-user" hidden>
+                    <div class="pp-profile-header"><div class="pp-profile-avatar"><img src="/plexpoint-logo.png" alt="" width="80" height="80" /></div><div class="pp-profile-copy"><h2 id="auth-user-name"></h2><p id="auth-user-email"></p><p id="auth-user-since" class="pp-small"></p><span class="pp-profile-active"><span aria-hidden="true"></span>Active member</span></div></div>
+                    <div class="pp-profile-membership">
+                      <div class="pp-profile-plan"><span class="pp-icon-tile" data-icon="membership"></span><div><strong id="profile-plan">Membership</strong><small id="profile-plan-note">Loading your plan…</small></div></div>
+                      <dl><div><dt><span data-icon="clock"></span>Renews on</dt><dd id="profile-renewal">—</dd></div><div><dt><span data-icon="payment"></span>Last payment</dt><dd id="profile-last-payment">—</dd></div><div><dt><span data-icon="info"></span>Payment status</dt><dd><span id="profile-payment-state" class="pp-billing-state" data-status="none">Checking</span></dd></div><div><dt><span data-icon="grid"></span>Account status</dt><dd><span id="profile-access" class="pp-account-status" data-status="enabled">Active</span></dd></div></dl>
+                    </div>
+                    <div class="pp-actions pp-profile-actions"><a href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer" class="pp-button pp-button-primary">Open Overseerr ↗</a><a href="#billing-panel" class="pp-button">Membership</a><button id="auth-logout" type="button" class="pp-button">Sign out</button></div>
+                  </div>
+                </aside>
               </div>
-              <div class="hero-device-showcase pp-account-art">
-                <div class="hero-device-showcase__glow"></div>
-                <div class="hero-device-showcase__desktop"><img src="/preview-pictures/desktop-home.BmZmeulL.avif" alt="PlexPoint desktop home preview" width="1170" height="731" decoding="async" /></div>
-                <div class="hero-device-showcase__tablet"><img src="/preview-pictures/tablet-library.DoKL6xiL.avif" alt="PlexPoint tablet library preview" width="1280" height="800" decoding="async" /></div>
-                <div class="hero-device-showcase__phone"><img src="/preview-pictures/phone-home.SM7zECzK.avif" alt="PlexPoint phone home preview" width="540" height="1212" decoding="async" /></div>
-              </div>
-            </div></div>
-          </section>
-          <div id="content-notice" class="pp-content-notice" role="status" hidden><span id="content-notice-text"></span><button id="retry-content" type="button">Try again</button></div>
-          <section id="dashboard" class="container pp-account-dashboard" aria-label="Account dashboard">
-            <nav class="pp-account-shortcuts" aria-label="Explore PlexPoint">
-              <a class="pp-card glass-card" href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer"><span data-icon="search"></span><div><strong>Request on Overseerr</strong><p>Ask for a movie or show.</p></div><span aria-hidden="true">↗</span></a>
-              <a class="pp-card glass-card" href="/movies"><span data-icon="film"></span><div><strong>Browse the library</strong><p>Find your next movie night.</p></div><span aria-hidden="true">→</span></a>
-              <a class="pp-card glass-card" href="#help"><span data-icon="book"></span><div><strong>Get set up</strong><p>Guides for every device.</p></div><span aria-hidden="true">→</span></a>
-              <a class="pp-card glass-card" href="#support"><span data-icon="message"></span><div><strong>Need a hand?</strong><p>Get in touch with Jacob.</p></div><span aria-hidden="true">→</span></a>
-            </nav>
-            <div class="pp-section-heading"><div><p class="pp-eyebrow">YOUR ACCOUNT</p><h2>Everything at a glance</h2></div></div>
-            <div class="pp-metrics">
-              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="membership"></span><h3>Current subscription</h3><strong id="overview-plan">Sign in to view</strong><p id="overview-plan-note">Your current plan and access status appear here.</p></article>
-              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="clock"></span><h3>Next payment</h3><strong id="overview-renewal">Sign in to view</strong><p id="overview-renewal-note">See when your next payment is due.</p></article>
-              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="payment"></span><h3>Payment status</h3><strong id="overview-payment">Sign in to view</strong><p id="overview-payment-note">Your latest confirmed payment appears here.</p></article>
-              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="film"></span><h3>Watch time</h3><strong id="overview-watch-time">Sign in to view</strong><p id="overview-watch-time-note">Your selected activity period appears here.</p></article>
-            </div>
-            <section id="billing-panel" class="pp-card glass-card pp-billing-panel" aria-labelledby="billing-heading" hidden>
+              <div class="pp-dashboard-detail-grid">
+                <section id="billing-panel" class="pp-card glass-card pp-billing-panel" aria-labelledby="billing-heading" hidden>
               <div class="pp-billing-heading"><div><span class="pp-badge">MEMBERSHIP</span><h2 id="billing-heading">Your plan and payments</h2><p>Your membership is managed manually. No card or bank details are stored here.</p></div><span id="billing-state" class="pp-billing-state" data-status="none">No plan</span></div>
               <p id="billing-status" class="pp-small" role="status"></p><button id="billing-retry" type="button" class="pp-button" hidden>Retry membership</button>
               <div id="billing-results" hidden>
@@ -108,10 +104,10 @@
                   <article><span>Last payment</span><strong id="billing-last-paid">—</strong><small id="billing-last-amount">—</small></article>
                   <article><span>Next payment due</span><strong id="billing-next-due">—</strong><small id="billing-balance">—</small></article>
                 </div>
-                <div class="pp-payment-history"><h3>Payment history</h3><div class="pp-admin-table-wrap"><table class="pp-admin-table"><thead><tr><th scope="col">Date paid</th><th scope="col">Amount</th><th scope="col">Method</th><th scope="col">Billing period</th><th scope="col">Status</th></tr></thead><tbody id="billing-payments"></tbody></table></div></div>
+                <div id="billing-history" class="pp-payment-history"><h3>Recent payments</h3><div class="pp-admin-table-wrap"><table class="pp-admin-table"><thead><tr><th scope="col">Date paid</th><th scope="col">Amount</th><th scope="col">Method</th><th scope="col">Billing period</th><th scope="col">Status</th></tr></thead><tbody id="billing-payments"></tbody></table></div></div>
               </div>
-            </section>
-            <section id="activity-panel" class="pp-card glass-card pp-viewing-panel" aria-labelledby="activity-heading" hidden>
+                </section>
+                <section id="activity-panel" class="pp-card glass-card pp-viewing-panel" aria-labelledby="activity-heading" hidden>
               <div class="pp-viewing-heading"><div><span class="pp-badge">PLEX ACTIVITY</span><h2 id="activity-heading">What everyone’s watching</h2><p>Popular picks across PlexPoint, plus your own watch time.</p></div>
                 <div id="activity-range" class="pp-range-picker" role="group" aria-label="Viewing period">
                   <button type="button" data-range="1" aria-pressed="false">Last day</button><button type="button" data-range="7" aria-pressed="true">Last 7 days</button><button type="button" data-range="30" aria-pressed="false">Last 30 days</button><button type="button" data-range="0" aria-pressed="false">All time</button>
@@ -123,8 +119,9 @@
                 <article class="pp-viewing-card"><div class="pp-viewing-card-title"><span class="pp-icon-tile" data-icon="film"></span><h3>Popular movies</h3></div><ol id="popular-movies" class="pp-popular-list"></ol></article>
                 <article class="pp-viewing-card"><div class="pp-viewing-card-title"><span class="pp-icon-tile" data-icon="play"></span><h3>Popular shows</h3></div><ol id="popular-shows" class="pp-popular-list"></ol></article>
               </div>
-            </section>
-            <section id="admin-panel" class="pp-card glass-card pp-admin-panel" aria-labelledby="admin-heading" hidden>
+                </section>
+              </div>
+              <section id="admin-panel" class="pp-card glass-card pp-admin-panel" aria-labelledby="admin-heading" hidden>
               <div class="pp-admin-heading"><div><span class="pp-badge">ADMIN</span><h2 id="admin-heading">User accounts and billing</h2><p>Assign plans, set payment dates, record payments and spot overdue accounts.</p></div><div class="pp-admin-summary" aria-label="Account summary"><span><strong id="admin-total">0</strong>Total</span><span><strong id="admin-enabled">0</strong>Enabled</span><span><strong id="admin-subscribed">0</strong>With a plan</span><span><strong id="admin-overdue">0</strong>Overdue</span></div></div>
               <p id="admin-status" class="pp-small" role="status"></p><button id="admin-retry" type="button" class="pp-button" hidden>Retry user list</button>
               <div id="admin-table-wrap" class="pp-admin-table-wrap" hidden><table class="pp-admin-table"><thead><tr><th scope="col">User</th><th scope="col">Sign-in</th><th scope="col">Plan</th><th scope="col">Payment</th><th scope="col">Account</th><th scope="col"><span class="pp-sr-only">Manage billing</span></th></tr></thead><tbody id="admin-users"></tbody></table></div>
@@ -147,8 +144,10 @@
                   <div class="pp-payment-history"><h4>Payment history</h4><div class="pp-admin-table-wrap"><table class="pp-admin-table"><thead><tr><th scope="col">Date</th><th scope="col">Amount</th><th scope="col">Method</th><th scope="col">Reference</th><th scope="col">Status</th><th scope="col"><span class="pp-sr-only">Actions</span></th></tr></thead><tbody id="admin-billing-payments"></tbody></table></div></div>
                 </div>
               </section>
+              </section>
             </section>
           </section>
+          <div id="content-notice" class="pp-content-notice" role="status" hidden><span id="content-notice-text"></span><button id="retry-content" type="button">Try again</button></div>
 
           <section id="services" class="container pp-content-section" aria-labelledby="services-heading"><div class="pp-content-heading"><p class="pp-eyebrow">PLEXPOINT SERVICES</p><h2 id="services-heading">Open what you need</h2><p>Plex, requests and the full library are one tap away.</p></div><div id="service-links" class="pp-services-grid"></div><div class="pp-card glass-card pp-inline-help"><div><h2>Not sure where to start?</h2><p>The setup guides below cover installation, sign-in and requests.</p></div><a class="pp-button" href="#help">Browse guides →</a></div></section>
 
