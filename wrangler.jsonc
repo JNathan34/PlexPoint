@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "plexpoint",
+  "pages_build_output_dir": ".",
+  "compatibility_date": "2025-11-16",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "PORTAL_DB",
+      "database_name": "plexpoint-portal",
+      "database_id": "9a3b40e6-b606-4829-b82d-3c6756a3dd4f",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
