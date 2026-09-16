@@ -17,7 +17,7 @@ test('overview distinguishes portal accounts from Plex access and links to real 
   await page.goto('/account/#overview');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Your PlexPoint, in one place.');
   await expect(page.getByText('Sign in with Plex. Keep your existing library access.', { exact: true })).toBeVisible();
-  await expect(page.locator('.pp-metric > strong')).toHaveText(['Not available', 'Not available', 'Not available', 'Sign in to view']);
+  await expect(page.locator('.pp-metric > strong')).toHaveText(['Sign in to view', 'Sign in to view', 'Sign in to view', 'Sign in to view']);
   await expect(page.locator('#quick-links > a')).toHaveCount(3);
   await expect(page.locator('#quick-links > a').first()).toHaveAttribute('href', 'https://app.plex.tv/');
   await expect(page.locator('#quick-links > a').first()).toHaveAttribute('rel', 'noopener noreferrer');

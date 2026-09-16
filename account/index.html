@@ -52,9 +52,9 @@
             </div>
             <div class="pp-section-heading"><h2>Your account at a glance</h2><span class="pp-muted">Not connected</span></div>
             <div class="pp-metrics">
-              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="membership"></span><h3>Current subscription</h3><strong>Not available</strong><p>Your plan and access status will appear here.</p></article>
-              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="clock"></span><h3>Time remaining</h3><strong>Not available</strong><p>Start, expiry and renewal dates are not connected.</p></article>
-              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="payment"></span><h3>Payment status</h3><strong>Not available</strong><p>Contact Jacob to confirm a payment or renewal.</p></article>
+              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="membership"></span><h3>Current subscription</h3><strong id="overview-plan">Sign in to view</strong><p id="overview-plan-note">Your current plan and access status appear here.</p></article>
+              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="clock"></span><h3>Next payment</h3><strong id="overview-renewal">Sign in to view</strong><p id="overview-renewal-note">See when your next payment is due.</p></article>
+              <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="payment"></span><h3>Payment status</h3><strong id="overview-payment">Sign in to view</strong><p id="overview-payment-note">Your latest confirmed payment appears here.</p></article>
               <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="film"></span><h3>Watch time</h3><strong id="overview-watch-time">Sign in to view</strong><p id="overview-watch-time-note">Your selected activity period appears here.</p></article>
             </div>
             <div class="pp-section-heading"><h2>Go straight to the good stuff</h2><a href="#services">All services <span aria-hidden="true">→</span></a></div>
@@ -112,6 +112,18 @@
               <a class="pp-card glass-card" href="#help"><span data-icon="book"></span><div><strong>Get set up</strong><p>Guides for every device.</p></div><span aria-hidden="true">→</span></a>
               <a class="pp-card glass-card" href="#support"><span data-icon="message"></span><div><strong>Need a hand?</strong><p>Get in touch with Jacob.</p></div><span aria-hidden="true">→</span></a>
             </nav>
+            <section id="billing-panel" class="pp-card glass-card pp-billing-panel" aria-labelledby="billing-heading" hidden>
+              <div class="pp-billing-heading"><div><span class="pp-badge">MEMBERSHIP</span><h2 id="billing-heading">Your plan and payments</h2><p>Your membership is managed manually. No card or bank details are stored here.</p></div><span id="billing-state" class="pp-billing-state" data-status="none">No plan</span></div>
+              <p id="billing-status" class="pp-small" role="status"></p><button id="billing-retry" type="button" class="pp-button" hidden>Retry membership</button>
+              <div id="billing-results" hidden>
+                <div class="pp-billing-summary">
+                  <article><span>Current plan</span><strong id="billing-plan">—</strong><small id="billing-access">—</small></article>
+                  <article><span>Last payment</span><strong id="billing-last-paid">—</strong><small id="billing-last-amount">—</small></article>
+                  <article><span>Next payment due</span><strong id="billing-next-due">—</strong><small id="billing-balance">—</small></article>
+                </div>
+                <div class="pp-payment-history"><h3>Payment history</h3><div class="pp-admin-table-wrap"><table class="pp-admin-table"><thead><tr><th scope="col">Date paid</th><th scope="col">Amount</th><th scope="col">Method</th><th scope="col">Billing period</th><th scope="col">Status</th></tr></thead><tbody id="billing-payments"></tbody></table></div></div>
+              </div>
+            </section>
             <section id="activity-panel" class="pp-card glass-card pp-viewing-panel" aria-labelledby="activity-heading" hidden>
               <div class="pp-viewing-heading"><div><span class="pp-badge">PLEX ACTIVITY</span><h2 id="activity-heading">What everyone’s watching</h2><p>Popular picks across PlexPoint, plus your own watch time.</p></div>
                 <div id="activity-range" class="pp-range-picker" role="group" aria-label="Viewing period">
@@ -126,9 +138,28 @@
               </div>
             </section>
             <section id="admin-panel" class="pp-card glass-card pp-admin-panel" aria-labelledby="admin-heading" hidden>
-              <div class="pp-admin-heading"><div><span class="pp-badge">ADMIN</span><h2 id="admin-heading">User accounts</h2><p>Portal access and subscription details for every account.</p></div><div class="pp-admin-summary" aria-label="Account summary"><span><strong id="admin-total">0</strong>Total</span><span><strong id="admin-enabled">0</strong>Enabled</span><span><strong id="admin-subscribed">0</strong>With a plan</span></div></div>
+              <div class="pp-admin-heading"><div><span class="pp-badge">ADMIN</span><h2 id="admin-heading">User accounts and billing</h2><p>Assign plans, set payment dates, record payments and spot overdue accounts.</p></div><div class="pp-admin-summary" aria-label="Account summary"><span><strong id="admin-total">0</strong>Total</span><span><strong id="admin-enabled">0</strong>Enabled</span><span><strong id="admin-subscribed">0</strong>With a plan</span><span><strong id="admin-overdue">0</strong>Overdue</span></div></div>
               <p id="admin-status" class="pp-small" role="status"></p><button id="admin-retry" type="button" class="pp-button" hidden>Retry user list</button>
-              <div id="admin-table-wrap" class="pp-admin-table-wrap" hidden><table class="pp-admin-table"><thead><tr><th scope="col">User</th><th scope="col">Sign-in</th><th scope="col">Plan</th><th scope="col">Status</th><th scope="col">Joined</th></tr></thead><tbody id="admin-users"></tbody></table></div>
+              <div id="admin-table-wrap" class="pp-admin-table-wrap" hidden><table class="pp-admin-table"><thead><tr><th scope="col">User</th><th scope="col">Sign-in</th><th scope="col">Plan</th><th scope="col">Payment</th><th scope="col">Account</th><th scope="col"><span class="pp-sr-only">Manage billing</span></th></tr></thead><tbody id="admin-users"></tbody></table></div>
+              <section id="admin-billing-editor" class="pp-admin-billing-editor" aria-labelledby="admin-billing-heading" hidden>
+                <div class="pp-admin-editor-heading"><div><span class="pp-badge">BILLING</span><h3 id="admin-billing-heading">Manage membership</h3><p id="admin-billing-account"></p></div><button id="admin-billing-close" type="button" class="pp-button">Close</button></div>
+                <p id="admin-billing-status" class="pp-small" role="status"></p>
+                <div id="admin-billing-content" hidden>
+                  <div class="pp-admin-billing-grid">
+                    <form id="admin-plan-form" class="pp-admin-billing-form">
+                      <h4>Plan and billing dates</h4><p>Changing these dates starts or updates the member’s current billing period.</p>
+                      <div class="pp-form-grid"><label for="admin-plan-tier">Plan<select id="admin-plan-tier" required></select></label><label for="admin-plan-access">Access status<select id="admin-plan-access" required><option value="enabled">Enabled</option><option value="pending">Pending</option><option value="suspended">Suspended</option><option value="cancelled">Cancelled</option></select></label><label for="admin-plan-start">Plan starts<input id="admin-plan-start" type="date" required /></label><label for="admin-plan-due">Next payment due<input id="admin-plan-due" type="date" required /></label></div>
+                      <button id="admin-plan-save" type="submit" class="pp-button pp-button-primary">Save plan and dates</button>
+                    </form>
+                    <form id="admin-payment-form" class="pp-admin-billing-form">
+                      <h4>Record a payment</h4><p>Payments are immediately confirmed and included in the member’s history.</p>
+                      <div class="pp-form-grid"><label for="admin-payment-amount">Amount (£)<input id="admin-payment-amount" type="number" inputmode="decimal" min="0.01" max="1000000" step="0.01" required /></label><label for="admin-payment-date">Date paid<input id="admin-payment-date" type="date" required /></label><label for="admin-payment-method">Method<select id="admin-payment-method" required><option value="bank_transfer">Bank transfer</option><option value="cash">Cash</option><option value="card">Card</option><option value="paypal">PayPal</option><option value="other">Other</option></select></label><label for="admin-payment-reference">Reference <span class="pp-muted">(optional)</span><input id="admin-payment-reference" maxlength="80" autocomplete="off" /></label></div>
+                      <button id="admin-payment-save" type="submit" class="pp-button pp-button-primary">Record payment</button>
+                    </form>
+                  </div>
+                  <div class="pp-payment-history"><h4>Payment history</h4><div class="pp-admin-table-wrap"><table class="pp-admin-table"><thead><tr><th scope="col">Date</th><th scope="col">Amount</th><th scope="col">Method</th><th scope="col">Reference</th><th scope="col">Status</th><th scope="col"><span class="pp-sr-only">Actions</span></th></tr></thead><tbody id="admin-billing-payments"></tbody></table></div></div>
+                </div>
+              </section>
             </section></div>
           </section>
 
@@ -146,7 +177,7 @@
             <div class="pp-support-grid"><div><div class="pp-card glass-card pp-support-card"><span class="pp-icon-tile" data-icon="message"></span><h2>A real person, ready to help.</h2><p>Contact Jacob for help with Plex, library access, requests or your membership.</p><a id="support-whatsapp" class="pp-button pp-button-primary">Open WhatsApp ↗</a><a id="support-email" class="pp-button">Open email ↗</a><p class="pp-small">These links open your messaging application. This portal does not submit or store support tickets.</p></div><div class="pp-card glass-card pp-support-tip"><h3>Make it easy to investigate</h3><p>Include the title or episode, your device and any error message. Never include passwords or payment card details.</p><a class="pp-text-link" href="#help/playback-help">Try the playback checklist →</a></div></div>
             <form id="support-form" class="pp-card glass-card pp-support-form"><p class="pp-eyebrow">SAVE A LITTLE BACK-AND-FORTH</p><h2>Prepare a support message</h2><p>Fill this in, then choose email or copy the message to send yourself.</p><label for="support-topic">What do you need help with?</label><select id="support-topic" name="topic"><option>Plex setup</option><option>Playback problem</option><option>Missing library access</option><option>Content request</option><option>Payment or renewal</option><option>Something else</option></select><label for="support-device">Device <span class="pp-muted">(optional)</span></label><input id="support-device" name="device" type="text" maxlength="120" placeholder="For example, Samsung TV or iPhone" /><label for="support-details">What is happening?</label><textarea id="support-details" name="details" rows="6" minlength="10" maxlength="1200" required placeholder="Describe the problem and anything you have already tried."></textarea><div class="pp-actions"><button type="submit" class="pp-button pp-button-primary">Prepare email <span aria-hidden="true">→</span></button><button type="button" id="copy-support" class="pp-button">Copy message</button></div><div id="prepared-email" class="pp-prepared-email" hidden><p>Your message is ready. Open it in your email application and review it before sending.</p><a id="prepared-email-link" class="pp-text-link">Open prepared email →</a></div><p id="support-status" class="pp-small" role="status"></p></form></div>
           </section>
-          <div class="container pp-notice-wrap"><div class="pp-notice" role="note"><span data-icon="info"></span><p><strong>Sign in with Plex. Keep your existing library access.</strong> Signing in does not purchase a subscription or grant new library access. Subscription details, payment history and personal Plex activity are not connected yet.</p></div></div>
+          <div class="container pp-notice-wrap"><div class="pp-notice" role="note"><span data-icon="info"></span><p><strong>Sign in with Plex. Keep your existing library access.</strong> Signing in does not purchase a subscription or grant new library access. Membership and payment records shown here are maintained manually by Jacob.</p></div></div>
           <footer class="pp-footer container"><a class="pp-footer-brand" href="/"><img src="/plexpoint-logo.png" width="28" height="28" alt="" />Plex Point</a><span>A better place to press play.</span><div><a href="/privacy-policy">Privacy</a><a href="/terms-of-service">Terms</a><a href="/">Main website ↗</a></div></footer>
         </main>
       </div>

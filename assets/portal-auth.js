@@ -10,6 +10,9 @@ let available = false;
 let plexPending = false;
 let adminBusy = false;
 let activityBusy = false;
+let billingBusy = false;
+let adminBillingBusy = false;
+let adminBillingData = null;
 let activityRange = "7";
 const returnUrl = new URL(location.href);
 let plexReturning = returnUrl.searchParams.get("plex") === "return";
@@ -32,6 +35,15 @@ function controls() {
   byId("plex-sign-in").disabled = busy || !available || plexPending;
   byId("admin-retry").disabled = adminBusy;
   byId("activity-retry").disabled = activityBusy;
+  byId("billing-retry").disabled = billingBusy;
+  for (const formId of ["admin-plan-form", "admin-payment-form"]) {
+    const editorForm = byId(formId);
+    for (const control of editorForm.elements) control.disabled = adminBillingBusy;
+    editorForm.setAttribute("aria-busy", String(adminBillingBusy));
+  }
+  byId("admin-payment-save").disabled = adminBillingBusy || !adminBillingData?.billing?.subscription;
+  for (const button of byId("admin-users").querySelectorAll("button")) button.disabled = adminBillingBusy;
+  for (const button of byId("admin-billing-payments").querySelectorAll("button")) button.disabled = adminBillingBusy;
   for (const button of byId("activity-range").querySelectorAll("button")) button.disabled = activityBusy || !user;
   byId("plex-pending").hidden = !plexPending;
   form.setAttribute("aria-busy", String(busy));
@@ -55,6 +67,7 @@ function renderUser(next) {
   byId("auth-user").hidden = !user;
   byId("account-link").textContent = user ? "My account" : "Sign in";
   byId("activity-panel").hidden = !user;
+  byId("billing-panel").hidden = !user;
   byId("admin-panel").hidden = !user?.isAdmin;
   if (user) {
     byId("auth-user-name").textContent = user.displayName;
@@ -65,12 +78,27 @@ function renderUser(next) {
     byId("admin-users").replaceChildren();
     byId("admin-table-wrap").hidden = true;
     byId("admin-status").textContent = "";
+    byId("admin-billing-editor").hidden = true;
+    byId("admin-billing-content").hidden = true;
+    byId("admin-billing-status").textContent = "";
+    adminBillingData = null;
     byId("activity-results").hidden = true;
     byId("activity-status").textContent = "";
     byId("popular-movies").replaceChildren();
     byId("popular-shows").replaceChildren();
     byId("overview-watch-time").textContent = "Sign in to view";
     byId("overview-watch-time-note").textContent = "Your selected activity period appears here.";
+    byId("billing-results").hidden = true;
+    byId("billing-status").textContent = "";
+    byId("billing-payments").replaceChildren();
+    byId("billing-state").textContent = "No plan";
+    byId("billing-state").dataset.status = "none";
+    byId("overview-plan").textContent = "Sign in to view";
+    byId("overview-plan-note").textContent = "Your current plan and access status appear here.";
+    byId("overview-renewal").textContent = "Sign in to view";
+    byId("overview-renewal-note").textContent = "See when your next payment is due.";
+    byId("overview-payment").textContent = "Sign in to view";
+    byId("overview-payment-note").textContent = "Your latest confirmed payment appears here.";
   }
 }
 
@@ -163,7 +191,132 @@ async function loadActivity(range = activityRange) {
   }
 }
 
-const dateText = (value) => new Date(value).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+const dateText = (value) => value == null ? "—" : new Date(value).toLocaleDateString(undefined,
+  { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
+const dateInput = (value) => value == null ? "" : new Date(value).toISOString().slice(0, 10);
+const moneyText = (minor, currency = "GBP") => new Intl.NumberFormat(undefined,
+  { style: "currency", currency }).format((Number(minor) || 0) / 100);
+const paymentLabels = {
+  none: "No plan", paid: "Paid", due_soon: "Due soon", overdue: "Overdue",
+  unpaid: "Payment due", partially_paid: "Part paid", awaiting_confirmation: "Awaiting confirmation", void: "Void",
+};
+const accessLabels = { enabled: "Access enabled", pending: "Access pending", suspended: "Access suspended", cancelled: "Plan cancelled" };
+const methodLabels = { bank_transfer: "Bank transfer", cash: "Cash", card: "Card", paypal: "PayPal", other: "Other" };
+
+function tableTextCell(row, text, className = "") {
+  const cell = document.createElement("td");
+  cell.textContent = text;
+  if (className) cell.className = className;
+  row.append(cell);
+  return cell;
+}
+
+function renderPaymentRows(target, payments, admin = false) {
+  const rows = payments.map((payment) => {
+    const row = document.createElement("tr");
+    tableTextCell(row, dateText(payment.receivedAt));
+    tableTextCell(row, moneyText(payment.amountMinor, payment.currency));
+    tableTextCell(row, methodLabels[payment.method] || payment.method);
+    if (admin) tableTextCell(row, payment.reference || "—");
+    else tableTextCell(row, `${dateText(payment.periodStartsAt)} – ${dateText(payment.periodEndsAt)}`);
+    const statusCell = document.createElement("td");
+    const badge = document.createElement("span");
+    badge.className = "pp-billing-state";
+    badge.dataset.status = payment.status;
+    badge.textContent = payment.status === "confirmed" ? "Confirmed" : payment.status;
+    statusCell.append(badge);
+    row.append(statusCell);
+    if (admin) {
+      const actionCell = document.createElement("td");
+      if (payment.status !== "void") {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "pp-text-link pp-void-payment";
+        button.dataset.paymentId = payment.id;
+        button.textContent = "Void";
+        actionCell.append(button);
+      }
+      row.append(actionCell);
+    }
+    return row;
+  });
+  if (!rows.length) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = admin ? 6 : 5;
+    cell.textContent = "No payments have been recorded yet.";
+    row.append(cell);
+    rows.push(row);
+  }
+  byId(target).replaceChildren(...rows);
+}
+
+function renderBilling(data) {
+  const billing = data?.billing;
+  if (!billing || !Array.isArray(billing.payments)) throw new Error("Membership details returned an unexpected response.");
+  const subscription = billing.subscription;
+  const period = billing.currentPeriod;
+  const paymentStatus = period?.paymentStatus || "none";
+  const paymentLabel = paymentLabels[paymentStatus] || "Payment status unavailable";
+  const state = byId("billing-state");
+  state.textContent = paymentLabel;
+  state.dataset.status = paymentStatus;
+  byId("billing-plan").textContent = subscription?.tier || "No plan assigned";
+  byId("billing-access").textContent = subscription ? (accessLabels[subscription.accessStatus] || subscription.accessStatus) : "Contact Jacob to choose a plan";
+  byId("billing-last-paid").textContent = billing.lastPayment ? dateText(billing.lastPayment.receivedAt) : "No payment recorded";
+  byId("billing-last-amount").textContent = billing.lastPayment
+    ? `${moneyText(billing.lastPayment.amountMinor, billing.lastPayment.currency)} · ${methodLabels[billing.lastPayment.method] || billing.lastPayment.method}` : "—";
+  byId("billing-next-due").textContent = period ? dateText(period.endsAt) : "Not scheduled";
+  byId("billing-balance").textContent = period
+    ? period.creditMinor > 0 ? `${moneyText(period.creditMinor, period.currency)} credit`
+      : `${moneyText(period.outstandingMinor, period.currency)} outstanding` : "No active billing period";
+  renderPaymentRows("billing-payments", billing.payments.filter((payment) => payment.status !== "void"));
+  byId("billing-results").hidden = false;
+
+  byId("overview-plan").textContent = subscription?.tier || "No plan";
+  byId("overview-plan-note").textContent = subscription ? (accessLabels[subscription.accessStatus] || subscription.accessStatus) : "No membership has been assigned yet.";
+  byId("overview-renewal").textContent = period ? dateText(period.endsAt) : "Not scheduled";
+  if (period) {
+    const days = Math.ceil((period.endsAt - Date.now()) / 86_400_000);
+    byId("overview-renewal-note").textContent = days < 0 ? `${Math.abs(days)} day${Math.abs(days) === 1 ? "" : "s"} past due`
+      : days === 0 ? "Due today" : `Due in ${days} day${days === 1 ? "" : "s"}`;
+  } else byId("overview-renewal-note").textContent = "No payment date has been set.";
+  byId("overview-payment").textContent = paymentLabel;
+  byId("overview-payment-note").textContent = billing.lastPayment
+    ? `Last paid ${dateText(billing.lastPayment.receivedAt)} · ${moneyText(billing.lastPayment.amountMinor, billing.lastPayment.currency)}`
+    : "No confirmed payment has been recorded.";
+}
+
+async function loadBilling() {
+  if (!user || billingBusy) return;
+  const userId = user.id;
+  billingBusy = true;
+  byId("billing-panel").setAttribute("aria-busy", "true");
+  byId("billing-status").textContent = "Loading membership…";
+  byId("billing-status").dataset.error = "false";
+  byId("billing-retry").hidden = true;
+  controls();
+  try {
+    const data = await request("billing", undefined, "");
+    if (user?.id === userId) {
+      renderBilling(data);
+      byId("billing-status").textContent = "";
+    }
+  } catch (error) {
+    if (user?.id === userId) {
+      byId("billing-results").hidden = true;
+      byId("billing-status").textContent = error.message;
+      byId("billing-status").dataset.error = "true";
+      byId("billing-retry").hidden = false;
+      for (const id of ["overview-plan", "overview-renewal", "overview-payment"]) byId(id).textContent = "Unavailable";
+    }
+  } finally {
+    billingBusy = false;
+    byId("billing-panel").setAttribute("aria-busy", "false");
+    controls();
+  }
+}
+
 function adminCell(row, primary, secondary = "") {
   const cell = document.createElement("td");
   const strong = document.createElement("strong");
@@ -191,7 +344,12 @@ function renderAdminUsers(data) {
       userCell.strong.append(badge);
     }
     adminCell(row, account.signInMethods?.join(" + ") || "Not linked", account.plexUsername ? `Plex: ${account.plexUsername}` : "");
-    adminCell(row, account.subscription?.tier || "No plan", account.subscription?.status || "");
+    adminCell(row, account.subscription?.tier || "No plan", account.subscription ? (accessLabels[account.subscription.status] || account.subscription.status) : "");
+    const billingLabel = paymentLabels[account.billing?.status || "none"] || "Unknown";
+    const billingCell = adminCell(row, billingLabel, account.billing
+      ? `${moneyText(account.billing.outstandingMinor, account.billing.currency)} due · ${dateText(account.billing.nextDueAt)}` : "Not scheduled");
+    billingCell.cell.classList.add("pp-admin-payment-cell");
+    billingCell.cell.dataset.status = account.billing?.status || "none";
     const statusCell = document.createElement("td");
     const statusLabel = document.createElement("span");
     statusLabel.className = "pp-account-status";
@@ -199,13 +357,20 @@ function renderAdminUsers(data) {
     statusLabel.textContent = account.accountStatus;
     statusCell.append(statusLabel);
     row.append(statusCell);
-    adminCell(row, dateText(account.createdAt));
+    const manageCell = document.createElement("td");
+    const manage = document.createElement("button");
+    manage.type = "button";
+    manage.className = "pp-button pp-admin-manage";
+    manage.dataset.userId = account.id;
+    manage.textContent = "Manage";
+    manageCell.append(manage);
+    row.append(manageCell);
     return row;
   });
   if (!rows.length) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
-    cell.colSpan = 5;
+    cell.colSpan = 6;
     cell.textContent = "No user accounts were found.";
     row.append(cell);
     rows.push(row);
@@ -214,6 +379,7 @@ function renderAdminUsers(data) {
   byId("admin-total").textContent = String(data.summary?.total ?? data.users.length);
   byId("admin-enabled").textContent = String(data.summary?.enabled ?? data.users.filter((account) => account.accountStatus === "enabled").length);
   byId("admin-subscribed").textContent = String(data.summary?.subscribed ?? data.users.filter((account) => account.subscription).length);
+  byId("admin-overdue").textContent = String(data.summary?.overdue ?? data.users.filter((account) => account.billing?.status === "overdue").length);
   byId("admin-table-wrap").hidden = false;
 }
 
@@ -238,9 +404,96 @@ async function loadAdminUsers() {
   }
 }
 
+function nextMonthDate(value = new Date()) {
+  const date = new Date(Date.UTC(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate()));
+  const day = date.getUTCDate();
+  date.setUTCDate(1);
+  date.setUTCMonth(date.getUTCMonth() + 1);
+  const lastDay = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0)).getUTCDate();
+  date.setUTCDate(Math.min(day, lastDay));
+  return date.toISOString().slice(0, 10);
+}
+
+function adminBillingMessage(text, error = false) {
+  byId("admin-billing-status").textContent = text;
+  byId("admin-billing-status").dataset.error = String(error);
+}
+
+function renderAdminBilling(data) {
+  if (!data?.account || !Array.isArray(data.tiers) || !data.billing || !Array.isArray(data.billing.payments)) {
+    throw new Error("Billing details returned an unexpected response.");
+  }
+  adminBillingData = data;
+  const subscription = data.billing.subscription;
+  const period = data.billing.currentPeriod;
+  byId("admin-billing-account").textContent = `${data.account.displayName} · ${data.account.email}`;
+  const tierSelect = byId("admin-plan-tier");
+  tierSelect.replaceChildren(...data.tiers.map((tier) => {
+    const option = document.createElement("option");
+    option.value = tier.id;
+    option.textContent = `${tier.name} · ${moneyText(tier.monthlyPriceMinor, tier.currency)}/month`;
+    option.dataset.priceMinor = String(tier.monthlyPriceMinor);
+    option.dataset.currency = tier.currency;
+    return option;
+  }));
+  if (subscription && data.tiers.some((tier) => tier.id === subscription.tierId)) tierSelect.value = subscription.tierId;
+  byId("admin-plan-access").value = subscription?.accessStatus || "pending";
+  const today = new Date();
+  const todayText = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())).toISOString().slice(0, 10);
+  byId("admin-plan-start").value = dateInput(subscription?.startsAt) || todayText;
+  byId("admin-plan-due").value = dateInput(subscription?.endsAt) || nextMonthDate(new Date(`${todayText}T00:00:00Z`));
+  byId("admin-payment-date").value = todayText;
+  const suggested = period?.outstandingMinor > 0 ? period.outstandingMinor : subscription?.monthlyPriceMinor || Number(tierSelect.selectedOptions[0]?.dataset.priceMinor || 0);
+  byId("admin-payment-amount").value = suggested ? (suggested / 100).toFixed(2) : "";
+  byId("admin-payment-reference").value = "";
+  renderPaymentRows("admin-billing-payments", data.billing.payments, true);
+  byId("admin-billing-content").hidden = false;
+  byId("admin-billing-editor").hidden = false;
+  controls();
+}
+
+async function openAdminBilling(userId) {
+  if (!user?.isAdmin || adminBillingBusy) return;
+  adminBillingBusy = true;
+  byId("admin-billing-editor").hidden = false;
+  byId("admin-billing-content").hidden = true;
+  adminBillingMessage("Loading billing details…");
+  controls();
+  try {
+    const data = await request(`billing?userId=${encodeURIComponent(userId)}`, undefined, "admin");
+    renderAdminBilling(data);
+    adminBillingMessage("");
+    byId("admin-billing-heading").scrollIntoView({ behavior: "smooth", block: "center" });
+  } catch (error) {
+    adminBillingMessage(error.message, true);
+  } finally {
+    adminBillingBusy = false;
+    controls();
+  }
+}
+
+async function updateAdminBilling(body, progress, success) {
+  if (!user?.isAdmin || adminBillingBusy || !adminBillingData?.account?.id) return;
+  adminBillingBusy = true;
+  adminBillingMessage(progress);
+  controls();
+  try {
+    const data = await request("billing", { ...body, userId: adminBillingData.account.id }, "admin");
+    renderAdminBilling(data);
+    adminBillingMessage(success);
+    if (user.id === data.account.id) renderBilling({ billing: data.billing });
+    await loadAdminUsers();
+  } catch (error) {
+    adminBillingMessage(error.message, true);
+  } finally {
+    adminBillingBusy = false;
+    controls();
+  }
+}
+
 async function acceptUser(next) {
   renderUser(next);
-  if (next) await Promise.all([loadActivity(), next.isAdmin ? loadAdminUsers() : Promise.resolve()]);
+  if (next) await Promise.all([loadBilling(), loadActivity(), next.isAdmin ? loadAdminUsers() : Promise.resolve()]);
 }
 
 function setMode(value) {
@@ -410,10 +663,55 @@ async function initializeSession() {
 }
 byId("auth-retry").addEventListener("click", () => void initializeSession());
 byId("admin-retry").addEventListener("click", () => void loadAdminUsers());
+byId("billing-retry").addEventListener("click", () => void loadBilling());
 byId("activity-retry").addEventListener("click", () => void loadActivity());
 byId("activity-range").addEventListener("click", (event) => {
   const button = event.target.closest("button[data-range]");
   if (button) void loadActivity(button.dataset.range);
+});
+byId("admin-users").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-user-id]");
+  if (button) void openAdminBilling(button.dataset.userId);
+});
+byId("admin-billing-close").addEventListener("click", () => {
+  byId("admin-billing-editor").hidden = true;
+  byId("admin-billing-content").hidden = true;
+  adminBillingData = null;
+  adminBillingMessage("");
+  controls();
+});
+byId("admin-plan-tier").addEventListener("change", () => {
+  if (adminBillingData?.billing?.currentPeriod?.outstandingMinor > 0) return;
+  const price = Number(byId("admin-plan-tier").selectedOptions[0]?.dataset.priceMinor || 0);
+  byId("admin-payment-amount").value = price ? (price / 100).toFixed(2) : "";
+});
+byId("admin-plan-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!event.currentTarget.reportValidity()) return;
+  void updateAdminBilling({
+    action: "save_plan",
+    tierId: byId("admin-plan-tier").value,
+    accessStatus: byId("admin-plan-access").value,
+    startsOn: byId("admin-plan-start").value,
+    nextDueOn: byId("admin-plan-due").value,
+  }, "Saving plan and billing dates…", "Plan and billing dates saved.");
+});
+byId("admin-payment-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!event.currentTarget.reportValidity()) return;
+  const amountMinor = Math.round(Number(byId("admin-payment-amount").value) * 100);
+  void updateAdminBilling({
+    action: "record_payment", amountMinor,
+    receivedOn: byId("admin-payment-date").value,
+    method: byId("admin-payment-method").value,
+    reference: byId("admin-payment-reference").value,
+  }, "Recording payment…", "Payment recorded and the member’s balance has been updated.");
+});
+byId("admin-billing-payments").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-payment-id]");
+  if (!button || !window.confirm("Void this payment? It will remain in the history but will no longer count toward the balance.")) return;
+  void updateAdminBilling({ action: "void_payment", paymentId: button.dataset.paymentId },
+    "Voiding payment…", "Payment voided. The outstanding balance has been recalculated.");
 });
 window.addEventListener("focus", () => void refreshSession());
 window.addEventListener("pageshow", (event) => { if (event.persisted) void initializeSession(); });

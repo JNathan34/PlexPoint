@@ -70,7 +70,7 @@ test("the owner can view a safe account list with Plex and subscription details"
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("Cache-Control"), "no-store");
   const data = await response.json();
-  assert.deepEqual(data.summary, { total: 2, enabled: 2, disabled: 0, subscribed: 1 });
+  assert.deepEqual(data.summary, { total: 2, enabled: 2, disabled: 0, subscribed: 1, overdue: 0 });
   const admin = data.users.find((user) => user.email === "jacobnathan1718@gmail.com");
   assert.equal(admin.isAdmin, true);
   assert.deepEqual(admin.signInMethods, ["Email"]);

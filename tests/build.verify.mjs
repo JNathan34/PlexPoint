@@ -33,7 +33,7 @@ test('only intended public assets and the generated worker are shipped', async (
   const worker = await readFile(entry, 'utf8');
   assert.deepEqual(await readFile(resolve(root, '_worker.js')), await readFile(entry),
     'The repository-root worker deployed by Pages must match the generated Functions worker');
-  for (const endpoint of ['/api/portal/activity', '/api/portal/admin/users', '/api/portal/auth/:action', '/api/portal/plex/:action', '/api/portal/content']) {
+  for (const endpoint of ['/api/portal/activity', '/api/portal/billing', '/api/portal/admin/billing', '/api/portal/admin/users', '/api/portal/auth/:action', '/api/portal/plex/:action', '/api/portal/content']) {
     assert.ok(worker.includes(endpoint), `Missing endpoint: ${endpoint}`);
   }
   for (const endpoint of ['anime-movies','anime-shows','collections','counts','featured-collection',
