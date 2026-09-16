@@ -22,6 +22,18 @@ test('the public website is copied byte-for-byte without rewriting its bundle', 
   }
 });
 
+test('the account session bootstrap is isolated and cache-versioned', async () => {
+  const account = await readFile(resolve(root, 'account/index.html'), 'utf8');
+  const portal = await readFile(resolve(root, 'assets/portal.js'), 'utf8');
+  assert.match(account, /src="\/assets\/portal-auth\.js\?v=[^"]+"/);
+  assert.match(account, /src="\/assets\/portal-navigation\.js\?v=[^"]+"/);
+  assert.match(account, /src="\/assets\/portal\.js\?v=[^"]+"/);
+  assert.doesNotMatch(portal, /import "\.\/portal-auth\.js/);
+  assert.doesNotMatch(portal, /import "\.\/portal-navigation\.js/);
+  assert.match(portal, /portal-content\.js\?v=/);
+  assert.match(portal, /portal-utils\.js\?v=/);
+});
+
 test('only intended public assets and the generated worker are shipped', async () => {
   assert.deepEqual((await readdir(output)).sort(), [
     'index.html','account','assets','icons','plex-posters','preview-pictures','plex-preview.json',
