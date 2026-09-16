@@ -28,4 +28,9 @@ const result = spawnSync(process.execPath, [
 });
 if (result.error) throw result.error;
 if (result.status !== 0) process.exit(result.status ?? 1);
-console.log("Built the existing website and Pages functions in dist/. No deployment performed.");
+
+// The production Pages project currently deploys this repository root, where
+// advanced-mode Functions are loaded from `_worker.js`. Keep that entry point
+// in sync with the same generated worker used by local and dist deployments.
+await cp(resolve(output, "_worker.js", "index.js"), resolve(root, "_worker.js"));
+console.log("Built the website and synchronized the deployable Pages worker. No deployment performed.");

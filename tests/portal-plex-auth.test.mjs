@@ -32,15 +32,18 @@ function setup(t) {
     try { const result = statements.map((s) => s.all()); db.exec("COMMIT"); return result; }
     catch (error) { db.exec("ROLLBACK"); throw error; }
   } } };
-  const provider = { authorized: true, failure: false, invalidPin: false,
+  const provider = { authorized: true, failure: false, redirect: false, invalidPin: false,
     user: { id: 4321, username: "PlexMovieFan", email: "plex@example.test" }, calls: [] };
   const fetcher = async (url, options) => {
     provider.calls.push({ url, options });
     assert.equal(new URL(url).origin, "https://plex.tv");
-    assert.equal(options.redirect, "error");
+    assert.equal(options.redirect, "manual");
     assert.equal(options.headers["X-Plex-Product"], "PlexPoint");
     assert.ok(options.headers["X-Plex-Client-Identifier"]);
     if (provider.failure) throw new Error("provider-private-error");
+    if (provider.redirect) {
+      return new Response(null, { status: 302, headers: { Location: "https://example.test/not-plex" } });
+    }
     if (new URL(url).pathname.endsWith("/user")) {
       assert.equal(options.headers["X-Plex-Token"], accessToken);
       assert.ok(!url.includes(accessToken));
@@ -204,6 +207,9 @@ test("upstream failure and malformed identities never create accounts or reveal 
   assert.equal(failure.status, 502);
   assert.doesNotMatch(await failure.text(), /provider-private-error/);
   provider.failure = false;
+  provider.redirect = true;
+  assert.equal((await call("start")).status, 502);
+  provider.redirect = false;
   provider.invalidPin = true;
   assert.equal((await call("start")).status, 502);
   provider.invalidPin = false;

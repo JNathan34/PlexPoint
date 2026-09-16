@@ -21,7 +21,9 @@ async function plexRequest(fetcher, path, clientId, { method = "GET", token, bod
   try {
     // Fixed host, no redirects, and tokens only in headers; never accept URLs from a browser.
     const response = await fetcher(`https://plex.tv/api/v2/${path}`, {
-      method, redirect: "error", signal: controller.signal,
+      // Workers does not implement redirect:"error". Manual mode preserves the
+      // no-redirect boundary and lets the status check below reject every 3xx.
+      method, redirect: "manual", signal: controller.signal,
       headers: { Accept: "application/json", "X-Plex-Product": "PlexPoint", "X-Plex-Version": "1.0",
         "X-Plex-Client-Identifier": clientId, ...(token ? { "X-Plex-Token": token } : {}),
         ...(body ? { "Content-Type": "application/x-www-form-urlencoded" } : {}),
@@ -32,6 +34,10 @@ async function plexRequest(fetcher, path, clientId, { method = "GET", token, bod
     return await response.json();
   } catch (error) {
     if (error instanceof AuthError) throw error;
+    // Keep enough signal for Workers logs without recording a PIN, token, or provider URL.
+    console.error(JSON.stringify({ event: "plex_auth_upstream_error",
+      errorType: error instanceof Error ? error.name : typeof error,
+      causeCode: typeof error?.cause?.code === "string" ? error.cause.code : undefined }));
     throw new AuthError(502, "Plex is not responding. Please try again shortly.");
   } finally { clearTimeout(timeout); }
 }

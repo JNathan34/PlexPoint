@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -31,9 +31,24 @@ test('only intended public assets and the generated worker are shipped', async (
   const syntax = spawnSync(process.execPath, ['--check', entry], { encoding: 'utf8' });
   assert.equal(syntax.status, 0, syntax.stderr);
   const worker = await readFile(entry, 'utf8');
-  assert.ok(worker.includes('/api/portal/content'));
+  assert.deepEqual(await readFile(resolve(root, '_worker.js')), await readFile(entry),
+    'The repository-root worker deployed by Pages must match the generated Functions worker');
+  for (const endpoint of ['/api/portal/auth/:action', '/api/portal/plex/:action', '/api/portal/content']) {
+    assert.ok(worker.includes(endpoint), `Missing endpoint: ${endpoint}`);
+  }
   for (const endpoint of ['anime-movies','anime-shows','collections','counts','featured-collection',
     'image','movies','sections','shows','status','top-rated']) {
     assert.ok(worker.includes(`/api/plex/${endpoint}`), `Missing endpoint: ${endpoint}`);
   }
+});
+
+test('the repository-root worker dispatches the Plex sign-in API', async () => {
+  const workerUrl = `${pathToFileURL(resolve(root, '_worker.js')).href}?build-test=${Date.now()}`;
+  const { default: worker } = await import(workerUrl);
+  const response = await worker.fetch(new Request('https://portal.example.test/api/portal/plex/start'), {
+    ASSETS: { fetch: () => new Response('static fallback') },
+  }, { waitUntil() {} });
+  assert.equal(response.status, 405);
+  assert.equal(response.headers.get('Allow'), 'POST');
+  assert.deepEqual(await response.json(), { message: 'Method not allowed.' });
 });
