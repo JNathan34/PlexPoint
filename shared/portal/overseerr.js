@@ -132,7 +132,11 @@ export async function requestsResponse(request, env, fetcher = fetch) {
     const recent = Array.isArray(payload.results) ? payload.results.slice(0, 6) : [];
     return reply({ requests: await Promise.all(recent.map((item) => requestDetails(config, item, fetcher))) });
   } catch (error) {
-    if (!(error instanceof AuthError)) console.error(JSON.stringify({ event: "overseerr_requests_error", errorType: error instanceof Error ? error.name : typeof error }));
+    if (!(error instanceof AuthError)) console.error(JSON.stringify({
+      event: "overseerr_requests_error",
+      errorType: error instanceof Error ? error.name : typeof error,
+      errorMessage: error instanceof Error ? error.message.slice(0, 200) : "Unknown error",
+    }));
     return reply({ message: error instanceof AuthError ? error.message : "Recent requests are temporarily unavailable. Please try again later." },
       error instanceof AuthError ? error.status : 502);
   }
