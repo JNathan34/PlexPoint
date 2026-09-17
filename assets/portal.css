@@ -327,6 +327,10 @@
 .pp-skip:focus { transform: translateY(0); }
 .pp-no-script { padding: 24px; background: #171c26; color: #fff; }
 .pp-no-script a { text-decoration: underline; }
+@media (min-width: 1024px) {
+  .pp-auth-intro { display: flex; flex-direction: column; }
+  .pp-auth-intro .pp-metrics { margin-top: auto; }
+}
 @media (max-width: 1279px) {
   .pp-navigation a { padding-inline: 16px; }
   .pp-dashboard-top, .pp-dashboard-detail-grid { grid-template-columns: minmax(0,1.25fr) minmax(320px,.75fr); }

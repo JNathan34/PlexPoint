@@ -159,18 +159,25 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
   await expect(page.locator("#admin-billing-payments")).toContainText("£5.00");
 });
 
-test("the viewing activity panel is removed while recent requests remain", async ({ page }) => {
+test("the viewing panel stays removed while the summary shows seven-day watch time", async ({ page }) => {
   let activityRequests = 0;
   await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
     id: "viewer", email: "viewer@example.test", displayName: "Viewer", createdAt: Date.now(),
   } } }));
-  await page.route("**/api/portal/activity?**", (route) => { activityRequests++; return route.abort(); });
+  await page.route("**/api/portal/activity?**", (route) => {
+    activityRequests++;
+    return route.fulfill({ json: {
+      range: "7", periodLabel: "Last 7 days", popularMovies: [], popularShows: [], watchTime: { seconds: 7384, plays: 4 },
+    } });
+  });
   await page.route("**/api/portal/requests", (route) => route.fulfill({ json: { requests: [] } }));
   await page.goto("/account/#account");
   await expect(page.locator("#activity-panel, #activity-range")).toHaveCount(0);
   await expect(page.getByText("What everyone’s watching", { exact: true })).toHaveCount(0);
   await expect(page.locator("#requests-panel")).toBeVisible();
-  expect(activityRequests).toBe(0);
+  await expect(page.locator("#overview-watch-time")).toHaveText("2h 3m");
+  await expect(page.locator("#overview-watch-time-note")).toContainText("Last 7 days");
+  expect(activityRequests).toBe(1);
 });
 
 test("members can see recent Overseerr requests", async ({ page }) => {
@@ -180,9 +187,12 @@ test("members can see recent Overseerr requests", async ({ page }) => {
   await page.route("**/api/portal/requests", (route) => route.fulfill({ json: { requests: [{
     id: 12, title: "The Weekly Film", type: "movie", year: 2026, requestedAt: Date.now(), status: "processing", posterUrl: null,
   }] } }));
+  await page.route("**/api/portal/activity?**", (route) => route.fulfill({ json: {
+    range: "7", periodLabel: "Last 7 days", popularMovies: [], popularShows: [], watchTime: null,
+  } }));
   await page.goto("/account/#account");
   await expect(page.locator("#requests-panel")).toBeVisible();
   await expect(page.locator("#recent-requests")).toContainText("The Weekly Film");
   await expect(page.locator("#recent-requests")).toContainText("Processing");
-  await expect(page.locator("#overview-requests")).toHaveText("1");
+  await expect(page.locator("#recent-requests")).toContainText("Requested today");
 });

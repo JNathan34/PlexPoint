@@ -146,8 +146,8 @@ function renderUser(next) {
     byId("recent-requests").replaceChildren();
     byId("recent-requests").hidden = true;
     byId("requests-status").textContent = "";
-    byId("overview-requests").textContent = "Sign in to view";
-    byId("overview-requests-note").textContent = "Your latest Overseerr requests appear here.";
+    byId("overview-watch-time").textContent = "Sign in to view";
+    byId("overview-watch-time-note").textContent = "Your Plex watch time from the last 7 days.";
     byId("billing-results").hidden = true;
     byId("billing-status").textContent = "";
     byId("billing-payments").replaceChildren();
@@ -199,6 +199,33 @@ function requestedText(value) {
   return `Requested ${new Date(timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}`;
 }
 
+function durationText(seconds) {
+  const total = Math.max(0, Number(seconds) || 0);
+  if (total < 3600) return `${Math.floor(total / 60)}m`;
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  return `${hours}h${minutes ? ` ${minutes}m` : ""}`;
+}
+
+async function loadWatchTime() {
+  if (!user) return;
+  const userId = user.id;
+  try {
+    const data = await request("activity?range=7", undefined, "");
+    if (user?.id !== userId) return;
+    const hasWatchTime = data?.watchTime && Number.isFinite(Number(data.watchTime.seconds));
+    byId("overview-watch-time").textContent = hasWatchTime ? durationText(data.watchTime.seconds) : "Not linked";
+    byId("overview-watch-time-note").textContent = hasWatchTime
+      ? `${data.watchTime.plays} play${data.watchTime.plays === 1 ? "" : "s"} · Last 7 days`
+      : "No matching Tautulli user was found.";
+  } catch {
+    if (user?.id === userId) {
+      byId("overview-watch-time").textContent = "Unavailable";
+      byId("overview-watch-time-note").textContent = "Seven-day watch time could not be loaded.";
+    }
+  }
+}
+
 function renderRequests(data) {
   if (!Array.isArray(data?.requests)) throw new Error("Recent requests returned an unexpected response.");
   const rows = data.requests.map((item) => {
@@ -243,9 +270,6 @@ function renderRequests(data) {
   }
   byId("recent-requests").replaceChildren(...rows);
   byId("recent-requests").hidden = false;
-  byId("overview-requests").textContent = String(data.requests.length);
-  byId("overview-requests-note").textContent = data.requests.length
-    ? requestedText(data.requests[0].requestedAt) : "No recent requests found.";
 }
 
 async function loadRequests() {
@@ -269,8 +293,6 @@ async function loadRequests() {
       byId("requests-status").textContent = error.message;
       byId("requests-status").dataset.error = "true";
       byId("requests-retry").hidden = false;
-      byId("overview-requests").textContent = "Unavailable";
-      byId("overview-requests-note").textContent = "Recent requests could not be loaded.";
     }
   } finally {
     requestsBusy = false;
@@ -638,7 +660,7 @@ async function updateAdminBilling(body, progress, success) {
 
 async function acceptUser(next) {
   renderUser(next);
-  if (next) await Promise.all([loadBilling(), loadRequests(), next.isAdmin ? loadAdminUsers() : Promise.resolve()]);
+  if (next) await Promise.all([loadBilling(), loadWatchTime(), loadRequests(), next.isAdmin ? loadAdminUsers() : Promise.resolve()]);
 }
 
 async function request(action, body, group = "auth") {
