@@ -1,12 +1,8 @@
 import { AuthError, reply, sessionUser } from "./auth.js";
 
 const DEFAULT_TAUTULLI_URL = "https://tautulli.plexpoint.uk";
-const PERIODS = {
-  "1": "Last day",
-  "7": "Last 7 days",
-  "30": "Last 30 days",
-  "0": "All time",
-};
+const ACTIVITY_RANGE = "7";
+const ACTIVITY_LABEL = "Last 7 days";
 
 function configuredEndpoint(env) {
   if (typeof env.TAUTULLI_API_KEY !== "string" || !/^[a-zA-Z0-9_-]{16,256}$/.test(env.TAUTULLI_API_KEY)) {
@@ -65,6 +61,27 @@ function watchTime(data, range) {
   return row ? { seconds: count(row.total_time), plays: count(row.total_plays) } : null;
 }
 
+const normalized = (value) => typeof value === "string" ? value.trim().toLowerCase() : "";
+
+async function tautulliUserId(config, current, fetcher) {
+  const candidate = String(current.tautulli_user_id || current.plex_id || "");
+  const fallback = /^[1-9][0-9]{0,19}$/.test(candidate) ? candidate : "";
+  try {
+    const data = await tautulliRequest(config, "get_users", {}, fetcher);
+    const users = Array.isArray(data) ? data : [];
+    const plexUsername = normalized(current.plex_username);
+    const email = normalized(current.email);
+    const match = users.find((item) => fallback && String(item?.user_id) === fallback)
+      || users.find((item) => email && normalized(item?.email) === email)
+      || users.find((item) => plexUsername && [item?.username, item?.friendly_name].some((value) => normalized(value) === plexUsername));
+    const resolved = String(match?.user_id || "");
+    return /^[1-9][0-9]{0,19}$/.test(resolved) ? resolved : fallback;
+  } catch (error) {
+    console.warn(JSON.stringify({ event: "tautulli_user_lookup_unavailable", errorType: error instanceof Error ? error.name : typeof error }));
+    return fallback;
+  }
+}
+
 export async function activityResponse(request, env, fetcher = fetch) {
   try {
     const requestUrl = new URL(request.url);
@@ -72,27 +89,42 @@ export async function activityResponse(request, env, fetcher = fetch) {
       throw new AuthError(400, "Account access requires HTTPS.");
     }
     if (request.method !== "GET") return reply({ message: "Method not allowed." }, 405, { Allow: "GET" });
-    const range = requestUrl.searchParams.get("range") || "7";
-    if (!PERIODS[range]) throw new AuthError(400, "Choose a valid viewing period.");
+    const requestedRange = requestUrl.searchParams.get("range");
+    if (requestedRange && requestedRange !== ACTIVITY_RANGE) {
+      throw new AuthError(400, "Viewing activity is fixed to the last 7 days.");
+    }
     if (!env.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
     const current = await sessionUser(env.PORTAL_DB, request);
     if (!current) throw new AuthError(401, "Please sign in to view activity.");
     const config = configuredEndpoint(env);
-    const common = { grouping: "1", time_range: range, stats_type: "plays", stats_count: "5" };
-    const candidateUserId = String(current.tautulli_user_id || current.plex_id || "");
-    const userId = /^[1-9][0-9]{0,19}$/.test(candidateUserId) ? candidateUserId : "";
-
-    const [moviesData, showsData, watchData] = await Promise.all([
+    const common = { grouping: "1", time_range: ACTIVITY_RANGE, stats_type: "plays", stats_count: "5" };
+    const [moviesResult, showsResult, userId] = await Promise.all([
       tautulliRequest(config, "get_home_stats", { ...common, stat_id: "popular_movies" }, fetcher),
       tautulliRequest(config, "get_home_stats", { ...common, stat_id: "popular_tv" }, fetcher),
-      userId ? tautulliRequest(config, "get_user_watch_time_stats", { grouping: "1", query_days: range, user_id: userId }, fetcher) : null,
-    ]);
+      tautulliUserId(config, current, fetcher),
+    ].map((promise) => Promise.resolve(promise).then((value) => ({ value }), (error) => ({ error }))));
+    const resolvedUserId = userId.value || "";
+    let watchData = null;
+    let watchError = null;
+    if (resolvedUserId) {
+      try {
+        watchData = await tautulliRequest(config, "get_user_watch_time_stats",
+          { grouping: "1", query_days: ACTIVITY_RANGE, user_id: resolvedUserId }, fetcher);
+      } catch (error) { watchError = error; }
+    }
+    if (moviesResult.error && showsResult.error && (!resolvedUserId || watchError)) {
+      throw moviesResult.error;
+    }
+    for (const [source, result] of [["movies", moviesResult], ["shows", showsResult]]) {
+      if (result.error) console.warn(JSON.stringify({ event: "tautulli_partial_activity", source, errorType: result.error instanceof Error ? result.error.name : typeof result.error }));
+    }
+    if (watchError) console.warn(JSON.stringify({ event: "tautulli_partial_activity", source: "watch_time", errorType: watchError instanceof Error ? watchError.name : typeof watchError }));
     return reply({
-      range,
-      periodLabel: PERIODS[range],
-      popularMovies: popularItems(moviesData, "popular_movies"),
-      popularShows: popularItems(showsData, "popular_tv"),
-      watchTime: userId ? watchTime(watchData, range) : null,
+      range: ACTIVITY_RANGE,
+      periodLabel: ACTIVITY_LABEL,
+      popularMovies: popularItems(moviesResult.value, "popular_movies"),
+      popularShows: popularItems(showsResult.value, "popular_tv"),
+      watchTime: resolvedUserId ? watchTime(watchData, ACTIVITY_RANGE) : null,
     });
   } catch (error) {
     if (!(error instanceof AuthError)) console.error(JSON.stringify({ event: "tautulli_activity_error", errorType: error instanceof Error ? error.name : typeof error }));

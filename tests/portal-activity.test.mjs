@@ -55,6 +55,7 @@ function successfulTautulli(calls) {
     const statId = url.searchParams.get("stat_id");
     let data;
     if (command === "get_user_watch_time_stats") data = [{ query_days: 7, total_plays: 4, total_time: 7384 }];
+    else if (command === "get_users") data = [{ user_id: 123456, username: "Viewer", email: "viewer@example.test" }];
     else if (statId === "popular_movies") data = [{ stat_id: statId, rows: [
       { title: "Movie One", year: 2026, total_plays: 12, users_watched: 5 },
       { title: "Movie Two", year: "2025", total_plays: "8", users_watched: "3" },
@@ -84,7 +85,7 @@ test("signed-in Plex users receive sanitized popular titles and personal watch t
     popularShows: [{ title: "Show One", year: 2024, plays: 20, viewers: 7 }],
     watchTime: { seconds: 7384, plays: 4 },
   });
-  assert.equal(calls.length, 3);
+  assert.equal(calls.length, 4);
   for (const call of calls) {
     assert.equal(call.url.origin, "https://tautulli.plexpoint.uk");
     assert.equal(call.url.pathname, "/api/v2");
@@ -104,8 +105,9 @@ test("email-only accounts still receive popular titles without another user's wa
   const response = await activityResponse(activityRequest(cookieOf(registration)), env, successfulTautulli(calls));
   assert.equal(response.status, 200);
   assert.equal((await response.json()).watchTime, null);
-  assert.equal(calls.length, 2);
-  assert.ok(calls.every((call) => call.url.searchParams.get("cmd") === "get_home_stats"));
+  assert.equal(calls.length, 3);
+  assert.equal(calls.filter((call) => call.url.searchParams.get("cmd") === "get_home_stats").length, 2);
+  assert.equal(calls.filter((call) => call.url.searchParams.get("cmd") === "get_users").length, 1);
 });
 
 test("activity rejects unauthenticated, invalid, unconfigured, and unsupported requests", async (t) => {

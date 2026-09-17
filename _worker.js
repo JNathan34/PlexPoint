@@ -60,7 +60,7 @@ function notImplementedClass(name) {
 }
 var init_utils = __esm({
   "../node_modules/unenv/dist/runtime/_internal/utils.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -74,7 +74,7 @@ var init_utils = __esm({
 var _timeOrigin, _performanceNow, nodeTiming, PerformanceEntry, PerformanceMark, PerformanceMeasure, PerformanceResourceTiming, PerformanceObserverEntryList, Performance, PerformanceObserver, performance;
 var init_performance = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -321,7 +321,7 @@ var init_performance = __esm({
 // ../node_modules/unenv/dist/runtime/node/perf_hooks.mjs
 var init_perf_hooks = __esm({
   "../node_modules/unenv/dist/runtime/node/perf_hooks.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -359,7 +359,7 @@ var init_performance2 = __esm({
 var noop_default;
 var init_noop = __esm({
   "../node_modules/unenv/dist/runtime/mock/noop.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -373,7 +373,7 @@ import { Writable } from "node:stream";
 var _console, _ignoreErrors, _stderr, _stdout, log, info, trace, debug, table, error, warn, createTask, clear, count, countReset, dir, dirxml, group, groupEnd, groupCollapsed, profile, profileEnd, time, timeEnd, timeLog, timeStamp, Console, _times, _stdoutErrorHandler, _stderrErrorHandler;
 var init_console = __esm({
   "../node_modules/unenv/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -416,7 +416,7 @@ var init_console = __esm({
 var workerdConsole, assert, clear2, context, count2, countReset2, createTask2, debug2, dir2, dirxml2, error2, group2, groupCollapsed2, groupEnd2, info2, log2, profile2, profileEnd2, table2, time2, timeEnd2, timeLog2, timeStamp2, trace2, warn2, console_default;
 var init_console2 = __esm({
   "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -479,7 +479,7 @@ var init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console = __
 var hrtime;
 var init_hrtime = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -507,7 +507,7 @@ var init_hrtime = __esm({
 var ReadStream;
 var init_read_stream = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -533,7 +533,7 @@ var init_read_stream = __esm({
 var WriteStream;
 var init_write_stream = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -591,7 +591,7 @@ var init_write_stream = __esm({
 // ../node_modules/unenv/dist/runtime/node/tty.mjs
 var init_tty = __esm({
   "../node_modules/unenv/dist/runtime/node/tty.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -604,7 +604,7 @@ var init_tty = __esm({
 var NODE_VERSION;
 var init_node_version = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/node-version.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -617,7 +617,7 @@ import { EventEmitter } from "node:events";
 var Process;
 var init_process = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/process.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -864,7 +864,7 @@ var init_process = __esm({
 var globalProcess, getBuiltinModule, workerdProcess, unenvProcess, exit, features, platform, _channel, _debugEnd, _debugProcess, _disconnect, _events, _eventsCount, _exiting, _fatalException, _getActiveHandles, _getActiveRequests, _handleQueue, _kill, _linkedBinding, _maxListeners, _pendingMessage, _preload_modules, _rawDebug, _send, _startProfilerIdleNotifier, _stopProfilerIdleNotifier, _tickCallback, abort, addListener, allowedNodeEnvironmentFlags, arch, argv, argv0, assert2, availableMemory, binding, channel, chdir, config, connected, constrainedMemory, cpuUsage, cwd, debugPort, disconnect, dlopen, domain, emit, emitWarning, env, eventNames, execArgv, execPath, exitCode, finalization, getActiveResourcesInfo, getegid, geteuid, getgid, getgroups, getMaxListeners, getuid, hasUncaughtExceptionCaptureCallback, hrtime3, initgroups, kill, listenerCount, listeners, loadEnvFile, mainModule, memoryUsage, moduleLoadList, nextTick, off, on, once, openStdin, permission, pid, ppid, prependListener, prependOnceListener, rawListeners, reallyExit, ref, release, removeAllListeners, removeListener, report, resourceUsage, send, setegid, seteuid, setgid, setgroups, setMaxListeners, setSourceMapsEnabled, setuid, setUncaughtExceptionCaptureCallback, sourceMapsEnabled, stderr, stdin, stdout, throwDeprecation, title, traceDeprecation, umask, unref, uptime, version, versions, _process, process_default;
 var init_process2 = __esm({
   "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1215,13 +1215,14 @@ async function rateLimit(db, request, action, email, now) {
 function isAdminEmail(value) {
   return typeof value === "string" && value.trim().toLowerCase() === ADMIN_EMAIL;
 }
-function publicUser(row) {
+function publicUser(row, proxyAvatar = false) {
   return {
     id: row.id,
     email: row.email,
     displayName: row.display_name,
     createdAt: row.created_at,
     ...isAdminEmail(row.email) ? { isAdmin: true } : {},
+    ...proxyAvatar ? { avatarUrl: "/api/portal/avatar" } : {},
     ...row.plex_username ? { plex: {
       username: row.plex_username,
       ...row.plex_avatar_url ? { avatarUrl: row.plex_avatar_url } : {}
@@ -1301,7 +1302,7 @@ async function sessionUser(db, request, now = Date.now()) {
 async function currentSession(db, request, now) {
   const row = await sessionUser(db, request, now);
   return reply(
-    { user: row ? publicUser(await withPlexAvatar(db, row)) : null },
+    { user: row ? publicUser(await withPlexAvatar(db, row), true) : null },
     200,
     !row && readToken(request) ? { "Set-Cookie": sessionCookie(request, "", 0) } : {}
   );
@@ -1337,7 +1338,7 @@ async function authResponse(request, env2, action) {
 var SESSION_SECONDS, ITERATIONS, WINDOW_MS, ADMIN_EMAIL, encoder, hex, randomHex, digest, AuthError;
 var init_auth = __esm({
   "../shared/portal/auth.js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1665,7 +1666,7 @@ async function adminBillingResponse(request, env2) {
 var DAY_MS, ACCESS_STATUSES, PAYMENT_METHODS;
 var init_billing = __esm({
   "../shared/portal/billing.js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1698,7 +1699,7 @@ async function onRequest({ request, env: env2 }) {
 }
 var init_billing2 = __esm({
   "api/portal/admin/billing.js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1722,7 +1723,7 @@ function adminUser(row, now) {
     updatedAt: row.updated_at,
     signInMethods,
     ...row.plex_username ? { plexUsername: row.plex_username } : {},
-    ...row.plex_avatar_url ? { plexAvatarUrl: row.plex_avatar_url } : {},
+    plexAvatarUrl: `/api/portal/avatar?userId=${encodeURIComponent(row.id)}`,
     subscription: row.tier_name ? {
       tier: row.tier_name,
       status: row.subscription_status,
@@ -1806,7 +1807,7 @@ async function adminUsersResponse(request, env2) {
 }
 var init_admin = __esm({
   "../shared/portal/admin.js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1823,7 +1824,7 @@ async function onRequest2({ request, env: env2 }) {
 }
 var init_users = __esm({
   "api/portal/admin/users.js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1838,7 +1839,7 @@ async function onRequest3({ request, env: env2, params }) {
 }
 var init_action = __esm({
   "api/portal/auth/[action].js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1996,7 +1997,7 @@ async function complete(request, db, fetcher) {
     throw new AuthError(409, "The account could not be connected. Please start sign-in again or contact support.");
   }
   const response = reply(
-    { user: publicUser({ ...row, plex_username: profile3.username, plex_avatar_url: profile3.avatarUrl }) },
+    { user: publicUser({ ...row, plex_username: profile3.username, plex_avatar_url: profile3.avatarUrl }, true) },
     200,
     { "Set-Cookie": sessionCookie(request, session.token) }
   );
@@ -2027,7 +2028,7 @@ async function plexAuthResponse(request, env2, action, fetcher = fetch) {
 var MAX_AGE;
 var init_plex_auth = __esm({
   "../shared/portal/plex-auth.js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2051,7 +2052,7 @@ async function onRequest4({ request, env: env2, params }) {
 }
 var init_action2 = __esm({
   "api/portal/plex/[action].js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2064,7 +2065,7 @@ var init_action2 = __esm({
 var require_util = __commonJS({
   "../node_modules/fast-xml-parser/src/util.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2142,7 +2143,7 @@ var require_util = __commonJS({
 var require_validator = __commonJS({
   "../node_modules/fast-xml-parser/src/validator.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2469,7 +2470,7 @@ var require_validator = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
 var require_OptionsBuilder = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"(exports) {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2532,13 +2533,13 @@ var require_OptionsBuilder = __commonJS({
       if (typeof propertyName !== "string") {
         return;
       }
-      const normalized = propertyName.toLowerCase();
-      if (DANGEROUS_PROPERTY_NAMES.some((dangerous) => normalized === dangerous.toLowerCase())) {
+      const normalized3 = propertyName.toLowerCase();
+      if (DANGEROUS_PROPERTY_NAMES.some((dangerous) => normalized3 === dangerous.toLowerCase())) {
         throw new Error(
           `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`
         );
       }
-      if (criticalProperties.some((dangerous) => normalized === dangerous.toLowerCase())) {
+      if (criticalProperties.some((dangerous) => normalized3 === dangerous.toLowerCase())) {
         throw new Error(
           `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`
         );
@@ -2602,7 +2603,7 @@ var require_OptionsBuilder = __commonJS({
 var require_xmlNode = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2635,7 +2636,7 @@ var require_xmlNode = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js
 var require_DocTypeReader = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js"(exports, module) {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2932,7 +2933,7 @@ var require_DocTypeReader = __commonJS({
 // ../node_modules/strnum/strnum.js
 var require_strnum = __commonJS({
   "../node_modules/strnum/strnum.js"(exports, module) {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3027,7 +3028,7 @@ var require_strnum = __commonJS({
 // ../node_modules/fast-xml-parser/src/ignoreAttributes.js
 var require_ignoreAttributes = __commonJS({
   "../node_modules/fast-xml-parser/src/ignoreAttributes.js"(exports, module) {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3058,7 +3059,7 @@ var require_ignoreAttributes = __commonJS({
 var require_OrderedObjParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3684,7 +3685,7 @@ var require_OrderedObjParser = __commonJS({
 var require_node2json = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/node2json.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3779,7 +3780,7 @@ var require_node2json = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js
 var require_XMLParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js"(exports, module) {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3844,7 +3845,7 @@ var require_XMLParser = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js
 var require_orderedJs2Xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js"(exports, module) {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3988,7 +3989,7 @@ var require_orderedJs2Xml = __commonJS({
 var require_json2xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4242,7 +4243,7 @@ var require_json2xml = __commonJS({
 var require_fxp = __commonJS({
   "../node_modules/fast-xml-parser/src/fxp.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4693,8 +4694,8 @@ function normalizeLimit(limit) {
   return Math.max(1, Math.min(500, Math.trunc(limit)));
 }
 function normalizeText(value) {
-  const normalized = value?.trim();
-  return normalized ? normalized : null;
+  const normalized3 = value?.trim();
+  return normalized3 ? normalized3 : null;
 }
 async function resolveFeaturedCollectionTarget(env2, options) {
   const desiredId = normalizeText(options.collectionId ?? env2.PLEX_COLLECTION_ID);
@@ -4736,7 +4737,7 @@ async function getFeaturedCollection(env2, options = {}) {
 var import_fast_xml_parser, parser, cache, DEFAULT_PLEX_FETCH_TIMEOUT_MS, DEFAULT_LIBRARY_TITLES;
 var init_plex_client = __esm({
   "../shared/plex-client.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4856,7 +4857,7 @@ async function cachedJson(context2, options) {
 var PLEX_API_CACHE_VERSION;
 var init_pages = __esm({
   "_lib/pages.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4884,7 +4885,7 @@ async function onRequestGet(context2) {
 }
 var init_anime_movies = __esm({
   "api/plex/anime-movies.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4909,7 +4910,7 @@ async function onRequestGet2(context2) {
 }
 var init_anime_shows = __esm({
   "api/plex/anime-shows.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4932,7 +4933,7 @@ async function onRequestGet3(context2) {
 }
 var init_collections = __esm({
   "api/plex/collections.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4953,7 +4954,7 @@ async function onRequestGet4(context2) {
 }
 var init_counts = __esm({
   "api/plex/counts.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4984,7 +4985,7 @@ async function onRequestGet5(context2) {
 }
 var init_featured_collection = __esm({
   "api/plex/featured-collection.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5037,7 +5038,7 @@ async function onRequestGet6(context2) {
 }
 var init_image = __esm({
   "api/plex/image.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5062,7 +5063,7 @@ async function onRequestGet7(context2) {
 }
 var init_movies = __esm({
   "api/plex/movies.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5083,7 +5084,7 @@ async function onRequestGet8(context2) {
 }
 var init_sections = __esm({
   "api/plex/sections.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5108,7 +5109,7 @@ async function onRequestGet9(context2) {
 }
 var init_shows = __esm({
   "api/plex/shows.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5172,7 +5173,7 @@ async function onRequestGet10(context2) {
 }
 var init_status = __esm({
   "api/plex/status.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5201,7 +5202,7 @@ async function onRequestGet11(context2) {
 }
 var init_top_rated = __esm({
   "api/plex/top-rated.ts"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5215,7 +5216,7 @@ var init_top_rated = __esm({
 var defaultLinks, defaultArticles;
 var init_portal_content = __esm({
   "../assets/portal-content.js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5307,7 +5308,7 @@ function normalizeContent(content) {
 }
 var init_portal_utils = __esm({
   "../assets/portal-utils.js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5343,7 +5344,7 @@ async function publicContentResponse(env2) {
 var publicContentQueries;
 var init_content = __esm({
   "../shared/portal/content.js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5364,7 +5365,7 @@ async function onRequestGet12(context2) {
 }
 var init_content2 = __esm({
   "api/portal/content.js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5427,6 +5428,22 @@ function watchTime(data, range) {
   const row = data.find((entry) => String(entry?.query_days) === range);
   return row ? { seconds: count3(row.total_time), plays: count3(row.total_plays) } : null;
 }
+async function tautulliUserId(config2, current, fetcher) {
+  const candidate = String(current.tautulli_user_id || current.plex_id || "");
+  const fallback = /^[1-9][0-9]{0,19}$/.test(candidate) ? candidate : "";
+  try {
+    const data = await tautulliRequest(config2, "get_users", {}, fetcher);
+    const users = Array.isArray(data) ? data : [];
+    const plexUsername = normalized(current.plex_username);
+    const email = normalized(current.email);
+    const match2 = users.find((item) => fallback && String(item?.user_id) === fallback) || users.find((item) => email && normalized(item?.email) === email) || users.find((item) => plexUsername && [item?.username, item?.friendly_name].some((value) => normalized(value) === plexUsername));
+    const resolved = String(match2?.user_id || "");
+    return /^[1-9][0-9]{0,19}$/.test(resolved) ? resolved : fallback;
+  } catch (error3) {
+    console.warn(JSON.stringify({ event: "tautulli_user_lookup_unavailable", errorType: error3 instanceof Error ? error3.name : typeof error3 }));
+    return fallback;
+  }
+}
 async function activityResponse(request, env2, fetcher = fetch) {
   try {
     const requestUrl = new URL(request.url);
@@ -5434,26 +5451,48 @@ async function activityResponse(request, env2, fetcher = fetch) {
       throw new AuthError(400, "Account access requires HTTPS.");
     }
     if (request.method !== "GET") return reply({ message: "Method not allowed." }, 405, { Allow: "GET" });
-    const range = requestUrl.searchParams.get("range") || "7";
-    if (!PERIODS[range]) throw new AuthError(400, "Choose a valid viewing period.");
+    const requestedRange = requestUrl.searchParams.get("range");
+    if (requestedRange && requestedRange !== ACTIVITY_RANGE) {
+      throw new AuthError(400, "Viewing activity is fixed to the last 7 days.");
+    }
     if (!env2.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
     const current = await sessionUser(env2.PORTAL_DB, request);
     if (!current) throw new AuthError(401, "Please sign in to view activity.");
     const config2 = configuredEndpoint(env2);
-    const common = { grouping: "1", time_range: range, stats_type: "plays", stats_count: "5" };
-    const candidateUserId = String(current.tautulli_user_id || current.plex_id || "");
-    const userId = /^[1-9][0-9]{0,19}$/.test(candidateUserId) ? candidateUserId : "";
-    const [moviesData, showsData, watchData] = await Promise.all([
+    const common = { grouping: "1", time_range: ACTIVITY_RANGE, stats_type: "plays", stats_count: "5" };
+    const [moviesResult, showsResult, userId] = await Promise.all([
       tautulliRequest(config2, "get_home_stats", { ...common, stat_id: "popular_movies" }, fetcher),
       tautulliRequest(config2, "get_home_stats", { ...common, stat_id: "popular_tv" }, fetcher),
-      userId ? tautulliRequest(config2, "get_user_watch_time_stats", { grouping: "1", query_days: range, user_id: userId }, fetcher) : null
-    ]);
+      tautulliUserId(config2, current, fetcher)
+    ].map((promise) => Promise.resolve(promise).then((value) => ({ value }), (error3) => ({ error: error3 }))));
+    const resolvedUserId = userId.value || "";
+    let watchData = null;
+    let watchError = null;
+    if (resolvedUserId) {
+      try {
+        watchData = await tautulliRequest(
+          config2,
+          "get_user_watch_time_stats",
+          { grouping: "1", query_days: ACTIVITY_RANGE, user_id: resolvedUserId },
+          fetcher
+        );
+      } catch (error3) {
+        watchError = error3;
+      }
+    }
+    if (moviesResult.error && showsResult.error && (!resolvedUserId || watchError)) {
+      throw moviesResult.error;
+    }
+    for (const [source, result] of [["movies", moviesResult], ["shows", showsResult]]) {
+      if (result.error) console.warn(JSON.stringify({ event: "tautulli_partial_activity", source, errorType: result.error instanceof Error ? result.error.name : typeof result.error }));
+    }
+    if (watchError) console.warn(JSON.stringify({ event: "tautulli_partial_activity", source: "watch_time", errorType: watchError instanceof Error ? watchError.name : typeof watchError }));
     return reply({
-      range,
-      periodLabel: PERIODS[range],
-      popularMovies: popularItems(moviesData, "popular_movies"),
-      popularShows: popularItems(showsData, "popular_tv"),
-      watchTime: userId ? watchTime(watchData, range) : null
+      range: ACTIVITY_RANGE,
+      periodLabel: ACTIVITY_LABEL,
+      popularMovies: popularItems(moviesResult.value, "popular_movies"),
+      popularShows: popularItems(showsResult.value, "popular_tv"),
+      watchTime: resolvedUserId ? watchTime(watchData, ACTIVITY_RANGE) : null
     });
   } catch (error3) {
     if (!(error3 instanceof AuthError)) console.error(JSON.stringify({ event: "tautulli_activity_error", errorType: error3 instanceof Error ? error3.name : typeof error3 }));
@@ -5463,21 +5502,17 @@ async function activityResponse(request, env2, fetcher = fetch) {
     );
   }
 }
-var DEFAULT_TAUTULLI_URL, PERIODS, count3;
+var DEFAULT_TAUTULLI_URL, ACTIVITY_RANGE, ACTIVITY_LABEL, count3, normalized;
 var init_activity = __esm({
   "../shared/portal/activity.js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
     init_auth();
     DEFAULT_TAUTULLI_URL = "https://tautulli.plexpoint.uk";
-    PERIODS = {
-      "1": "Last day",
-      "7": "Last 7 days",
-      "30": "Last 30 days",
-      "0": "All time"
-    };
+    ACTIVITY_RANGE = "7";
+    ACTIVITY_LABEL = "Last 7 days";
     __name(configuredEndpoint, "configuredEndpoint");
     __name(tautulliRequest, "tautulliRequest");
     count3 = /* @__PURE__ */ __name((value) => {
@@ -5486,6 +5521,8 @@ var init_activity = __esm({
     }, "count");
     __name(popularItems, "popularItems");
     __name(watchTime, "watchTime");
+    normalized = /* @__PURE__ */ __name((value) => typeof value === "string" ? value.trim().toLowerCase() : "", "normalized");
+    __name(tautulliUserId, "tautulliUserId");
     __name(activityResponse, "activityResponse");
   }
 });
@@ -5496,7 +5533,7 @@ async function onRequest5({ request, env: env2 }) {
 }
 var init_activity2 = __esm({
   "api/portal/activity.js"() {
-    init_functionsRoutes_0_37438613289721445();
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5505,25 +5542,294 @@ var init_activity2 = __esm({
   }
 });
 
-// api/portal/billing.js
-async function onRequest6({ request, env: env2 }) {
-  return billingResponse(request, env2);
+// ../shared/portal/overseerr.js
+function configuredOverseerr(env2) {
+  const apiKey = typeof env2.OVERSEERR_API_KEY === "string" ? env2.OVERSEERR_API_KEY.trim() : "";
+  if (!/^[A-Za-z0-9+/_=-]{16,512}$/.test(apiKey)) {
+    throw new AuthError(503, "Recent requests are not configured yet.");
+  }
+  let root;
+  try {
+    root = new URL(env2.OVERSEERR_URL || DEFAULT_OVERSEERR_URL);
+  } catch {
+    throw new AuthError(503, "Recent requests are not configured yet.");
+  }
+  if (root.protocol !== "https:" || root.username || root.password || root.search || root.hash) {
+    throw new AuthError(503, "Recent requests are not configured yet.");
+  }
+  root.pathname = root.pathname.replace(/\/+$/, "").replace(/\/api\/v1$/i, "") || "/";
+  const apiBase = new URL(`${root.pathname.replace(/\/+$/, "")}/api/v1/`, root.origin);
+  return { root, apiBase, apiKey };
 }
-var init_billing3 = __esm({
-  "api/portal/billing.js"() {
-    init_functionsRoutes_0_37438613289721445();
+async function overseerrJson(config2, path, search, fetcher) {
+  const url = new URL(path.replace(/^\/+/, ""), config2.apiBase);
+  for (const [key, value] of Object.entries(search || {})) url.searchParams.set(key, String(value));
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8e3);
+  try {
+    const response = await fetcher(url, {
+      headers: { Accept: "application/json", "X-Api-Key": config2.apiKey },
+      redirect: "error",
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error("upstream status");
+    const declaredLength = Number(response.headers.get("Content-Length") || 0);
+    if (declaredLength > MAX_JSON_BYTES) throw new Error("upstream response too large");
+    const text = await response.text();
+    if (text.length > MAX_JSON_BYTES) throw new Error("upstream response too large");
+    const data = JSON.parse(text);
+    if (!data || typeof data !== "object") throw new Error("upstream response");
+    return data;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+async function findOverseerrUser(config2, account, fetcher) {
+  const payload = await overseerrJson(config2, "user", { take: 100, skip: 0, sort: "created" }, fetcher);
+  const users = Array.isArray(payload.results) ? payload.results : [];
+  const email = normalized2(account.email);
+  const plexUsername = normalized2(account.plex_username || account.plexUsername);
+  return users.find((candidate) => email && normalized2(candidate?.email) === email) || users.find((candidate) => plexUsername && normalized2(candidate?.plexUsername) === plexUsername) || null;
+}
+function safeText(value, fallback, limit = 200) {
+  const text = typeof value === "string" ? value.trim().replace(/[\x00-\x1f\x7f]/g, "") : "";
+  return text ? text.slice(0, limit) : fallback;
+}
+function mediaType(media) {
+  const type = normalized2(media?.mediaType || media?.type);
+  if (type === "tv" || type === "show") return "tv";
+  if (type === "movie") return "movie";
+  return media?.tvdbId ? "tv" : "movie";
+}
+function requestStatus(request) {
+  const mediaStatus = Number(request?.media?.status);
+  if (mediaStatus === 5) return "added";
+  if (mediaStatus === 4) return "partial";
+  if (mediaStatus === 3) return "processing";
+  if (mediaStatus === 6) return "removed";
+  const status = Number(request?.status);
+  if (status === 3) return "declined";
+  if (status === 2) return "approved";
+  if (status === 1) return "pending";
+  return "unknown";
+}
+function safePoster(path) {
+  return typeof path === "string" && /^\/[A-Za-z0-9._/-]{1,300}$/.test(path) ? `https://image.tmdb.org/t/p/w185${path}` : null;
+}
+function safeTimestamp(value) {
+  const parsed = typeof value === "string" ? Date.parse(value) : NaN;
+  return Number.isFinite(parsed) ? parsed : null;
+}
+async function requestDetails(config2, request, fetcher) {
+  const media = request?.media && typeof request.media === "object" ? request.media : {};
+  const type = mediaType(media);
+  const tmdbId = Number(media.tmdbId);
+  let details = media;
+  if (Number.isInteger(tmdbId) && tmdbId > 0 && tmdbId <= 2147483647) {
+    try {
+      details = await overseerrJson(config2, `${type}/${tmdbId}`, {}, fetcher);
+    } catch (error3) {
+      console.warn(JSON.stringify({ event: "overseerr_request_detail_unavailable", mediaType: type, errorType: error3 instanceof Error ? error3.name : typeof error3 }));
+    }
+  }
+  const title2 = safeText(
+    details.title || details.name || media.title || media.name,
+    type === "tv" ? "TV request" : "Movie request"
+  );
+  const date = details.releaseDate || details.firstAirDate || details.release_date || details.first_air_date;
+  const yearMatch = typeof date === "string" ? date.match(/^\d{4}/) : null;
+  return {
+    id: Number.isFinite(Number(request?.id)) ? Number(request.id) : null,
+    title: title2,
+    type,
+    year: yearMatch ? Number(yearMatch[0]) : null,
+    requestedAt: safeTimestamp(request?.createdAt),
+    status: requestStatus(request),
+    posterUrl: safePoster(details.posterPath || details.poster_path || media.posterPath || media.poster_path)
+  };
+}
+async function requestsResponse(request, env2, fetcher = fetch) {
+  try {
+    const url = new URL(request.url);
+    if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) {
+      throw new AuthError(400, "Account access requires HTTPS.");
+    }
+    if (request.method !== "GET") return reply({ message: "Method not allowed." }, 405, { Allow: "GET" });
+    if (!env2.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
+    const current = await sessionUser(env2.PORTAL_DB, request);
+    if (!current) throw new AuthError(401, "Please sign in to view requests.");
+    const config2 = configuredOverseerr(env2);
+    const overseerrUser = await findOverseerrUser(config2, current, fetcher);
+    if (!overseerrUser || !Number.isInteger(Number(overseerrUser.id))) return reply({ requests: [] });
+    const payload = await overseerrJson(config2, `user/${Number(overseerrUser.id)}/requests`, { take: 6, skip: 0 }, fetcher);
+    const recent = Array.isArray(payload.results) ? payload.results.slice(0, 6) : [];
+    return reply({ requests: await Promise.all(recent.map((item) => requestDetails(config2, item, fetcher))) });
+  } catch (error3) {
+    if (!(error3 instanceof AuthError)) console.error(JSON.stringify({ event: "overseerr_requests_error", errorType: error3 instanceof Error ? error3.name : typeof error3 }));
+    return reply(
+      { message: error3 instanceof AuthError ? error3.message : "Recent requests are temporarily unavailable. Please try again later." },
+      error3 instanceof AuthError ? error3.status : 502
+    );
+  }
+}
+function safeAvatarSource(value, config2) {
+  if (typeof value !== "string" || value.length > 2048) return null;
+  try {
+    const url = new URL(value, config2?.root || DEFAULT_OVERSEERR_URL);
+    if (url.protocol !== "https:" || url.username || url.password || url.hash) return null;
+    return url;
+  } catch {
+    return null;
+  }
+}
+async function accountForAvatar(db, id) {
+  const avatarSelect = await plexAvatarColumnAvailable(db) ? "p.avatar_url AS plex_avatar_url" : "NULL AS plex_avatar_url";
+  return db.prepare(`SELECT u.id, u.email, p.username AS plex_username, ${avatarSelect}
+    FROM users u LEFT JOIN plex_identities p ON p.user_id = u.id WHERE u.id = ?`).bind(id).first();
+}
+async function proxiedAvatar(source, config2, fetcher) {
+  if (source.origin !== config2?.root.origin) {
+    return new Response(null, { status: 302, headers: { Location: source.href, "Cache-Control": "private, no-store", Vary: "Cookie" } });
+  }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8e3);
+  try {
+    const response = await fetcher(source, {
+      headers: { Accept: "image/avif,image/webp,image/png,image/jpeg,image/gif", "X-Api-Key": config2.apiKey },
+      redirect: "error",
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error("upstream status");
+    const type = (response.headers.get("Content-Type") || "").split(";")[0].trim().toLowerCase();
+    if (!(/* @__PURE__ */ new Set(["image/avif", "image/webp", "image/png", "image/jpeg", "image/gif"])).has(type)) throw new Error("unsupported avatar");
+    const declaredLength = Number(response.headers.get("Content-Length") || 0);
+    if (declaredLength > MAX_AVATAR_BYTES) throw new Error("avatar too large");
+    const body = await response.arrayBuffer();
+    if (body.byteLength > MAX_AVATAR_BYTES) throw new Error("avatar too large");
+    return new Response(body, { headers: {
+      "Content-Type": type,
+      "Cache-Control": "private, max-age=300",
+      "X-Content-Type-Options": "nosniff",
+      Vary: "Cookie"
+    } });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+async function avatarResponse(request, env2, fetcher = fetch) {
+  try {
+    const url = new URL(request.url);
+    if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) {
+      throw new AuthError(400, "Account access requires HTTPS.");
+    }
+    if (request.method !== "GET") return new Response(null, { status: 405, headers: { Allow: "GET" } });
+    if (!env2.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
+    const current = await sessionUser(env2.PORTAL_DB, request);
+    if (!current) throw new AuthError(401, "Please sign in to view this profile picture.");
+    const requestedId = url.searchParams.get("userId") || current.id;
+    if (!/^[A-Za-z0-9-]{1,64}$/.test(requestedId)) throw new AuthError(400, "Invalid account.");
+    if (requestedId !== current.id && !isAdminEmail(current.email)) throw new AuthError(403, "Administrator access is required.");
+    const account = await accountForAvatar(env2.PORTAL_DB, requestedId);
+    if (!account) throw new AuthError(404, "Profile picture not found.");
+    let config2 = null;
+    let overseerrAvatar = null;
+    try {
+      config2 = configuredOverseerr(env2);
+      const overseerrUser = await findOverseerrUser(config2, account, fetcher);
+      overseerrAvatar = safeAvatarSource(overseerrUser?.avatar, config2);
+    } catch (error3) {
+      console.warn(JSON.stringify({ event: "overseerr_avatar_fallback", errorType: error3 instanceof Error ? error3.name : typeof error3 }));
+    }
+    const source = overseerrAvatar || safeAvatarSource(account.plex_avatar_url, null);
+    if (!source) throw new AuthError(404, "Profile picture not found.");
+    if (source.origin === config2?.root.origin) return await proxiedAvatar(source, config2, fetcher);
+    return new Response(null, { status: 302, headers: { Location: source.href, "Cache-Control": "private, no-store", Vary: "Cookie" } });
+  } catch (error3) {
+    if (!(error3 instanceof AuthError)) console.error(JSON.stringify({ event: "portal_avatar_error", errorType: error3 instanceof Error ? error3.name : typeof error3 }));
+    return reply(
+      { message: error3 instanceof AuthError ? error3.message : "Profile picture is temporarily unavailable." },
+      error3 instanceof AuthError ? error3.status : 502
+    );
+  }
+}
+var DEFAULT_OVERSEERR_URL, MAX_JSON_BYTES, MAX_AVATAR_BYTES, normalized2;
+var init_overseerr = __esm({
+  "../shared/portal/overseerr.js"() {
+    init_functionsRoutes_0_778005779604425();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
-    init_billing();
+    init_auth();
+    DEFAULT_OVERSEERR_URL = "https://request.plexpoint.uk";
+    MAX_JSON_BYTES = 1e6;
+    MAX_AVATAR_BYTES = 2e6;
+    __name(configuredOverseerr, "configuredOverseerr");
+    __name(overseerrJson, "overseerrJson");
+    normalized2 = /* @__PURE__ */ __name((value) => typeof value === "string" ? value.trim().toLowerCase() : "", "normalized");
+    __name(findOverseerrUser, "findOverseerrUser");
+    __name(safeText, "safeText");
+    __name(mediaType, "mediaType");
+    __name(requestStatus, "requestStatus");
+    __name(safePoster, "safePoster");
+    __name(safeTimestamp, "safeTimestamp");
+    __name(requestDetails, "requestDetails");
+    __name(requestsResponse, "requestsResponse");
+    __name(safeAvatarSource, "safeAvatarSource");
+    __name(accountForAvatar, "accountForAvatar");
+    __name(proxiedAvatar, "proxiedAvatar");
+    __name(avatarResponse, "avatarResponse");
+  }
+});
+
+// api/portal/avatar.js
+async function onRequest6({ request, env: env2 }) {
+  return avatarResponse(request, env2);
+}
+var init_avatar = __esm({
+  "api/portal/avatar.js"() {
+    init_functionsRoutes_0_778005779604425();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_overseerr();
     __name(onRequest6, "onRequest");
   }
 });
 
-// ../.wrangler/tmp/pages-Q22EYJ/functionsRoutes-0.37438613289721445.mjs
+// api/portal/billing.js
+async function onRequest7({ request, env: env2 }) {
+  return billingResponse(request, env2);
+}
+var init_billing3 = __esm({
+  "api/portal/billing.js"() {
+    init_functionsRoutes_0_778005779604425();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_billing();
+    __name(onRequest7, "onRequest");
+  }
+});
+
+// api/portal/requests.js
+async function onRequest8({ request, env: env2 }) {
+  return requestsResponse(request, env2);
+}
+var init_requests = __esm({
+  "api/portal/requests.js"() {
+    init_functionsRoutes_0_778005779604425();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_overseerr();
+    __name(onRequest8, "onRequest");
+  }
+});
+
+// ../.wrangler/tmp/pages-M6G149/functionsRoutes-0.778005779604425.mjs
 var routes;
-var init_functionsRoutes_0_37438613289721445 = __esm({
-  "../.wrangler/tmp/pages-Q22EYJ/functionsRoutes-0.37438613289721445.mjs"() {
+var init_functionsRoutes_0_778005779604425 = __esm({
+  "../.wrangler/tmp/pages-M6G149/functionsRoutes-0.778005779604425.mjs"() {
     init_billing2();
     init_users();
     init_action();
@@ -5541,7 +5847,9 @@ var init_functionsRoutes_0_37438613289721445 = __esm({
     init_top_rated();
     init_content2();
     init_activity2();
+    init_avatar();
     init_billing3();
+    init_requests();
     routes = [
       {
         routePath: "/api/portal/admin/billing",
@@ -5663,24 +5971,38 @@ var init_functionsRoutes_0_37438613289721445 = __esm({
         modules: [onRequest5]
       },
       {
-        routePath: "/api/portal/billing",
+        routePath: "/api/portal/avatar",
         mountPath: "/api/portal",
         method: "",
         middlewares: [],
         modules: [onRequest6]
+      },
+      {
+        routePath: "/api/portal/billing",
+        mountPath: "/api/portal",
+        method: "",
+        middlewares: [],
+        modules: [onRequest7]
+      },
+      {
+        routePath: "/api/portal/requests",
+        mountPath: "/api/portal",
+        method: "",
+        middlewares: [],
+        modules: [onRequest8]
       }
     ];
   }
 });
 
 // ../node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_37438613289721445();
+init_functionsRoutes_0_778005779604425();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
 init_performance2();
 
 // ../node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_37438613289721445();
+init_functionsRoutes_0_778005779604425();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
 init_performance2();

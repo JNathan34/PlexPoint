@@ -8,10 +8,10 @@ let available = false;
 let plexPending = false;
 let adminBusy = false;
 let activityBusy = false;
+let requestsBusy = false;
 let billingBusy = false;
 let adminBillingBusy = false;
 let adminBillingData = null;
-let activityRange = "7";
 const returnUrl = new URL(location.href);
 let plexReturning = returnUrl.searchParams.get("plex") === "return";
 if (plexReturning) {
@@ -32,6 +32,7 @@ function controls() {
   byId("plex-sign-in").disabled = busy || !available || plexPending;
   byId("admin-retry").disabled = adminBusy;
   byId("activity-retry").disabled = activityBusy;
+  byId("requests-retry").disabled = requestsBusy;
   byId("billing-retry").disabled = billingBusy;
   for (const formId of ["admin-plan-form", "admin-payment-form"]) {
     const editorForm = byId(formId);
@@ -41,7 +42,6 @@ function controls() {
   byId("admin-payment-save").disabled = adminBillingBusy || !adminBillingData?.billing?.subscription;
   for (const button of byId("admin-users").querySelectorAll("button")) button.disabled = adminBillingBusy;
   for (const button of byId("admin-billing-payments").querySelectorAll("button")) button.disabled = adminBillingBusy;
-  for (const button of byId("activity-range").querySelectorAll("button")) button.disabled = activityBusy || !user;
   byId("plex-pending").hidden = !plexPending;
 }
 
@@ -92,8 +92,8 @@ function setTierBadge(id, value) {
 function safeAvatarUrl(value) {
   if (typeof value !== "string" || value.length > 2048) return "";
   try {
-    const url = new URL(value);
-    return url.protocol === "https:" && !url.username && !url.password ? url.href : "";
+    const url = new URL(value, location.origin);
+    return (url.origin === location.origin || url.protocol === "https:") && !url.username && !url.password ? url.href : "";
   } catch { return ""; }
 }
 
@@ -121,13 +121,13 @@ function renderUser(next) {
   byId("auth-guest").hidden = Boolean(user);
   byId("auth-user").hidden = !user;
   byId("activity-panel").hidden = !user;
+  byId("requests-panel").hidden = !user;
   byId("billing-panel").hidden = !user;
   byId("admin-panel").hidden = !user?.isAdmin;
   if (user) {
     byId("auth-user-name").textContent = user.displayName;
     byId("auth-user-email").textContent = user.email;
-    byId("auth-user-since").textContent = `Member since ${new Date(user.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}`;
-    configureAvatar(profileAvatar, user.plex?.avatarUrl, user.displayName, profileAvatar.parentElement);
+    configureAvatar(profileAvatar, user.avatarUrl || user.plex?.avatarUrl, user.displayName, profileAvatar.parentElement);
     for (const id of ["overview-tier-icon", "profile-tier-icon", "billing-tier-icon"]) setTierBadge(id, null);
     byId("profile-plan").textContent = "Loading membership…";
     byId("profile-plan-note").textContent = "Checking your plan and payment details";
@@ -135,12 +135,10 @@ function renderUser(next) {
     byId("profile-last-payment").textContent = "—";
     byId("profile-payment-state").textContent = "Checking";
     byId("profile-payment-state").dataset.status = "none";
-    byId("profile-access").textContent = user.isAdmin ? "Administrator" : "Active";
-    byId("profile-access").dataset.status = "enabled";
   } else {
     configureAvatar(profileAvatar, "", "", profileAvatar.parentElement);
     for (const id of ["overview-tier-icon", "profile-tier-icon", "billing-tier-icon"]) setTierBadge(id, null);
-    for (const id of ["auth-user-name", "auth-user-email", "auth-user-since"]) byId(id).textContent = "";
+    for (const id of ["auth-user-name", "auth-user-email"]) byId(id).textContent = "";
     byId("admin-users").replaceChildren();
     byId("admin-table-wrap").hidden = true;
     byId("admin-status").textContent = "";
@@ -152,8 +150,11 @@ function renderUser(next) {
     byId("activity-status").textContent = "";
     byId("popular-movies").replaceChildren();
     byId("popular-shows").replaceChildren();
+    byId("recent-requests").replaceChildren();
+    byId("recent-requests").hidden = true;
+    byId("requests-status").textContent = "";
     byId("overview-watch-time").textContent = "Sign in to view";
-    byId("overview-watch-time-note").textContent = "Your selected activity period appears here.";
+    byId("overview-watch-time-note").textContent = "Your last 7 days of Plex activity appear here.";
     byId("billing-results").hidden = true;
     byId("billing-status").textContent = "";
     byId("billing-payments").replaceChildren();
@@ -171,8 +172,6 @@ function renderUser(next) {
     byId("profile-last-payment").textContent = "—";
     byId("profile-payment-state").textContent = "Checking";
     byId("profile-payment-state").dataset.status = "none";
-    byId("profile-access").textContent = "Active";
-    byId("profile-access").dataset.status = "enabled";
   }
 }
 
@@ -233,12 +232,8 @@ function renderActivity(data) {
   byId("activity-results").hidden = false;
 }
 
-async function loadActivity(range = activityRange) {
-  if (!user || activityBusy || !["1", "7", "30", "0"].includes(range)) return;
-  activityRange = range;
-  for (const button of byId("activity-range").querySelectorAll("button")) {
-    button.setAttribute("aria-pressed", String(button.dataset.range === activityRange));
-  }
+async function loadActivity() {
+  if (!user || activityBusy) return;
   const userId = user.id;
   activityBusy = true;
   byId("activity-panel").setAttribute("aria-busy", "true");
@@ -247,7 +242,7 @@ async function loadActivity(range = activityRange) {
   byId("activity-retry").hidden = true;
   controls();
   try {
-    const data = await request(`activity?range=${encodeURIComponent(activityRange)}`, undefined, "");
+    const data = await request("activity?range=7", undefined, "");
     if (user?.id === userId) renderActivity(data);
   } catch (error) {
     if (user?.id === userId) {
@@ -261,6 +256,97 @@ async function loadActivity(range = activityRange) {
   } finally {
     activityBusy = false;
     byId("activity-panel").setAttribute("aria-busy", "false");
+    controls();
+  }
+}
+
+const requestStatusLabels = {
+  added: "Added",
+  processing: "Processing",
+  partial: "Partially available",
+  approved: "Approved",
+  pending: "Pending",
+  declined: "Declined",
+  removed: "Removed",
+  unknown: "Requested",
+};
+
+function safePosterUrl(value) {
+  if (typeof value !== "string" || value.length > 2048) return "";
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname === "image.tmdb.org" && !url.username && !url.password ? url.href : "";
+  } catch { return ""; }
+}
+
+function renderRequests(data) {
+  if (!Array.isArray(data?.requests)) throw new Error("Recent requests returned an unexpected response.");
+  const rows = data.requests.map((item) => {
+    const row = document.createElement("li");
+    row.className = "pp-request-item";
+    const posterUrl = safePosterUrl(item.posterUrl);
+    if (posterUrl) {
+      const poster = document.createElement("img");
+      poster.src = posterUrl;
+      poster.alt = "";
+      poster.loading = "lazy";
+      poster.referrerPolicy = "no-referrer";
+      row.append(poster);
+    } else {
+      const placeholder = document.createElement("span");
+      placeholder.className = "pp-request-poster-placeholder";
+      placeholder.setAttribute("data-icon", item.type === "tv" ? "play" : "film");
+      row.append(placeholder);
+    }
+    const copy = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = item.title || (item.type === "tv" ? "TV request" : "Movie request");
+    const detail = document.createElement("small");
+    const requested = item.requestedAt ? new Date(item.requestedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "Recently requested";
+    detail.textContent = `${item.type === "tv" ? "TV show" : "Movie"}${item.year ? ` · ${item.year}` : ""} · ${requested}`;
+    copy.append(title, detail);
+    const state = document.createElement("span");
+    state.className = "pp-request-state";
+    state.dataset.status = item.status || "unknown";
+    state.textContent = requestStatusLabels[item.status] || requestStatusLabels.unknown;
+    row.append(copy, state);
+    return row;
+  });
+  if (!rows.length) {
+    const empty = document.createElement("li");
+    empty.className = "pp-request-empty";
+    empty.textContent = "No recent Overseerr requests were found for this Plex account.";
+    rows.push(empty);
+  }
+  byId("recent-requests").replaceChildren(...rows);
+  byId("recent-requests").hidden = false;
+}
+
+async function loadRequests() {
+  if (!user || requestsBusy) return;
+  const userId = user.id;
+  requestsBusy = true;
+  byId("requests-panel").setAttribute("aria-busy", "true");
+  byId("requests-status").textContent = "Loading recent requests…";
+  byId("requests-status").dataset.error = "false";
+  byId("requests-retry").hidden = true;
+  controls();
+  try {
+    const data = await request("requests", undefined, "");
+    if (user?.id === userId) {
+      renderRequests(data);
+      byId("requests-status").textContent = "";
+    }
+  } catch (error) {
+    if (user?.id === userId) {
+      byId("recent-requests").hidden = true;
+      byId("requests-status").textContent = error.message;
+      byId("requests-status").dataset.error = "true";
+      byId("requests-retry").hidden = false;
+    }
+  } finally {
+    requestsBusy = false;
+    byId("requests-panel").setAttribute("aria-busy", "false");
     controls();
   }
 }
@@ -357,11 +443,6 @@ function renderBilling(data) {
     ? `${dateText(billing.lastPayment.receivedAt)} · ${moneyText(billing.lastPayment.amountMinor, billing.lastPayment.currency)}` : "None recorded";
   byId("profile-payment-state").textContent = paymentLabel;
   byId("profile-payment-state").dataset.status = paymentStatus;
-  const profileAccess = subscription
-    ? (accessLabels[subscription.accessStatus] || subscription.accessStatus).replace(/^Access /, "") : "Active account";
-  byId("profile-access").textContent = profileAccess.charAt(0).toUpperCase() + profileAccess.slice(1);
-  byId("profile-access").dataset.status = subscription?.accessStatus || "enabled";
-
   byId("overview-plan").textContent = subscription?.tier || "No plan";
   byId("overview-plan-note").textContent = subscription ? (accessLabels[subscription.accessStatus] || subscription.accessStatus) : "No membership has been assigned yet.";
   if (period) {
@@ -629,7 +710,7 @@ async function updateAdminBilling(body, progress, success) {
 
 async function acceptUser(next) {
   renderUser(next);
-  if (next) await Promise.all([loadBilling(), loadActivity(), next.isAdmin ? loadAdminUsers() : Promise.resolve()]);
+  if (next) await Promise.all([loadBilling(), loadActivity(), loadRequests(), next.isAdmin ? loadAdminUsers() : Promise.resolve()]);
 }
 
 async function request(action, body, group = "auth") {
@@ -748,10 +829,7 @@ byId("auth-retry").addEventListener("click", () => void initializeSession());
 byId("admin-retry").addEventListener("click", () => void loadAdminUsers());
 byId("billing-retry").addEventListener("click", () => void loadBilling());
 byId("activity-retry").addEventListener("click", () => void loadActivity());
-byId("activity-range").addEventListener("click", (event) => {
-  const button = event.target.closest("button[data-range]");
-  if (button) void loadActivity(button.dataset.range);
-});
+byId("requests-retry").addEventListener("click", () => void loadRequests());
 byId("admin-users").addEventListener("click", (event) => {
   const button = event.target.closest("button[data-user-id]");
   if (button) void openAdminBilling(button.dataset.userId);

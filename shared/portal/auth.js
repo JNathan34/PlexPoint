@@ -116,9 +116,10 @@ function isAdminEmail(value) {
   return typeof value === "string" && value.trim().toLowerCase() === ADMIN_EMAIL;
 }
 
-function publicUser(row) {
+function publicUser(row, proxyAvatar = false) {
   return { id: row.id, email: row.email, displayName: row.display_name, createdAt: row.created_at,
     ...(isAdminEmail(row.email) ? { isAdmin: true } : {}),
+    ...(proxyAvatar ? { avatarUrl: "/api/portal/avatar" } : {}),
     ...(row.plex_username ? { plex: {
       username: row.plex_username,
       ...(row.plex_avatar_url ? { avatarUrl: row.plex_avatar_url } : {}),
@@ -206,7 +207,7 @@ async function sessionUser(db, request, now = Date.now()) {
 
 async function currentSession(db, request, now) {
   const row = await sessionUser(db, request, now);
-  return reply({ user: row ? publicUser(await withPlexAvatar(db, row)) : null }, 200,
+  return reply({ user: row ? publicUser(await withPlexAvatar(db, row), true) : null }, 200,
     !row && readToken(request) ? { "Set-Cookie": sessionCookie(request, "", 0) } : {});
 }
 

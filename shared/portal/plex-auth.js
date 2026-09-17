@@ -142,7 +142,7 @@ async function complete(request, db, fetcher) {
       .bind(profile.username, profile.id));
   try { await db.batch([...statements, ...session.statements]); }
   catch { throw new AuthError(409, "The account could not be connected. Please start sign-in again or contact support."); }
-  const response = reply({ user: publicUser({ ...row, plex_username: profile.username, plex_avatar_url: profile.avatarUrl }) }, 200,
+  const response = reply({ user: publicUser({ ...row, plex_username: profile.username, plex_avatar_url: profile.avatarUrl }, true) }, 200,
     { "Set-Cookie": sessionCookie(request, session.token) });
   response.headers.append("Set-Cookie", stateCookie(request, "", 0));
   return response;

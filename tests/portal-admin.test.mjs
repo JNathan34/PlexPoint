@@ -77,7 +77,7 @@ test("the owner can view a safe account list with Plex and subscription details"
   const listedMember = data.users.find((user) => user.id === member.id);
   assert.deepEqual(listedMember.signInMethods, ["Email", "Plex"]);
   assert.equal(listedMember.plexUsername, "PlexMember");
-  assert.equal(listedMember.plexAvatarUrl, "https://plex.tv/users/member/avatar");
+  assert.equal(listedMember.plexAvatarUrl, `/api/portal/avatar?userId=${encodeURIComponent(member.id)}`);
   assert.deepEqual(listedMember.subscription, { tier: "Gold Tier", status: "enabled", startsAt: now, endsAt: now + 86400000 });
   assert.doesNotMatch(JSON.stringify(data), /password_hash|token_hash|pin_code|\"salt\"/i);
 });
@@ -101,5 +101,5 @@ test("the admin user list remains available before the avatar migration", async 
   assert.equal(response.status, 200);
   const listed = (await response.json()).users[0];
   assert.equal(listed.plexUsername, "JNathan34");
-  assert.equal("plexAvatarUrl" in listed, false);
+  assert.equal(listed.plexAvatarUrl, `/api/portal/avatar?userId=${encodeURIComponent(owner.id)}`);
 });

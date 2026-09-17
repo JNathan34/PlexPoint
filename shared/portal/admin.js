@@ -15,7 +15,7 @@ function adminUser(row, now) {
     updatedAt: row.updated_at,
     signInMethods,
     ...(row.plex_username ? { plexUsername: row.plex_username } : {}),
-    ...(row.plex_avatar_url ? { plexAvatarUrl: row.plex_avatar_url } : {}),
+    plexAvatarUrl: `/api/portal/avatar?userId=${encodeURIComponent(row.id)}`,
     subscription: row.tier_name ? {
       tier: row.tier_name,
       status: row.subscription_status,

@@ -65,7 +65,8 @@ test("the owner account sees the user dashboard and Overseerr shortcuts", async 
   await expect(page.locator("#admin-users")).toContainText("Movie Fan");
   await expect(page.locator("#admin-users")).toContainText("Gold Tier");
   await expect(page.getByText("Plex connected", { exact: false })).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "Request on Overseerr", exact: false })).toHaveAttribute("href", "https://request.plexpoint.uk/");
+  await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveAttribute("href", "https://request.plexpoint.uk/");
+  await expect(page.getByRole("link", { name: /Manage membership|Billing history|Plex activity|Request on Overseerr/i })).toHaveCount(0);
 });
 
 test("ordinary accounts never request or reveal the admin dashboard", async ({ page }) => {
@@ -102,7 +103,8 @@ test("members can see their plan, payment due state and confirmed payment histor
   await expect(page.locator("#overview-payment")).toHaveText("Overdue");
   await expect(page.locator("#profile-plan")).toHaveText("Gold Tier");
   await expect(page.locator("#profile-payment-state")).toHaveText("Overdue");
-  await expect(page.locator("#profile-access")).toHaveText("Enabled");
+  await expect(page.locator("#profile-access, #auth-user-since")).toHaveCount(0);
+  await expect(page.locator(".pp-profile-actions").getByRole("link", { name: "Membership", exact: true })).toHaveCount(0);
 });
 
 test("the owner can edit a member plan and record a payment", async ({ page }) => {
@@ -157,7 +159,7 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
   await expect(page.locator("#admin-billing-payments")).toContainText("£5.00");
 });
 
-test("viewing activity shares one period across popular titles and personal watch time", async ({ page }) => {
+test("viewing activity is fixed to the last 7 days", async ({ page }) => {
   const ranges = [];
   await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
     id: "viewer", email: "viewer@example.test", displayName: "Viewer", createdAt: Date.now(),
@@ -165,13 +167,12 @@ test("viewing activity shares one period across popular titles and personal watc
   await page.route("**/api/portal/activity?**", (route) => {
     const range = new URL(route.request().url()).searchParams.get("range");
     ranges.push(range);
-    const allTime = range === "0";
     return route.fulfill({ json: {
       range,
-      periodLabel: allTime ? "All time" : "Last 7 days",
-      popularMovies: [{ title: allTime ? "All-time Movie" : "Weekly Movie", year: 2026, plays: 12, viewers: 5 }],
-      popularShows: [{ title: allTime ? "All-time Show" : "Weekly Show", year: 2025, plays: 8, viewers: 3 }],
-      watchTime: { seconds: allTime ? 90000 : 7384, plays: allTime ? 40 : 4 },
+      periodLabel: "Last 7 days",
+      popularMovies: [{ title: "Weekly Movie", year: 2026, plays: 12, viewers: 5 }],
+      popularShows: [{ title: "Weekly Show", year: 2025, plays: 8, viewers: 3 }],
+      watchTime: { seconds: 7384, plays: 4 },
     } });
   });
   await page.goto("/account/#account");
@@ -179,10 +180,19 @@ test("viewing activity shares one period across popular titles and personal watc
   await expect(page.locator("#activity-watch-time")).toHaveText("2h 3m");
   await expect(page.locator("#popular-movies")).toContainText("Weekly Movie");
   await expect(page.locator("#popular-shows")).toContainText("Weekly Show");
-  await page.getByRole("button", { name: "All time", exact: true }).click();
-  await expect(page.locator("#activity-watch-time")).toHaveText("25h");
-  await expect(page.locator("#popular-movies")).toContainText("All-time Movie");
-  await expect(page.locator("#popular-shows")).toContainText("All-time Show");
-  await expect(page.getByRole("button", { name: "All time", exact: true })).toHaveAttribute("aria-pressed", "true");
-  expect(ranges).toEqual(["7", "0"]);
+  await expect(page.locator("#activity-range")).toHaveCount(0);
+  expect(ranges).toEqual(["7"]);
+});
+
+test("members can see recent Overseerr requests", async ({ page }) => {
+  await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
+    id: "viewer", email: "viewer@example.test", displayName: "Viewer", createdAt: Date.now(), avatarUrl: "/api/portal/avatar",
+  } } }));
+  await page.route("**/api/portal/requests", (route) => route.fulfill({ json: { requests: [{
+    id: 12, title: "The Weekly Film", type: "movie", year: 2026, requestedAt: Date.now(), status: "processing", posterUrl: null,
+  }] } }));
+  await page.goto("/account/#account");
+  await expect(page.locator("#requests-panel")).toBeVisible();
+  await expect(page.locator("#recent-requests")).toContainText("The Weekly Film");
+  await expect(page.locator("#recent-requests")).toContainText("Processing");
 });

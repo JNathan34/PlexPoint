@@ -13,8 +13,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/index-GJ5txONd.css" />
-    <link rel="stylesheet" href="/assets/portal.css?v=20260916-uniform-2" />
-    <script type="module" src="/assets/portal-auth.js?v=20260916-uniform-2"></script>
+    <link rel="stylesheet" href="/assets/portal.css?v=20260917-account-1" />
+    <script type="module" src="/assets/portal-auth.js?v=20260917-account-1"></script>
     <script type="module" src="/assets/portal-navigation.js?v=20260916-dashboard-1"></script>
     <script type="module" src="/assets/portal.js?v=20260916-account-only-3"></script>
   </head>
@@ -52,7 +52,7 @@
                     <article class="pp-card glass-card pp-metric"><span id="overview-tier-icon" class="pp-tier-icon" data-tier="none" aria-hidden="true"></span><h3>Active plan</h3><strong id="overview-plan">Sign in to view</strong><p id="overview-plan-note">Your current plan and access status appear here.</p></article>
                     <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="clock"></span><h3>Time remaining</h3><strong id="overview-renewal">Sign in to view</strong><p id="overview-renewal-note">See when your next payment is due.</p></article>
                     <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="payment"></span><h3>Payment status</h3><strong id="overview-payment">Sign in to view</strong><p id="overview-payment-note">Your latest confirmed payment appears here.</p></article>
-                    <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="film"></span><h3>Watch time</h3><strong id="overview-watch-time">Sign in to view</strong><p id="overview-watch-time-note">Your selected activity period appears here.</p></article>
+                    <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="film"></span><h3>Watch time</h3><strong id="overview-watch-time">Sign in to view</strong><p id="overview-watch-time-note">Your last 7 days of Plex activity appear here.</p></article>
                   </div>
                 </div>
                 <aside class="pp-card glass-card pp-auth-card" aria-label="Profile and sign in">
@@ -63,12 +63,12 @@
                     <div class="pp-plex-option"><div class="pp-auth-label"><span data-icon="membership"></span><h2>Your PlexPoint account</h2></div><button id="plex-sign-in" type="button" class="pp-button pp-button-primary pp-plex-button" disabled><svg class="pp-plex-mark" viewBox="0 0 20 24" width="18" height="22" aria-hidden="true"><path fill="currentColor" d="M2 1h7l9 11-9 11H2l9-11z" /></svg>Continue with Plex<span aria-hidden="true">→</span></button><p class="pp-small">Sign in on Plex’s own page. Your Plex password stays with Plex.</p></div>
                   </div>
                   <div id="auth-user" hidden>
-                    <div class="pp-profile-header"><div class="pp-profile-avatar"><img id="profile-avatar" src="/plexpoint-logo.png" alt="" width="96" height="96" referrerpolicy="no-referrer" /></div><div class="pp-profile-copy"><h2 id="auth-user-name"></h2><p id="auth-user-email"></p><p id="auth-user-since" class="pp-small"></p><span class="pp-profile-active"><span aria-hidden="true"></span>Active member</span></div></div>
+                    <div class="pp-profile-header"><div class="pp-profile-avatar"><img id="profile-avatar" src="/plexpoint-logo.png" alt="" width="96" height="96" referrerpolicy="no-referrer" /></div><div class="pp-profile-copy"><h2 id="auth-user-name"></h2><p id="auth-user-email"></p><span class="pp-profile-active"><span aria-hidden="true"></span>Active member</span></div></div>
                     <div class="pp-profile-membership">
                       <div class="pp-profile-plan"><span id="profile-tier-icon" class="pp-tier-icon" data-tier="none" aria-hidden="true"></span><div><strong id="profile-plan">Membership</strong><small id="profile-plan-note">Loading your plan…</small></div></div>
-                      <dl><div><dt><span data-icon="clock"></span>Renews on</dt><dd id="profile-renewal">—</dd></div><div><dt><span data-icon="payment"></span>Last payment</dt><dd id="profile-last-payment">—</dd></div><div><dt><span data-icon="info"></span>Payment status</dt><dd><span id="profile-payment-state" class="pp-billing-state" data-status="none">Checking</span></dd></div><div><dt><span data-icon="grid"></span>Account status</dt><dd><span id="profile-access" class="pp-account-status" data-status="enabled">Active</span></dd></div></dl>
+                      <dl><div><dt><span data-icon="clock"></span>Renews on</dt><dd id="profile-renewal">—</dd></div><div><dt><span data-icon="payment"></span>Last payment</dt><dd id="profile-last-payment">—</dd></div><div><dt><span data-icon="info"></span>Payment status</dt><dd><span id="profile-payment-state" class="pp-billing-state" data-status="none">Checking</span></dd></div></dl>
                     </div>
-                    <div class="pp-actions pp-profile-actions"><a href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer" class="pp-button pp-button-primary">Open Overseerr ↗</a><a href="#billing-panel" class="pp-button">Membership</a><button id="auth-logout" type="button" class="pp-button">Sign out</button></div>
+                    <div class="pp-actions pp-profile-actions"><a href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer" class="pp-button pp-button-primary">Open Overseerr ↗</a><button id="auth-logout" type="button" class="pp-button">Sign out</button></div>
                   </div>
                 </aside>
               </div>
@@ -86,17 +86,18 @@
               </div>
                 </section>
                 <section id="activity-panel" class="pp-card glass-card pp-viewing-panel" aria-labelledby="activity-heading" hidden>
-              <div class="pp-viewing-heading"><div><span class="pp-badge">PLEX ACTIVITY</span><h2 id="activity-heading">What everyone’s watching</h2><p>Popular picks across PlexPoint, plus your own watch time.</p></div>
-                <div id="activity-range" class="pp-range-picker" role="group" aria-label="Viewing period">
-                  <button type="button" data-range="1" aria-pressed="false">Last day</button><button type="button" data-range="7" aria-pressed="true">Last 7 days</button><button type="button" data-range="30" aria-pressed="false">Last 30 days</button><button type="button" data-range="0" aria-pressed="false">All time</button>
-                </div>
-              </div>
+              <div class="pp-viewing-heading"><div><span class="pp-badge">PLEX ACTIVITY</span><h2 id="activity-heading">What everyone’s watching</h2><p>Popular picks and your watch time from the last 7 days.</p></div></div>
               <p id="activity-status" class="pp-small" role="status"></p><button id="activity-retry" type="button" class="pp-button" hidden>Retry activity</button>
               <div id="activity-results" class="pp-viewing-grid" hidden>
-                <article class="pp-viewing-card pp-watch-time"><span class="pp-icon-tile" data-icon="clock"></span><p>Your watch time</p><strong id="activity-watch-time">—</strong><small id="activity-watch-count">Select a period</small></article>
+                <article class="pp-viewing-card pp-watch-time"><span class="pp-icon-tile" data-icon="clock"></span><p>Your watch time</p><strong id="activity-watch-time">—</strong><small id="activity-watch-count">Last 7 days</small></article>
                 <article class="pp-viewing-card"><div class="pp-viewing-card-title"><span class="pp-icon-tile" data-icon="film"></span><h3>Popular movies</h3></div><ol id="popular-movies" class="pp-popular-list"></ol></article>
                 <article class="pp-viewing-card"><div class="pp-viewing-card-title"><span class="pp-icon-tile" data-icon="play"></span><h3>Popular shows</h3></div><ol id="popular-shows" class="pp-popular-list"></ol></article>
               </div>
+                </section>
+                <section id="requests-panel" class="pp-card glass-card pp-requests-panel" aria-labelledby="requests-heading" hidden>
+                  <div class="pp-requests-heading"><div><span class="pp-badge">REQUESTS</span><h2 id="requests-heading">Recent requests</h2><p>Your latest movie and TV requests from Overseerr.</p></div><a href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer" class="pp-text-link">View all ↗</a></div>
+                  <p id="requests-status" class="pp-small" role="status"></p><button id="requests-retry" type="button" class="pp-button" hidden>Retry requests</button>
+                  <ol id="recent-requests" class="pp-request-list" hidden></ol>
                 </section>
               </div>
               <section id="admin-panel" class="pp-card glass-card pp-admin-panel" aria-labelledby="admin-heading" hidden>
