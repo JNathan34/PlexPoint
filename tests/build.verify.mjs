@@ -35,6 +35,11 @@ test('the account session bootstrap is isolated and cache-versioned', async () =
   assert.match(portal, /portal-utils\.js\?v=/);
 });
 
+test('production fetches same-zone media services through Cloudflare public routing', async () => {
+  const config = JSON.parse(await readFile(resolve(root, 'wrangler.jsonc'), 'utf8'));
+  assert.ok(config.compatibility_flags.includes('global_fetch_strictly_public'));
+});
+
 test('only intended public assets and the generated worker are shipped', async () => {
   assert.deepEqual((await readdir(output)).sort(), [
     'index.html','account','assets','icons','plex-posters','preview-pictures','plex-preview.json',
