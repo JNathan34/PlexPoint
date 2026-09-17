@@ -28,7 +28,9 @@ async function tautulliRequest(config, command, parameters, fetcher) {
   try {
     const response = await fetcher(url, {
       headers: { Accept: "application/json", "X-Api-Key": config.apiKey },
-      redirect: "error",
+      // Workers supports manual redirects at the edge; the status check below
+      // rejects every 3xx so credentials never follow an upstream redirect.
+      redirect: "manual",
       signal: controller.signal,
     });
     if (!response.ok) throw new Error("upstream status");

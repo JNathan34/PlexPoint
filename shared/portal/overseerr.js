@@ -28,7 +28,9 @@ async function overseerrJson(config, path, search, fetcher) {
   try {
     const response = await fetcher(url, {
       headers: { Accept: "application/json", "X-Api-Key": config.apiKey },
-      redirect: "error",
+      // Workers does not implement redirect:"error". Manual mode keeps the
+      // request on the fixed host and the status check rejects every 3xx.
+      redirect: "manual",
       signal: controller.signal,
     });
     if (!response.ok) throw new Error("upstream status");
@@ -166,7 +168,7 @@ async function proxiedAvatar(source, config, fetcher) {
   try {
     const response = await fetcher(source, {
       headers: { Accept: "image/avif,image/webp,image/png,image/jpeg,image/gif", "X-Api-Key": config.apiKey },
-      redirect: "error",
+      redirect: "manual",
       signal: controller.signal,
     });
     if (!response.ok) throw new Error("upstream status");

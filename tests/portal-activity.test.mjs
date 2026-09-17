@@ -91,7 +91,7 @@ test("signed-in Plex users receive sanitized popular titles and personal watch t
     assert.equal(call.url.pathname, "/api/v2");
     assert.equal(call.url.searchParams.has("apikey"), false);
     assert.equal(call.options.headers["X-Api-Key"], env.TAUTULLI_API_KEY);
-    assert.equal(call.options.redirect, "error");
+    assert.equal(call.options.redirect, "manual");
   }
   const personal = calls.find((call) => call.url.searchParams.get("cmd") === "get_user_watch_time_stats");
   assert.equal(personal.url.searchParams.get("user_id"), "123456");

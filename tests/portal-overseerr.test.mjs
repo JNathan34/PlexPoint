@@ -62,6 +62,7 @@ function overseerrFetcher(calls) {
     const url = new URL(input);
     calls.push({ url, options });
     assert.equal(options.headers["X-Api-Key"], "test-overseerr-key-123456");
+    assert.equal(options.redirect, "manual");
     if (url.pathname === "/api/v1/user") return Response.json({ results: [{
       id: 42, email: "viewer@example.test", plexUsername: "PlexViewer", avatar: "/avatarproxy/42",
     }] });
