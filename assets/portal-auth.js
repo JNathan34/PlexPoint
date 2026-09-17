@@ -7,7 +7,6 @@ let busy = false;
 let available = false;
 let plexPending = false;
 let adminBusy = false;
-let activityBusy = false;
 let requestsBusy = false;
 let billingBusy = false;
 let adminBillingBusy = false;
@@ -31,7 +30,6 @@ function controls() {
   for (const id of ["auth-retry", "plex-check", "plex-cancel"]) byId(id).disabled = busy;
   byId("plex-sign-in").disabled = busy || !available || plexPending;
   byId("admin-retry").disabled = adminBusy;
-  byId("activity-retry").disabled = activityBusy;
   byId("requests-retry").disabled = requestsBusy;
   byId("billing-retry").disabled = billingBusy;
   for (const formId of ["admin-plan-form", "admin-payment-form"]) {
@@ -120,7 +118,6 @@ function renderUser(next) {
   user = next;
   byId("auth-guest").hidden = Boolean(user);
   byId("auth-user").hidden = !user;
-  byId("activity-panel").hidden = !user;
   byId("requests-panel").hidden = !user;
   byId("billing-panel").hidden = !user;
   byId("admin-panel").hidden = !user?.isAdmin;
@@ -146,15 +143,11 @@ function renderUser(next) {
     byId("admin-billing-content").hidden = true;
     byId("admin-billing-status").textContent = "";
     adminBillingData = null;
-    byId("activity-results").hidden = true;
-    byId("activity-status").textContent = "";
-    byId("popular-movies").replaceChildren();
-    byId("popular-shows").replaceChildren();
     byId("recent-requests").replaceChildren();
     byId("recent-requests").hidden = true;
     byId("requests-status").textContent = "";
-    byId("overview-watch-time").textContent = "Sign in to view";
-    byId("overview-watch-time-note").textContent = "Your last 7 days of Plex activity appear here.";
+    byId("overview-requests").textContent = "Sign in to view";
+    byId("overview-requests-note").textContent = "Your latest Overseerr requests appear here.";
     byId("billing-results").hidden = true;
     byId("billing-status").textContent = "";
     byId("billing-payments").replaceChildren();
@@ -175,91 +168,6 @@ function renderUser(next) {
   }
 }
 
-function durationText(seconds) {
-  const total = Math.max(0, Number(seconds) || 0);
-  if (total < 3600) return `${Math.floor(total / 60)}m`;
-  const hours = Math.floor(total / 3600);
-  const minutes = Math.floor((total % 3600) / 60);
-  return `${hours}h${minutes ? ` ${minutes}m` : ""}`;
-}
-
-function renderPopular(target, items) {
-  const rows = items.map((item, index) => {
-    const row = document.createElement("li");
-    const rank = document.createElement("span");
-    rank.className = "pp-popular-rank";
-    rank.textContent = String(index + 1).padStart(2, "0");
-    const details = document.createElement("div");
-    const title = document.createElement("strong");
-    title.textContent = item.title;
-    details.append(title);
-    if (item.year) {
-      const year = document.createElement("small");
-      year.textContent = String(item.year);
-      details.append(year);
-    }
-    const metric = document.createElement("small");
-    metric.textContent = item.viewers ? `${item.viewers} viewer${item.viewers === 1 ? "" : "s"}` : `${item.plays} play${item.plays === 1 ? "" : "s"}`;
-    row.append(rank, details, metric);
-    return row;
-  });
-  if (!rows.length) {
-    const empty = document.createElement("li");
-    empty.className = "pp-popular-empty";
-    empty.textContent = "Nothing watched in this period yet.";
-    rows.push(empty);
-  }
-  byId(target).replaceChildren(...rows);
-}
-
-function renderActivity(data) {
-  if (!Array.isArray(data?.popularMovies) || !Array.isArray(data?.popularShows) || typeof data.periodLabel !== "string") {
-    throw new Error("Viewing activity returned an unexpected response.");
-  }
-  renderPopular("popular-movies", data.popularMovies);
-  renderPopular("popular-shows", data.popularShows);
-  const hasWatchTime = data.watchTime && Number.isFinite(Number(data.watchTime.seconds));
-  const watchText = hasWatchTime ? durationText(data.watchTime.seconds) : "Not linked";
-  const watchNote = hasWatchTime
-    ? `${data.watchTime.plays} play${data.watchTime.plays === 1 ? "" : "s"} · ${data.periodLabel}`
-    : "Personal watch time is not linked to this account.";
-  byId("activity-watch-time").textContent = watchText;
-  byId("activity-watch-count").textContent = watchNote;
-  byId("overview-watch-time").textContent = watchText;
-  byId("overview-watch-time-note").textContent = hasWatchTime ? data.periodLabel : watchNote;
-  byId("activity-status").textContent = hasWatchTime ? "" : watchNote;
-  byId("activity-status").dataset.error = "false";
-  byId("activity-results").hidden = false;
-}
-
-async function loadActivity() {
-  if (!user || activityBusy) return;
-  const userId = user.id;
-  activityBusy = true;
-  byId("activity-panel").setAttribute("aria-busy", "true");
-  byId("activity-status").textContent = "Loading viewing activity…";
-  byId("activity-status").dataset.error = "false";
-  byId("activity-retry").hidden = true;
-  controls();
-  try {
-    const data = await request("activity?range=7", undefined, "");
-    if (user?.id === userId) renderActivity(data);
-  } catch (error) {
-    if (user?.id === userId) {
-      byId("activity-results").hidden = true;
-      byId("activity-status").textContent = error.message;
-      byId("activity-status").dataset.error = "true";
-      byId("activity-retry").hidden = false;
-      byId("overview-watch-time").textContent = "Unavailable";
-      byId("overview-watch-time-note").textContent = "Viewing activity could not be loaded.";
-    }
-  } finally {
-    activityBusy = false;
-    byId("activity-panel").setAttribute("aria-busy", "false");
-    controls();
-  }
-}
-
 const requestStatusLabels = {
   added: "Added",
   processing: "Processing",
@@ -277,6 +185,18 @@ function safePosterUrl(value) {
     const url = new URL(value);
     return url.protocol === "https:" && url.hostname === "image.tmdb.org" && !url.username && !url.password ? url.href : "";
   } catch { return ""; }
+}
+
+function requestedText(value) {
+  const timestamp = Number(value);
+  if (!Number.isFinite(timestamp)) return "Requested recently";
+  const elapsedDays = Math.max(0, Math.floor((Date.now() - timestamp) / 86_400_000));
+  if (elapsedDays === 0) return "Requested today";
+  if (elapsedDays === 1) return "Requested yesterday";
+  if (elapsedDays < 14) return `Requested ${elapsedDays} days ago`;
+  const weeks = Math.floor(elapsedDays / 7);
+  if (weeks < 8) return `Requested ${weeks} week${weeks === 1 ? "" : "s"} ago`;
+  return `Requested ${new Date(timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}`;
 }
 
 function renderRequests(data) {
@@ -302,14 +222,17 @@ function renderRequests(data) {
     const title = document.createElement("strong");
     title.textContent = item.title || (item.type === "tv" ? "TV request" : "Movie request");
     const detail = document.createElement("small");
-    const requested = item.requestedAt ? new Date(item.requestedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "Recently requested";
-    detail.textContent = `${item.type === "tv" ? "TV show" : "Movie"}${item.year ? ` · ${item.year}` : ""} · ${requested}`;
+    detail.textContent = `${item.type === "tv" ? "TV show" : "Movie"}${item.year ? ` · ${item.year}` : ""} · ${requestedText(item.requestedAt)}`;
     copy.append(title, detail);
     const state = document.createElement("span");
     state.className = "pp-request-state";
     state.dataset.status = item.status || "unknown";
     state.textContent = requestStatusLabels[item.status] || requestStatusLabels.unknown;
-    row.append(copy, state);
+    const arrow = document.createElement("span");
+    arrow.className = "pp-request-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "›";
+    row.append(copy, state, arrow);
     return row;
   });
   if (!rows.length) {
@@ -320,6 +243,9 @@ function renderRequests(data) {
   }
   byId("recent-requests").replaceChildren(...rows);
   byId("recent-requests").hidden = false;
+  byId("overview-requests").textContent = String(data.requests.length);
+  byId("overview-requests-note").textContent = data.requests.length
+    ? requestedText(data.requests[0].requestedAt) : "No recent requests found.";
 }
 
 async function loadRequests() {
@@ -343,6 +269,8 @@ async function loadRequests() {
       byId("requests-status").textContent = error.message;
       byId("requests-status").dataset.error = "true";
       byId("requests-retry").hidden = false;
+      byId("overview-requests").textContent = "Unavailable";
+      byId("overview-requests-note").textContent = "Recent requests could not be loaded.";
     }
   } finally {
     requestsBusy = false;
@@ -710,7 +638,7 @@ async function updateAdminBilling(body, progress, success) {
 
 async function acceptUser(next) {
   renderUser(next);
-  if (next) await Promise.all([loadBilling(), loadActivity(), loadRequests(), next.isAdmin ? loadAdminUsers() : Promise.resolve()]);
+  if (next) await Promise.all([loadBilling(), loadRequests(), next.isAdmin ? loadAdminUsers() : Promise.resolve()]);
 }
 
 async function request(action, body, group = "auth") {
@@ -828,7 +756,6 @@ async function initializeSession() {
 byId("auth-retry").addEventListener("click", () => void initializeSession());
 byId("admin-retry").addEventListener("click", () => void loadAdminUsers());
 byId("billing-retry").addEventListener("click", () => void loadBilling());
-byId("activity-retry").addEventListener("click", () => void loadActivity());
 byId("requests-retry").addEventListener("click", () => void loadRequests());
 byId("admin-users").addEventListener("click", (event) => {
   const button = event.target.closest("button[data-user-id]");

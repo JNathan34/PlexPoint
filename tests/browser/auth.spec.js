@@ -159,29 +159,18 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
   await expect(page.locator("#admin-billing-payments")).toContainText("£5.00");
 });
 
-test("viewing activity is fixed to the last 7 days", async ({ page }) => {
-  const ranges = [];
+test("the viewing activity panel is removed while recent requests remain", async ({ page }) => {
+  let activityRequests = 0;
   await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
     id: "viewer", email: "viewer@example.test", displayName: "Viewer", createdAt: Date.now(),
   } } }));
-  await page.route("**/api/portal/activity?**", (route) => {
-    const range = new URL(route.request().url()).searchParams.get("range");
-    ranges.push(range);
-    return route.fulfill({ json: {
-      range,
-      periodLabel: "Last 7 days",
-      popularMovies: [{ title: "Weekly Movie", year: 2026, plays: 12, viewers: 5 }],
-      popularShows: [{ title: "Weekly Show", year: 2025, plays: 8, viewers: 3 }],
-      watchTime: { seconds: 7384, plays: 4 },
-    } });
-  });
+  await page.route("**/api/portal/activity?**", (route) => { activityRequests++; return route.abort(); });
+  await page.route("**/api/portal/requests", (route) => route.fulfill({ json: { requests: [] } }));
   await page.goto("/account/#account");
-  await expect(page.locator("#activity-panel")).toBeVisible();
-  await expect(page.locator("#activity-watch-time")).toHaveText("2h 3m");
-  await expect(page.locator("#popular-movies")).toContainText("Weekly Movie");
-  await expect(page.locator("#popular-shows")).toContainText("Weekly Show");
-  await expect(page.locator("#activity-range")).toHaveCount(0);
-  expect(ranges).toEqual(["7"]);
+  await expect(page.locator("#activity-panel, #activity-range")).toHaveCount(0);
+  await expect(page.getByText("What everyone’s watching", { exact: true })).toHaveCount(0);
+  await expect(page.locator("#requests-panel")).toBeVisible();
+  expect(activityRequests).toBe(0);
 });
 
 test("members can see recent Overseerr requests", async ({ page }) => {
@@ -195,4 +184,5 @@ test("members can see recent Overseerr requests", async ({ page }) => {
   await expect(page.locator("#requests-panel")).toBeVisible();
   await expect(page.locator("#recent-requests")).toContainText("The Weekly Film");
   await expect(page.locator("#recent-requests")).toContainText("Processing");
+  await expect(page.locator("#overview-requests")).toHaveText("1");
 });

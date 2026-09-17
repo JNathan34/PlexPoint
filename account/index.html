@@ -13,8 +13,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/index-GJ5txONd.css" />
-    <link rel="stylesheet" href="/assets/portal.css?v=20260917-account-1" />
-    <script type="module" src="/assets/portal-auth.js?v=20260917-account-1"></script>
+    <link rel="stylesheet" href="/assets/portal.css?v=20260917-requests-2" />
+    <script type="module" src="/assets/portal-auth.js?v=20260917-requests-2"></script>
     <script type="module" src="/assets/portal-navigation.js?v=20260916-dashboard-1"></script>
     <script type="module" src="/assets/portal.js?v=20260916-account-only-3"></script>
   </head>
@@ -52,7 +52,7 @@
                     <article class="pp-card glass-card pp-metric"><span id="overview-tier-icon" class="pp-tier-icon" data-tier="none" aria-hidden="true"></span><h3>Active plan</h3><strong id="overview-plan">Sign in to view</strong><p id="overview-plan-note">Your current plan and access status appear here.</p></article>
                     <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="clock"></span><h3>Time remaining</h3><strong id="overview-renewal">Sign in to view</strong><p id="overview-renewal-note">See when your next payment is due.</p></article>
                     <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="payment"></span><h3>Payment status</h3><strong id="overview-payment">Sign in to view</strong><p id="overview-payment-note">Your latest confirmed payment appears here.</p></article>
-                    <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="film"></span><h3>Watch time</h3><strong id="overview-watch-time">Sign in to view</strong><p id="overview-watch-time-note">Your last 7 days of Plex activity appear here.</p></article>
+                    <article class="pp-card glass-card pp-metric"><span class="pp-icon-tile" data-icon="search"></span><h3>Recent requests</h3><strong id="overview-requests">Sign in to view</strong><p id="overview-requests-note">Your latest Overseerr requests appear here.</p></article>
                   </div>
                 </div>
                 <aside class="pp-card glass-card pp-auth-card" aria-label="Profile and sign in">
@@ -85,17 +85,8 @@
                 <div id="billing-history" class="pp-payment-history"><h3>Recent payments</h3><div class="pp-admin-table-wrap"><table class="pp-admin-table"><thead><tr><th scope="col">Date paid</th><th scope="col">Amount</th><th scope="col">Method</th><th scope="col">Billing period</th><th scope="col">Status</th></tr></thead><tbody id="billing-payments"></tbody></table></div></div>
               </div>
                 </section>
-                <section id="activity-panel" class="pp-card glass-card pp-viewing-panel" aria-labelledby="activity-heading" hidden>
-              <div class="pp-viewing-heading"><div><span class="pp-badge">PLEX ACTIVITY</span><h2 id="activity-heading">What everyone’s watching</h2><p>Popular picks and your watch time from the last 7 days.</p></div></div>
-              <p id="activity-status" class="pp-small" role="status"></p><button id="activity-retry" type="button" class="pp-button" hidden>Retry activity</button>
-              <div id="activity-results" class="pp-viewing-grid" hidden>
-                <article class="pp-viewing-card pp-watch-time"><span class="pp-icon-tile" data-icon="clock"></span><p>Your watch time</p><strong id="activity-watch-time">—</strong><small id="activity-watch-count">Last 7 days</small></article>
-                <article class="pp-viewing-card"><div class="pp-viewing-card-title"><span class="pp-icon-tile" data-icon="film"></span><h3>Popular movies</h3></div><ol id="popular-movies" class="pp-popular-list"></ol></article>
-                <article class="pp-viewing-card"><div class="pp-viewing-card-title"><span class="pp-icon-tile" data-icon="play"></span><h3>Popular shows</h3></div><ol id="popular-shows" class="pp-popular-list"></ol></article>
-              </div>
-                </section>
                 <section id="requests-panel" class="pp-card glass-card pp-requests-panel" aria-labelledby="requests-heading" hidden>
-                  <div class="pp-requests-heading"><div><span class="pp-badge">REQUESTS</span><h2 id="requests-heading">Recent requests</h2><p>Your latest movie and TV requests from Overseerr.</p></div><a href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer" class="pp-text-link">View all ↗</a></div>
+                  <div class="pp-requests-heading"><div><span class="pp-badge">REQUESTS</span><h2 id="requests-heading">Recent requests</h2></div><a href="https://request.plexpoint.uk/" target="_blank" rel="noopener noreferrer" class="pp-text-link">View all →</a></div>
                   <p id="requests-status" class="pp-small" role="status"></p><button id="requests-retry" type="button" class="pp-button" hidden>Retry requests</button>
                   <ol id="recent-requests" class="pp-request-list" hidden></ol>
                 </section>
