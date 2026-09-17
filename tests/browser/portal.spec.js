@@ -56,6 +56,7 @@ test("the main and account headers keep Account attached and the trial visible",
   const accountTrial = page.locator('[data-testid="account-trial-link"]');
   await expect(accountTrial).toBeVisible();
   await expect(accountTrial).toHaveAttribute("href", "https://wizarr.plexpoint.uk/j/FREE%20TRIAL");
+  await expect(accountTrial).toHaveCSS("color", "rgb(255, 255, 255)");
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
@@ -69,6 +70,7 @@ test("the main and account headers keep Account attached and the trial visible",
   const mobileAccountTrial = page.locator('[data-testid="account-mobile-trial-link"]');
   await expect(mobileAccountTrial).toBeVisible();
   await expect(mobileAccountTrial).toHaveAttribute("href", "https://wizarr.plexpoint.uk/j/FREE%20TRIAL");
+  await expect(mobileAccountTrial).toHaveCSS("color", "rgb(255, 255, 255)");
 });
 
 test("public content remains available to other clients through the Pages worker", async ({ request }) => {
