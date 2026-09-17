@@ -44,7 +44,7 @@ test("failed logout keeps the user informed instead of claiming success", async 
   await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled();
 });
 
-test("the owner account sees the user dashboard and Overseerr shortcuts", async ({ page }) => {
+test("the owner account sees the user dashboard with compact profile actions", async ({ page }) => {
   const createdAt = Date.UTC(2026, 8, 16);
   await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
     id: "owner", email: "jacobnathan1718@gmail.com", displayName: "Jacob", createdAt, isAdmin: true,
@@ -65,7 +65,11 @@ test("the owner account sees the user dashboard and Overseerr shortcuts", async 
   await expect(page.locator("#admin-users")).toContainText("Movie Fan");
   await expect(page.locator("#admin-users")).toContainText("Gold Tier");
   await expect(page.getByText("Plex connected", { exact: false })).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveAttribute("href", "https://request.plexpoint.uk/");
+  await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveCount(0);
+  const profile = await page.locator(".pp-auth-card").boundingBox();
+  const logout = await page.getByRole("button", { name: "Sign out", exact: true }).boundingBox();
+  expect(logout.y).toBeLessThan(profile.y + profile.height / 2);
+  expect(logout.x + logout.width).toBeLessThanOrEqual(profile.x + profile.width);
   await expect(page.getByRole("link", { name: /Manage membership|Billing history|Plex activity|Request on Overseerr/i })).toHaveCount(0);
 });
 
@@ -104,7 +108,7 @@ test("members can see their plan, payment due state and confirmed payment histor
   await expect(page.locator("#profile-plan")).toHaveText("Gold Tier");
   await expect(page.locator("#profile-payment-state")).toHaveText("Overdue");
   await expect(page.locator("#profile-access, #auth-user-since")).toHaveCount(0);
-  await expect(page.locator(".pp-profile-actions").getByRole("link", { name: "Membership", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveCount(0);
 });
 
 test("the owner can edit a member plan and record a payment", async ({ page }) => {

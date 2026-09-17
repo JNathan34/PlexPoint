@@ -96,7 +96,7 @@ test("signed-in accounts show account actions without Plex connection messaging"
   await expect(page.locator("#auth-user-name")).toHaveText(localUser.displayName);
   await expect(page.getByText("Plex connected", { exact: false })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Connect Plex", exact: true })).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveAttribute("href", "https://request.plexpoint.uk/");
+  await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveCount(0);
 });
 
 test("account page shares the main site's background, font, glass cards and gradient tokens", async ({ page }) => {

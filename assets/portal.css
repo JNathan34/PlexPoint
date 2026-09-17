@@ -75,13 +75,14 @@
 .pp-plex-pending { padding: 16px; margin-bottom: 20px; border: 1px solid #ff7b003d; border-radius: 12px; font-size: 14px; }
 #auth-user h2 { margin: 0 0 4px; font-size: 25px; line-height: 1.2; font-weight: 650; }
 #auth-user :is(h2,p) { overflow-wrap: anywhere; }
-.pp-profile-header { display: flex; align-items: center; gap: 18px; padding: 4px 4px 18px; }
+.pp-profile-header { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 18px; padding: 4px 4px 18px; }
 .pp-profile-avatar { display: grid; place-items: center; width: 96px; height: 96px; flex: 0 0 96px; overflow: hidden; border: 2px solid #ff8a32b8; border-radius: 50%; background: radial-gradient(circle at 45% 35%,#422813,#111827 64%); box-shadow: 0 0 0 4px #ff7b0010, 0 12px 30px #0007, 0 0 30px #ff7b002c; }
 .pp-profile-avatar img { width: 100%; height: 100%; padding: 17px; border-radius: inherit; object-fit: contain; filter: drop-shadow(0 8px 16px #0008); }
 .pp-profile-avatar.has-plex-avatar img { padding: 0; object-fit: cover; filter: none; }
 .pp-profile-copy { min-width: 0; }
 .pp-profile-copy > p:not(.pp-small) { color: #a9b5c7; font-size: 13px; }
 .pp-profile-copy .pp-small { margin-top: 3px !important; }
+.pp-profile-logout { align-self: start; min-height: 40px; padding-inline: 12px; font-size: 11px; white-space: nowrap; }
 .pp-profile-active { display: inline-flex; align-items: center; gap: 7px; margin-top: 9px; padding: 4px 10px; border: 1px solid #22c55e40; border-radius: 999px; color: #7ee2a4; background: #22c55e17; font-size: 11px; font-weight: 600; }
 .pp-profile-active > span { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 10px #22c55e; }
 .pp-profile-membership { padding: 18px; border: 1px solid #f59e0b40; border-radius: 14px; background: radial-gradient(circle at 88% 12%,#ff9d2e1f,transparent 35%), linear-gradient(135deg,#3b260f8f,#131820b8 58%,#0b1119c9); }
@@ -95,8 +96,6 @@
 .pp-profile-membership dt { display: inline-flex; align-items: center; gap: 9px; color: #aab5c5; }
 .pp-profile-membership dt .pp-icon { width: 16px; height: 16px; color: #d5dae2; }
 .pp-profile-membership dd { color: #ecf0f6; font-weight: 500; text-align: right; overflow-wrap: anywhere; }
-.pp-profile-actions { gap: 8px; margin-top: 14px; }
-.pp-profile-actions .pp-button { min-height: 40px; padding-inline: 11px; font-size: 11px; }
 .pp-dashboard-detail-grid { display: grid; grid-template-columns: var(--pp-dashboard-columns); align-items: stretch; gap: 20px; margin-top: 20px; }
 .pp-dashboard-detail-grid > .pp-card { height: 100%; }
 .pp-dashboard-detail-grid .pp-viewing-heading { align-items: flex-start; flex-direction: column; }
@@ -401,7 +400,6 @@
   .pp-profile-avatar img { width: 100%; height: 100%; padding: 12px; }
   .pp-profile-avatar.has-plex-avatar img { padding: 0; }
   .pp-profile-membership { padding: 14px; }
-  .pp-profile-actions .pp-button { flex: 1 1 120px; }
   .pp-request-item { grid-template-columns: 42px minmax(0,1fr) 10px; }
   .pp-request-item > img, .pp-request-poster-placeholder { width: 42px; height: 59px; }
   .pp-request-state { grid-column: 2; justify-self: start; }
