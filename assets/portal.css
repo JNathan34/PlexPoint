@@ -1,5 +1,8 @@
 /* Layout and interactions for the portal. Shared surfaces, tokens and backdrop
    come from the main site's stylesheet rather than a second theme. */
+@view-transition { navigation: auto; }
+.pp-site-header { view-transition-name: plexpoint-navigation; }
+::view-transition-old(plexpoint-navigation), ::view-transition-new(plexpoint-navigation) { animation-duration: 140ms; }
 .pp-portal { margin: 0; background: var(--background); color: var(--foreground); font: 400 16px/1.5 var(--font-sans); color-scheme: dark; }
 .pp-portal *, .pp-portal *::before, .pp-portal *::after { box-sizing: border-box; }
 .pp-portal [hidden] { display: none !important; }

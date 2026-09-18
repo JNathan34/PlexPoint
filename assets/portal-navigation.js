@@ -20,7 +20,13 @@ toggle.addEventListener("click", () => {
   toggle.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
 });
 navigation.addEventListener("click", (event) => {
-  if (event.target.closest("a")) closeMenu();
+  const link = event.target.closest("a[href]");
+  if (!link) return;
+  closeMenu();
+  const destination = new URL(link.href, location.href);
+  if (destination.origin === location.origin && destination.pathname === "/" && destination.hash) {
+    try { sessionStorage.setItem("plexpoint:account-navigation", "1"); } catch { /* Storage is optional. */ }
+  }
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") closeMenu(true);

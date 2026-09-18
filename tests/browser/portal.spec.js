@@ -89,6 +89,24 @@ test("the main and account headers keep Account attached and the trial visible",
   await expect(mobileAccountTrial).toHaveCSS("color", "rgb(255, 255, 255)");
 });
 
+test("account section links keep the main navigation visible during the return to the homepage", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/account/");
+  await expect(page.locator(".pp-site-header")).toHaveCSS("view-transition-name", "plexpoint-navigation");
+  await page.locator('#portal-navigation a[href="/#membership"]').click();
+  await page.waitForURL(/\/#membership$/);
+  const navigation = page.locator('[data-testid="navigation"]');
+  await expect(navigation).toBeVisible();
+  await expect(navigation).toHaveCSS("opacity", "1");
+  await expect(navigation).toHaveCSS("view-transition-name", "plexpoint-navigation");
+  const continuity = await page.evaluate(() => ({
+    fromAccount: document.documentElement.classList.contains("pp-from-account-navigation"),
+    pendingMarker: sessionStorage.getItem("plexpoint:account-navigation"),
+    transform: getComputedStyle(document.querySelector('[data-testid="navigation"]')).transform,
+  }));
+  expect(continuity).toEqual({ fromAccount: true, pendingMarker: null, transform: "matrix(1, 0, 0, 1, 0, 0)" });
+});
+
 test("public content remains available to other clients through the Pages worker", async ({ request }) => {
   const response = await request.get("/api/portal/content");
   expect(response.ok()).toBe(true);

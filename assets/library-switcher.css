@@ -1,3 +1,19 @@
+@view-transition { navigation: auto; }
+
+[data-testid="navigation"] {
+  view-transition-name: plexpoint-navigation;
+}
+
+html.pp-from-account-navigation [data-testid="navigation"] {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+::view-transition-old(plexpoint-navigation),
+::view-transition-new(plexpoint-navigation) {
+  animation-duration: 140ms;
+}
+
 [data-plex-shows-panel] select,
 [data-plex-anime-panel] select {
   appearance: none;
