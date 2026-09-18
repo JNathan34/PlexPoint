@@ -46,8 +46,17 @@ test("desktop account reuses the home backdrop and presents the compact dashboar
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const backdrop = await page.locator(".hero-backdrop img").getAttribute("src");
+  const homeBackdropStyles = await page.evaluate(() => ({
+    imageOpacity: getComputedStyle(document.querySelector(".hero-backdrop img")).opacity,
+    overlayBackground: getComputedStyle(document.querySelector(".hero-backdrop > div")).backgroundImage,
+  }));
   await page.goto("/account/");
   await expect(page.locator(".pp-account-backdrop img")).toHaveAttribute("src", backdrop);
+  const accountBackdropStyles = await page.evaluate(() => ({
+    imageOpacity: getComputedStyle(document.querySelector(".pp-account-backdrop img")).opacity,
+    overlayBackground: getComputedStyle(document.querySelector(".pp-account-backdrop > div")).backgroundImage,
+  }));
+  expect(accountBackdropStyles).toEqual(homeBackdropStyles);
   await expect(page.locator(".pp-account-art")).toHaveCount(0);
   await expect(page.locator(".pp-metric")).toHaveCount(4);
   await expect(page.locator(".pp-account-shortcuts")).toHaveCount(0);

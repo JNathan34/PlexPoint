@@ -50,8 +50,8 @@
 .pp-page-heading > p { font-size: 16px; line-height: 28px; margin-top: 16px; max-width: 672px; }
 .pp-account-hero { position: relative; isolation: isolate; min-height: 100vh; padding: 96px 0 40px; overflow: clip; }
 .pp-account-backdrop { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
-.pp-account-backdrop > img { width: 100%; height: 100%; object-fit: cover; opacity: .2; filter: saturate(.75) contrast(1.08); }
-.pp-account-backdrop > div { position: absolute; inset: 0; background: radial-gradient(circle at 92% 78%, #0ea5e926 0%, transparent 35%), radial-gradient(circle at 22% 75%, #7c3aed18 0%, transparent 34%), linear-gradient(90deg, #070a11f5 0%, #070a11e8 46%, #070a11c9 100%); }
+.pp-account-backdrop > img { width: 100%; height: 100%; object-fit: cover; opacity: .25; }
+.pp-account-backdrop > div { position: absolute; inset: 0; background: linear-gradient(90deg, #080b11, #080b11e6 36%, #080b118c); }
 .pp-account-container { padding: 28px 16px 48px; }
 .pp-account-dashboard { --pp-dashboard-columns: minmax(0,1.55fr) minmax(340px,.85fr); scroll-margin-top: 96px; }
 .pp-dashboard-top { display: grid; grid-template-columns: var(--pp-dashboard-columns); align-items: stretch; gap: 20px; }
