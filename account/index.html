@@ -9,15 +9,23 @@
     <title>My PlexPoint</title>
     <link rel="icon" type="image/png" href="/plexpoint-logo.png" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <script>
+      try {
+        if (sessionStorage.getItem("plexpoint:main-navigation") === "1") {
+          sessionStorage.removeItem("plexpoint:main-navigation");
+          document.documentElement.classList.add("pp-from-main-navigation");
+        }
+      } catch { /* Storage is optional. */ }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="modulepreload" href="/assets/index-C0vs28Zi.js" />
     <link rel="prefetch" href="/" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/index-GJ5txONd.css" />
-    <link rel="stylesheet" href="/assets/portal.css?v=20260918-account-12" />
-    <script type="module" src="/assets/portal-auth.js?v=20260918-account-10"></script>
-    <script type="module" src="/assets/portal-navigation.js?v=20260918-dashboard-2"></script>
+    <link rel="stylesheet" href="/assets/portal.css?v=20260918-account-13" />
+    <script type="module" src="/assets/portal-auth.js?v=20260918-account-11"></script>
+    <script type="module" src="/assets/portal-navigation.js?v=20260918-dashboard-3"></script>
     <script type="module" src="/assets/portal.js?v=20260918-account-only-4"></script>
   </head>
   <body class="pp-portal">
@@ -26,7 +34,7 @@
       <header class="pp-site-header">
         <div class="pp-site-nav container">
         <a class="pp-brand" href="/" aria-label="PlexPoint home" data-testid="account-logo-link">
-          <span class="pp-brand-mark"><span class="pp-brand-glow" aria-hidden="true"></span><img src="/plexpoint-logo.png" alt="PlexPoint Logo" width="40" height="40" /></span>
+          <span class="pp-brand-mark"><img src="/plexpoint-logo.png" alt="PlexPoint Logo" width="40" height="40" /></span>
           <span>PlexPoint</span>
         </a>
         <nav id="portal-navigation" class="pp-navigation glass" aria-label="Main website navigation">
@@ -68,6 +76,7 @@
                     <div class="pp-profile-header"><div class="pp-profile-avatar"><img id="profile-avatar" src="/plexpoint-logo.png" alt="" width="96" height="96" referrerpolicy="no-referrer" /></div><div class="pp-profile-copy"><h2 id="auth-user-name"></h2><p id="auth-user-email"></p><span class="pp-profile-active"><span aria-hidden="true"></span>Active member</span></div><button id="auth-logout" type="button" class="pp-button pp-profile-logout">Sign out</button></div>
                     <div class="pp-profile-membership">
                       <div class="pp-profile-plan"><span id="profile-tier-icon" class="pp-tier-icon" data-tier="none" aria-hidden="true"></span><div><strong id="profile-plan">Membership</strong><small id="profile-plan-note">Loading your plan…</small></div></div>
+                      <div id="profile-addons" class="pp-profile-addons" hidden><span>Add-ons</span><div id="profile-addon-list"></div></div>
                       <dl><div><dt><span data-icon="clock"></span>Renews on</dt><dd id="profile-renewal">—</dd></div><div><dt><span data-icon="payment"></span>Last payment</dt><dd id="profile-last-payment">—</dd></div><div><dt><span data-icon="info"></span>Payment status</dt><dd><span id="profile-payment-state" class="pp-billing-state" data-status="none">Checking</span></dd></div></dl>
                     </div>
                   </div>
@@ -102,11 +111,16 @@
                       <button id="admin-plan-save" type="submit" class="pp-button pp-button-primary">Save plan and dates</button>
                     </form>
                     <form id="admin-payment-form" class="pp-admin-billing-form">
-                      <h4>Record a payment</h4><p>Payments are immediately confirmed and included in the member’s history.</p>
+                      <h4>Record a payment</h4><p id="admin-payment-description">Payments are immediately confirmed and included in the member’s history.</p>
                       <div class="pp-form-grid"><label for="admin-payment-amount">Amount (£)<input id="admin-payment-amount" type="number" inputmode="decimal" min="0.01" max="1000000" step="0.01" required /></label><label for="admin-payment-date">Date paid<input id="admin-payment-date" type="date" required /></label><label for="admin-payment-method">Method<select id="admin-payment-method" required><option value="bank_transfer">Bank transfer</option><option value="cash">Cash</option><option value="card">Card</option><option value="paypal">PayPal</option><option value="other">Other</option></select></label><label for="admin-payment-reference">Reference<input id="admin-payment-reference" maxlength="80" autocomplete="off" /></label></div>
                       <button id="admin-payment-save" type="submit" class="pp-button pp-button-primary">Record payment</button>
                     </form>
                   </div>
+                  <form id="admin-addons-form" class="pp-admin-billing-form pp-admin-addons-form">
+                    <h4>Account add-ons</h4><p>Assign optional extras to this member. Quantities are shown on their account page.</p>
+                    <div id="admin-addons-list" class="pp-admin-addons-list"></div>
+                    <button id="admin-addons-save" type="submit" class="pp-button pp-button-primary">Save add-ons</button>
+                  </form>
                   <div class="pp-payment-history"><h4>Payment history</h4><div class="pp-admin-table-wrap"><table class="pp-admin-table"><thead><tr><th scope="col">Date</th><th scope="col">Amount</th><th scope="col">Method</th><th scope="col">Reference</th><th scope="col">Status</th><th scope="col"><span class="pp-sr-only">Actions</span></th></tr></thead><tbody id="admin-billing-payments"></tbody></table></div></div>
                 </div>
               </section>

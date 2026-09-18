@@ -34,12 +34,19 @@ function controls() {
   byId("admin-retry").disabled = adminBusy;
   byId("requests-retry").disabled = requestsBusy;
   byId("billing-retry").disabled = billingBusy;
-  for (const formId of ["admin-plan-form", "admin-payment-form"]) {
+  for (const formId of ["admin-plan-form", "admin-payment-form", "admin-addons-form"]) {
     const editorForm = byId(formId);
     for (const control of editorForm.elements) control.disabled = adminBillingBusy;
     editorForm.setAttribute("aria-busy", String(adminBillingBusy));
   }
-  byId("admin-payment-save").disabled = adminBillingBusy || !adminBillingData?.billing?.subscription;
+  const selectedPrice = Number(byId("admin-plan-tier").selectedOptions[0]?.dataset.priceMinor);
+  const paymentUnavailable = adminBillingBusy || !adminBillingData?.billing?.subscription || selectedPrice === 0;
+  for (const control of byId("admin-payment-form").elements) control.disabled = paymentUnavailable;
+  for (const item of byId("admin-addons-list").querySelectorAll(".pp-admin-addon-option")) {
+    const checkbox = item.querySelector('input[type="checkbox"]');
+    const quantity = item.querySelector('input[type="number"]');
+    if (quantity) quantity.disabled = adminBillingBusy || !checkbox?.checked;
+  }
   for (const button of byId("admin-users").querySelectorAll("button")) button.disabled = adminBillingBusy;
   for (const button of byId("admin-billing-payments").querySelectorAll("button")) button.disabled = adminBillingBusy;
   byId("plex-pending").hidden = !plexPending;
@@ -53,6 +60,7 @@ const tierIconPaths = {
   diamond: ["M6 3h12l4 6-10 13L2 9Z", "M11 3 8 9l4 13 4-13-3-6", "M2 9h20"],
   ruby: ["M6 3h12l4 6-10 13L2 9Z", "M11 3 8 9l4 13 4-13-3-6", "M2 9h20"],
   platinum: ["M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"],
+  vip: ["m12 3 2.5 5.07 5.6.81-4.05 3.95.96 5.58L12 15.8l-5.01 2.63.96-5.58L3.9 8.88l5.6-.81L12 3Z"],
 };
 
 function tierKey(value) {
@@ -147,6 +155,8 @@ function renderUser(next) {
     byId("profile-last-payment").textContent = "—";
     byId("profile-payment-state").textContent = "Checking";
     byId("profile-payment-state").dataset.status = "none";
+    byId("profile-addons").hidden = true;
+    byId("profile-addon-list").replaceChildren();
   } else {
     configureAvatar(profileAvatar, "", "", profileAvatar.parentElement);
     for (const id of ["overview-tier-icon", "profile-tier-icon"]) setTierBadge(id, null);
@@ -182,6 +192,8 @@ function renderUser(next) {
     byId("profile-last-payment").textContent = "—";
     byId("profile-payment-state").textContent = "Checking";
     byId("profile-payment-state").dataset.status = "none";
+    byId("profile-addons").hidden = true;
+    byId("profile-addon-list").replaceChildren();
   }
 }
 
@@ -398,7 +410,8 @@ function renderBilling(data) {
   const subscription = billing.subscription;
   const period = billing.currentPeriod;
   const paymentStatus = period?.paymentStatus || "none";
-  const paymentLabel = paymentLabels[paymentStatus] || "Payment status unavailable";
+  const noPaymentRequired = Boolean(subscription && Number(subscription.monthlyPriceMinor) === 0);
+  const paymentLabel = noPaymentRequired ? "No payment required" : paymentLabels[paymentStatus] || "Payment status unavailable";
   const tier = subscription?.tierId || subscription?.tier;
   for (const id of ["overview-tier-icon", "profile-tier-icon"]) setTierBadge(id, tier);
   setProfileTier(tier);
@@ -409,13 +422,23 @@ function renderBilling(data) {
 
   byId("profile-plan").textContent = subscription?.tier || "No plan assigned";
   setPlanNote("profile-plan-note", subscription ? "" : "Contact Jacob to choose a plan");
+  const addons = Array.isArray(billing.addons) ? billing.addons : [];
+  const addonList = byId("profile-addon-list");
+  addonList.replaceChildren(...addons.map((addon) => {
+    const chip = document.createElement("span");
+    chip.textContent = `${addon.name}${addon.quantity > 1 ? ` ×${addon.quantity}` : ""}`;
+    if (addon.description) chip.title = addon.description;
+    return chip;
+  }));
+  byId("profile-addons").hidden = addons.length === 0;
   const days = period ? Math.ceil((period.endsAt - Date.now()) / 86_400_000) : null;
   const renewalSuffix = days == null ? "" : days < 0
     ? ` (${Math.abs(days)} day${Math.abs(days) === 1 ? "" : "s"} overdue)`
     : days === 0 ? " (due today)" : ` (${days} day${days === 1 ? "" : "s"} left)`;
   byId("profile-renewal").textContent = period ? `${dateText(period.endsAt)}${renewalSuffix}` : "Not scheduled";
   byId("profile-last-payment").textContent = billing.lastPayment
-    ? `${dateText(billing.lastPayment.receivedAt)} · ${moneyText(billing.lastPayment.amountMinor, billing.lastPayment.currency)}` : "None recorded";
+    ? `${dateText(billing.lastPayment.receivedAt)} · ${moneyText(billing.lastPayment.amountMinor, billing.lastPayment.currency)}`
+    : noPaymentRequired ? "Not required" : "None recorded";
   byId("profile-payment-state").textContent = paymentLabel;
   byId("profile-payment-state").dataset.status = paymentStatus;
   byId("overview-plan").textContent = subscription?.tier || "No plan";
@@ -428,7 +451,9 @@ function renderBilling(data) {
     byId("overview-renewal-note").textContent = "No payment date has been set.";
   }
   byId("overview-payment").textContent = paymentLabel;
-  byId("overview-payment-note").textContent = billing.lastPayment
+  byId("overview-payment-note").textContent = noPaymentRequired
+    ? "VIP access does not require payment."
+    : billing.lastPayment
     ? `Last paid ${dateText(billing.lastPayment.receivedAt)} · ${moneyText(billing.lastPayment.amountMinor, billing.lastPayment.currency)}`
     : "No confirmed payment has been recorded.";
 }
@@ -459,6 +484,8 @@ async function loadBilling() {
       setPlanNote("profile-plan-note", "Membership details could not be loaded.");
       byId("profile-payment-state").textContent = "Unavailable";
       byId("profile-payment-state").dataset.status = "none";
+      byId("profile-addons").hidden = true;
+      byId("profile-addon-list").replaceChildren();
     }
   } finally {
     billingBusy = false;
@@ -622,7 +649,9 @@ function renderAdminBilling(data) {
   tierSelect.replaceChildren(...data.tiers.map((tier) => {
     const option = document.createElement("option");
     option.value = tier.id;
-    option.textContent = `${tier.name} · ${moneyText(tier.monthlyPriceMinor, tier.currency)}/month`;
+    option.textContent = tier.monthlyPriceMinor === 0
+      ? `${tier.name} · No payment`
+      : `${tier.name} · ${moneyText(tier.monthlyPriceMinor, tier.currency)}/month`;
     option.dataset.priceMinor = String(tier.monthlyPriceMinor);
     option.dataset.currency = tier.currency;
     return option;
@@ -637,6 +666,40 @@ function renderAdminBilling(data) {
   const suggested = period?.outstandingMinor > 0 ? period.outstandingMinor : subscription?.monthlyPriceMinor || Number(tierSelect.selectedOptions[0]?.dataset.priceMinor || 0);
   byId("admin-payment-amount").value = suggested ? (suggested / 100).toFixed(2) : "";
   byId("admin-payment-reference").value = "";
+  const assignedAddons = new Map((Array.isArray(data.billing.addons) ? data.billing.addons : [])
+    .map((addon) => [addon.id, addon]));
+  const availableAddons = Array.isArray(data.availableAddons) ? data.availableAddons : [];
+  byId("admin-addons-list").replaceChildren(...availableAddons.map((addon, index) => {
+    const row = document.createElement("label");
+    row.className = "pp-admin-addon-option";
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.value = addon.id;
+    checkbox.checked = assignedAddons.has(addon.id);
+    checkbox.dataset.addonId = addon.id;
+    const copy = document.createElement("span");
+    const name = document.createElement("strong");
+    name.textContent = addon.name;
+    const description = document.createElement("small");
+    description.textContent = addon.description;
+    copy.append(name, description);
+    const quantity = document.createElement("input");
+    quantity.type = "number";
+    quantity.min = "1";
+    quantity.max = "99";
+    quantity.step = "1";
+    quantity.value = String(assignedAddons.get(addon.id)?.quantity || 1);
+    quantity.dataset.addonQuantity = addon.id;
+    quantity.setAttribute("aria-label", `${addon.name} quantity`);
+    quantity.id = `admin-addon-quantity-${index}`;
+    row.append(checkbox, copy, quantity);
+    return row;
+  }));
+  byId("admin-addons-form").hidden = availableAddons.length === 0;
+  const noPaymentRequired = Number(tierSelect.selectedOptions[0]?.dataset.priceMinor) === 0;
+  byId("admin-payment-description").textContent = noPaymentRequired
+    ? "VIP access does not require a payment record."
+    : "Payments are immediately confirmed and included in the member’s history.";
   renderPaymentRows("admin-billing-payments", data.billing.payments, true);
   byId("admin-billing-content").hidden = false;
   byId("admin-billing-editor").hidden = false;
@@ -819,9 +882,14 @@ byId("admin-billing-close").addEventListener("click", () => {
   controls();
 });
 byId("admin-plan-tier").addEventListener("change", () => {
-  if (adminBillingData?.billing?.currentPeriod?.outstandingMinor > 0) return;
   const price = Number(byId("admin-plan-tier").selectedOptions[0]?.dataset.priceMinor || 0);
-  byId("admin-payment-amount").value = price ? (price / 100).toFixed(2) : "";
+  if (!(adminBillingData?.billing?.currentPeriod?.outstandingMinor > 0) || price === 0) {
+    byId("admin-payment-amount").value = price ? (price / 100).toFixed(2) : "";
+  }
+  byId("admin-payment-description").textContent = price === 0
+    ? "VIP access does not require a payment record."
+    : "Payments are immediately confirmed and included in the member’s history.";
+  controls();
 });
 byId("admin-plan-form").addEventListener("submit", (event) => {
   event.preventDefault();
@@ -844,6 +912,19 @@ byId("admin-payment-form").addEventListener("submit", (event) => {
     method: byId("admin-payment-method").value,
     reference: byId("admin-payment-reference").value,
   }, "Recording payment…", "Payment recorded and the member’s balance has been updated.");
+});
+byId("admin-addons-list").addEventListener("change", (event) => {
+  if (event.target.matches('input[type="checkbox"]')) controls();
+});
+byId("admin-addons-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!event.currentTarget.reportValidity()) return;
+  const addons = [...byId("admin-addons-list").querySelectorAll('input[type="checkbox"]:checked')].map((checkbox) => ({
+    id: checkbox.dataset.addonId,
+    quantity: Number(byId("admin-addons-list").querySelector(`[data-addon-quantity="${CSS.escape(checkbox.dataset.addonId)}"]`).value),
+  }));
+  void updateAdminBilling({ action: "save_addons", addons },
+    "Saving account add-ons…", "Account add-ons saved.");
 });
 byId("admin-billing-payments").addEventListener("click", (event) => {
   const button = event.target.closest("button[data-payment-id]");

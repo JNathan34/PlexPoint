@@ -101,6 +101,7 @@ test("members can see their plan, payment due state and confirmed payment histor
     currentPeriod: { id: "period", tierId: "gold", tier: "Gold Tier", startsAt: start, endsAt: due, amountDueMinor: 500, currency: "GBP", status: "open", confirmedMinor: 200, pendingMinor: 0, outstandingMinor: 300, creditMinor: 0, paymentStatus: "overdue" },
     lastPayment: payments[0],
     payments,
+    addons: [{ id: "extra-movie", name: "Extra Movie Request", description: "Adds 1 extra movie request.", quantity: 2 }],
   } } }));
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/account/#account");
@@ -122,6 +123,8 @@ test("members can see their plan, payment due state and confirmed payment histor
   await expect(page.locator("#profile-plan")).toHaveText("Gold Tier");
   await expect(page.locator("#profile-renewal")).toContainText("24 days left");
   await expect(page.locator("#profile-payment-state")).toHaveText("Overdue");
+  await expect(page.locator("#profile-addons")).toBeVisible();
+  await expect(page.locator("#profile-addon-list")).toHaveText("Extra Movie Request ×2");
   const columnOffsets = await page.locator("#billing-history").evaluate((history) => {
     const headings = [...history.querySelectorAll("th")];
     const cells = [...history.querySelectorAll("tbody tr:first-child td")];
@@ -137,7 +140,9 @@ test("members can see their plan, payment due state and confirmed payment histor
     heading: getComputedStyle(history.querySelector("th:nth-child(2)")).textAlign,
     value: getComputedStyle(history.querySelector("tbody td:nth-child(2)")).textAlign,
   }));
-  expect(planAlignment).toEqual({ heading: "center", value: "center" });
+  expect(planAlignment).toEqual({ heading: "left", value: "left" });
+  await expect(page.locator("#billing-history th").first()).toHaveCSS("border-top-left-radius", "10px");
+  await expect(page.locator("#billing-history th").last()).toHaveCSS("border-top-right-radius", "10px");
   const panelHeights = await page.locator(".pp-dashboard-detail-grid").evaluate((grid) => ({
     payments: grid.querySelector("#billing-panel").getBoundingClientRect().height,
     requests: grid.querySelector("#requests-panel").getBoundingClientRect().height,
@@ -183,7 +188,7 @@ test("profile styling and plan icons follow the member's current tier", async ({
   await page.route("**/api/portal/billing", (route) => route.fulfill({ json: { billing: {
     subscription: { id: "sub", tierId: "platinum", tier: "Platinum Tier", accessStatus: "enabled", startsAt: start, endsAt: due, monthlyPriceMinor: 1500, currency: "GBP" },
     currentPeriod: { id: "period", tierId: "platinum", tier: "Platinum Tier", startsAt: start, endsAt: due, amountDueMinor: 1500, currency: "GBP", status: "open", confirmedMinor: 1500, pendingMinor: 0, outstandingMinor: 0, creditMinor: 0, paymentStatus: "paid" },
-    lastPayment: null, payments: [],
+    lastPayment: null, payments: [], addons: [],
   } } }));
   await page.goto("/account/#account");
   await expect(page.locator("#profile-plan")).toHaveText("Platinum Tier");
@@ -222,16 +227,39 @@ test("profile styling and plan icons follow the member's current tier", async ({
   expect(tierPresentation.membershipBackground).toContain("196, 181, 253");
 });
 
+test("VIP is presented as a grey no-payment membership", async ({ page }) => {
+  const start = Date.now() - 86400000;
+  const due = Date.now() + 365 * 86400000;
+  await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
+    id: "vip-member", email: "vip@example.test", displayName: "VIP Member", createdAt: start,
+  } } }));
+  await page.route("**/api/portal/billing", (route) => route.fulfill({ json: { billing: {
+    subscription: { id: "sub", tierId: "vip", tier: "VIP", accessStatus: "enabled", startsAt: start, endsAt: due, monthlyPriceMinor: 0, currency: "GBP" },
+    currentPeriod: { id: "period", tierId: "vip", tier: "VIP", startsAt: start, endsAt: due, amountDueMinor: 0, currency: "GBP", status: "open", confirmedMinor: 0, pendingMinor: 0, outstandingMinor: 0, creditMinor: 0, paymentStatus: "paid" },
+    lastPayment: null, payments: [], addons: [],
+  } } }));
+  await page.goto("/account/#account");
+  await expect(page.locator("#profile-plan")).toHaveText("VIP");
+  await expect(page.locator("#profile-payment-state")).toHaveText("No payment required");
+  await expect(page.locator("#profile-last-payment")).toHaveText("Not required");
+  await expect(page.locator("#overview-payment-note")).toHaveText("VIP access does not require payment.");
+  await expect(page.locator("#auth-user")).toHaveAttribute("data-tier", "vip");
+  await expect(page.locator("#profile-tier-icon")).toHaveCSS("color", "rgb(148, 163, 184)");
+});
+
 test("the owner can edit a member plan and record a payment", async ({ page }) => {
   const createdAt = Date.UTC(2026, 8, 16);
   let planSaved = false;
   let paymentRecorded = false;
+  let addonsSaved = false;
   const billing = {
-    subscription: null, currentPeriod: null, lastPayment: null, payments: [],
+    subscription: null, currentPeriod: null, lastPayment: null, payments: [], addons: [],
   };
   const detail = () => ({
     account: { id: "member", displayName: "Movie Fan", email: "fan@example.test", accountStatus: "enabled" },
-    tiers: [{ id: "gold", name: "Gold Tier", monthlyPriceMinor: 500, currency: "GBP" }], billing,
+    tiers: [{ id: "gold", name: "Gold Tier", monthlyPriceMinor: 500, currency: "GBP" }],
+    availableAddons: [{ id: "extra-movie", name: "Extra Movie Request", description: "Adds 1 extra movie request." }],
+    billing,
   });
   await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
     id: "owner", email: "jacobnathan1718@gmail.com", displayName: "Jacob", createdAt, isAdmin: true,
@@ -254,6 +282,9 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
       billing.currentPeriod.paymentStatus = "paid";
       billing.payments = [{ id: "pay", tierId: "gold", tier: "Gold Tier", amountMinor: body.amountMinor, currency: "GBP", status: "confirmed", method: body.method, receivedAt: Date.parse(`${body.receivedOn}T00:00:00Z`), reference: body.reference || null, periodStartsAt: billing.subscription.startsAt, periodEndsAt: billing.subscription.endsAt }];
       billing.lastPayment = billing.payments[0];
+    } else if (body.action === "save_addons") {
+      addonsSaved = true;
+      billing.addons = body.addons.map((addon) => ({ ...addon, name: "Extra Movie Request", description: "Adds 1 extra movie request." }));
     }
     return route.fulfill({ json: detail() });
   });
@@ -272,6 +303,12 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
   await expect(page.locator("#admin-billing-status")).toContainText("Payment recorded");
   expect(paymentRecorded).toBe(true);
   await expect(page.locator("#admin-billing-payments")).toContainText("£5.00");
+  await page.locator('#admin-addons-list input[type="checkbox"]').check();
+  await page.getByLabel("Extra Movie Request quantity").fill("3");
+  await page.getByRole("button", { name: "Save add-ons" }).click();
+  await expect(page.locator("#admin-billing-status")).toHaveText("Account add-ons saved.");
+  expect(addonsSaved).toBe(true);
+  await expect(page.getByLabel("Extra Movie Request quantity")).toHaveValue("3");
 });
 
 test("the viewing panel stays removed while the summary shows seven-day watch time", async ({ page }) => {

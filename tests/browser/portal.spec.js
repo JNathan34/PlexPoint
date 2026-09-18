@@ -61,8 +61,9 @@ test("the main and account headers keep Account attached and the trial visible",
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Your Account");
   const accountBrand = page.locator('[data-testid="account-logo-link"]');
   await expect(accountBrand).toContainText("PlexPoint");
-  await expect(accountBrand.locator(".pp-brand-glow")).toHaveCount(1);
+  await expect(accountBrand.locator(".pp-brand-glow")).toHaveCount(0);
   await expect(accountBrand.locator("img")).toHaveAttribute("alt", "PlexPoint Logo");
+  await expect(accountBrand.locator("img")).toHaveCSS("box-shadow", "none");
   const accountLogoDetails = await accountBrand.locator("img").evaluate((image) => {
     const style = getComputedStyle(image);
     const box = image.getBoundingClientRect();
@@ -82,6 +83,7 @@ test("the main and account headers keep Account attached and the trial visible",
   await expect(mobileLink).toHaveAttribute("href", "/account/");
   await mobileLink.click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Your Account");
+  expect(await page.evaluate(() => document.documentElement.classList.contains("pp-from-main-navigation"))).toBe(true);
   await page.locator("#portal-menu-toggle").click();
   const mobileAccountTrial = page.locator('[data-testid="account-mobile-trial-link"]');
   await expect(mobileAccountTrial).toBeVisible();

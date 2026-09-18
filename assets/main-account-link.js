@@ -23,3 +23,9 @@ function installAccountLinks() {
 
 installAccountLinks();
 new MutationObserver(installAccountLinks).observe(document.getElementById("root"), { childList: true, subtree: true });
+
+document.addEventListener("click", (event) => {
+  const link = event.target.closest('a[href="/account/"]');
+  if (!link) return;
+  try { sessionStorage.setItem("plexpoint:main-navigation", "1"); } catch { /* Storage is optional. */ }
+}, { capture: true });

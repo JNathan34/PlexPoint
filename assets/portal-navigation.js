@@ -24,7 +24,7 @@ navigation.addEventListener("click", (event) => {
   if (!link) return;
   closeMenu();
   const destination = new URL(link.href, location.href);
-  if (destination.origin === location.origin && destination.pathname === "/" && destination.hash) {
+  if (destination.origin === location.origin && destination.pathname === "/") {
     try { sessionStorage.setItem("plexpoint:account-navigation", "1"); } catch { /* Storage is optional. */ }
   }
 });

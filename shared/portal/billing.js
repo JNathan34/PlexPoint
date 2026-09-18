@@ -77,13 +77,29 @@ function mapPayment(row) {
   };
 }
 
+async function addonsForUser(db, userId) {
+  const result = await db.prepare(`SELECT
+    a.id, a.name, a.description, ua.quantity
+    FROM user_addons ua
+    JOIN addon_catalog a ON a.id = ua.addon_id
+    WHERE ua.user_id = ? AND a.enabled = 1
+    ORDER BY a.sort_order, a.name`).bind(userId).all();
+  return (result.results || []).map((addon) => ({
+    id: addon.id,
+    name: addon.name,
+    description: addon.description,
+    quantity: Number(addon.quantity),
+  }));
+}
+
 export async function billingForUser(db, userId, { includeVoided = false, now = Date.now() } = {}) {
+  const addons = await addonsForUser(db, userId);
   const subscription = await db.prepare(`SELECT
     s.id, s.tier_id, s.access_status, s.starts_at, s.ends_at,
     t.name AS tier_name, t.monthly_price_minor, t.currency
     FROM subscriptions s JOIN subscription_tiers t ON t.id = s.tier_id
     WHERE s.user_id = ?`).bind(userId).first();
-  if (!subscription) return { subscription: null, currentPeriod: null, payments: [] };
+  if (!subscription) return { subscription: null, currentPeriod: null, payments: [], addons };
 
   const periodResult = await db.prepare(`SELECT
     bp.id, bp.tier_id, t.name AS tier_name, bp.starts_at, bp.ends_at,
@@ -125,6 +141,7 @@ export async function billingForUser(db, userId, { includeVoided = false, now = 
     currentPeriod,
     lastPayment,
     payments,
+    addons,
   };
 }
 
@@ -148,13 +165,54 @@ async function adminDetail(db, userId, now = Date.now()) {
   const account = await targetUser(db, userId);
   const tiersResult = await db.prepare(`SELECT id, name, monthly_price_minor, currency
     FROM subscription_tiers WHERE enabled = 1 ORDER BY sort_order, name`).all();
+  const addonsResult = await db.prepare(`SELECT id, name, description
+    FROM addon_catalog WHERE enabled = 1 ORDER BY sort_order, name`).all();
   return {
     account,
     tiers: (tiersResult.results || []).map((tier) => ({
       id: tier.id, name: tier.name, monthlyPriceMinor: Number(tier.monthly_price_minor), currency: tier.currency,
     })),
+    availableAddons: (addonsResult.results || []).map((addon) => ({
+      id: addon.id, name: addon.name, description: addon.description,
+    })),
     billing: await billingForUser(db, userId, { includeVoided: true, now }),
   };
+}
+
+async function saveAddons(db, actor, body, now) {
+  const userId = identifier(body.userId);
+  await targetUser(db, userId);
+  if (!Array.isArray(body.addons) || body.addons.length > 50) {
+    throw new AuthError(400, "Select valid add-ons.");
+  }
+  const selected = [];
+  const seen = new Set();
+  for (const item of body.addons) {
+    const id = identifier(item?.id, "add-on");
+    const quantity = item?.quantity;
+    if (seen.has(id) || !Number.isSafeInteger(quantity) || quantity < 1 || quantity > 99) {
+      throw new AuthError(400, "Select valid add-ons and quantities.");
+    }
+    seen.add(id);
+    selected.push({ id, quantity });
+  }
+  if (selected.length) {
+    const placeholders = selected.map(() => "?").join(",");
+    const result = await db.prepare(`SELECT id FROM addon_catalog
+      WHERE enabled = 1 AND id IN (${placeholders})`).bind(...selected.map((item) => item.id)).all();
+    if ((result.results || []).length !== selected.length) throw new AuthError(400, "Select available add-ons.");
+  }
+  const statements = [db.prepare("DELETE FROM user_addons WHERE user_id = ?").bind(userId)];
+  for (const addon of selected) {
+    statements.push(db.prepare(`INSERT INTO user_addons
+      (user_id, addon_id, quantity, assigned_by, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?)`).bind(userId, addon.id, addon.quantity, actor.id, now, now));
+  }
+  statements.push(db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
+    VALUES (?, ?, ?, 'billing.addons_updated', ?, ?)`)
+    .bind(crypto.randomUUID(), actor.id, userId, JSON.stringify({ addons: selected }), now));
+  await db.batch(statements);
+  return adminDetail(db, userId, now);
 }
 
 async function savePlan(db, actor, body, now) {
@@ -280,6 +338,7 @@ export async function adminBillingResponse(request, env) {
     if (body.action === "save_plan") return reply(await savePlan(env.PORTAL_DB, current, body, now));
     if (body.action === "record_payment") return reply(await recordPayment(env.PORTAL_DB, current, body, now));
     if (body.action === "void_payment") return reply(await voidPayment(env.PORTAL_DB, current, body, now));
+    if (body.action === "save_addons") return reply(await saveAddons(env.PORTAL_DB, current, body, now));
     throw new AuthError(400, "Select a valid billing action.");
   } catch (error) { return errorResponse(error); }
 }

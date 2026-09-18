@@ -4,6 +4,10 @@
   view-transition-name: plexpoint-navigation;
 }
 
+[data-testid^="nav-link-"] > .absolute.inset-0 {
+  view-transition-name: plexpoint-active-navigation;
+}
+
 html.pp-from-account-navigation [data-testid="navigation"] {
   opacity: 1 !important;
   transform: translate3d(0, 0, 0) !important;
@@ -11,8 +15,13 @@ html.pp-from-account-navigation [data-testid="navigation"] {
 
 ::view-transition-old(plexpoint-navigation),
 ::view-transition-new(plexpoint-navigation) {
-  animation-duration: 140ms;
+  animation-duration: 220ms;
 }
+
+::view-transition-old(root) { animation: 160ms ease both pp-page-out; }
+::view-transition-new(root) { animation: 220ms ease both pp-page-in; }
+@keyframes pp-page-out { to { opacity: .88; } }
+@keyframes pp-page-in { from { opacity: .82; } }
 
 [data-plex-shows-panel] select,
 [data-plex-anime-panel] select {

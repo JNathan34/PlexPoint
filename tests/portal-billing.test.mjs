@@ -6,7 +6,7 @@ import { adminBillingResponse, billingResponse } from "../shared/portal/billing.
 import { adminUsersResponse } from "../shared/portal/admin.js";
 import { authResponse } from "../shared/portal/auth.js";
 
-const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql"];
+const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql", "0007_vip_addons.sql"];
 const password = "A very long unique passphrase";
 
 function setup(t) {
@@ -70,7 +70,18 @@ test("an admin assigns a plan, records payments and members see their own billin
   assert.equal(savedData.billing.subscription.tier, "Gold Tier");
   assert.equal(savedData.billing.currentPeriod.paymentStatus, "overdue");
   assert.equal(savedData.billing.currentPeriod.outstandingMinor, 500);
-  assert.equal(savedData.tiers.length, 6);
+  assert.equal(savedData.tiers.length, 7);
+  assert.equal(savedData.availableAddons.length, 3);
+
+  const addons = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "save_addons", userId: member.user.id,
+    addons: [{ id: "extra-movie", quantity: 2 }, { id: "extra-season", quantity: 1 }],
+  }), env);
+  assert.equal(addons.status, 200);
+  const addonData = await addons.json();
+  assert.deepEqual(addonData.billing.addons.map(({ id, quantity }) => ({ id, quantity })), [
+    { id: "extra-movie", quantity: 2 }, { id: "extra-season", quantity: 1 },
+  ]);
 
   const payment = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
     action: "record_payment", userId: member.user.id, amountMinor: 500,
@@ -89,10 +100,12 @@ test("an admin assigns a plan, records payments and members see their own billin
   assert.equal(memberData.billing.payments.length, 1);
   assert.equal(memberData.billing.payments[0].tier, "Gold Tier");
   assert.equal(memberData.billing.payments[0].amountMinor, 500);
+  assert.equal(memberData.billing.addons[0].name, "Extra Movie Request");
+  assert.equal(memberData.billing.addons[0].quantity, 2);
   assert.doesNotMatch(JSON.stringify(memberData), /recorded_by|actor_id|details_json|token_hash/i);
 
   const audit = sqlite.prepare("SELECT action FROM audit_events WHERE subject_user_id = ? ORDER BY created_at, action").all(member.user.id);
-  assert.deepEqual(audit.map((row) => row.action).sort(), ["billing.payment_recorded", "billing.plan_updated"]);
+  assert.deepEqual(audit.map((row) => row.action).sort(), ["billing.addons_updated", "billing.payment_recorded", "billing.plan_updated"]);
 });
 
 test("billing access is private and admin mutations are owner-only and same-origin", async (t) => {
@@ -103,7 +116,7 @@ test("billing access is private and admin mutations are owner-only and same-orig
 
   assert.equal((await billingResponse(getRequest("/api/portal/billing"), env)).status, 401);
   const own = await billingResponse(getRequest(`/api/portal/billing?userId=${second.user.id}`, first.cookie), env);
-  assert.deepEqual(await own.json(), { billing: { subscription: null, currentPeriod: null, payments: [] } });
+  assert.deepEqual(await own.json(), { billing: { subscription: null, currentPeriod: null, payments: [], addons: [] } });
 
   const forbidden = await adminBillingResponse(getRequest(`/api/portal/admin/billing?userId=${second.user.id}`, first.cookie), env);
   assert.equal(forbidden.status, 403);
@@ -149,4 +162,21 @@ test("the admin user list includes an automatically calculated payment state", a
   const listed = (await response.json()).users.find((account) => account.id === member.user.id);
   assert.equal(listed.billing.status, "overdue");
   assert.equal(listed.billing.outstandingMinor, 350);
+});
+
+test("VIP uses the normal entitlement flow without requiring a payment", async (t) => {
+  const { env } = setup(t);
+  const admin = await register(env, "jacobnathan1718@gmail.com", "Jacob");
+  const member = await register(env, "vip@example.test", "VIP Member");
+  const response = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "save_plan", userId: member.user.id, tierId: "vip", accessStatus: "enabled",
+    startsOn: "2026-09-01", nextDueOn: "2027-09-01",
+  }), env);
+  assert.equal(response.status, 200);
+  const data = await response.json();
+  assert.equal(data.billing.subscription.tier, "VIP");
+  assert.equal(data.billing.subscription.monthlyPriceMinor, 0);
+  assert.equal(data.billing.currentPeriod.amountDueMinor, 0);
+  assert.equal(data.billing.currentPeriod.paymentStatus, "paid");
+  assert.equal(data.billing.payments.length, 0);
 });
