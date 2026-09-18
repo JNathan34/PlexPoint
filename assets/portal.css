@@ -20,8 +20,13 @@
 .pp-site-nav { display: flex; align-items: center; gap: 12px; padding-inline: 16px; }
 .pp-brand { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; color: var(--foreground); transition: color 180ms; }
 .pp-brand:hover { color: var(--primary); }
-.pp-brand img { width: 40px; height: 40px; border-radius: 12px; box-shadow: 0 0 30px #ff7b0026, 0 0 45px #a855f718; }
+.pp-brand-mark { position: relative; display: inline-flex; }
+.pp-brand-glow { position: absolute; inset: -8px; border-radius: 16px; background: linear-gradient(135deg,#ff791a4d,#a855f733,#06b6d433); filter: blur(12px); opacity: .8; transition: opacity 180ms; }
+.pp-brand:hover .pp-brand-glow { opacity: 1; }
+.pp-brand img { position: relative; width: 40px; height: 40px; border-radius: 12px; object-fit: contain; box-shadow: none; transition: box-shadow 180ms; }
+.pp-brand:hover img { box-shadow: 0 10px 24px #ff791a4d; }
 .pp-brand > span { font-size: 20px; font-weight: 700; line-height: 28px; }
+.pp-brand > .pp-brand-mark { font-size: inherit; line-height: normal; }
 .pp-navigation { display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 999px; margin-left: auto; }
 .pp-navigation a { display: flex; align-items: center; justify-content: center; min-height: 36px; padding: 8px 20px; border-radius: 999px; font-size: 14px; line-height: 20px; font-weight: 500; white-space: nowrap; color: var(--muted-foreground); transition: background 180ms, color 180ms; }
 .pp-navigation a > span { display: none; }

@@ -46,6 +46,12 @@ for (const width of [360, 768, 1440]) {
 test("the main and account headers keep Account attached and the trial visible", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/");
+  const homeLogo = page.locator('[data-testid="logo-button"] img');
+  const homeLogoDetails = await homeLogo.evaluate((image) => {
+    const style = getComputedStyle(image);
+    const box = image.getBoundingClientRect();
+    return { src: image.getAttribute("src"), width: box.width, height: box.height, borderRadius: style.borderRadius, objectFit: style.objectFit };
+  });
   const desktopLink = page.locator('[data-testid="nav-account-link"]');
   await expect(desktopLink).toBeVisible();
   await expect(desktopLink).toHaveAttribute("href", "/account/");
@@ -53,6 +59,16 @@ test("the main and account headers keep Account attached and the trial visible",
   await expect(page.locator('[data-testid="nav-free-trial-link"]')).toBeVisible();
   await desktopLink.click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Your Account");
+  const accountBrand = page.locator('[data-testid="account-logo-link"]');
+  await expect(accountBrand).toContainText("PlexPoint");
+  await expect(accountBrand.locator(".pp-brand-glow")).toHaveCount(1);
+  await expect(accountBrand.locator("img")).toHaveAttribute("alt", "PlexPoint Logo");
+  const accountLogoDetails = await accountBrand.locator("img").evaluate((image) => {
+    const style = getComputedStyle(image);
+    const box = image.getBoundingClientRect();
+    return { src: image.getAttribute("src"), width: box.width, height: box.height, borderRadius: style.borderRadius, objectFit: style.objectFit };
+  });
+  expect(accountLogoDetails).toEqual(homeLogoDetails);
   const accountTrial = page.locator('[data-testid="account-trial-link"]');
   await expect(accountTrial).toBeVisible();
   await expect(accountTrial).toHaveAttribute("href", "https://wizarr.plexpoint.uk/j/FREE%20TRIAL");
