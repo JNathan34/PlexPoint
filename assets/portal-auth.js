@@ -214,7 +214,7 @@ async function loadWatchTime() {
     const hasWatchTime = data?.watchTime && Number.isFinite(Number(data.watchTime.seconds));
     byId("overview-watch-time").textContent = hasWatchTime ? durationText(data.watchTime.seconds) : "Not linked";
     byId("overview-watch-time-note").textContent = hasWatchTime
-      ? `${data.watchTime.plays} play${data.watchTime.plays === 1 ? "" : "s"} · Last 7 days`
+      ? "Last 7 days"
       : "No matching Tautulli user was found.";
   } catch {
     if (user?.id === userId) {
@@ -226,7 +226,7 @@ async function loadWatchTime() {
 
 function renderRequests(data) {
   if (!Array.isArray(data?.requests)) throw new Error("Recent requests returned an unexpected response.");
-  const rows = data.requests.map((item) => {
+  const rows = data.requests.slice(0, 4).map((item) => {
     const row = document.createElement("li");
     row.className = "pp-request-item";
     const posterUrl = safePosterUrl(item.posterUrl);
@@ -372,7 +372,7 @@ function renderBilling(data) {
   const paymentLabel = paymentLabels[paymentStatus] || "Payment status unavailable";
   const tier = subscription?.tierId || subscription?.tier;
   for (const id of ["overview-tier-icon", "profile-tier-icon"]) setTierBadge(id, tier);
-  renderPaymentRows("billing-payments", billing.payments.filter((payment) => payment.status !== "void"));
+  renderPaymentRows("billing-payments", billing.payments.filter((payment) => payment.status !== "void").slice(0, 4));
   byId("billing-results").hidden = false;
 
   byId("profile-plan").textContent = subscription?.tier || "No plan assigned";

@@ -94,6 +94,7 @@ test("recent requests are matched to the signed-in Plex user and sanitized", asy
     posterUrl: "https://image.tmdb.org/t/p/w185/poster.jpg",
   }] });
   assert.deepEqual(calls.map((call) => call.url.pathname), ["/api/v1/user", "/api/v1/user/42/requests", "/api/v1/movie/101"]);
+  assert.equal(calls[1].url.searchParams.get("take"), "4");
   assert.doesNotMatch(JSON.stringify(data), /plexToken|test-overseerr-key/i);
 });
 

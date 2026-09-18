@@ -88,14 +88,19 @@ test("ordinary accounts never request or reveal the admin dashboard", async ({ p
 test("members can see their plan, payment due state and confirmed payment history", async ({ page }) => {
   const start = Date.now() - 6 * 86400000;
   const due = Date.now() + 24 * 86400000;
+  const payments = Array.from({ length: 5 }, (_, index) => ({
+    id: `payment-${index}`, tierId: "gold", tier: "Gold Tier", amountMinor: 200, currency: "GBP",
+    status: "confirmed", method: "bank_transfer", receivedAt: start + (5 - index) * 3600000,
+    reference: null, periodStartsAt: start, periodEndsAt: due,
+  }));
   await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
     id: "member", email: "member@example.test", displayName: "Member", createdAt: start,
   } } }));
   await page.route("**/api/portal/billing", (route) => route.fulfill({ json: { billing: {
     subscription: { id: "sub", tierId: "gold", tier: "Gold Tier", accessStatus: "enabled", startsAt: start, endsAt: due, monthlyPriceMinor: 500, currency: "GBP" },
     currentPeriod: { id: "period", tierId: "gold", tier: "Gold Tier", startsAt: start, endsAt: due, amountDueMinor: 500, currency: "GBP", status: "open", confirmedMinor: 200, pendingMinor: 0, outstandingMinor: 300, creditMinor: 0, paymentStatus: "overdue" },
-    lastPayment: { id: "payment", tierId: "gold", tier: "Gold Tier", amountMinor: 200, currency: "GBP", status: "confirmed", method: "bank_transfer", receivedAt: start + 86400000, reference: null, periodStartsAt: start, periodEndsAt: due },
-    payments: [{ id: "payment", tierId: "gold", tier: "Gold Tier", amountMinor: 200, currency: "GBP", status: "confirmed", method: "bank_transfer", receivedAt: start + 86400000, reference: null, periodStartsAt: start, periodEndsAt: due }],
+    lastPayment: payments[0],
+    payments,
   } } }));
   await page.goto("/account/#account");
   await expect(page.locator("#billing-panel")).toBeVisible();
@@ -103,10 +108,10 @@ test("members can see their plan, payment due state and confirmed payment histor
   await expect(page.locator("#billing-panel")).not.toContainText("Your plan and payments");
   await expect(page.locator("#billing-summary, #billing-plan, #billing-state, #billing-balance")).toHaveCount(0);
   expect(await page.locator("#billing-history th").allTextContents()).toEqual(["Date", "Plan", "Amount", "Status"]);
-  await expect(page.locator("#billing-payments tr")).toHaveCount(1);
-  await expect(page.locator("#billing-payments tr")).toContainText("Gold Tier");
-  await expect(page.locator("#billing-payments tr")).toContainText("£2.00");
-  await expect(page.locator("#billing-payments tr")).toContainText("Confirmed");
+  await expect(page.locator("#billing-payments tr")).toHaveCount(4);
+  await expect(page.locator("#billing-payments tr").first()).toContainText("Gold Tier");
+  await expect(page.locator("#billing-payments tr").first()).toContainText("£2.00");
+  await expect(page.locator("#billing-payments tr").first()).toContainText("Confirmed");
   await expect(page.locator("#overview-plan")).toHaveText("Gold Tier");
   await expect(page.locator("#overview-payment")).toHaveText("Overdue");
   await expect(page.locator("#profile-plan")).toHaveText("Gold Tier");
@@ -191,7 +196,8 @@ test("the viewing panel stays removed while the summary shows seven-day watch ti
   await expect(page.getByText("What everyone’s watching", { exact: true })).toHaveCount(0);
   await expect(page.locator("#requests-panel")).toBeVisible();
   await expect(page.locator("#overview-watch-time")).toHaveText("2h 3m");
-  await expect(page.locator("#overview-watch-time-note")).toContainText("Last 7 days");
+  await expect(page.locator("#overview-watch-time-note")).toHaveText("Last 7 days");
+  await expect(page.locator("#overview-watch-time-note")).not.toContainText("plays");
   expect(activityRequests).toBe(1);
 });
 
@@ -199,9 +205,12 @@ test("members can see recent Overseerr requests", async ({ page }) => {
   await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
     id: "viewer", email: "viewer@example.test", displayName: "Viewer", createdAt: Date.now(), avatarUrl: "/api/portal/avatar",
   } } }));
-  await page.route("**/api/portal/requests", (route) => route.fulfill({ json: { requests: [{
-    id: 12, title: "The Weekly Film", type: "movie", year: 2026, requestedAt: Date.now(), status: "processing", posterUrl: null,
-  }] } }));
+  const requests = Array.from({ length: 5 }, (_, index) => ({
+    id: 12 + index, title: index === 0 ? "The Weekly Film" : `Request ${index + 1}`,
+    type: "movie", year: 2026, requestedAt: Date.now() - index * 86400000,
+    status: "processing", posterUrl: null,
+  }));
+  await page.route("**/api/portal/requests", (route) => route.fulfill({ json: { requests } }));
   await page.route("**/api/portal/activity?**", (route) => route.fulfill({ json: {
     range: "7", periodLabel: "Last 7 days", popularMovies: [], popularShows: [], watchTime: null,
   } }));
@@ -210,4 +219,6 @@ test("members can see recent Overseerr requests", async ({ page }) => {
   await expect(page.locator("#recent-requests")).toContainText("The Weekly Film");
   await expect(page.locator("#recent-requests")).toContainText("Processing");
   await expect(page.locator("#recent-requests")).toContainText("Requested today");
+  await expect(page.locator("#recent-requests .pp-request-item")).toHaveCount(4);
+  await expect(page.locator("#recent-requests")).not.toContainText("Request 5");
 });

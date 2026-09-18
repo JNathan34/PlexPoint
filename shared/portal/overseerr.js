@@ -130,8 +130,8 @@ export async function requestsResponse(request, env, fetcher = fetch) {
     const config = configuredOverseerr(env);
     const overseerrUser = await findOverseerrUser(config, current, fetcher);
     if (!overseerrUser || !Number.isInteger(Number(overseerrUser.id))) return reply({ requests: [] });
-    const payload = await overseerrJson(config, `user/${Number(overseerrUser.id)}/requests`, { take: 6, skip: 0 }, fetcher);
-    const recent = Array.isArray(payload.results) ? payload.results.slice(0, 6) : [];
+    const payload = await overseerrJson(config, `user/${Number(overseerrUser.id)}/requests`, { take: 4, skip: 0 }, fetcher);
+    const recent = Array.isArray(payload.results) ? payload.results.slice(0, 4) : [];
     return reply({ requests: await Promise.all(recent.map((item) => requestDetails(config, item, fetcher))) });
   } catch (error) {
     if (!(error instanceof AuthError)) console.error(JSON.stringify({
