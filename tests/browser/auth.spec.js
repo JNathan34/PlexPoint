@@ -109,6 +109,8 @@ test("members can see their plan, payment due state and confirmed payment histor
   await expect(page.locator("#billing-summary, #billing-plan, #billing-state, #billing-balance")).toHaveCount(0);
   expect(await page.locator("#billing-history th").allTextContents()).toEqual(["Date", "Plan", "Amount", "Status"]);
   await expect(page.locator("#billing-payments tr")).toHaveCount(4);
+  await expect(page.locator("#billing-view-all")).toBeVisible();
+  await expect(page.locator("#billing-view-all")).toHaveText("View all →");
   await expect(page.locator("#billing-payments tr").first()).toContainText("Gold Tier");
   await expect(page.locator("#billing-payments tr").first()).toContainText("£2.00");
   await expect(page.locator("#billing-payments tr").first()).toContainText("Confirmed");
@@ -117,6 +119,17 @@ test("members can see their plan, payment due state and confirmed payment histor
   await expect(page.locator("#profile-plan")).toHaveText("Gold Tier");
   await expect(page.locator("#profile-renewal")).toContainText("24 days left");
   await expect(page.locator("#profile-payment-state")).toHaveText("Overdue");
+  const columnOffsets = await page.locator("#billing-history").evaluate((history) => {
+    const headings = [...history.querySelectorAll("th")];
+    const cells = [...history.querySelectorAll("tbody tr:first-child td")];
+    return headings.map((heading, index) => Math.abs(heading.getBoundingClientRect().left - cells[index].getBoundingClientRect().left));
+  });
+  expect(columnOffsets.every((offset) => offset < 1)).toBe(true);
+  await page.locator("#billing-view-all").click();
+  await expect(page.locator("#billing-payments tr")).toHaveCount(5);
+  await expect(page.locator("#billing-view-all")).toHaveText("Show latest 4 ↑");
+  await page.locator("#billing-view-all").click();
+  await expect(page.locator("#billing-payments tr")).toHaveCount(4);
   const iconStyles = await page.locator(".pp-metric > span svg").evaluateAll((icons) => icons.map((icon) => ({
     color: getComputedStyle(icon).color,
     strokeWidth: Number.parseFloat(getComputedStyle(icon).strokeWidth),

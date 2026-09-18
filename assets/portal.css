@@ -96,8 +96,8 @@
 .pp-profile-membership dt { display: inline-flex; align-items: center; gap: 9px; color: #aab5c5; }
 .pp-profile-membership dt .pp-icon { width: 16px; height: 16px; color: #d5dae2; }
 .pp-profile-membership dd { color: #ecf0f6; font-weight: 500; text-align: right; overflow-wrap: anywhere; }
-.pp-dashboard-detail-grid { display: grid; grid-template-columns: var(--pp-dashboard-columns); align-items: stretch; gap: 20px; margin-top: 20px; }
-.pp-dashboard-detail-grid > .pp-card { height: 100%; }
+.pp-dashboard-detail-grid { display: grid; grid-template-columns: var(--pp-dashboard-columns); align-items: start; gap: 20px; margin-top: 20px; }
+.pp-dashboard-detail-grid > .pp-card { height: auto; }
 .pp-dashboard-detail-grid .pp-viewing-heading { align-items: flex-start; flex-direction: column; }
 .pp-dashboard-detail-grid .pp-viewing-grid { grid-template-columns: 1fr 1fr; }
 .pp-dashboard-detail-grid .pp-watch-time { grid-column: 1 / -1; min-height: 110px; }
@@ -147,11 +147,12 @@
 .pp-request-empty { padding: 24px 10px; color: var(--muted-foreground); text-align: center; }
 #requests-status[data-error="true"] { color: #ffb5a5; }
 #requests-retry { margin-top: 12px; }
-.pp-billing-panel { margin-top: 0; padding: 22px; scroll-margin-top: 96px; }
+.pp-billing-panel { margin-top: 0; padding: 16px; scroll-margin-top: 96px; }
 .pp-payment-history-heading { display: flex; align-items: center; gap: 10px; }
 .pp-payment-history-heading .pp-icon-tile { width: 30px; height: 30px; border: 0; color: var(--primary); background: transparent; }
 .pp-payment-history-heading .pp-icon { width: 22px; height: 22px; stroke-width: 2.25; }
 .pp-payment-history-heading h2 { font-size: 21px; font-weight: 600; }
+.pp-payment-history-heading .pp-text-link { margin-left: auto; padding: 0; border: 0; background: transparent; white-space: nowrap; }
 .pp-billing-state { display: inline-flex; align-items: center; width: max-content; padding: 5px 10px; border: 1px solid #ffffff1f; border-radius: 999px; color: #cbd5e1; background: #ffffff08; font-size: 11px; font-weight: 600; text-transform: capitalize; white-space: nowrap; }
 .pp-billing-state[data-status="paid"], .pp-billing-state[data-status="confirmed"] { border-color: #67db9a55; color: #91edb8; background: #67db9a12; }
 .pp-billing-state[data-status="due_soon"], .pp-billing-state[data-status="partially_paid"], .pp-billing-state[data-status="pending"] { border-color: #fbbf2455; color: #fbd278; background: #fbbf2412; }
@@ -159,7 +160,12 @@
 .pp-payment-history { margin-top: 12px; scroll-margin-top: 100px; }
 .pp-payment-history :is(h3,h4) { font-size: 16px; font-weight: 600; }
 .pp-payment-history > .pp-admin-table-wrap { margin-top: 0; }
-.pp-member-payment-table { min-width: 560px; }
+.pp-member-payment-table { min-width: 560px; table-layout: fixed; }
+.pp-admin-table.pp-member-payment-table :is(th,td) { padding: 11px 14px; text-align: left; }
+.pp-admin-table.pp-member-payment-table :is(th,td):nth-child(1) { width: 25%; }
+.pp-admin-table.pp-member-payment-table :is(th,td):nth-child(2) { width: 30%; }
+.pp-admin-table.pp-member-payment-table :is(th,td):nth-child(3) { width: 24%; }
+.pp-admin-table.pp-member-payment-table :is(th,td):nth-child(4) { width: 21%; text-align: left; }
 #billing-status[data-error="true"], #admin-billing-status[data-error="true"] { color: #ffb5a5; }
 #billing-retry { margin-top: 12px; }
 .pp-admin-panel { margin-top: 20px; padding: 24px; }

@@ -11,6 +11,8 @@ let requestsBusy = false;
 let billingBusy = false;
 let adminBillingBusy = false;
 let adminBillingData = null;
+let memberPayments = [];
+let memberPaymentsExpanded = false;
 const returnUrl = new URL(location.href);
 let plexReturning = returnUrl.searchParams.get("plex") === "return";
 if (plexReturning) {
@@ -151,6 +153,9 @@ function renderUser(next) {
     byId("billing-results").hidden = true;
     byId("billing-status").textContent = "";
     byId("billing-payments").replaceChildren();
+    byId("billing-view-all").hidden = true;
+    memberPayments = [];
+    memberPaymentsExpanded = false;
     byId("overview-plan").textContent = "Sign in to view";
     byId("overview-plan-note").textContent = "Your current plan and access status appear here.";
     byId("overview-renewal").textContent = "Sign in to view";
@@ -363,6 +368,14 @@ function renderPaymentRows(target, payments, admin = false) {
   byId(target).replaceChildren(...rows);
 }
 
+function renderMemberPayments() {
+  renderPaymentRows("billing-payments", memberPaymentsExpanded ? memberPayments : memberPayments.slice(0, 4));
+  const toggle = byId("billing-view-all");
+  toggle.hidden = memberPayments.length <= 4;
+  toggle.textContent = memberPaymentsExpanded ? "Show latest 4 ↑" : "View all →";
+  toggle.setAttribute("aria-expanded", String(memberPaymentsExpanded));
+}
+
 function renderBilling(data) {
   const billing = data?.billing;
   if (!billing || !Array.isArray(billing.payments)) throw new Error("Membership details returned an unexpected response.");
@@ -372,7 +385,9 @@ function renderBilling(data) {
   const paymentLabel = paymentLabels[paymentStatus] || "Payment status unavailable";
   const tier = subscription?.tierId || subscription?.tier;
   for (const id of ["overview-tier-icon", "profile-tier-icon"]) setTierBadge(id, tier);
-  renderPaymentRows("billing-payments", billing.payments.filter((payment) => payment.status !== "void").slice(0, 4));
+  memberPayments = billing.payments.filter((payment) => payment.status !== "void");
+  memberPaymentsExpanded = false;
+  renderMemberPayments();
   byId("billing-results").hidden = false;
 
   byId("profile-plan").textContent = subscription?.tier || "No plan assigned";
@@ -771,6 +786,10 @@ async function initializeSession() {
 byId("auth-retry").addEventListener("click", () => void initializeSession());
 byId("admin-retry").addEventListener("click", () => void loadAdminUsers());
 byId("billing-retry").addEventListener("click", () => void loadBilling());
+byId("billing-view-all").addEventListener("click", () => {
+  memberPaymentsExpanded = !memberPaymentsExpanded;
+  renderMemberPayments();
+});
 byId("requests-retry").addEventListener("click", () => void loadRequests());
 byId("admin-users").addEventListener("click", (event) => {
   const button = event.target.closest("button[data-user-id]");
