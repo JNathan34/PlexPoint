@@ -250,7 +250,7 @@ function renderRequests(data) {
     detail.textContent = `${item.type === "tv" ? "TV show" : "Movie"}${item.year ? ` · ${item.year}` : ""} · ${requestedText(item.requestedAt)}`;
     copy.append(title, detail);
     const state = document.createElement("span");
-    state.className = "pp-request-state";
+    state.className = "pp-billing-state pp-request-state";
     state.dataset.status = item.status || "unknown";
     state.textContent = requestStatusLabels[item.status] || requestStatusLabels.unknown;
     const arrow = document.createElement("span");

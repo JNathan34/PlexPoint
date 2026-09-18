@@ -221,4 +221,21 @@ test("members can see recent Overseerr requests", async ({ page }) => {
   await expect(page.locator("#recent-requests")).toContainText("Requested today");
   await expect(page.locator("#recent-requests .pp-request-item")).toHaveCount(4);
   await expect(page.locator("#recent-requests")).not.toContainText("Request 5");
+  const requestStatus = page.locator(".pp-request-state").first();
+  await expect(requestStatus).toHaveClass(/pp-billing-state/);
+  const requestShape = await requestStatus.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      padding: style.padding,
+      borderRadius: style.borderRadius,
+      borderWidth: style.borderWidth,
+      fontSize: style.fontSize,
+      fontWeight: style.fontWeight,
+      marker: getComputedStyle(element, "::before").content,
+    };
+  });
+  expect(requestShape).toEqual({
+    padding: "5px 10px", borderRadius: "999px", borderWidth: "1px",
+    fontSize: "11px", fontWeight: "600", marker: "none",
+  });
 });
