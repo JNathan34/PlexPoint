@@ -90,7 +90,7 @@ test("members can see their plan, payment due state and confirmed payment histor
   const due = Date.now() + 24 * 86400000;
   const payments = Array.from({ length: 5 }, (_, index) => ({
     id: `payment-${index}`, tierId: "gold", tier: "Gold Tier", amountMinor: 200, currency: "GBP",
-    status: "confirmed", method: "bank_transfer", receivedAt: start + (5 - index) * 3600000,
+    status: index === 1 ? "pending" : "confirmed", method: "bank_transfer", receivedAt: start + (5 - index) * 3600000,
     reference: null, periodStartsAt: start, periodEndsAt: due,
   }));
   await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
@@ -102,6 +102,7 @@ test("members can see their plan, payment due state and confirmed payment histor
     lastPayment: payments[0],
     payments,
   } } }));
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/account/#account");
   await expect(page.locator("#billing-panel")).toBeVisible();
   await expect(page.locator("#billing-heading")).toHaveText("Recent payments");
@@ -113,7 +114,9 @@ test("members can see their plan, payment due state and confirmed payment histor
   await expect(page.locator("#billing-view-all")).toHaveText("View all →");
   await expect(page.locator("#billing-payments tr").first()).toContainText("Gold Tier");
   await expect(page.locator("#billing-payments tr").first()).toContainText("£2.00");
-  await expect(page.locator("#billing-payments tr").first()).toContainText("Confirmed");
+  await expect(page.locator("#billing-payments tr").first()).toContainText("Paid");
+  await expect(page.locator("#billing-payments tr").nth(1)).toContainText("Not paid");
+  await expect(page.locator("#billing-payments")).not.toContainText("Confirmed");
   await expect(page.locator("#overview-plan")).toHaveText("Gold Tier");
   await expect(page.locator("#overview-payment")).toHaveText("Overdue");
   await expect(page.locator("#profile-plan")).toHaveText("Gold Tier");
@@ -125,6 +128,21 @@ test("members can see their plan, payment due state and confirmed payment histor
     return headings.map((heading, index) => Math.abs(heading.getBoundingClientRect().left - cells[index].getBoundingClientRect().left));
   });
   expect(columnOffsets.every((offset) => offset < 1)).toBe(true);
+  const tableStyle = await page.locator("#billing-history .pp-admin-table-wrap").evaluate((wrapper) => {
+    const style = getComputedStyle(wrapper);
+    return { borderTopWidth: style.borderTopWidth, borderRadius: style.borderRadius };
+  });
+  expect(tableStyle).toEqual({ borderTopWidth: "0px", borderRadius: "0px" });
+  const planAlignment = await page.locator("#billing-history").evaluate((history) => ({
+    heading: getComputedStyle(history.querySelector("th:nth-child(2)")).textAlign,
+    value: getComputedStyle(history.querySelector("tbody td:nth-child(2)")).textAlign,
+  }));
+  expect(planAlignment).toEqual({ heading: "center", value: "center" });
+  const panelHeights = await page.locator(".pp-dashboard-detail-grid").evaluate((grid) => ({
+    payments: grid.querySelector("#billing-panel").getBoundingClientRect().height,
+    requests: grid.querySelector("#requests-panel").getBoundingClientRect().height,
+  }));
+  expect(Math.abs(panelHeights.payments - panelHeights.requests)).toBeLessThan(1);
   await page.locator("#billing-view-all").click();
   await expect(page.locator("#billing-payments tr")).toHaveCount(5);
   await expect(page.locator("#billing-view-all")).toHaveText("Show latest 4 ↑");

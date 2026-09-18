@@ -96,8 +96,8 @@
 .pp-profile-membership dt { display: inline-flex; align-items: center; gap: 9px; color: #aab5c5; }
 .pp-profile-membership dt .pp-icon { width: 16px; height: 16px; color: #d5dae2; }
 .pp-profile-membership dd { color: #ecf0f6; font-weight: 500; text-align: right; overflow-wrap: anywhere; }
-.pp-dashboard-detail-grid { display: grid; grid-template-columns: var(--pp-dashboard-columns); align-items: start; gap: 20px; margin-top: 20px; }
-.pp-dashboard-detail-grid > .pp-card { height: auto; }
+.pp-dashboard-detail-grid { display: grid; grid-template-columns: var(--pp-dashboard-columns); align-items: stretch; gap: 20px; margin-top: 20px; }
+.pp-dashboard-detail-grid > .pp-card { height: 100%; }
 .pp-dashboard-detail-grid .pp-viewing-heading { align-items: flex-start; flex-direction: column; }
 .pp-dashboard-detail-grid .pp-viewing-grid { grid-template-columns: 1fr 1fr; }
 .pp-dashboard-detail-grid .pp-watch-time { grid-column: 1 / -1; min-height: 110px; }
@@ -159,11 +159,11 @@
 .pp-billing-state[data-status="overdue"], .pp-billing-state[data-status="void"] { border-color: #fb718555; color: #fda4af; background: #fb718512; }
 .pp-payment-history { margin-top: 12px; scroll-margin-top: 100px; }
 .pp-payment-history :is(h3,h4) { font-size: 16px; font-weight: 600; }
-.pp-payment-history > .pp-admin-table-wrap { margin-top: 0; }
+.pp-payment-history > .pp-admin-table-wrap { margin-top: 0; border: 0; border-radius: 0; }
 .pp-member-payment-table { min-width: 560px; table-layout: fixed; }
 .pp-admin-table.pp-member-payment-table :is(th,td) { padding: 11px 14px; text-align: left; }
 .pp-admin-table.pp-member-payment-table :is(th,td):nth-child(1) { width: 25%; }
-.pp-admin-table.pp-member-payment-table :is(th,td):nth-child(2) { width: 30%; }
+.pp-admin-table.pp-member-payment-table :is(th,td):nth-child(2) { width: 30%; text-align: center; }
 .pp-admin-table.pp-member-payment-table :is(th,td):nth-child(3) { width: 24%; }
 .pp-admin-table.pp-member-payment-table :is(th,td):nth-child(4) { width: 21%; text-align: left; }
 #billing-status[data-error="true"], #admin-billing-status[data-error="true"] { color: #ffb5a5; }

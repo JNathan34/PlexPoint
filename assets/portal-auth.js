@@ -340,7 +340,9 @@ function renderPaymentRows(target, payments, admin = false) {
     const badge = document.createElement("span");
     badge.className = "pp-billing-state";
     badge.dataset.status = payment.status;
-    badge.textContent = payment.status === "confirmed" ? "Confirmed" : payment.status;
+    badge.textContent = admin
+      ? (payment.status === "confirmed" ? "Confirmed" : payment.status)
+      : (payment.status === "confirmed" ? "Paid" : "Not paid");
     statusCell.append(badge);
     row.append(statusCell);
     if (admin) {
