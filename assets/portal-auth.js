@@ -85,7 +85,9 @@ function tierBadge(value, extraClass = "") {
 
 function setTierBadge(id, value) {
   const badge = byId(id);
-  badge.dataset.tier = tierKey(value);
+  const key = tierKey(value);
+  badge.dataset.tier = key;
+  if (id === "overview-tier-icon") badge.closest(".pp-metric")?.setAttribute("data-tier", key);
   badge.replaceChildren(tierSvg(value));
 }
 

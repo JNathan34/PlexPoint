@@ -152,8 +152,20 @@ test("members can see their plan, payment due state and confirmed payment histor
     color: getComputedStyle(icon).color,
     strokeWidth: Number.parseFloat(getComputedStyle(icon).strokeWidth),
   })));
-  expect(new Set(iconStyles.map((style) => style.color)).size).toBe(1);
+  expect(iconStyles.map((style) => style.color)).toEqual([
+    "rgb(253, 224, 71)",
+    "rgb(249, 115, 22)",
+    "rgb(34, 197, 94)",
+    "rgb(168, 85, 247)",
+  ]);
   expect(iconStyles.every((style) => style.strokeWidth >= 2.2)).toBe(true);
+  const cardAccents = await page.locator(".pp-metric").evaluateAll((cards) => cards.map((card) => {
+    const style = getComputedStyle(card);
+    return { border: style.borderTopColor, background: style.backgroundImage };
+  }));
+  expect(new Set(cardAccents.map((style) => style.border)).size).toBe(4);
+  expect(new Set(cardAccents.map((style) => style.background)).size).toBe(4);
+  await expect(page.locator(".pp-metric-plan")).toHaveAttribute("data-tier", "gold");
   await expect(page.locator("#profile-access, #auth-user-since")).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveCount(0);
 });
@@ -191,6 +203,7 @@ test("profile styling and plan icons follow the member's current tier", async ({
     const membershipStyle = getComputedStyle(document.querySelector(".pp-profile-membership"));
     return {
       profileIconColor: getComputedStyle(profileIcon).color,
+      overviewIconColor: getComputedStyle(overviewIcon).color,
       profileIconPath: profileIcon.querySelector("path").getAttribute("d"),
       profileIconSize: [profileBox.width, profileBox.height],
       overviewIconSize: [overviewBox.width, overviewBox.height],
@@ -200,6 +213,7 @@ test("profile styling and plan icons follow the member's current tier", async ({
     };
   });
   expect(tierPresentation.profileIconColor).toBe(membershipTierColor);
+  expect(tierPresentation.overviewIconColor).toBe(membershipTierColor);
   expect(tierPresentation.profileIconPath).toBe("M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z");
   expect(tierPresentation.profileIconSize).toEqual([42, 42]);
   expect(tierPresentation.overviewIconSize).toEqual([30, 30]);
