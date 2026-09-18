@@ -125,7 +125,7 @@ function renderUser(next) {
     byId("auth-user-name").textContent = user.displayName;
     byId("auth-user-email").textContent = user.email;
     configureAvatar(profileAvatar, user.avatarUrl || user.plex?.avatarUrl, user.displayName, profileAvatar.parentElement);
-    for (const id of ["overview-tier-icon", "profile-tier-icon", "billing-tier-icon"]) setTierBadge(id, null);
+    for (const id of ["overview-tier-icon", "profile-tier-icon"]) setTierBadge(id, null);
     byId("profile-plan").textContent = "Loading membership…";
     byId("profile-plan-note").textContent = "Checking your plan and payment details";
     byId("profile-renewal").textContent = "—";
@@ -134,7 +134,7 @@ function renderUser(next) {
     byId("profile-payment-state").dataset.status = "none";
   } else {
     configureAvatar(profileAvatar, "", "", profileAvatar.parentElement);
-    for (const id of ["overview-tier-icon", "profile-tier-icon", "billing-tier-icon"]) setTierBadge(id, null);
+    for (const id of ["overview-tier-icon", "profile-tier-icon"]) setTierBadge(id, null);
     for (const id of ["auth-user-name", "auth-user-email"]) byId(id).textContent = "";
     byId("admin-users").replaceChildren();
     byId("admin-table-wrap").hidden = true;
@@ -151,8 +151,6 @@ function renderUser(next) {
     byId("billing-results").hidden = true;
     byId("billing-status").textContent = "";
     byId("billing-payments").replaceChildren();
-    byId("billing-state").textContent = "No plan";
-    byId("billing-state").dataset.status = "none";
     byId("overview-plan").textContent = "Sign in to view";
     byId("overview-plan-note").textContent = "Your current plan and access status appear here.";
     byId("overview-renewal").textContent = "Sign in to view";
@@ -325,10 +323,14 @@ function renderPaymentRows(target, payments, admin = false) {
   const rows = payments.map((payment) => {
     const row = document.createElement("tr");
     tableTextCell(row, dateText(payment.receivedAt));
-    tableTextCell(row, moneyText(payment.amountMinor, payment.currency));
-    tableTextCell(row, methodLabels[payment.method] || payment.method);
-    if (admin) tableTextCell(row, payment.reference || "—");
-    else tableTextCell(row, `${dateText(payment.periodStartsAt)} – ${dateText(payment.periodEndsAt)}`);
+    if (admin) {
+      tableTextCell(row, moneyText(payment.amountMinor, payment.currency));
+      tableTextCell(row, methodLabels[payment.method] || payment.method);
+      tableTextCell(row, payment.reference || "—");
+    } else {
+      tableTextCell(row, payment.tier || "—");
+      tableTextCell(row, moneyText(payment.amountMinor, payment.currency));
+    }
     const statusCell = document.createElement("td");
     const badge = document.createElement("span");
     badge.className = "pp-billing-state";
@@ -353,7 +355,7 @@ function renderPaymentRows(target, payments, admin = false) {
   if (!rows.length) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
-    cell.colSpan = admin ? 6 : 5;
+    cell.colSpan = admin ? 6 : 4;
     cell.textContent = "No payments have been recorded yet.";
     row.append(cell);
     rows.push(row);
@@ -368,27 +370,19 @@ function renderBilling(data) {
   const period = billing.currentPeriod;
   const paymentStatus = period?.paymentStatus || "none";
   const paymentLabel = paymentLabels[paymentStatus] || "Payment status unavailable";
-  const state = byId("billing-state");
-  state.textContent = paymentLabel;
-  state.dataset.status = paymentStatus;
-  byId("billing-plan").textContent = subscription?.tier || "No plan assigned";
   const tier = subscription?.tierId || subscription?.tier;
-  for (const id of ["overview-tier-icon", "profile-tier-icon", "billing-tier-icon"]) setTierBadge(id, tier);
-  byId("billing-access").textContent = subscription ? (accessLabels[subscription.accessStatus] || subscription.accessStatus) : "Contact Jacob to choose a plan";
-  byId("billing-last-paid").textContent = billing.lastPayment ? dateText(billing.lastPayment.receivedAt) : "No payment recorded";
-  byId("billing-last-amount").textContent = billing.lastPayment
-    ? `${moneyText(billing.lastPayment.amountMinor, billing.lastPayment.currency)} · ${methodLabels[billing.lastPayment.method] || billing.lastPayment.method}` : "—";
-  byId("billing-next-due").textContent = period ? dateText(period.endsAt) : "Not scheduled";
-  byId("billing-balance").textContent = period
-    ? period.creditMinor > 0 ? `${moneyText(period.creditMinor, period.currency)} credit`
-      : `${moneyText(period.outstandingMinor, period.currency)} outstanding` : "No active billing period";
+  for (const id of ["overview-tier-icon", "profile-tier-icon"]) setTierBadge(id, tier);
   renderPaymentRows("billing-payments", billing.payments.filter((payment) => payment.status !== "void"));
   byId("billing-results").hidden = false;
 
   byId("profile-plan").textContent = subscription?.tier || "No plan assigned";
   byId("profile-plan-note").textContent = subscription
     ? (accessLabels[subscription.accessStatus] || subscription.accessStatus) : "Contact Jacob to choose a plan";
-  byId("profile-renewal").textContent = period ? dateText(period.endsAt) : "Not scheduled";
+  const days = period ? Math.ceil((period.endsAt - Date.now()) / 86_400_000) : null;
+  const renewalSuffix = days == null ? "" : days < 0
+    ? ` (${Math.abs(days)} day${Math.abs(days) === 1 ? "" : "s"} overdue)`
+    : days === 0 ? " (due today)" : ` (${days} day${days === 1 ? "" : "s"} left)`;
+  byId("profile-renewal").textContent = period ? `${dateText(period.endsAt)}${renewalSuffix}` : "Not scheduled";
   byId("profile-last-payment").textContent = billing.lastPayment
     ? `${dateText(billing.lastPayment.receivedAt)} · ${moneyText(billing.lastPayment.amountMinor, billing.lastPayment.currency)}` : "None recorded";
   byId("profile-payment-state").textContent = paymentLabel;
@@ -396,7 +390,6 @@ function renderBilling(data) {
   byId("overview-plan").textContent = subscription?.tier || "No plan";
   byId("overview-plan-note").textContent = subscription ? (accessLabels[subscription.accessStatus] || subscription.accessStatus) : "No membership has been assigned yet.";
   if (period) {
-    const days = Math.ceil((period.endsAt - Date.now()) / 86_400_000);
     byId("overview-renewal").textContent = days < 0 ? "Overdue" : days === 0 ? "Due today" : `${days} day${days === 1 ? "" : "s"} left`;
     byId("overview-renewal-note").textContent = `Renews ${dateText(period.endsAt)}`;
   } else {

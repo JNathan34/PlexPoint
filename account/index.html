@@ -13,8 +13,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/index-GJ5txONd.css" />
-    <link rel="stylesheet" href="/assets/portal.css?v=20260917-account-3" />
-    <script type="module" src="/assets/portal-auth.js?v=20260917-account-3"></script>
+    <link rel="stylesheet" href="/assets/portal.css?v=20260918-account-4" />
+    <script type="module" src="/assets/portal-auth.js?v=20260918-account-4"></script>
     <script type="module" src="/assets/portal-navigation.js?v=20260916-dashboard-1"></script>
     <script type="module" src="/assets/portal.js?v=20260916-account-only-3"></script>
   </head>
@@ -73,15 +73,10 @@
               </div>
               <div class="pp-dashboard-detail-grid">
                 <section id="billing-panel" class="pp-card glass-card pp-billing-panel" aria-labelledby="billing-heading" hidden>
-              <div class="pp-billing-heading"><div><span class="pp-badge">MEMBERSHIP</span><h2 id="billing-heading">Your plan and payments</h2><p>Your membership is managed manually. No card or bank details are stored here.</p></div><span id="billing-state" class="pp-billing-state" data-status="none">No plan</span></div>
+              <div class="pp-payment-history-heading"><span class="pp-icon-tile" data-icon="payment" aria-hidden="true"></span><h2 id="billing-heading">Recent payments</h2></div>
               <p id="billing-status" class="pp-small" role="status"></p><button id="billing-retry" type="button" class="pp-button" hidden>Retry membership</button>
               <div id="billing-results" hidden>
-                <div class="pp-billing-summary">
-                  <article class="pp-billing-plan-summary"><span id="billing-tier-icon" class="pp-tier-icon pp-tier-icon-small" data-tier="none" aria-hidden="true"></span><div><span>Current plan</span><strong id="billing-plan">—</strong><small id="billing-access">—</small></div></article>
-                  <article><span>Last payment</span><strong id="billing-last-paid">—</strong><small id="billing-last-amount">—</small></article>
-                  <article><span>Next payment due</span><strong id="billing-next-due">—</strong><small id="billing-balance">—</small></article>
-                </div>
-                <div id="billing-history" class="pp-payment-history"><h3>Recent payments</h3><div class="pp-admin-table-wrap"><table class="pp-admin-table"><thead><tr><th scope="col">Date paid</th><th scope="col">Amount</th><th scope="col">Method</th><th scope="col">Billing period</th><th scope="col">Status</th></tr></thead><tbody id="billing-payments"></tbody></table></div></div>
+                <div id="billing-history" class="pp-payment-history"><div class="pp-admin-table-wrap"><table class="pp-admin-table pp-member-payment-table"><thead><tr><th scope="col">Date</th><th scope="col">Plan</th><th scope="col">Amount</th><th scope="col">Status</th></tr></thead><tbody id="billing-payments"></tbody></table></div></div>
               </div>
                 </section>
                 <section id="requests-panel" class="pp-card glass-card pp-requests-panel" aria-labelledby="requests-heading" hidden>

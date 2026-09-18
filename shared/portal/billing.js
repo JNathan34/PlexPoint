@@ -64,6 +64,8 @@ function mapPeriod(row, now) {
 function mapPayment(row) {
   return {
     id: row.id,
+    tierId: row.tier_id,
+    tier: row.tier_name,
     amountMinor: Number(row.amount_minor),
     currency: row.currency,
     status: row.status,
@@ -101,9 +103,10 @@ export async function billingForUser(db, userId, { includeVoided = false, now = 
 
   const paymentResult = await db.prepare(`SELECT
     p.id, p.amount_minor, p.currency, p.status, p.method, p.received_at, p.provider_payment_id,
-    bp.starts_at AS period_starts_at, bp.ends_at AS period_ends_at
+    bp.tier_id, t.name AS tier_name, bp.starts_at AS period_starts_at, bp.ends_at AS period_ends_at
     FROM payments p
     JOIN billing_periods bp ON bp.id = p.billing_period_id
+    JOIN subscription_tiers t ON t.id = bp.tier_id
     WHERE bp.subscription_id = ? ${includeVoided ? "" : "AND p.status != 'void'"}
     ORDER BY COALESCE(p.received_at, p.created_at) DESC, p.created_at DESC LIMIT 50`).bind(subscription.id).all();
   const payments = (paymentResult.results || []).map(mapPayment);

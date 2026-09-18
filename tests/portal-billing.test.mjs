@@ -87,6 +87,7 @@ test("an admin assigns a plan, records payments and members see their own billin
   const memberData = await memberView.json();
   assert.equal(memberData.billing.subscription.tierId, "gold");
   assert.equal(memberData.billing.payments.length, 1);
+  assert.equal(memberData.billing.payments[0].tier, "Gold Tier");
   assert.equal(memberData.billing.payments[0].amountMinor, 500);
   assert.doesNotMatch(JSON.stringify(memberData), /recorded_by|actor_id|details_json|token_hash/i);
 

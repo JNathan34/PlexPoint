@@ -86,27 +86,38 @@ test("ordinary accounts never request or reveal the admin dashboard", async ({ p
 });
 
 test("members can see their plan, payment due state and confirmed payment history", async ({ page }) => {
-  const start = Date.UTC(2026, 7, 1);
-  const due = Date.UTC(2026, 8, 1);
+  const start = Date.now() - 6 * 86400000;
+  const due = Date.now() + 24 * 86400000;
   await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
     id: "member", email: "member@example.test", displayName: "Member", createdAt: start,
   } } }));
   await page.route("**/api/portal/billing", (route) => route.fulfill({ json: { billing: {
     subscription: { id: "sub", tierId: "gold", tier: "Gold Tier", accessStatus: "enabled", startsAt: start, endsAt: due, monthlyPriceMinor: 500, currency: "GBP" },
     currentPeriod: { id: "period", tierId: "gold", tier: "Gold Tier", startsAt: start, endsAt: due, amountDueMinor: 500, currency: "GBP", status: "open", confirmedMinor: 200, pendingMinor: 0, outstandingMinor: 300, creditMinor: 0, paymentStatus: "overdue" },
-    lastPayment: { id: "payment", amountMinor: 200, currency: "GBP", status: "confirmed", method: "bank_transfer", receivedAt: start + 86400000, reference: null, periodStartsAt: start, periodEndsAt: due },
-    payments: [{ id: "payment", amountMinor: 200, currency: "GBP", status: "confirmed", method: "bank_transfer", receivedAt: start + 86400000, reference: null, periodStartsAt: start, periodEndsAt: due }],
+    lastPayment: { id: "payment", tierId: "gold", tier: "Gold Tier", amountMinor: 200, currency: "GBP", status: "confirmed", method: "bank_transfer", receivedAt: start + 86400000, reference: null, periodStartsAt: start, periodEndsAt: due },
+    payments: [{ id: "payment", tierId: "gold", tier: "Gold Tier", amountMinor: 200, currency: "GBP", status: "confirmed", method: "bank_transfer", receivedAt: start + 86400000, reference: null, periodStartsAt: start, periodEndsAt: due }],
   } } }));
   await page.goto("/account/#account");
   await expect(page.locator("#billing-panel")).toBeVisible();
-  await expect(page.locator("#billing-plan")).toHaveText("Gold Tier");
-  await expect(page.locator("#billing-state")).toHaveText("Overdue");
-  await expect(page.locator("#billing-balance")).toContainText("£3.00 outstanding");
+  await expect(page.locator("#billing-heading")).toHaveText("Recent payments");
+  await expect(page.locator("#billing-panel")).not.toContainText("Your plan and payments");
+  await expect(page.locator("#billing-summary, #billing-plan, #billing-state, #billing-balance")).toHaveCount(0);
+  expect(await page.locator("#billing-history th").allTextContents()).toEqual(["Date", "Plan", "Amount", "Status"]);
   await expect(page.locator("#billing-payments tr")).toHaveCount(1);
+  await expect(page.locator("#billing-payments tr")).toContainText("Gold Tier");
+  await expect(page.locator("#billing-payments tr")).toContainText("£2.00");
+  await expect(page.locator("#billing-payments tr")).toContainText("Confirmed");
   await expect(page.locator("#overview-plan")).toHaveText("Gold Tier");
   await expect(page.locator("#overview-payment")).toHaveText("Overdue");
   await expect(page.locator("#profile-plan")).toHaveText("Gold Tier");
+  await expect(page.locator("#profile-renewal")).toContainText("24 days left");
   await expect(page.locator("#profile-payment-state")).toHaveText("Overdue");
+  const iconStyles = await page.locator(".pp-metric > span svg").evaluateAll((icons) => icons.map((icon) => ({
+    color: getComputedStyle(icon).color,
+    strokeWidth: Number.parseFloat(getComputedStyle(icon).strokeWidth),
+  })));
+  expect(new Set(iconStyles.map((style) => style.color)).size).toBe(1);
+  expect(iconStyles.every((style) => style.strokeWidth >= 2.2)).toBe(true);
   await expect(page.locator("#profile-access, #auth-user-since")).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveCount(0);
 });
@@ -141,7 +152,7 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
       billing.currentPeriod.outstandingMinor = 0;
       billing.currentPeriod.confirmedMinor = body.amountMinor;
       billing.currentPeriod.paymentStatus = "paid";
-      billing.payments = [{ id: "pay", amountMinor: body.amountMinor, currency: "GBP", status: "confirmed", method: body.method, receivedAt: Date.parse(`${body.receivedOn}T00:00:00Z`), reference: body.reference || null, periodStartsAt: billing.subscription.startsAt, periodEndsAt: billing.subscription.endsAt }];
+      billing.payments = [{ id: "pay", tierId: "gold", tier: "Gold Tier", amountMinor: body.amountMinor, currency: "GBP", status: "confirmed", method: body.method, receivedAt: Date.parse(`${body.receivedOn}T00:00:00Z`), reference: body.reference || null, periodStartsAt: billing.subscription.startsAt, periodEndsAt: billing.subscription.endsAt }];
       billing.lastPayment = billing.payments[0];
     }
     return route.fulfill({ json: detail() });

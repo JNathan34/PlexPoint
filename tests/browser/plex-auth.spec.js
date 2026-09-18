@@ -113,7 +113,7 @@ test("account page shares the main site's background, font, glass cards and grad
   const portal = await page.evaluate(() => ({
     background: getComputedStyle(document.body).backgroundColor,
     font: getComputedStyle(document.body).fontFamily,
-    card: getComputedStyle(document.querySelector(".pp-auth-card")).backgroundImage,
+    card: getComputedStyle(document.querySelector("#billing-panel")).backgroundImage,
     gradient: getComputedStyle(document.documentElement).getPropertyValue("--gradient-primary"),
   }));
   expect(portal).toEqual(main);
