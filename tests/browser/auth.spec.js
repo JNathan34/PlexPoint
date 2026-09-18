@@ -158,6 +158,56 @@ test("members can see their plan, payment due state and confirmed payment histor
   await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveCount(0);
 });
 
+test("profile styling and plan icons follow the member's current tier", async ({ page }) => {
+  const start = Date.now() - 6 * 86400000;
+  const due = Date.now() + 24 * 86400000;
+  await page.goto("/");
+  const membershipTierColor = await page.locator('[data-testid="membership-tier-platinum-tier"] svg').first()
+    .evaluate((icon) => getComputedStyle(icon).color);
+
+  await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
+    id: "platinum-member", email: "member@example.test", displayName: "Platinum Member", createdAt: start,
+  } } }));
+  await page.route("**/api/portal/billing", (route) => route.fulfill({ json: { billing: {
+    subscription: { id: "sub", tierId: "platinum", tier: "Platinum Tier", accessStatus: "enabled", startsAt: start, endsAt: due, monthlyPriceMinor: 1500, currency: "GBP" },
+    currentPeriod: { id: "period", tierId: "platinum", tier: "Platinum Tier", startsAt: start, endsAt: due, amountDueMinor: 1500, currency: "GBP", status: "open", confirmedMinor: 1500, pendingMinor: 0, outstandingMinor: 0, creditMinor: 0, paymentStatus: "paid" },
+    lastPayment: null, payments: [],
+  } } }));
+  await page.goto("/account/#account");
+  await expect(page.locator("#profile-plan")).toHaveText("Platinum Tier");
+  await expect(page.locator("#auth-user")).toHaveAttribute("data-tier", "platinum");
+  await expect(page.locator("#profile-tier-icon")).toHaveAttribute("data-tier", "platinum");
+  await expect(page.locator("#overview-tier-icon")).toHaveAttribute("data-tier", "platinum");
+  await expect(page.locator("#profile-plan-note")).toBeHidden();
+  await expect(page.locator("#overview-plan-note")).toBeHidden();
+  await expect(page.locator("#auth-user")).not.toContainText("Access enabled");
+
+  const tierPresentation = await page.evaluate(() => {
+    const profileIcon = document.querySelector("#profile-tier-icon");
+    const overviewIcon = document.querySelector("#overview-tier-icon");
+    const profileBox = profileIcon.getBoundingClientRect();
+    const overviewBox = overviewIcon.getBoundingClientRect();
+    const avatarStyle = getComputedStyle(document.querySelector(".pp-profile-avatar"));
+    const membershipStyle = getComputedStyle(document.querySelector(".pp-profile-membership"));
+    return {
+      profileIconColor: getComputedStyle(profileIcon).color,
+      profileIconPath: profileIcon.querySelector("path").getAttribute("d"),
+      profileIconSize: [profileBox.width, profileBox.height],
+      overviewIconSize: [overviewBox.width, overviewBox.height],
+      avatarBorder: avatarStyle.borderTopColor,
+      membershipBorder: membershipStyle.borderTopColor,
+      membershipBackground: membershipStyle.backgroundImage,
+    };
+  });
+  expect(tierPresentation.profileIconColor).toBe(membershipTierColor);
+  expect(tierPresentation.profileIconPath).toBe("M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z");
+  expect(tierPresentation.profileIconSize).toEqual([42, 42]);
+  expect(tierPresentation.overviewIconSize).toEqual([30, 30]);
+  expect(tierPresentation.avatarBorder).toContain("196, 181, 253");
+  expect(tierPresentation.membershipBorder).toContain("196, 181, 253");
+  expect(tierPresentation.membershipBackground).toContain("196, 181, 253");
+});
+
 test("the owner can edit a member plan and record a payment", async ({ page }) => {
   const createdAt = Date.UTC(2026, 8, 16);
   let planSaved = false;

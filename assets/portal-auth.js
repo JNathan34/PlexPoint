@@ -47,12 +47,12 @@ function controls() {
 
 const tierIconPaths = {
   none: ["m12 3 9 6-9 12L3 9l9-6Z", "M3 9h18M8 9l4 12 4-12"],
-  bronze: ["M12 3 20 6v5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6l8-3Z", "M8.5 10.5 12 8l3.5 2.5L14 15h-4l-1.5-4.5Z"],
-  silver: ["M8 3h8l-1 6h-6L8 3Z", "M12 9a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z", "m9.5 15 1.6 1.6 3.4-3.4"],
-  gold: ["M3 7l4 5 5-8 5 8 4-5-2 12H5L3 7Z", "M6 16h12"],
-  diamond: ["m4 8 4-4h8l4 4-8 12L4 8Z", "m4 8 8 3 8-3M8 4l4 7 4-7"],
-  ruby: ["m12 3 7 5-2 10-5 3-5-3L5 8l7-5Z", "m5 8 7 3 7-3M8 5l4 6 4-6M7 18l5-7 5 7"],
-  platinum: ["m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"],
+  bronze: ["M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2", "M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"],
+  silver: ["M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z", "m9 12 2 2 4-4"],
+  gold: ["M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z", "M5 21h14"],
+  diamond: ["M6 3h12l4 6-10 13L2 9Z", "M11 3 8 9l4 13 4-13-3-6", "M2 9h20"],
+  ruby: ["M6 3h12l4 6-10 13L2 9Z", "M11 3 8 9l4 13 4-13-3-6", "M2 9h20"],
+  platinum: ["M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"],
 };
 
 function tierKey(value) {
@@ -87,6 +87,16 @@ function setTierBadge(id, value) {
   const badge = byId(id);
   badge.dataset.tier = tierKey(value);
   badge.replaceChildren(tierSvg(value));
+}
+
+function setProfileTier(value) {
+  byId("auth-user").dataset.tier = tierKey(value);
+}
+
+function setPlanNote(id, text) {
+  const note = byId(id);
+  note.textContent = text;
+  note.hidden = !text;
 }
 
 function safeAvatarUrl(value) {
@@ -128,8 +138,9 @@ function renderUser(next) {
     byId("auth-user-email").textContent = user.email;
     configureAvatar(profileAvatar, user.avatarUrl || user.plex?.avatarUrl, user.displayName, profileAvatar.parentElement);
     for (const id of ["overview-tier-icon", "profile-tier-icon"]) setTierBadge(id, null);
+    setProfileTier(null);
     byId("profile-plan").textContent = "Loading membership…";
-    byId("profile-plan-note").textContent = "Checking your plan and payment details";
+    setPlanNote("profile-plan-note", "Checking your plan and payment details");
     byId("profile-renewal").textContent = "—";
     byId("profile-last-payment").textContent = "—";
     byId("profile-payment-state").textContent = "Checking";
@@ -137,6 +148,7 @@ function renderUser(next) {
   } else {
     configureAvatar(profileAvatar, "", "", profileAvatar.parentElement);
     for (const id of ["overview-tier-icon", "profile-tier-icon"]) setTierBadge(id, null);
+    setProfileTier(null);
     for (const id of ["auth-user-name", "auth-user-email"]) byId(id).textContent = "";
     byId("admin-users").replaceChildren();
     byId("admin-table-wrap").hidden = true;
@@ -157,13 +169,13 @@ function renderUser(next) {
     memberPayments = [];
     memberPaymentsExpanded = false;
     byId("overview-plan").textContent = "Sign in to view";
-    byId("overview-plan-note").textContent = "Your current plan and access status appear here.";
+    setPlanNote("overview-plan-note", "Your current plan and access status appear here.");
     byId("overview-renewal").textContent = "Sign in to view";
     byId("overview-renewal-note").textContent = "See when your next payment is due.";
     byId("overview-payment").textContent = "Sign in to view";
     byId("overview-payment-note").textContent = "Your latest confirmed payment appears here.";
     byId("profile-plan").textContent = "Membership";
-    byId("profile-plan-note").textContent = "Loading your plan…";
+    setPlanNote("profile-plan-note", "Loading your plan…");
     byId("profile-renewal").textContent = "—";
     byId("profile-last-payment").textContent = "—";
     byId("profile-payment-state").textContent = "Checking";
@@ -387,14 +399,14 @@ function renderBilling(data) {
   const paymentLabel = paymentLabels[paymentStatus] || "Payment status unavailable";
   const tier = subscription?.tierId || subscription?.tier;
   for (const id of ["overview-tier-icon", "profile-tier-icon"]) setTierBadge(id, tier);
+  setProfileTier(tier);
   memberPayments = billing.payments.filter((payment) => payment.status !== "void");
   memberPaymentsExpanded = false;
   renderMemberPayments();
   byId("billing-results").hidden = false;
 
   byId("profile-plan").textContent = subscription?.tier || "No plan assigned";
-  byId("profile-plan-note").textContent = subscription
-    ? (accessLabels[subscription.accessStatus] || subscription.accessStatus) : "Contact Jacob to choose a plan";
+  setPlanNote("profile-plan-note", subscription ? "" : "Contact Jacob to choose a plan");
   const days = period ? Math.ceil((period.endsAt - Date.now()) / 86_400_000) : null;
   const renewalSuffix = days == null ? "" : days < 0
     ? ` (${Math.abs(days)} day${Math.abs(days) === 1 ? "" : "s"} overdue)`
@@ -405,7 +417,7 @@ function renderBilling(data) {
   byId("profile-payment-state").textContent = paymentLabel;
   byId("profile-payment-state").dataset.status = paymentStatus;
   byId("overview-plan").textContent = subscription?.tier || "No plan";
-  byId("overview-plan-note").textContent = subscription ? (accessLabels[subscription.accessStatus] || subscription.accessStatus) : "No membership has been assigned yet.";
+  setPlanNote("overview-plan-note", subscription ? "" : "No membership has been assigned yet.");
   if (period) {
     byId("overview-renewal").textContent = days < 0 ? "Overdue" : days === 0 ? "Due today" : `${days} day${days === 1 ? "" : "s"} left`;
     byId("overview-renewal-note").textContent = `Renews ${dateText(period.endsAt)}`;
@@ -442,7 +454,7 @@ async function loadBilling() {
       byId("billing-retry").hidden = false;
       for (const id of ["overview-plan", "overview-renewal", "overview-payment"]) byId(id).textContent = "Unavailable";
       for (const id of ["profile-plan", "profile-renewal", "profile-last-payment"]) byId(id).textContent = "Unavailable";
-      byId("profile-plan-note").textContent = "Membership details could not be loaded.";
+      setPlanNote("profile-plan-note", "Membership details could not be loaded.");
       byId("profile-payment-state").textContent = "Unavailable";
       byId("profile-payment-state").dataset.status = "none";
     }
