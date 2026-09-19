@@ -99,14 +99,14 @@ test("signed-in accounts show account actions without Plex connection messaging"
   await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveCount(0);
 });
 
-test("account page shares the main site's background, font, glass cards and gradient tokens", async ({ page }) => {
+test("account page shares the membership section's translucent glass treatment", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/");
-  await expect(page.locator(".glass-card").first()).toBeVisible();
+  await expect(page.locator(".membership-tier").first()).toBeVisible();
   const main = await page.evaluate(() => ({
     background: getComputedStyle(document.body).backgroundColor,
     font: getComputedStyle(document.body).fontFamily,
-    card: getComputedStyle(document.querySelector(".glass-card")).backgroundImage,
+    card: getComputedStyle(document.querySelector(".membership-tier")).backgroundImage,
     gradient: getComputedStyle(document.documentElement).getPropertyValue("--gradient-primary"),
   }));
   await page.goto("/account/");
@@ -117,6 +117,8 @@ test("account page shares the main site's background, font, glass cards and grad
     gradient: getComputedStyle(document.documentElement).getPropertyValue("--gradient-primary"),
   }));
   expect(portal).toEqual(main);
+  expect(await page.locator(".pp-auth-card").evaluate((card) => getComputedStyle(card).backgroundImage)).toBe(main.card);
+  expect(await page.locator(".pp-metric").first().evaluate((card) => getComputedStyle(card).backgroundImage)).toContain("rgba(24, 29, 42, 0.68)");
   await page.evaluate(() => window.scrollTo(0, 100));
   await expect(page.locator(".pp-site-header.navbar-custom")).toBeVisible();
   await expect(page.locator(".pp-sidebar")).toHaveCount(0);
