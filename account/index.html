@@ -23,8 +23,8 @@
     <link rel="prefetch" href="/" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/index-GJ5txONd.css" />
-    <link rel="stylesheet" href="/assets/portal.css?v=20260924-billing-1" />
-    <script type="module" src="/assets/portal-auth.js?v=20260924-billing-1"></script>
+    <link rel="stylesheet" href="/assets/portal.css?v=20260924-billing-2" />
+    <script type="module" src="/assets/portal-auth.js?v=20260924-billing-2"></script>
     <script type="module" src="/assets/portal-navigation.js?v=20260918-dashboard-3"></script>
     <script type="module" src="/assets/portal.js?v=20260918-account-only-4"></script>
   </head>
@@ -105,29 +105,24 @@
                 <p id="admin-billing-status" class="pp-small" role="status"></p>
                 <div id="admin-billing-content" hidden>
                   <div class="pp-admin-billing-summary" aria-label="Current billing summary"><span><small>Plan</small><strong id="admin-billing-plan-summary">—</strong></span><span><small>Next payment due</small><strong id="admin-billing-due-summary">—</strong></span><span><small>Balance due</small><strong id="admin-billing-balance-summary">—</strong></span></div>
-                  <div class="pp-admin-billing-grid">
-                    <form id="admin-payment-form" class="pp-admin-billing-form pp-admin-payment-form">
-                      <span class="pp-step-label">PAYMENT</span><h4>Record one payment</h4><p id="admin-payment-description">Choose how many months this payment covers. The next payment date updates automatically.</p>
-                      <div class="pp-payment-coverage-block"><label for="admin-payment-months">This payment covers<select id="admin-payment-months" required><option value="1">1 month</option><option value="2">2 months</option><option value="3">3 months</option><option value="4">4 months</option><option value="5">5 months</option><option value="6">6 months</option><option value="7">7 months</option><option value="8">8 months</option><option value="9">9 months</option><option value="10">10 months</option><option value="11">11 months</option><option value="12">12 months</option></select></label><div id="admin-payment-coverage-preview" class="pp-payment-coverage-preview" aria-live="polite"><small>Coverage</small><strong>Choose a plan first</strong><span>The exact dates will appear here.</span></div></div>
-                      <div class="pp-form-grid"><label for="admin-payment-amount">Amount received (£)<input id="admin-payment-amount" type="number" inputmode="decimal" min="0.01" max="1000000" step="0.01" required /></label><label for="admin-payment-date">Date paid<input id="admin-payment-date" type="date" required /></label><label for="admin-payment-method">Method<select id="admin-payment-method" required><option value="bank_transfer">Bank transfer</option><option value="cash">Cash</option><option value="card">Card</option><option value="paypal">PayPal</option><option value="other">Other</option></select></label><label for="admin-payment-reference">Reference <small>Optional</small><input id="admin-payment-reference" maxlength="80" autocomplete="off" /></label></div>
-                      <label class="pp-field-full" for="admin-payment-note">Note <small>Optional — for example, “Caught up July to September”</small><textarea id="admin-payment-note" maxlength="500" rows="3"></textarea></label>
-                      <button id="admin-payment-save" type="submit" class="pp-button pp-button-primary">Record payment and update due date</button>
-                    </form>
-                    <details id="admin-plan-settings" class="pp-admin-plan-settings">
-                      <summary><span><span class="pp-step-label">PLAN SETTINGS</span><strong>Change plan or access</strong><small>Only use this when the membership itself changes.</small></span><span aria-hidden="true">+</span></summary>
-                      <form id="admin-plan-form" class="pp-admin-billing-form">
-                        <p>Set the starting billing period. Future payment dates move forward when payments are recorded.</p>
-                        <div class="pp-form-grid"><label for="admin-plan-tier">Plan<select id="admin-plan-tier" required></select></label><label for="admin-plan-access">Access status<select id="admin-plan-access" required><option value="enabled">Enabled</option><option value="pending">Pending</option><option value="suspended">Suspended</option><option value="cancelled">Cancelled</option></select></label><label for="admin-plan-start">Plan starts<input id="admin-plan-start" type="date" required /></label><label for="admin-plan-due">First payment due<input id="admin-plan-due" type="date" required /></label></div>
-                        <button id="admin-plan-save" type="submit" class="pp-button">Save plan settings</button>
-                      </form>
-                    </details>
-                  </div>
-                  <form id="admin-addons-form" class="pp-admin-billing-form pp-admin-addons-form">
-                    <h4>Account add-ons</h4><p>Give each add-on its own start date and duration. Choose ongoing when it should not expire.</p>
-                    <div id="admin-addons-list" class="pp-admin-addons-list"></div>
-                    <button id="admin-addons-save" type="submit" class="pp-button pp-button-primary">Save add-ons</button>
+                  <form id="admin-payment-form" class="pp-admin-billing-form pp-admin-payment-form">
+                    <div class="pp-admin-form-heading"><div><span class="pp-step-label">PAYMENT</span><h4>Record payment</h4><p id="admin-payment-description">Choose the number of months paid. Everything else is optional.</p></div></div>
+                    <div class="pp-payment-quick-fields"><label for="admin-payment-months">Months paid<select id="admin-payment-months" required><option value="1">1 month</option><option value="2">2 months</option><option value="3">3 months</option><option value="4">4 months</option><option value="5">5 months</option><option value="6">6 months</option><option value="7">7 months</option><option value="8">8 months</option><option value="9">9 months</option><option value="10">10 months</option><option value="11">11 months</option><option value="12">12 months</option></select></label><label for="admin-payment-amount">Amount received<input id="admin-payment-amount" type="number" inputmode="decimal" min="0.01" max="1000000" step="0.01" required /><span aria-hidden="true">£</span></label><div id="admin-payment-coverage-preview" class="pp-payment-coverage-preview" aria-live="polite"><small>Covers</small><strong>Choose a plan first</strong><span>The exact dates will appear here.</span></div></div>
+                    <details id="admin-payment-details" class="pp-admin-inline-details"><summary><span><strong>Payment details</strong><small id="admin-payment-details-summary">Today · Bank transfer · No note</small></span><span aria-hidden="true">+</span></summary><div class="pp-admin-details-body"><div class="pp-form-grid"><label for="admin-payment-date">Date paid<input id="admin-payment-date" type="date" required /></label><label for="admin-payment-method">Method<select id="admin-payment-method" required><option value="bank_transfer">Bank transfer</option><option value="cash">Cash</option><option value="card">Card</option><option value="paypal">PayPal</option><option value="other">Other</option></select></label><label for="admin-payment-reference">Reference <small>Optional</small><input id="admin-payment-reference" maxlength="80" autocomplete="off" /></label><label for="admin-payment-note">Note <small>Optional</small><input id="admin-payment-note" maxlength="500" autocomplete="off" placeholder="e.g. Caught up July to September" /></label></div></div></details>
+                    <button id="admin-payment-save" type="submit" class="pp-button pp-button-primary">Save payment</button>
                   </form>
-                  <div class="pp-payment-history"><h4>Payment history</h4><div class="pp-admin-table-wrap"><table class="pp-admin-table pp-admin-payment-history"><thead><tr><th scope="col">Paid</th><th scope="col">Payment</th><th scope="col">Covers</th><th scope="col">Details</th><th scope="col">Status</th><th scope="col"><span class="pp-sr-only">Actions</span></th></tr></thead><tbody id="admin-billing-payments"></tbody></table></div></div>
+                  <details id="admin-plan-settings" class="pp-admin-secondary-section">
+                    <summary><span><strong>Membership settings</strong><small>Change the plan, access status or billing dates</small></span><span class="pp-secondary-action">Edit</span></summary>
+                    <form id="admin-plan-form" class="pp-admin-billing-form"><div class="pp-form-grid"><label for="admin-plan-tier">Plan<select id="admin-plan-tier" required></select></label><label for="admin-plan-access">Access status<select id="admin-plan-access" required><option value="enabled">Enabled</option><option value="pending">Pending</option><option value="suspended">Suspended</option><option value="cancelled">Cancelled</option></select></label><label for="admin-plan-start">Plan starts<input id="admin-plan-start" type="date" required /></label><label for="admin-plan-due">Next payment due<input id="admin-plan-due" type="date" required /></label></div><button id="admin-plan-save" type="submit" class="pp-button">Save membership settings</button></form>
+                  </details>
+                  <details id="admin-addons-settings" class="pp-admin-secondary-section">
+                    <summary><span><strong>Add-ons</strong><small id="admin-addons-summary">None assigned</small></span><span class="pp-secondary-action">Manage</span></summary>
+                    <form id="admin-addons-form" class="pp-admin-billing-form pp-admin-addons-form"><p>Select an add-on, then choose how long it should last.</p><div id="admin-addons-list" class="pp-admin-addons-list"></div><button id="admin-addons-save" type="submit" class="pp-button pp-button-primary">Save add-ons</button></form>
+                  </details>
+                  <details id="admin-payment-history" class="pp-admin-secondary-section pp-admin-history-section">
+                    <summary><span><strong>Payment history</strong><small id="admin-payment-history-summary">No payments recorded</small></span><span class="pp-secondary-action">View</span></summary>
+                    <div class="pp-payment-history"><div class="pp-admin-table-wrap"><table class="pp-admin-table pp-admin-payment-history"><thead><tr><th scope="col">Paid</th><th scope="col">Payment</th><th scope="col">Covers</th><th scope="col">Details</th><th scope="col">Status</th><th scope="col"><span class="pp-sr-only">Actions</span></th></tr></thead><tbody id="admin-billing-payments"></tbody></table></div></div>
+                  </details>
                 </div>
               </section>
               </section>

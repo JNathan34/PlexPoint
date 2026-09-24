@@ -660,6 +660,27 @@ function nextMonthDate(value = new Date()) {
   return date.toISOString().slice(0, 10);
 }
 
+function refreshPaymentAction() {
+  const button = byId("admin-payment-save");
+  const subscription = adminBillingData?.billing?.subscription;
+  const monthlyPrice = Number(subscription?.monthlyPriceMinor ?? 0);
+  const amountMinor = Math.round(Number(byId("admin-payment-amount").value || 0) * 100);
+  if (!subscription) button.textContent = "Assign a plan first";
+  else if (monthlyPrice === 0) button.textContent = "No payment needed";
+  else button.textContent = amountMinor > 0 ? `Save ${moneyText(amountMinor, subscription.currency)} payment` : "Save payment";
+}
+
+function refreshPaymentDetailsSummary() {
+  const date = byId("admin-payment-date").value;
+  const method = byId("admin-payment-method").selectedOptions[0]?.textContent || "Payment";
+  const hasExtra = byId("admin-payment-reference").value.trim() || byId("admin-payment-note").value.trim();
+  byId("admin-payment-details-summary").textContent = [
+    date ? dateText(new Date(`${date}T00:00:00Z`)) : "No date",
+    method,
+    hasExtra ? "Includes a note" : "No note",
+  ].join(" · ");
+}
+
 function refreshPaymentCoverage({ resetAmount = true } = {}) {
   const preview = byId("admin-payment-coverage-preview");
   const subscription = adminBillingData?.billing?.subscription;
@@ -673,6 +694,7 @@ function refreshPaymentCoverage({ resetAmount = true } = {}) {
       ? "This membership has no monthly charge."
       : "The exact dates will appear here.";
     if (resetAmount) byId("admin-payment-amount").value = "";
+    refreshPaymentAction();
     return;
   }
   const catchingUp = period.outstandingMinor > 0;
@@ -688,6 +710,7 @@ function refreshPaymentCoverage({ resetAmount = true } = {}) {
       : monthlyPrice * months;
     byId("admin-payment-amount").value = suggested ? (suggested / 100).toFixed(2) : "";
   }
+  refreshPaymentAction();
 }
 
 function adminBillingMessage(text, error = false) {
@@ -720,7 +743,7 @@ function renderAdminBilling(data) {
   const todayText = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())).toISOString().slice(0, 10);
   byId("admin-plan-start").value = dateInput(subscription?.startsAt) || todayText;
   byId("admin-plan-due").value = dateInput(subscription?.endsAt) || nextMonthDate(new Date(`${todayText}T00:00:00Z`));
-  byId("admin-plan-settings").open ||= !subscription;
+  byId("admin-plan-settings").open = !subscription;
   byId("admin-billing-plan-summary").textContent = subscription?.tier || "Not assigned";
   byId("admin-billing-due-summary").textContent = subscription?.endsAt ? dateText(subscription.endsAt) : "Not set";
   byId("admin-billing-balance-summary").textContent = subscription && Number(subscription.monthlyPriceMinor) === 0
@@ -732,11 +755,15 @@ function renderAdminBilling(data) {
   byId("admin-payment-note").value = "";
   const assignedAddons = new Map((Array.isArray(data.billing.addons) ? data.billing.addons : [])
     .map((addon) => [addon.id, addon]));
+  byId("admin-addons-summary").textContent = assignedAddons.size
+    ? `${assignedAddons.size} assigned`
+    : "None assigned";
   const availableAddons = Array.isArray(data.availableAddons) ? data.availableAddons : [];
   byId("admin-addons-list").replaceChildren(...availableAddons.map((addon, index) => {
     const assigned = assignedAddons.get(addon.id);
     const row = document.createElement("div");
     row.className = "pp-admin-addon-option";
+    row.classList.toggle("is-selected", Boolean(assigned));
     row.setAttribute("role", "group");
     row.setAttribute("aria-labelledby", `admin-addon-name-${index}`);
     const header = document.createElement("label");
@@ -801,9 +828,14 @@ function renderAdminBilling(data) {
   const noPaymentRequired = Number(tierSelect.selectedOptions[0]?.dataset.priceMinor) === 0;
   byId("admin-payment-description").textContent = noPaymentRequired
     ? "VIP access does not require a payment record."
-    : "Choose how many months this payment covers. The next payment date updates automatically.";
+    : "Choose the number of months paid. Everything else is optional.";
   refreshPaymentCoverage();
+  refreshPaymentDetailsSummary();
   renderPaymentRows("admin-billing-payments", data.billing.payments, true);
+  const paymentCount = data.billing.payments.filter((payment) => payment.status !== "void").length;
+  byId("admin-payment-history-summary").textContent = paymentCount
+    ? `${paymentCount} payment${paymentCount === 1 ? "" : "s"}`
+    : "No payments recorded";
   byId("admin-billing-content").hidden = false;
   byId("admin-billing-editor").hidden = false;
   controls();
@@ -812,6 +844,9 @@ function renderAdminBilling(data) {
 async function openAdminBilling(userId) {
   if (!user?.isAdmin || adminBillingBusy) return;
   adminBillingBusy = true;
+  for (const id of ["admin-payment-details", "admin-plan-settings", "admin-addons-settings", "admin-payment-history"]) {
+    byId(id).open = false;
+  }
   byId("admin-billing-editor").hidden = false;
   byId("admin-billing-content").hidden = true;
   adminBillingMessage("Loading billing details…");
@@ -988,10 +1023,15 @@ byId("admin-plan-tier").addEventListener("change", () => {
   const price = Number(byId("admin-plan-tier").selectedOptions[0]?.dataset.priceMinor || 0);
   byId("admin-payment-description").textContent = price === 0
     ? "VIP access does not require a payment record."
-    : "Choose how many months this payment covers. The next payment date updates automatically.";
+    : "Choose the number of months paid. Everything else is optional.";
   controls();
 });
 byId("admin-payment-months").addEventListener("change", () => refreshPaymentCoverage());
+byId("admin-payment-amount").addEventListener("input", refreshPaymentAction);
+for (const id of ["admin-payment-date", "admin-payment-method", "admin-payment-reference", "admin-payment-note"]) {
+  byId(id).addEventListener("input", refreshPaymentDetailsSummary);
+  byId(id).addEventListener("change", refreshPaymentDetailsSummary);
+}
 byId("admin-plan-form").addEventListener("submit", (event) => {
   event.preventDefault();
   if (!event.currentTarget.reportValidity()) return;
@@ -1017,7 +1057,9 @@ byId("admin-payment-form").addEventListener("submit", (event) => {
   }, "Recording payment and updating coverage…", "Payment recorded. The balance and next payment date have been updated.");
 });
 byId("admin-addons-list").addEventListener("change", (event) => {
-  if (event.target.matches('input[type="checkbox"]')) controls();
+  if (!event.target.matches('input[type="checkbox"]')) return;
+  event.target.closest(".pp-admin-addon-option")?.classList.toggle("is-selected", event.target.checked);
+  controls();
 });
 byId("admin-addons-form").addEventListener("submit", (event) => {
   event.preventDefault();
