@@ -10,6 +10,12 @@ let adminBusy = false;
 let requestsBusy = false;
 let billingBusy = false;
 let adminBillingBusy = false;
+let referralBusy = false;
+let referralData = null;
+let referralStep = 1;
+let referralOrder = null;
+let referralWhatsAppUrl = "";
+let adminReferralsBusy = false;
 let adminBillingData = null;
 let memberPayments = [];
 let memberPaymentsExpanded = false;
@@ -34,6 +40,9 @@ function controls() {
   byId("admin-retry").disabled = adminBusy;
   byId("requests-retry").disabled = requestsBusy;
   byId("billing-retry").disabled = billingBusy;
+  for (const id of ["referral-copy", "referral-share", "referral-order-back", "referral-order-next", "referral-order-submit"]) {
+    byId(id).disabled = referralBusy;
+  }
   for (const formId of ["admin-plan-form", "admin-payment-form", "admin-addons-form"]) {
     const editorForm = byId(formId);
     for (const control of editorForm.elements) control.disabled = adminBillingBusy;
@@ -144,6 +153,7 @@ function renderUser(next) {
   byId("requests-panel").hidden = !user;
   byId("billing-panel").hidden = !user;
   byId("admin-panel").hidden = !user?.isAdmin;
+  byId("referral-panel").hidden = !user;
   if (user) {
     byId("auth-user-name").textContent = user.displayName;
     byId("auth-user-email").textContent = user.email;
@@ -181,6 +191,13 @@ function renderUser(next) {
     byId("billing-view-all").hidden = true;
     memberPayments = [];
     memberPaymentsExpanded = false;
+    referralData = null;
+    referralOrder = null;
+    referralWhatsAppUrl = "";
+    byId("referral-panel").hidden = true;
+    byId("referral-content").hidden = true;
+    byId("referral-order").hidden = true;
+    byId("referral-welcome").hidden = true;
     byId("overview-plan").textContent = "Sign in to view";
     setPlanNote("overview-plan-note", "Your current plan and access status appear here.");
     byId("overview-renewal").textContent = "Sign in to view";
@@ -342,6 +359,143 @@ const paymentLabels = {
 };
 const accessLabels = { enabled: "Access enabled", pending: "Access pending", suspended: "Access suspended", cancelled: "Plan cancelled" };
 const methodLabels = { bank_transfer: "Bank transfer", cash: "Cash", card: "Card", paypal: "PayPal", other: "Other" };
+
+const referralStatusLabels = {
+  registered: "Account created", awaiting_payment: "Awaiting payment", completed: "Completed", cancelled: "Cancelled",
+};
+
+function setReferralStep(step) {
+  referralStep = Math.max(1, Math.min(3, step));
+  for (const panel of document.querySelectorAll("[data-referral-step]")) panel.hidden = Number(panel.dataset.referralStep) !== referralStep;
+  for (const dot of document.querySelectorAll("[data-referral-step-dot]")) {
+    const number = Number(dot.dataset.referralStepDot);
+    dot.classList.toggle("is-active", number === referralStep);
+    dot.classList.toggle("is-complete", number < referralStep);
+  }
+  byId("referral-order-step-label").textContent = `Step ${referralStep} of 3`;
+  byId("referral-order-back").hidden = referralStep === 1;
+  byId("referral-order-next").hidden = referralStep === 3;
+  byId("referral-order-submit").hidden = referralStep !== 3;
+  byId("referral-order-next").textContent = referralStep === 1 ? "Choose extras" : "Review order";
+  if (referralStep === 3) renderReferralReview();
+}
+
+function selectedReferralAddons() {
+  return [...byId("referral-extras").querySelectorAll("input[data-addon-id]")]
+    .map((input) => ({ id: input.dataset.addonId, quantity: Number(input.value || 0) }))
+    .filter((item) => Number.isSafeInteger(item.quantity) && item.quantity > 0);
+}
+
+function renderReferralReview() {
+  const plan = referralData?.plans?.find((item) => item.id === byId("referral-plan").value);
+  if (!plan) return;
+  const addonMap = new Map((referralData.addons || []).map((addon) => [addon.id, addon]));
+  const addons = selectedReferralAddons().map((item) => ({ ...addonMap.get(item.id), ...item }));
+  const total = Number(plan.monthlyPriceMinor) + addons.reduce((sum, addon) => sum + Number(addon.priceMinor) * addon.quantity, 0);
+  const rows = [["Plex username", user?.plex?.username || user?.displayName || "Your account"],
+    ["Plan", `${plan.name} · ${moneyText(plan.monthlyPriceMinor, plan.currency)}/month`],
+    ["Extras", addons.length ? addons.map((addon) => `${addon.quantity}× ${addon.name}`).join(", ") : "None"],
+    ["Total", `${moneyText(total, plan.currency)}${addons.some((addon) => addon.billingLabel === "per month") ? " first month" : ""}`],
+    ["Referred by", referralData?.inbound?.referredBy?.code || "—"],
+    ["Order ID", referralOrder?.id || referralData?.inbound?.order?.id || "Preparing…"]];
+  byId("referral-review").replaceChildren(...rows.map(([label, value], index) => {
+    const row = document.createElement("div");
+    if (index === 3) row.className = "is-total";
+    const key = document.createElement("span"); key.textContent = label;
+    const copy = document.createElement("strong"); copy.textContent = value;
+    row.append(key, copy); return row;
+  }));
+}
+
+function renderReferralHistory(referrals) {
+  byId("referral-history-summary").textContent = referrals.length
+    ? `${referrals.length} friend${referrals.length === 1 ? "" : "s"}` : "No referrals yet";
+  byId("referral-history-list").replaceChildren(...referrals.map((referral) => {
+    const row = document.createElement("div");
+    const copy = document.createElement("span");
+    const name = document.createElement("strong"); name.textContent = referral.member;
+    const detail = document.createElement("small"); detail.textContent = referral.completedAt
+      ? `Completed ${dateText(referral.completedAt)}` : `Joined ${dateText(referral.createdAt)}`;
+    copy.append(name, detail);
+    const state = document.createElement("span"); state.className = "pp-billing-state"; state.dataset.status = referral.status;
+    state.textContent = referralStatusLabels[referral.status] || referral.status;
+    row.append(copy, state); return row;
+  }));
+}
+
+function renderReferralOrder(data) {
+  const inbound = data.inbound;
+  const canOrder = inbound && ["registered", "awaiting_payment"].includes(inbound.status);
+  byId("referral-order").hidden = !canOrder;
+  if (!canOrder) return;
+  byId("referral-order-by").textContent = `Referred by ${inbound.referredBy.code} ✓`;
+  byId("referral-plan").replaceChildren(...data.plans.map((plan) => {
+    const option = document.createElement("option"); option.value = plan.id;
+    option.textContent = `${plan.name} — ${moneyText(plan.monthlyPriceMinor, plan.currency)}/month`;
+    return option;
+  }));
+  if (inbound.order?.tierId && data.plans.some((plan) => plan.id === inbound.order.tierId)) byId("referral-plan").value = inbound.order.tierId;
+  const assigned = new Map((inbound.order?.addons || []).map((addon) => [addon.id, addon.quantity]));
+  referralOrder = inbound.order || null;
+  byId("referral-extras").replaceChildren(...data.addons.map((addon) => {
+    const row = document.createElement("label");
+    const copy = document.createElement("span");
+    const name = document.createElement("strong"); name.textContent = addon.name;
+    const price = document.createElement("small"); price.textContent = `${moneyText(addon.priceMinor, addon.currency)} ${addon.billingLabel}`;
+    copy.append(name, price);
+    const input = document.createElement("input"); input.type = "number"; input.min = "0"; input.max = "10"; input.step = "1";
+    input.value = String(assigned.get(addon.id) || 0); input.dataset.addonId = addon.id;
+    input.setAttribute("aria-label", `${addon.name} quantity`);
+    row.append(copy, input); return row;
+  }));
+  setReferralStep(1);
+}
+
+function renderReferrals(data) {
+  referralData = data;
+  const landing = data?.landing;
+  byId("referral-welcome").hidden = !landing || Boolean(user);
+  if (landing) {
+    byId("referral-welcome-title").textContent = `Referred by ${landing.code} ✓`;
+    byId("referral-welcome-copy").textContent = `Continue with Plex to create your account${landing.displayName ? ` through ${landing.displayName}` : ""}.`;
+  }
+  if (!user || !data?.dashboard) return;
+  byId("referral-panel").hidden = false;
+  byId("referral-content").hidden = false;
+  byId("referral-status").textContent = "";
+  byId("referral-link").value = data.dashboard.link;
+  byId("referral-progress-count").textContent = `${data.dashboard.completed}/${data.dashboard.maximum}`;
+  byId("referral-season-total").textContent = String(data.dashboard.totals.seasons);
+  byId("referral-movie-total").textContent = String(data.dashboard.totals.movies);
+  byId("referral-next").textContent = data.dashboard.nextReward
+    ? `Next friend: +${data.dashboard.nextReward.seasons} season and +${data.dashboard.nextReward.movies} movie requests.`
+    : "You’ve unlocked every referral reward — thank you!";
+  byId("referral-milestones").replaceChildren(...data.dashboard.rewards.map((reward) => {
+    const item = document.createElement("span");
+    const complete = reward.number <= data.dashboard.completed;
+    item.className = complete ? "is-complete" : "";
+    item.textContent = complete ? "✓" : String(reward.number);
+    item.title = `Friend ${reward.number}: +${reward.seasons} season, +${reward.movies} movie requests`;
+    return item;
+  }));
+  renderReferralHistory(data.dashboard.referrals || []);
+  renderReferralOrder(data);
+}
+
+async function loadReferrals() {
+  if (referralBusy) return;
+  referralBusy = true;
+  if (user) byId("referral-status").textContent = "Loading your referral rewards…";
+  controls();
+  try { renderReferrals(await request("referrals", undefined, "")); }
+  catch (error) {
+    if (user) {
+      byId("referral-panel").hidden = false;
+      byId("referral-status").textContent = error.message;
+      byId("referral-status").dataset.error = "true";
+    }
+  } finally { referralBusy = false; controls(); }
+}
 
 function tableTextCell(row, text, className = "") {
   const cell = document.createElement("td");
@@ -584,7 +738,10 @@ function renderAdminUsers(data) {
   const rows = data.users.map((account) => {
     const row = document.createElement("tr");
     adminUserCell(row, account);
-    adminCell(row, account.signInMethods?.join(" + ") || "Not linked", account.plexUsername ? `Plex: ${account.plexUsername}` : "");
+    adminCell(row, account.signInMethods?.join(" + ") || "Not linked", [
+      account.plexUsername ? `Plex: ${account.plexUsername}` : "",
+      account.referredBy ? `Referred by ${account.referredBy.code}` : "",
+    ].filter(Boolean).join(" · "));
     adminTierCell(row, account.subscription);
     const billingLabel = paymentLabels[account.billing?.status || "none"] || "Unknown";
     const billingCell = adminCell(row, billingLabel, account.billing
@@ -643,6 +800,45 @@ async function loadAdminUsers() {
     adminBusy = false;
     controls();
   }
+}
+
+function renderAdminReferrals(data) {
+  if (!Array.isArray(data?.referrals)) throw new Error("The referral list returned an unexpected response.");
+  byId("admin-referrals").hidden = false;
+  byId("admin-referrals-summary").textContent = data.referrals.length
+    ? `${data.referrals.filter((item) => item.status === "completed").length} completed · ${data.referrals.length} total`
+    : "No referrals yet";
+  const rows = data.referrals.map((referral) => {
+    const row = document.createElement("tr");
+    adminCell(row, referral.referred.name, referral.orderId || "No order yet");
+    adminCell(row, referral.referrer.name, referral.referrer.code);
+    adminCell(row, referral.tier || "Not chosen", referral.totalMinor == null ? "—" : moneyText(referral.totalMinor, referral.currency));
+    const stateCell = document.createElement("td");
+    const state = document.createElement("span"); state.className = "pp-billing-state"; state.dataset.status = referral.status;
+    state.textContent = referralStatusLabels[referral.status] || referral.status; stateCell.append(state); row.append(stateCell);
+    adminCell(row, referral.referralNumber ? `Reward #${referral.referralNumber}` : "Not issued",
+      referral.referralNumber ? `+${referral.reward.seasons} season · +${referral.reward.movies} movie` : "Payment must be confirmed");
+    const actionCell = document.createElement("td");
+    const button = document.createElement("button"); button.type = "button"; button.className = "pp-button pp-admin-manage";
+    button.dataset.userId = referral.referred.id; button.textContent = "Manage"; actionCell.append(button); row.append(actionCell);
+    return row;
+  });
+  if (!rows.length) {
+    const row = document.createElement("tr"); const cell = document.createElement("td"); cell.colSpan = 6;
+    cell.textContent = "No friend referrals have been started."; row.append(cell); rows.push(row);
+  }
+  byId("admin-referrals-list").replaceChildren(...rows);
+  byId("admin-referrals-status").textContent = "";
+}
+
+async function loadAdminReferrals() {
+  if (!user?.isAdmin || adminReferralsBusy) return;
+  adminReferralsBusy = true;
+  byId("admin-referrals").hidden = false;
+  byId("admin-referrals-status").textContent = "Loading referrals…";
+  try { renderAdminReferrals(await request("referrals", undefined, "admin")); }
+  catch (error) { byId("admin-referrals-status").textContent = error.message; byId("admin-referrals-status").dataset.error = "true"; }
+  finally { adminReferralsBusy = false; }
 }
 
 function addCalendarMonths(value, months = 1) {
@@ -738,6 +934,7 @@ function renderAdminBilling(data) {
     return option;
   }));
   if (subscription && data.tiers.some((tier) => tier.id === subscription.tierId)) tierSelect.value = subscription.tierId;
+  else if (data.referral?.order?.tierId && data.tiers.some((tier) => tier.id === data.referral.order.tierId)) tierSelect.value = data.referral.order.tierId;
   byId("admin-plan-access").value = subscription?.accessStatus || "pending";
   const today = new Date();
   const todayText = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())).toISOString().slice(0, 10);
@@ -749,6 +946,30 @@ function renderAdminBilling(data) {
   byId("admin-billing-balance-summary").textContent = subscription && Number(subscription.monthlyPriceMinor) === 0
     ? "No payment"
     : period ? moneyText(period.outstandingMinor, period.currency) : "Not set";
+  const referral = data.referral;
+  byId("admin-referral-order").hidden = !referral;
+  if (referral) {
+    const order = referral.order;
+    byId("admin-referral-order-title").textContent = order
+      ? `${order.id} · ${order.tier} · ${moneyText(order.totalMinor, order.currency)}`
+      : `Referred by ${referral.referredBy.code}`;
+    byId("admin-referral-order-copy").textContent = order
+      ? `Referred by ${referral.referredBy.code} · ${order.addons.length ? order.addons.map((addon) => `${addon.quantity}× ${addon.name}`).join(", ") : "No extras"}`
+      : "The member has created an account but has not submitted an order.";
+    const state = byId("admin-referral-order-state");
+    state.dataset.status = referral.status;
+    state.textContent = referral.qualified
+      ? `✓ Reward #${referral.referralNumber || "—"} issued`
+      : referralStatusLabels[referral.status] || referral.status;
+    const checks = [
+      ["Account", true], ["Plan chosen", Boolean(order)], ["Plan activated", subscription?.accessStatus === "enabled"],
+      ["Payment confirmed", referral.qualified], ["Reward issued", referral.rewardIssued],
+    ];
+    byId("admin-referral-checklist").replaceChildren(...checks.map(([label, complete]) => {
+      const item = document.createElement("span"); item.className = complete ? "is-complete" : "";
+      item.textContent = `${complete ? "✓" : "○"} ${label}`; return item;
+    }));
+  }
   byId("admin-payment-date").value = todayText;
   byId("admin-payment-months").value = "1";
   byId("admin-payment-reference").value = "";
@@ -874,7 +1095,7 @@ async function updateAdminBilling(body, progress, success) {
     renderAdminBilling(data);
     adminBillingMessage(success);
     if (user.id === data.account.id) renderBilling({ billing: data.billing });
-    await loadAdminUsers();
+    await Promise.all([loadAdminUsers(), loadAdminReferrals()]);
   } catch (error) {
     adminBillingMessage(error.message, true);
   } finally {
@@ -885,7 +1106,9 @@ async function updateAdminBilling(body, progress, success) {
 
 async function acceptUser(next) {
   renderUser(next);
-  if (next) await Promise.all([loadBilling(), loadWatchTime(), loadRequests(), next.isAdmin ? loadAdminUsers() : Promise.resolve()]);
+  if (next) await Promise.all([loadBilling(), loadWatchTime(), loadRequests(), loadReferrals(),
+    next.isAdmin ? loadAdminUsers() : Promise.resolve(), next.isAdmin ? loadAdminReferrals() : Promise.resolve()]);
+  else await loadReferrals();
 }
 
 async function request(action, body, group = "auth") {
@@ -1007,8 +1230,54 @@ byId("billing-view-all").addEventListener("click", () => {
   memberPaymentsExpanded = !memberPaymentsExpanded;
   renderMemberPayments();
 });
+byId("referral-copy").addEventListener("click", async () => {
+  const link = byId("referral-link").value;
+  try {
+    if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(link);
+    else { byId("referral-link").select(); document.execCommand("copy"); }
+    byId("referral-copy").textContent = "Copied ✓";
+    setTimeout(() => { byId("referral-copy").textContent = "Copy link"; }, 1800);
+  } catch { byId("referral-status").textContent = "Could not copy automatically. Select the link and copy it manually."; }
+});
+byId("referral-share").addEventListener("click", async () => {
+  const link = byId("referral-link").value;
+  if (navigator.share) {
+    try { await navigator.share({ title: "Join me on PlexPoint", text: "Use my PlexPoint referral link:", url: link }); }
+    catch (error) { if (error.name !== "AbortError") byId("referral-status").textContent = "Sharing was unavailable. Copy the link instead."; }
+  } else byId("referral-copy").click();
+});
+byId("referral-order-next").addEventListener("click", async () => {
+  if (referralStep === 1 && !byId("referral-plan").reportValidity()) return;
+  if (referralStep === 2 && !byId("referral-order-form").reportValidity()) return;
+  if (referralStep === 1) { setReferralStep(2); return; }
+  referralBusy = true;
+  byId("referral-order-status").textContent = "Saving your order for review…";
+  controls();
+  try {
+    const data = await request("referrals", { action: "save_order", tierId: byId("referral-plan").value,
+      addons: selectedReferralAddons() }, "");
+    renderReferrals(data);
+    referralOrder = data.order;
+    referralWhatsAppUrl = data.whatsappUrl;
+    byId("referral-order-status").textContent = "Order saved. Check the details, then continue on WhatsApp.";
+    setReferralStep(3);
+  } catch (error) {
+    byId("referral-order-status").textContent = error.message;
+    byId("referral-order-status").dataset.error = "true";
+  } finally { referralBusy = false; controls(); }
+});
+byId("referral-order-back").addEventListener("click", () => setReferralStep(referralStep - 1));
+byId("referral-order-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (referralBusy || !event.currentTarget.reportValidity() || !referralWhatsAppUrl) return;
+  window.open(referralWhatsAppUrl, "_blank", "noopener,noreferrer");
+});
 byId("requests-retry").addEventListener("click", () => void loadRequests());
 byId("admin-users").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-user-id]");
+  if (button) void openAdminBilling(button.dataset.userId);
+});
+byId("admin-referrals-list").addEventListener("click", (event) => {
   const button = event.target.closest("button[data-user-id]");
   if (button) void openAdminBilling(button.dataset.userId);
 });

@@ -1,4 +1,5 @@
 import { AuthError, isAdminEmail, readBody, reply, sessionUser } from "./auth.js";
+import { referralAdminDetail } from "./referrals.js";
 
 const DAY_MS = 86_400_000;
 const ACCESS_STATUSES = new Set(["pending", "enabled", "suspended", "cancelled"]);
@@ -187,7 +188,7 @@ async function adminDetail(db, userId, now = Date.now()) {
   const account = await targetUser(db, userId);
   const tiersResult = await db.prepare(`SELECT id, name, monthly_price_minor, currency
     FROM subscription_tiers WHERE enabled = 1 ORDER BY sort_order, name`).all();
-  const addonsResult = await db.prepare(`SELECT id, name, description
+  const addonsResult = await db.prepare(`SELECT id, name, description, price_minor, currency, billing_label
     FROM addon_catalog WHERE enabled = 1 ORDER BY sort_order, name`).all();
   return {
     account,
@@ -195,9 +196,11 @@ async function adminDetail(db, userId, now = Date.now()) {
       id: tier.id, name: tier.name, monthlyPriceMinor: Number(tier.monthly_price_minor), currency: tier.currency,
     })),
     availableAddons: (addonsResult.results || []).map((addon) => ({
-      id: addon.id, name: addon.name, description: addon.description,
+      id: addon.id, name: addon.name, description: addon.description, priceMinor: Number(addon.price_minor),
+      currency: addon.currency, billingLabel: addon.billing_label,
     })),
     billing: await billingForUser(db, userId, { includeVoided: true, includeInactiveAddons: true, now }),
+    referral: await referralAdminDetail(db, userId),
   };
 }
 
@@ -344,6 +347,12 @@ async function recordPayment(db, actor, body, now) {
   const details = JSON.stringify({ paymentId, amountMinor, currency: period.currency, method, receivedAt,
     coverageStartsAt, coverageEndsAt, coverageMonths, periodExtensionMinor,
     ...(reference ? { reference } : {}), ...(note ? { note } : {}) });
+  const rewardSlot = `(SELECT MIN(candidate.n) FROM (
+    SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5
+    ) candidate WHERE NOT EXISTS (
+      SELECT 1 FROM referrals used WHERE used.referrer_user_id = referrals.referrer_user_id
+        AND used.referral_number = candidate.n AND used.rewarded_at IS NOT NULL
+    ))`;
   await db.batch([
     db.prepare(`INSERT INTO payments
       (id, billing_period_id, amount_minor, currency, status, method, received_at, confirmed_at,
@@ -359,11 +368,35 @@ async function recordPayment(db, actor, body, now) {
         base_amount_due_minor = COALESCE(base_amount_due_minor, ?)
       WHERE id = ?`).bind(nextEndsAt, nextAmountDueMinor, Number(period.base_ends_at),
         Number(period.base_amount_due_minor), period.id),
-    db.prepare("UPDATE subscriptions SET ends_at = ?, version = version + 1, updated_at = ? WHERE id = ?")
-      .bind(nextEndsAt, now, period.subscription_id),
+    db.prepare(`UPDATE subscriptions SET ends_at = ?,
+      access_status = CASE WHEN access_status = 'pending' AND EXISTS (
+        SELECT 1 FROM referrals WHERE referred_user_id = ? AND status IN ('registered', 'awaiting_payment')
+      ) THEN 'enabled' ELSE access_status END,
+      version = version + 1, updated_at = ? WHERE id = ?`)
+      .bind(nextEndsAt, userId, now, period.subscription_id),
+    db.prepare(`UPDATE referrals SET
+      status = 'completed', completion_payment_id = ?, completed_at = ?,
+      referral_number = ${rewardSlot},
+      reward_movie_requests = CASE WHEN ${rewardSlot} IS NULL THEN 0 ELSE 2 END,
+      reward_season_requests = CASE WHEN ${rewardSlot} IS NULL THEN 0
+        WHEN ${rewardSlot} IN (3, 5) THEN 2 ELSE 1 END,
+      rewarded_at = CASE WHEN ${rewardSlot} IS NULL THEN NULL ELSE ? END,
+      updated_at = ?
+      WHERE referred_user_id = ? AND status IN ('registered', 'awaiting_payment')
+        AND completion_payment_id IS NULL
+        AND EXISTS (SELECT 1 FROM subscriptions paid_subscription
+          JOIN subscription_tiers paid_tier ON paid_tier.id = paid_subscription.tier_id
+          WHERE paid_subscription.user_id = referrals.referred_user_id
+            AND paid_subscription.access_status = 'enabled'
+            AND paid_tier.monthly_price_minor > 0)`)
+      .bind(paymentId, now, now, now, userId),
     db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
       VALUES (?, ?, ?, 'billing.payment_recorded', ?, ?)`)
       .bind(crypto.randomUUID(), actor.id, userId, details, now),
+    db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
+      SELECT ?, ?, ?, 'referral.reward_issued', ?, ? FROM referrals
+      WHERE referred_user_id = ? AND completion_payment_id = ?`)
+      .bind(crypto.randomUUID(), actor.id, userId, JSON.stringify({ paymentId }), now, userId, paymentId),
   ]);
   return adminDetail(db, userId, now);
 }
@@ -383,6 +416,10 @@ async function voidPayment(db, actor, body, now) {
   if (!payment) throw new AuthError(404, "That payment could not be found or is already void.");
   await db.batch([
     db.prepare("UPDATE payments SET status = 'void' WHERE id = ? AND status != 'void'").bind(paymentId),
+    db.prepare(`UPDATE referrals SET status = 'awaiting_payment', completion_payment_id = NULL,
+      completed_at = NULL, rewarded_at = NULL, referral_number = NULL,
+      reward_movie_requests = 0, reward_season_requests = 0, updated_at = ?
+      WHERE referred_user_id = ? AND completion_payment_id = ?`).bind(now, userId, paymentId),
     db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
       VALUES (?, ?, ?, 'billing.payment_voided', ?, ?)`)
       .bind(crypto.randomUUID(), actor.id, userId, JSON.stringify({ paymentId }), now),

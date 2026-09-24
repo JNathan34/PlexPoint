@@ -23,8 +23,8 @@
     <link rel="prefetch" href="/" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/index-GJ5txONd.css" />
-    <link rel="stylesheet" href="/assets/portal.css?v=20260924-footer-1" />
-    <script type="module" src="/assets/portal-auth.js?v=20260924-billing-2"></script>
+    <link rel="stylesheet" href="/assets/portal.css?v=20260924-referrals-1" />
+    <script type="module" src="/assets/portal-auth.js?v=20260924-referrals-1"></script>
     <script type="module" src="/assets/portal-navigation.js?v=20260918-dashboard-3"></script>
     <script type="module" src="/assets/portal.js?v=20260918-account-only-4"></script>
   </head>
@@ -70,6 +70,7 @@
                   <button id="auth-retry" type="button" class="pp-button" hidden>Retry connection</button>
                   <div id="plex-pending" class="pp-plex-pending" hidden><p>Finish signing in on Plex, then check your approval.</p><div class="pp-actions"><button id="plex-check" type="button" class="pp-button pp-button-primary">Check approval</button><button id="plex-cancel" type="button" class="pp-button">Cancel Plex sign-in</button></div></div>
                   <div id="auth-guest" hidden>
+                    <div id="referral-welcome" class="pp-referral-welcome" hidden><span aria-hidden="true">✓</span><p><strong id="referral-welcome-title">Friend referral applied</strong><small id="referral-welcome-copy">Continue with Plex to create your account.</small></p></div>
                     <div class="pp-plex-option"><div class="pp-auth-label"><span data-icon="membership"></span><h2>Your PlexPoint account</h2></div><button id="plex-sign-in" type="button" class="pp-button pp-button-primary pp-plex-button" disabled><svg class="pp-plex-mark" viewBox="0 0 20 24" width="18" height="22" aria-hidden="true"><path fill="currentColor" d="M2 1h7l9 11-9 11H2l9-11z" /></svg>Continue with Plex<span aria-hidden="true">→</span></button><p class="pp-small">Sign in on Plex’s own page. Your Plex password stays with Plex.</p></div>
                   </div>
                   <div id="auth-user" data-tier="none" hidden>
@@ -96,6 +97,33 @@
                   <ol id="recent-requests" class="pp-request-list" hidden></ol>
                 </section>
               </div>
+              <section id="referral-panel" class="pp-card glass-card pp-referral-panel" aria-labelledby="referral-heading" hidden>
+                <div class="pp-referral-heading"><div><span class="pp-badge">REFER A FRIEND</span><h2 id="referral-heading">Share PlexPoint. Unlock more requests.</h2><p>Rewards are added after your friend’s first paid membership is confirmed.</p></div><div class="pp-referral-total"><strong id="referral-progress-count">0/5</strong><span>friends complete</span></div></div>
+                <p id="referral-status" class="pp-small" role="status"></p>
+                <div id="referral-content" hidden>
+                  <div class="pp-referral-grid">
+                    <div class="pp-referral-share">
+                      <label for="referral-link">Your personal referral link</label>
+                      <div class="pp-referral-link-row"><input id="referral-link" readonly /><button id="referral-copy" class="pp-button pp-button-primary" type="button">Copy link</button><button id="referral-share" class="pp-button" type="button">Share</button></div>
+                      <div id="referral-milestones" class="pp-referral-milestones" aria-label="Referral milestones"></div>
+                      <p id="referral-next" class="pp-referral-next"></p>
+                    </div>
+                    <div class="pp-referral-rewards" aria-label="Your referral rewards"><span class="pp-step-label">YOUR REWARDS</span><div><article><strong id="referral-season-total">0</strong><span>bonus season requests</span></article><article><strong id="referral-movie-total">0</strong><span>bonus movie requests</span></article></div><small>Maximum reward: 7 season requests and 10 movie requests.</small></div>
+                  </div>
+                  <details id="referral-history" class="pp-referral-history"><summary><span><strong>Referral activity</strong><small id="referral-history-summary">No referrals yet</small></span><span class="pp-secondary-action">View</span></summary><div id="referral-history-list"></div></details>
+                </div>
+                <section id="referral-order" class="pp-referral-order" aria-labelledby="referral-order-heading" hidden>
+                  <div class="pp-referral-order-heading"><div><span class="pp-referral-check" aria-hidden="true">✓</span><div><span id="referral-order-by">Friend referral applied</span><h3 id="referral-order-heading">Choose your membership</h3></div></div><span id="referral-order-step-label">Step 1 of 3</span></div>
+                  <div class="pp-referral-steps" aria-hidden="true"><span data-referral-step-dot="1" class="is-active">Plan</span><span data-referral-step-dot="2">Extras</span><span data-referral-step-dot="3">Review</span></div>
+                  <form id="referral-order-form">
+                    <div data-referral-step="1"><label for="referral-plan">Your plan<select id="referral-plan" required></select></label><p>Choose the monthly plan that suits you. You’ll confirm payment with Jacob on WhatsApp.</p></div>
+                    <div data-referral-step="2" hidden><p class="pp-referral-step-intro">Add anything extra, or continue without extras.</p><div id="referral-extras" class="pp-referral-extras"></div></div>
+                    <div data-referral-step="3" hidden><div id="referral-review" class="pp-referral-review"></div><p>We’ll open WhatsApp with this order already filled in. Nothing is charged online.</p></div>
+                    <p id="referral-order-status" class="pp-small" role="status"></p>
+                    <div class="pp-referral-order-actions"><button id="referral-order-back" class="pp-button" type="button" hidden>Back</button><button id="referral-order-next" class="pp-button pp-button-primary" type="button">Choose extras</button><button id="referral-order-submit" class="pp-button pp-whatsapp-button" type="submit" hidden>Continue on WhatsApp</button></div>
+                  </form>
+                </section>
+              </section>
               <section id="admin-panel" class="pp-card glass-card pp-admin-panel" aria-labelledby="admin-heading" hidden>
               <div class="pp-admin-heading"><div><span class="pp-badge">ADMIN</span><h2 id="admin-heading">User accounts and billing</h2><p>Assign plans, set payment dates, record payments and spot overdue accounts.</p></div><div class="pp-admin-summary" aria-label="Account summary"><span><strong id="admin-total">0</strong>Total</span><span><strong id="admin-enabled">0</strong>Enabled</span><span><strong id="admin-subscribed">0</strong>With a plan</span><span><strong id="admin-overdue">0</strong>Overdue</span></div></div>
               <p id="admin-status" class="pp-small" role="status"></p><button id="admin-retry" type="button" class="pp-button" hidden>Retry user list</button>
@@ -105,6 +133,7 @@
                 <p id="admin-billing-status" class="pp-small" role="status"></p>
                 <div id="admin-billing-content" hidden>
                   <div class="pp-admin-billing-summary" aria-label="Current billing summary"><span><small>Plan</small><strong id="admin-billing-plan-summary">—</strong></span><span><small>Next payment due</small><strong id="admin-billing-due-summary">—</strong></span><span><small>Balance due</small><strong id="admin-billing-balance-summary">—</strong></span></div>
+                  <div id="admin-referral-order" class="pp-admin-referral-order" hidden><div><span class="pp-step-label">REFERRAL ORDER</span><strong id="admin-referral-order-title"></strong><small id="admin-referral-order-copy"></small><div id="admin-referral-checklist" class="pp-admin-referral-checklist" aria-label="Referral completion checklist"></div></div><span id="admin-referral-order-state" class="pp-billing-state"></span></div>
                   <form id="admin-payment-form" class="pp-admin-billing-form pp-admin-payment-form">
                     <div class="pp-admin-form-heading"><div><span class="pp-step-label">PAYMENT</span><h4>Record payment</h4><p id="admin-payment-description">Choose the number of months paid. Everything else is optional.</p></div></div>
                     <div class="pp-payment-quick-fields"><label for="admin-payment-months">Months paid<select id="admin-payment-months" required><option value="1">1 month</option><option value="2">2 months</option><option value="3">3 months</option><option value="4">4 months</option><option value="5">5 months</option><option value="6">6 months</option><option value="7">7 months</option><option value="8">8 months</option><option value="9">9 months</option><option value="10">10 months</option><option value="11">11 months</option><option value="12">12 months</option></select></label><label for="admin-payment-amount">Amount received<input id="admin-payment-amount" type="number" inputmode="decimal" min="0.01" max="1000000" step="0.01" required /><span aria-hidden="true">£</span></label><div id="admin-payment-coverage-preview" class="pp-payment-coverage-preview" aria-live="polite"><small>Covers</small><strong>Choose a plan first</strong><span>The exact dates will appear here.</span></div></div>
@@ -125,6 +154,11 @@
                   </details>
                 </div>
               </section>
+              <details id="admin-referrals" class="pp-admin-secondary-section pp-admin-referrals" hidden>
+                <summary><span><strong>Referral management</strong><small id="admin-referrals-summary">Loading referrals…</small></span><span class="pp-secondary-action">View</span></summary>
+                <p id="admin-referrals-status" class="pp-small" role="status"></p>
+                <div class="pp-admin-table-wrap"><table class="pp-admin-table"><thead><tr><th scope="col">Friend</th><th scope="col">Referred by</th><th scope="col">Order</th><th scope="col">Status</th><th scope="col">Reward</th><th scope="col"><span class="pp-sr-only">Manage</span></th></tr></thead><tbody id="admin-referrals-list"></tbody></table></div>
+              </details>
               </section>
             </section>
           </section>

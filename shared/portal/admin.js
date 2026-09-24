@@ -15,6 +15,8 @@ function adminUser(row, now) {
     updatedAt: row.updated_at,
     signInMethods,
     ...(row.plex_username ? { plexUsername: row.plex_username } : {}),
+    ...(row.referrer_code ? { referredBy: { code: row.referrer_code, displayName: row.referrer_name,
+      status: row.referral_status, orderId: row.referral_order_id || null } } : {}),
     plexAvatarUrl: `/api/portal/avatar?userId=${encodeURIComponent(row.id)}`,
     subscription: row.tier_name ? {
       tier: row.tier_name,
@@ -62,6 +64,8 @@ export async function adminUsersResponse(request, env) {
       u.id, u.email, u.display_name, u.account_status, u.created_at, u.updated_at,
       CASE WHEN c.user_id IS NULL THEN 0 ELSE 1 END AS has_password,
       p.username AS plex_username, ${avatarSelect},
+      referrer.display_name AS referrer_name, rc.code AS referrer_code,
+      r.status AS referral_status, r.order_id AS referral_order_id,
       s.access_status AS subscription_status, s.starts_at, s.ends_at,
       t.name AS tier_name,
       bp.id AS billing_period_id, bp.ends_at AS billing_ends_at,
@@ -71,6 +75,9 @@ export async function adminUsersResponse(request, env) {
       FROM users u
       LEFT JOIN password_credentials c ON c.user_id = u.id
       LEFT JOIN plex_identities p ON p.user_id = u.id
+      LEFT JOIN referrals r ON r.referred_user_id = u.id
+      LEFT JOIN users referrer ON referrer.id = r.referrer_user_id
+      LEFT JOIN referral_codes rc ON rc.user_id = r.referrer_user_id
       LEFT JOIN subscriptions s ON s.user_id = u.id
       LEFT JOIN subscription_tiers t ON t.id = s.tier_id
       LEFT JOIN billing_periods bp ON bp.subscription_id = s.id AND bp.status = 'open'

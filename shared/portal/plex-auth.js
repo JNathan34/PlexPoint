@@ -1,4 +1,5 @@
 import { AuthError, randomHex, digest, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail, plexAvatarColumnAvailable } from "./auth.js";
+import { newAccountReferralStatements, readReferralCode, referralCookie } from "./referral-core.js";
 
 const MAX_AGE = 600;
 function stateName(request) {
@@ -128,8 +129,13 @@ async function complete(request, db, fetcher) {
   const session = await sessionStatements(db, request, row.id, now);
   const avatarSupported = await plexAvatarColumnAvailable(db);
   const statements = [];
-  if (!current && !linked) statements.push(db.prepare("INSERT INTO users(id, email, display_name, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)")
-    .bind(row.id, row.email, row.display_name, isAdminEmail(row.email) ? "admin" : "user", now, now));
+  const isNewAccount = !current && !linked;
+  if (isNewAccount) {
+    statements.push(db.prepare("INSERT INTO users(id, email, display_name, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)")
+      .bind(row.id, row.email, row.display_name, isAdminEmail(row.email) ? "admin" : "user", now, now));
+    statements.push(...await newAccountReferralStatements(db, request,
+      { id: row.id, displayName: row.display_name }, now));
+  }
   if (!linked) statements.push(avatarSupported
     ? db.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at, avatar_url) VALUES (?, ?, ?, ?, ?)")
       .bind(profile.id, row.id, profile.username, now, profile.avatarUrl || null)
@@ -145,6 +151,7 @@ async function complete(request, db, fetcher) {
   const response = reply({ user: publicUser({ ...row, plex_username: profile.username, plex_avatar_url: profile.avatarUrl }, true) }, 200,
     { "Set-Cookie": sessionCookie(request, session.token) });
   response.headers.append("Set-Cookie", stateCookie(request, "", 0));
+  if (isNewAccount && readReferralCode(request)) response.headers.append("Set-Cookie", referralCookie(request, "", 0));
   return response;
 }
 

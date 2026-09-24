@@ -1,3 +1,5 @@
+import { newAccountReferralStatements, readReferralCode, referralCookie } from "./referral-core.js";
+
 const SESSION_SECONDS = 7 * 24 * 60 * 60;
 // Workers Web Crypto supports a maximum of 100,000 PBKDF2 iterations.
 const ITERATIONS = 100000;
@@ -161,11 +163,13 @@ async function register(db, request, body, now) {
   if (await db.prepare("SELECT id FROM users WHERE email = ?").bind(email).first()) throw unavailable();
   const id = crypto.randomUUID();
   const session = await sessionStatements(db, request, id, now);
+  const referralStatements = await newAccountReferralStatements(db, request, { id, displayName }, now);
   try {
     await db.batch([
       db.prepare("INSERT INTO users(id, email, display_name, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)")
         .bind(id, email, displayName, isAdminEmail(email) ? "admin" : "user", now, now),
       db.prepare("INSERT INTO password_credentials(user_id, salt, password_hash, iterations, created_at) VALUES (?, ?, ?, ?, ?)").bind(id, salt, hash, ITERATIONS, now),
+      ...referralStatements,
       ...session.statements,
     ]);
   } catch (error) {
@@ -173,8 +177,10 @@ async function register(db, request, body, now) {
     if (await db.prepare("SELECT id FROM users WHERE email = ?").bind(email).first()) throw unavailable();
     throw error;
   }
-  return reply({ user: publicUser({ id, email, display_name: displayName, created_at: now }) }, 201,
+  const response = reply({ user: publicUser({ id, email, display_name: displayName, created_at: now }) }, 201,
     { "Set-Cookie": sessionCookie(request, session.token) });
+  if (readReferralCode(request)) response.headers.append("Set-Cookie", referralCookie(request, "", 0));
+  return response;
 }
 
 async function login(db, request, body, now) {

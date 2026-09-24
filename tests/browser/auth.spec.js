@@ -92,6 +92,49 @@ test("ordinary accounts never request or reveal the admin dashboard", async ({ p
   expect(adminRequests).toBe(0);
 });
 
+test("members can share a referral and review a referred friend order in three clear steps", async ({ page }) => {
+  await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
+    id: "friend", email: "friend@example.test", displayName: "New Friend", createdAt: Date.now(),
+    plex: { username: "NewFriendPlex" },
+  } } }));
+  const referralFixture = {
+    landing: null,
+    dashboard: { code: "NEWFRIEND-123ABC", link: "https://plexpoint.uk/join/NEWFRIEND-123ABC",
+      completed: 2, maximum: 5, totals: { seasons: 2, movies: 4 },
+      nextReward: { number: 3, seasons: 2, movies: 2 },
+      rewards: [{ number: 1, seasons: 1, movies: 2 }, { number: 2, seasons: 1, movies: 2 },
+        { number: 3, seasons: 2, movies: 2 }, { number: 4, seasons: 1, movies: 2 }, { number: 5, seasons: 2, movies: 2 }],
+      referrals: [{ id: "r1", status: "completed", member: "First Friend", createdAt: Date.now(), completedAt: Date.now(), referralNumber: 1, reward: { seasons: 1, movies: 2 }, orderId: "PP-FIRST" }],
+    },
+    inbound: { id: "inbound", status: "awaiting_payment", referredBy: { code: "JACOB-ABC123", displayName: "Jacob" },
+      order: null, qualified: false, rewardIssued: false, referralNumber: null, reward: { seasons: 0, movies: 0 } },
+    plans: [{ id: "gold", name: "Gold Tier", monthlyPriceMinor: 500, currency: "GBP" }],
+    addons: [{ id: "extra-season", name: "Extra Season Request", description: "Adds a season request.", priceMinor: 100, currency: "GBP", billingLabel: "one-off" }],
+  };
+  await page.route("**/api/portal/referrals", (route) => route.fulfill({ json: route.request().method() === "POST"
+    ? { ...referralFixture, inbound: { ...referralFixture.inbound, order: { id: "PP-REVIEW", tierId: "gold",
+      addons: [{ id: "extra-season", name: "Extra Season Request", quantity: 2 }] } },
+      order: { id: "PP-REVIEW" }, whatsappUrl: "https://wa.me/447481861478?text=review" }
+    : referralFixture }));
+  await page.goto("/account/#account");
+  await expect(page.locator("#referral-panel")).toBeVisible();
+  await expect(page.locator("#referral-link")).toHaveValue("https://plexpoint.uk/join/NEWFRIEND-123ABC");
+  await expect(page.locator("#referral-progress-count")).toHaveText("2/5");
+  await expect(page.locator("#referral-season-total")).toHaveText("2");
+  await expect(page.locator("#referral-movie-total")).toHaveText("4");
+  await expect(page.locator("#referral-order-by")).toContainText("JACOB-ABC123");
+  await page.getByRole("button", { name: "Choose extras" }).click();
+  await expect(page.locator('[data-referral-step="2"]')).toBeVisible();
+  await page.locator('#referral-extras input[data-addon-id="extra-season"]').fill("2");
+  await page.getByRole("button", { name: "Review order" }).click();
+  await expect(page.locator("#referral-review")).toContainText("NewFriendPlex");
+  await expect(page.locator("#referral-review")).toContainText("Gold Tier");
+  await expect(page.locator("#referral-review")).toContainText("2× Extra Season Request");
+  await expect(page.locator("#referral-review")).toContainText("£7.00");
+  await expect(page.locator("#referral-review")).toContainText("PP-REVIEW");
+  await expect(page.getByRole("button", { name: "Continue on WhatsApp" })).toBeVisible();
+});
+
 test("members can see their plan, payment due state and confirmed payment history", async ({ page }) => {
   const start = Date.now() - 6 * 86400000;
   const due = Date.now() + 24 * 86400000;

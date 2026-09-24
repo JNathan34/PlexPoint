@@ -178,8 +178,8 @@
 .pp-payment-history-heading h2 { font-size: 21px; font-weight: 600; }
 .pp-payment-history-heading .pp-text-link { margin-left: auto; padding: 0; border: 0; background: transparent; white-space: nowrap; }
 .pp-billing-state { display: inline-flex; align-items: center; width: max-content; padding: 5px 10px; border: 1px solid #ffffff1f; border-radius: 999px; color: #cbd5e1; background: #ffffff08; font-size: 11px; font-weight: 600; text-transform: capitalize; white-space: nowrap; }
-.pp-billing-state[data-status="paid"], .pp-billing-state[data-status="confirmed"] { border-color: #67db9a55; color: #91edb8; background: #67db9a12; }
-.pp-billing-state[data-status="due_soon"], .pp-billing-state[data-status="partially_paid"], .pp-billing-state[data-status="pending"] { border-color: #fbbf2455; color: #fbd278; background: #fbbf2412; }
+.pp-billing-state[data-status="paid"], .pp-billing-state[data-status="confirmed"], .pp-billing-state[data-status="completed"] { border-color: #67db9a55; color: #91edb8; background: #67db9a12; }
+.pp-billing-state[data-status="due_soon"], .pp-billing-state[data-status="partially_paid"], .pp-billing-state[data-status="pending"], .pp-billing-state[data-status="registered"], .pp-billing-state[data-status="awaiting_payment"] { border-color: #fbbf2455; color: #fbd278; background: #fbbf2412; }
 .pp-billing-state[data-status="overdue"], .pp-billing-state[data-status="void"] { border-color: #fb718555; color: #fda4af; background: #fb718512; }
 .pp-payment-history { margin-top: 12px; scroll-margin-top: 100px; }
 .pp-payment-history :is(h3,h4) { font-size: 16px; font-weight: 600; }
@@ -309,6 +309,84 @@
 .pp-admin-history-section .pp-payment-history { margin: 0; border-top: 1px solid #ffffff0d; }
 .pp-admin-history-section .pp-admin-table-wrap { margin-top: 0; border: 0; border-radius: 0; }
 .pp-admin-payment-history { min-width: 980px; }
+.pp-referral-welcome { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding: 12px; border: 1px solid #65d99a46; border-radius: 12px; background: #65d99a0d; }
+.pp-referral-welcome > span, .pp-referral-check { display: grid; place-items: center; width: 28px; height: 28px; flex: 0 0 28px; border-radius: 50%; color: #0b1711; background: #82e6ad; font-size: 14px; font-weight: 800; }
+.pp-referral-welcome strong, .pp-referral-welcome small { display: block; }
+.pp-referral-welcome strong { color: #eefcf4; font-size: 12px; }
+.pp-referral-welcome small { margin-top: 2px; color: #91aa9c; font-size: 10px; }
+.pp-referral-panel { margin-top: 20px; padding: 24px; overflow: hidden; background: radial-gradient(circle at 95% 0,#ff7b0014,transparent 34%),var(--pp-account-glass) !important; }
+.pp-referral-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.pp-referral-heading h2 { margin-top: 12px; font-size: 24px; letter-spacing: -.02em; }
+.pp-referral-heading p { margin-top: 5px; font-size: 13px; }
+.pp-referral-total { display: grid; min-width: 118px; padding: 12px 14px; border: 1px solid #ff7b0038; border-radius: 13px; background: #ff7b0009; text-align: center; }
+.pp-referral-total strong { color: #ffb274; font-size: 25px; line-height: 1; }
+.pp-referral-total span { margin-top: 6px; color: #9ca7b7; font-size: 9px; text-transform: uppercase; letter-spacing: .07em; }
+.pp-referral-grid { display: grid; grid-template-columns: minmax(0,1.45fr) minmax(260px,.55fr); gap: 16px; margin-top: 20px; }
+.pp-referral-share, .pp-referral-rewards { padding: 18px; border: 1px solid #ffffff15; border-radius: 14px; background: #080c136b; }
+.pp-referral-share > label { display: block; margin-bottom: 8px; color: #aeb8c7; font-size: 11px; font-weight: 600; }
+.pp-referral-link-row { display: grid; grid-template-columns: minmax(0,1fr) auto auto; gap: 8px; }
+.pp-referral-link-row input { min-width: 0; min-height: 44px; padding-block: 8px; color: #ced7e3; font-size: 12px; }
+.pp-referral-link-row .pp-button { min-height: 44px; }
+.pp-referral-milestones { position: relative; display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; margin-top: 20px; }
+.pp-referral-milestones::before { content: ""; position: absolute; top: 15px; right: 8%; left: 8%; height: 2px; background: #ffffff16; }
+.pp-referral-milestones > span { position: relative; z-index: 1; display: grid; place-items: center; width: 32px; height: 32px; margin: auto; border: 1px solid #ffffff22; border-radius: 50%; color: #8c98aa; background: #101620; font-size: 11px; font-weight: 700; }
+.pp-referral-milestones > span.is-complete { border-color: #ff9f535c; color: #241408; background: linear-gradient(135deg,#ff7b00,#ffb067); box-shadow: 0 0 18px #ff7b0030; }
+.pp-referral-next { margin-top: 13px !important; color: #cbd5e1 !important; font-size: 11px; text-align: center; }
+.pp-referral-rewards > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.pp-referral-rewards article { padding: 13px 10px; border: 1px solid #ffffff10; border-radius: 11px; background: #ffffff04; text-align: center; }
+.pp-referral-rewards article strong { display: block; color: #ffad70; font-size: 26px; line-height: 1; }
+.pp-referral-rewards article span { display: block; margin-top: 7px; color: #929eae; font-size: 9px; line-height: 1.35; }
+.pp-referral-rewards > small { display: block; margin-top: 12px; color: #6f7b8c; font-size: 9px; line-height: 1.5; text-align: center; }
+.pp-referral-history { margin-top: 12px; border: 1px solid #ffffff12; border-radius: 12px; overflow: hidden; }
+.pp-referral-history > summary { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; list-style: none; }
+.pp-referral-history > summary::-webkit-details-marker { display: none; }
+.pp-referral-history > summary strong, .pp-referral-history > summary small { display: block; }
+.pp-referral-history > summary strong { color: #e8edf4; font-size: 12px; }
+.pp-referral-history > summary small { margin-top: 2px; color: #778396; font-size: 9px; }
+#referral-history-list > div { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 16px; border-top: 1px solid #ffffff0d; }
+#referral-history-list strong, #referral-history-list small { display: block; }
+#referral-history-list strong { color: #edf1f7; font-size: 12px; }
+#referral-history-list small { margin-top: 2px; color: #7f8b9d; font-size: 9px; }
+.pp-referral-order { margin-top: 18px; padding: 20px; border: 1px solid #65d99a32; border-radius: 15px; background: radial-gradient(circle at 0 0,#65d99a0b,transparent 34%),#080d14a3; }
+.pp-referral-order-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.pp-referral-order-heading > div { display: flex; align-items: center; gap: 11px; }
+.pp-referral-order-heading span:not(.pp-referral-check) { color: #82d9a9; font-size: 10px; font-weight: 600; }
+.pp-referral-order-heading h3 { margin-top: 2px; font-size: 17px; }
+#referral-order-step-label { padding: 5px 9px; border: 1px solid #ffffff16; border-radius: 999px; color: #8995a6; font-size: 9px; }
+.pp-referral-steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; margin: 18px 0; }
+.pp-referral-steps span { padding: 7px; border-bottom: 2px solid #ffffff12; color: #6f7a8a; font-size: 9px; text-align: center; text-transform: uppercase; letter-spacing: .06em; }
+.pp-referral-steps span.is-active { border-color: #ff8e37; color: #ffc08f; }
+.pp-referral-steps span.is-complete { border-color: #66d99a; color: #89dcae; }
+#referral-order-form > [data-referral-step] > label { display: grid; gap: 7px; color: #aeb8c7; font-size: 11px; font-weight: 600; }
+#referral-order-form > [data-referral-step] > p { margin-top: 8px; font-size: 10px; }
+.pp-referral-step-intro { margin: 0 0 10px !important; }
+.pp-referral-extras { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.pp-referral-extras label { display: grid; grid-template-columns: minmax(0,1fr) 60px; align-items: center; gap: 10px; padding: 12px; border: 1px solid #ffffff12; border-radius: 11px; background: #ffffff04; }
+.pp-referral-extras strong, .pp-referral-extras small { display: block; }
+.pp-referral-extras strong { color: #edf2f7; font-size: 11px; }
+.pp-referral-extras small { margin-top: 3px; color: #7f8b9c; font-size: 9px; }
+.pp-referral-extras input { min-height: 38px; padding: 7px; text-align: center; font-size: 13px; }
+.pp-referral-review { border: 1px solid #ffffff12; border-radius: 12px; overflow: hidden; }
+.pp-referral-review > div { display: flex; justify-content: space-between; gap: 20px; padding: 10px 13px; border-bottom: 1px solid #ffffff0d; font-size: 11px; }
+.pp-referral-review > div:last-child { border-bottom: 0; }
+.pp-referral-review span { color: #7f8b9c; }
+.pp-referral-review strong { color: #e7edf5; text-align: right; }
+.pp-referral-review .is-total { background: #ff7b0009; }
+.pp-referral-review .is-total strong { color: #ffb274; font-size: 14px; }
+.pp-referral-order-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+.pp-referral-order-actions .pp-button { min-width: 140px; min-height: 42px; }
+.pp-whatsapp-button { border-color: #34d39955; color: #07120d; background: linear-gradient(135deg,#34d399,#86efac); box-shadow: 0 10px 26px #22c55e20; }
+.pp-whatsapp-button:hover { border-color: #86efac; box-shadow: 0 12px 32px #22c55e35; }
+.pp-admin-referral-order { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 12px; padding: 14px 16px; border: 1px solid #65d99a32; border-radius: 12px; background: #65d99a08; }
+.pp-admin-referral-order strong, .pp-admin-referral-order small { display: block; }
+.pp-admin-referral-order strong { margin-top: 4px; color: #edf7f1; font-size: 13px; }
+.pp-admin-referral-order small { margin-top: 3px; color: #86a090; font-size: 10px; }
+.pp-admin-referral-checklist { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+.pp-admin-referral-checklist span { padding: 4px 7px; border: 1px solid #ffffff13; border-radius: 999px; color: #7f8b9b; background: #ffffff04; font-size: 8px; }
+.pp-admin-referral-checklist span.is-complete { border-color: #65d99a31; color: #8dddb0; background: #65d99a09; }
+.pp-admin-referrals { margin-top: 18px; }
+.pp-admin-referrals > .pp-small { padding: 0 16px; }
+.pp-admin-referrals > .pp-admin-table-wrap { margin: 0; border-width: 1px 0 0; border-radius: 0; }
 .pp-void-payment { min-height: 36px; padding: 6px; }
 #admin-status[data-error="true"] { color: #ffb5a5; }
 #admin-retry { margin-top: 12px; }
@@ -444,6 +522,7 @@
   .pp-admin-heading { align-items: flex-start; flex-direction: column; }
   .pp-admin-billing-grid { grid-template-columns: 1fr; }
   .pp-admin-addons-list { grid-template-columns: 1fr; }
+  .pp-referral-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 767px) {
   .pp-site-header { padding-block: 12px; }
@@ -482,6 +561,13 @@
   .pp-form-grid { grid-template-columns: 1fr; }
   .pp-payment-quick-fields { grid-template-columns: 1fr 1fr; }
   .pp-payment-coverage-preview { grid-column: 1 / -1; }
+  .pp-referral-panel { padding: 20px; }
+  .pp-referral-heading { flex-direction: column; }
+  .pp-referral-total { width: 100%; }
+  .pp-referral-link-row { grid-template-columns: 1fr 1fr; }
+  .pp-referral-link-row input { grid-column: 1 / -1; }
+  .pp-referral-extras { grid-template-columns: 1fr; }
+  .pp-admin-referral-order { align-items: flex-start; flex-direction: column; }
   .pp-page-heading h1 { font-size: 32px; }
   .pp-content-section { padding-top: 56px; }
   .pp-content-heading h2 { font-size: 25px; }
@@ -511,5 +597,8 @@
   .pp-metrics { grid-template-columns: 1fr 1fr; }
   .pp-dashboard-detail-grid .pp-viewing-grid { grid-template-columns: 1fr; }
   .pp-dashboard-detail-grid .pp-watch-time { grid-column: auto; }
+  .pp-referral-rewards > div { grid-template-columns: 1fr; }
+  .pp-referral-order-actions { flex-direction: column-reverse; }
+  .pp-referral-order-actions .pp-button { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .pp-portal *, .pp-portal *::before, .pp-portal *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
