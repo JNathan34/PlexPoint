@@ -5,6 +5,7 @@ import { DatabaseSync } from "node:sqlite";
 
 const migration = readFileSync(new URL('../migrations/0001_portal.sql', import.meta.url), 'utf8');
 const vipAddonsMigration = readFileSync(new URL('../migrations/0007_vip_addons.sql', import.meta.url), 'utf8');
+const billingCoverageMigration = readFileSync(new URL('../migrations/0008_billing_coverage.sql', import.meta.url), 'utf8');
 function database(t) {
   const db = new DatabaseSync(':memory:');
   t.after(() => db.close());
@@ -88,6 +89,7 @@ test('payment recording does not implicitly alter entitlement', (t) => {
 test('VIP and assignable add-ons extend the existing account model', (t) => {
   const db = database(t);
   db.exec(vipAddonsMigration);
+  db.exec(billingCoverageMigration);
   const vip = db.prepare("SELECT id, monthly_price_minor FROM subscription_tiers WHERE id='vip'").get();
   assert.equal(vip.id, 'vip');
   assert.equal(vip.monthly_price_minor, 0);
@@ -95,6 +97,11 @@ test('VIP and assignable add-ons extend the existing account model', (t) => {
   db.exec("INSERT INTO user_addons(user_id,addon_id,quantity,assigned_by) VALUES ('u1','extra-movie',2,'u2')");
   assert.equal(db.prepare("SELECT quantity FROM user_addons WHERE user_id='u1' AND addon_id='extra-movie'").get().quantity, 2);
   assert.throws(() => db.exec("INSERT INTO user_addons(user_id,addon_id,quantity) VALUES ('u2','extra-season',0)"));
+  const basePeriod = db.prepare("SELECT base_ends_at, base_amount_due_minor FROM billing_periods WHERE id='b1'").get();
+  assert.equal(basePeriod.base_ends_at, 2000);
+  assert.equal(basePeriod.base_amount_due_minor, 500);
+  assert.ok(db.prepare("PRAGMA table_info(payments)").all().some((column) => column.name === 'coverage_months'));
+  assert.ok(db.prepare("PRAGMA table_info(user_addons)").all().some((column) => column.name === 'duration_months'));
 });
 
 test('a Plex identity cannot be assigned to two portal customers', (t) => {

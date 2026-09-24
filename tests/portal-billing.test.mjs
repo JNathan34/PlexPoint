@@ -6,7 +6,7 @@ import { adminBillingResponse, billingResponse } from "../shared/portal/billing.
 import { adminUsersResponse } from "../shared/portal/admin.js";
 import { authResponse } from "../shared/portal/auth.js";
 
-const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql", "0007_vip_addons.sql"];
+const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql", "0007_vip_addons.sql", "0008_billing_coverage.sql"];
 const password = "A very long unique passphrase";
 
 function setup(t) {
@@ -75,23 +75,32 @@ test("an admin assigns a plan, records payments and members see their own billin
 
   const addons = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
     action: "save_addons", userId: member.user.id,
-    addons: [{ id: "extra-movie", quantity: 2 }, { id: "extra-season", quantity: 1 }],
+    addons: [
+      { id: "extra-movie", quantity: 2, startsOn: "2026-09-01", durationMonths: 2 },
+      { id: "extra-season", quantity: 1, startsOn: "2026-09-01", durationMonths: 0 },
+    ],
   }), env);
   assert.equal(addons.status, 200);
   const addonData = await addons.json();
   assert.deepEqual(addonData.billing.addons.map(({ id, quantity }) => ({ id, quantity })), [
     { id: "extra-movie", quantity: 2 }, { id: "extra-season", quantity: 1 },
   ]);
+  assert.equal(addonData.billing.addons[0].durationMonths, 2);
+  assert.equal(addonData.billing.addons[0].endsAt, Date.parse("2026-11-01T00:00:00Z"));
+  assert.equal(addonData.billing.addons[1].endsAt, null);
 
   const payment = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
     action: "record_payment", userId: member.user.id, amountMinor: 500,
-    receivedOn: "2026-07-15", method: "bank_transfer", reference: "BANK-001",
+    receivedOn: "2026-07-15", method: "bank_transfer", reference: "BANK-001", coverageMonths: 1,
+    note: "July membership",
   }), env);
   assert.equal(payment.status, 200);
   const paymentData = await payment.json();
   assert.equal(paymentData.billing.currentPeriod.paymentStatus, "paid");
   assert.equal(paymentData.billing.currentPeriod.outstandingMinor, 0);
   assert.equal(paymentData.billing.lastPayment.reference, "BANK-001");
+  assert.equal(paymentData.billing.lastPayment.note, "July membership");
+  assert.equal(paymentData.billing.lastPayment.coverageMonths, 1);
 
   const memberView = await billingResponse(getRequest("/api/portal/billing", member.cookie), env);
   assert.equal(memberView.status, 200);
@@ -127,6 +136,48 @@ test("billing access is private and admin mutations are owner-only and same-orig
   assert.equal((await adminBillingResponse(crossOrigin, env)).status, 403);
 });
 
+test("one payment can catch up several months or prepay several months ahead", async (t) => {
+  const { env } = setup(t);
+  const admin = await register(env, "jacobnathan1718@gmail.com", "Jacob");
+  const member = await register(env, "multi-month@example.test", "Multi Month");
+  await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "save_plan", userId: member.user.id, tierId: "gold", accessStatus: "enabled",
+    startsOn: "2026-07-01", nextDueOn: "2026-08-01",
+  }), env);
+
+  const caughtUp = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "record_payment", userId: member.user.id, amountMinor: 1500, coverageMonths: 3,
+    receivedOn: "2026-09-01", method: "bank_transfer", reference: "CATCH-UP-3",
+    note: "Caught up July to September",
+  }), env);
+  const caughtUpData = await caughtUp.json();
+  assert.equal(caughtUpData.billing.subscription.endsAt, Date.parse("2026-10-01T00:00:00Z"));
+  assert.equal(caughtUpData.billing.currentPeriod.amountDueMinor, 1500);
+  assert.equal(caughtUpData.billing.currentPeriod.outstandingMinor, 0);
+  assert.equal(caughtUpData.billing.lastPayment.coverageStartsAt, Date.parse("2026-07-01T00:00:00Z"));
+  assert.equal(caughtUpData.billing.lastPayment.coverageEndsAt, Date.parse("2026-10-01T00:00:00Z"));
+
+  const prepaid = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "record_payment", userId: member.user.id, amountMinor: 1500, coverageMonths: 3,
+    receivedOn: "2026-09-02", method: "cash", reference: "AHEAD-3", note: "Three months ahead",
+  }), env);
+  const prepaidData = await prepaid.json();
+  assert.equal(prepaidData.billing.subscription.endsAt, Date.parse("2027-01-01T00:00:00Z"));
+  assert.equal(prepaidData.billing.currentPeriod.amountDueMinor, 3000);
+  assert.equal(prepaidData.billing.currentPeriod.confirmedMinor, 3000);
+  assert.equal(prepaidData.billing.currentPeriod.paymentStatus, "paid");
+  assert.equal(prepaidData.billing.lastPayment.coverageStartsAt, Date.parse("2026-10-01T00:00:00Z"));
+  assert.equal(prepaidData.billing.lastPayment.coverageEndsAt, Date.parse("2027-01-01T00:00:00Z"));
+
+  const voided = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "void_payment", userId: member.user.id, paymentId: prepaidData.billing.lastPayment.id,
+  }), env);
+  const voidedData = await voided.json();
+  assert.equal(voidedData.billing.subscription.endsAt, Date.parse("2026-10-01T00:00:00Z"));
+  assert.equal(voidedData.billing.currentPeriod.amountDueMinor, 1500);
+  assert.equal(voidedData.billing.currentPeriod.outstandingMinor, 0);
+});
+
 test("voiding a payment preserves its audit trail and restores the outstanding balance", async (t) => {
   const { sqlite, env } = setup(t);
   const admin = await register(env, "jacobnathan1718@gmail.com", "Jacob");
@@ -137,7 +188,7 @@ test("voiding a payment preserves its audit trail and restores the outstanding b
   }), env);
   const recorded = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
     action: "record_payment", userId: member.user.id, amountMinor: 250,
-    receivedOn: "2026-08-02", method: "cash", reference: "",
+    receivedOn: "2026-08-02", method: "cash", reference: "", coverageMonths: 1,
   }), env);
   const paymentId = (await recorded.json()).billing.payments[0].id;
   const voided = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {

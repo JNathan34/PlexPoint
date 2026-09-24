@@ -30,6 +30,15 @@ function dateTimestamp(value, label) {
   return timestamp;
 }
 
+function addCalendarMonths(timestamp, months) {
+  const source = new Date(timestamp);
+  const day = source.getUTCDate();
+  const target = new Date(Date.UTC(source.getUTCFullYear(), source.getUTCMonth() + months, 1));
+  const lastDay = new Date(Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)).getUTCDate();
+  target.setUTCDate(Math.min(day, lastDay));
+  return target.getTime();
+}
+
 export function paymentState(period, now = Date.now()) {
   if (!period) return "none";
   if (period.status === "void") return "void";
@@ -51,6 +60,7 @@ function mapPeriod(row, now) {
     startsAt: Number(row.starts_at),
     endsAt: Number(row.ends_at),
     amountDueMinor,
+    monthlyPriceMinor: Number(row.monthly_price_minor ?? row.amount_due_minor),
     currency: row.currency,
     status: row.status,
     confirmedMinor,
@@ -72,14 +82,18 @@ function mapPayment(row) {
     method: row.method,
     receivedAt: row.received_at == null ? null : Number(row.received_at),
     reference: row.provider_payment_id || null,
+    note: row.note || null,
+    coverageStartsAt: row.coverage_starts_at == null ? null : Number(row.coverage_starts_at),
+    coverageEndsAt: row.coverage_ends_at == null ? null : Number(row.coverage_ends_at),
+    coverageMonths: row.coverage_months == null ? null : Number(row.coverage_months),
     periodStartsAt: Number(row.period_starts_at),
     periodEndsAt: Number(row.period_ends_at),
   };
 }
 
-async function addonsForUser(db, userId) {
+async function addonsForUser(db, userId, { includeInactive = false, now = Date.now() } = {}) {
   const result = await db.prepare(`SELECT
-    a.id, a.name, a.description, ua.quantity
+    a.id, a.name, a.description, ua.quantity, ua.starts_at, ua.ends_at, ua.duration_months
     FROM user_addons ua
     JOIN addon_catalog a ON a.id = ua.addon_id
     WHERE ua.user_id = ? AND a.enabled = 1
@@ -89,11 +103,16 @@ async function addonsForUser(db, userId) {
     name: addon.name,
     description: addon.description,
     quantity: Number(addon.quantity),
-  }));
+    startsAt: addon.starts_at == null ? null : Number(addon.starts_at),
+    endsAt: addon.ends_at == null ? null : Number(addon.ends_at),
+    durationMonths: addon.duration_months == null ? null : Number(addon.duration_months),
+    active: (addon.starts_at == null || Number(addon.starts_at) <= now)
+      && (addon.ends_at == null || Number(addon.ends_at) > now),
+  })).filter((addon) => includeInactive || addon.active);
 }
 
-export async function billingForUser(db, userId, { includeVoided = false, now = Date.now() } = {}) {
-  const addons = await addonsForUser(db, userId);
+export async function billingForUser(db, userId, { includeVoided = false, includeInactiveAddons = false, now = Date.now() } = {}) {
+  const addons = await addonsForUser(db, userId, { includeInactive: includeInactiveAddons, now });
   const subscription = await db.prepare(`SELECT
     s.id, s.tier_id, s.access_status, s.starts_at, s.ends_at,
     t.name AS tier_name, t.monthly_price_minor, t.currency
@@ -103,14 +122,16 @@ export async function billingForUser(db, userId, { includeVoided = false, now = 
 
   const periodResult = await db.prepare(`SELECT
     bp.id, bp.tier_id, t.name AS tier_name, bp.starts_at, bp.ends_at,
-    bp.amount_due_minor, bp.currency, bp.status,
+    bp.amount_due_minor, COALESCE(bp.base_amount_due_minor, bp.amount_due_minor) AS monthly_price_minor,
+    bp.currency, bp.status,
     COALESCE(SUM(CASE WHEN p.status = 'confirmed' THEN p.amount_minor ELSE 0 END), 0) AS confirmed_minor,
     COALESCE(SUM(CASE WHEN p.status = 'pending' THEN p.amount_minor ELSE 0 END), 0) AS pending_minor
     FROM billing_periods bp
     JOIN subscription_tiers t ON t.id = bp.tier_id
     LEFT JOIN payments p ON p.billing_period_id = bp.id
     WHERE bp.subscription_id = ?
-    GROUP BY bp.id, bp.tier_id, t.name, bp.starts_at, bp.ends_at, bp.amount_due_minor, bp.currency, bp.status
+    GROUP BY bp.id, bp.tier_id, t.name, bp.starts_at, bp.ends_at, bp.amount_due_minor,
+      bp.base_amount_due_minor, bp.currency, bp.status
     ORDER BY bp.starts_at DESC LIMIT 24`).bind(subscription.id).all();
   const periods = (periodResult.results || []).map((row) => mapPeriod(row, now));
   const currentPeriod = periods.find((period) => period.status === "open"
@@ -119,6 +140,7 @@ export async function billingForUser(db, userId, { includeVoided = false, now = 
 
   const paymentResult = await db.prepare(`SELECT
     p.id, p.amount_minor, p.currency, p.status, p.method, p.received_at, p.provider_payment_id,
+    p.note, p.coverage_starts_at, p.coverage_ends_at, p.coverage_months,
     bp.tier_id, t.name AS tier_name, bp.starts_at AS period_starts_at, bp.ends_at AS period_ends_at
     FROM payments p
     JOIN billing_periods bp ON bp.id = p.billing_period_id
@@ -175,7 +197,7 @@ async function adminDetail(db, userId, now = Date.now()) {
     availableAddons: (addonsResult.results || []).map((addon) => ({
       id: addon.id, name: addon.name, description: addon.description,
     })),
-    billing: await billingForUser(db, userId, { includeVoided: true, now }),
+    billing: await billingForUser(db, userId, { includeVoided: true, includeInactiveAddons: true, now }),
   };
 }
 
@@ -190,11 +212,15 @@ async function saveAddons(db, actor, body, now) {
   for (const item of body.addons) {
     const id = identifier(item?.id, "add-on");
     const quantity = item?.quantity;
-    if (seen.has(id) || !Number.isSafeInteger(quantity) || quantity < 1 || quantity > 99) {
+    const startsAt = dateTimestamp(item?.startsOn, "add-on start date");
+    const durationMonths = item?.durationMonths;
+    if (seen.has(id) || !Number.isSafeInteger(quantity) || quantity < 1 || quantity > 99
+      || !Number.isSafeInteger(durationMonths) || durationMonths < 0 || durationMonths > 24) {
       throw new AuthError(400, "Select valid add-ons and quantities.");
     }
     seen.add(id);
-    selected.push({ id, quantity });
+    selected.push({ id, quantity, startsAt, durationMonths,
+      endsAt: durationMonths === 0 ? null : addCalendarMonths(startsAt, durationMonths) });
   }
   if (selected.length) {
     const placeholders = selected.map(() => "?").join(",");
@@ -205,8 +231,9 @@ async function saveAddons(db, actor, body, now) {
   const statements = [db.prepare("DELETE FROM user_addons WHERE user_id = ?").bind(userId)];
   for (const addon of selected) {
     statements.push(db.prepare(`INSERT INTO user_addons
-      (user_id, addon_id, quantity, assigned_by, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?)`).bind(userId, addon.id, addon.quantity, actor.id, now, now));
+      (user_id, addon_id, quantity, assigned_by, created_at, updated_at, starts_at, ends_at, duration_months)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(userId, addon.id, addon.quantity, actor.id, now, now,
+        addon.startsAt, addon.endsAt, addon.durationMonths));
   }
   statements.push(db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
     VALUES (?, ?, ?, 'billing.addons_updated', ?, ?)`)
@@ -242,11 +269,14 @@ async function savePlan(db, actor, body, now) {
         starts_at = excluded.starts_at, ends_at = excluded.ends_at, version = subscriptions.version + 1,
         updated_at = excluded.updated_at`).bind(subscriptionId, userId, tierId, accessStatus, startsAt, endsAt, now, now),
     db.prepare(`INSERT INTO billing_periods
-      (id, subscription_id, tier_id, starts_at, ends_at, amount_due_minor, currency, status, reference, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, 'open', ?, ?)
+      (id, subscription_id, tier_id, starts_at, ends_at, amount_due_minor, currency, status, reference, created_at,
+       base_ends_at, base_amount_due_minor)
+      VALUES (?, ?, ?, ?, ?, ?, ?, 'open', ?, ?, ?, ?)
       ON CONFLICT(reference) DO UPDATE SET tier_id = excluded.tier_id, ends_at = excluded.ends_at,
-        amount_due_minor = excluded.amount_due_minor, currency = excluded.currency, status = 'open'`)
-      .bind(periodId, subscriptionId, tierId, startsAt, endsAt, Number(tier.monthly_price_minor), tier.currency, reference, now),
+        amount_due_minor = excluded.amount_due_minor, currency = excluded.currency, status = 'open',
+        base_ends_at = excluded.base_ends_at, base_amount_due_minor = excluded.base_amount_due_minor`)
+      .bind(periodId, subscriptionId, tierId, startsAt, endsAt, Number(tier.monthly_price_minor), tier.currency,
+        reference, now, endsAt, Number(tier.monthly_price_minor)),
     db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
       VALUES (?, ?, ?, 'billing.plan_updated', ?, ?)`)
       .bind(crypto.randomUUID(), actor.id, userId, details, now),
@@ -273,22 +303,64 @@ async function recordPayment(db, actor, body, now) {
   }
   if (reference && await db.prepare("SELECT id FROM payments WHERE provider = 'manual' AND provider_payment_id = ?")
     .bind(reference).first()) throw new AuthError(409, "That payment reference has already been used.");
+  const note = typeof body.note === "string" ? body.note.trim() : "";
+  if (note.length > 500 || /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(note)) {
+    throw new AuthError(400, "Keep the payment note under 500 characters.");
+  }
+  const coverageMonths = body.coverageMonths;
+  if (!Number.isSafeInteger(coverageMonths) || coverageMonths < 1 || coverageMonths > 24) {
+    throw new AuthError(400, "Choose between 1 and 24 months for this payment.");
+  }
 
-  const period = await db.prepare(`SELECT bp.id, bp.currency
-    FROM subscriptions s JOIN billing_periods bp ON bp.subscription_id = s.id
+  const period = await db.prepare(`SELECT
+      bp.id, bp.currency, bp.starts_at, bp.ends_at, bp.amount_due_minor,
+      COALESCE(bp.base_ends_at, bp.ends_at) AS base_ends_at,
+      COALESCE(bp.base_amount_due_minor, bp.amount_due_minor) AS base_amount_due_minor,
+      s.id AS subscription_id,
+      COALESCE(SUM(CASE WHEN p.status = 'confirmed' THEN p.amount_minor ELSE 0 END), 0) AS confirmed_minor
+    FROM subscriptions s
+    JOIN billing_periods bp ON bp.subscription_id = s.id
+    LEFT JOIN payments p ON p.billing_period_id = bp.id
     WHERE s.user_id = ? AND bp.status = 'open' AND bp.starts_at = s.starts_at AND bp.ends_at = s.ends_at
+    GROUP BY bp.id, bp.currency, bp.starts_at, bp.ends_at, bp.amount_due_minor,
+      bp.base_ends_at, bp.base_amount_due_minor, s.id
     ORDER BY bp.starts_at DESC LIMIT 1`).bind(userId).first();
   if (!period) throw new AuthError(409, "Assign a plan and billing dates before recording a payment.");
+  const monthlyPriceMinor = Number(period.base_amount_due_minor);
+  if (monthlyPriceMinor === 0) throw new AuthError(409, "This plan does not require payment.");
+  const hasOutstandingBalance = Number(period.confirmed_minor) < Number(period.amount_due_minor);
+  const coverageStartsAt = hasOutstandingBalance ? Number(period.starts_at) : Number(period.ends_at);
+  const coverageEndsAt = addCalendarMonths(coverageStartsAt, coverageMonths);
+  const requestedCoverageMinor = monthlyPriceMinor * coverageMonths;
+  const periodExtensionMinor = hasOutstandingBalance
+    ? Math.max(0, requestedCoverageMinor - Number(period.amount_due_minor))
+    : requestedCoverageMinor;
+  if (!Number.isSafeInteger(periodExtensionMinor) || periodExtensionMinor > 100_000_000) {
+    throw new AuthError(400, "That coverage period is too large.");
+  }
+  const nextEndsAt = Math.max(Number(period.ends_at), coverageEndsAt);
+  const nextAmountDueMinor = Number(period.amount_due_minor) + periodExtensionMinor;
   const paymentId = crypto.randomUUID();
   const details = JSON.stringify({ paymentId, amountMinor, currency: period.currency, method, receivedAt,
-    ...(reference ? { reference } : {}) });
+    coverageStartsAt, coverageEndsAt, coverageMonths, periodExtensionMinor,
+    ...(reference ? { reference } : {}), ...(note ? { note } : {}) });
   await db.batch([
     db.prepare(`INSERT INTO payments
       (id, billing_period_id, amount_minor, currency, status, method, received_at, confirmed_at,
-       recorded_by, provider, provider_payment_id, idempotency_key, created_at)
-      VALUES (?, ?, ?, ?, 'confirmed', ?, ?, ?, ?, 'manual', ?, ?, ?)`)
+       recorded_by, provider, provider_payment_id, idempotency_key, created_at,
+       coverage_starts_at, coverage_ends_at, coverage_months, period_extension_minor, note)
+      VALUES (?, ?, ?, ?, 'confirmed', ?, ?, ?, ?, 'manual', ?, ?, ?, ?, ?, ?, ?, ?)`)
       .bind(paymentId, period.id, amountMinor, period.currency, method, receivedAt, now, actor.id,
-        reference || null, `manual:${paymentId}`, now),
+        reference || null, `manual:${paymentId}`, now, coverageStartsAt, coverageEndsAt, coverageMonths,
+        periodExtensionMinor, note || null),
+    db.prepare(`UPDATE billing_periods
+      SET ends_at = ?, amount_due_minor = ?,
+        base_ends_at = COALESCE(base_ends_at, ?),
+        base_amount_due_minor = COALESCE(base_amount_due_minor, ?)
+      WHERE id = ?`).bind(nextEndsAt, nextAmountDueMinor, Number(period.base_ends_at),
+        Number(period.base_amount_due_minor), period.id),
+    db.prepare("UPDATE subscriptions SET ends_at = ?, version = version + 1, updated_at = ? WHERE id = ?")
+      .bind(nextEndsAt, now, period.subscription_id),
     db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
       VALUES (?, ?, ?, 'billing.payment_recorded', ?, ?)`)
       .bind(crypto.randomUUID(), actor.id, userId, details, now),
@@ -300,7 +372,11 @@ async function voidPayment(db, actor, body, now) {
   const userId = identifier(body.userId);
   const paymentId = identifier(body.paymentId, "payment");
   await targetUser(db, userId);
-  const payment = await db.prepare(`SELECT p.id FROM payments p
+  const payment = await db.prepare(`SELECT p.id, p.billing_period_id, s.id AS subscription_id,
+      COALESCE(bp.base_ends_at, bp.ends_at) AS base_ends_at,
+      COALESCE(bp.base_amount_due_minor, bp.amount_due_minor) AS base_amount_due_minor,
+      CASE WHEN bp.starts_at = s.starts_at AND bp.ends_at = s.ends_at THEN 1 ELSE 0 END AS is_current
+    FROM payments p
     JOIN billing_periods bp ON bp.id = p.billing_period_id
     JOIN subscriptions s ON s.id = bp.subscription_id
     WHERE p.id = ? AND s.user_id = ? AND p.status != 'void'`).bind(paymentId, userId).first();
@@ -310,6 +386,19 @@ async function voidPayment(db, actor, body, now) {
     db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
       VALUES (?, ?, ?, 'billing.payment_voided', ?, ?)`)
       .bind(crypto.randomUUID(), actor.id, userId, JSON.stringify({ paymentId }), now),
+  ]);
+  const activeCoverage = await db.prepare(`SELECT
+      COALESCE(MAX(coverage_ends_at), ?) AS latest_coverage_end,
+      COALESCE(SUM(period_extension_minor), 0) AS extension_minor
+    FROM payments WHERE billing_period_id = ? AND status = 'confirmed'`)
+    .bind(Number(payment.base_ends_at), payment.billing_period_id).first();
+  const nextEndsAt = Math.max(Number(payment.base_ends_at), Number(activeCoverage.latest_coverage_end));
+  const nextAmountDueMinor = Number(payment.base_amount_due_minor) + Number(activeCoverage.extension_minor);
+  await db.batch([
+    db.prepare("UPDATE billing_periods SET ends_at = ?, amount_due_minor = ? WHERE id = ?")
+      .bind(nextEndsAt, nextAmountDueMinor, payment.billing_period_id),
+    db.prepare("UPDATE subscriptions SET ends_at = ?, version = version + 1, updated_at = ? WHERE id = ? AND ? = 1")
+      .bind(nextEndsAt, now, payment.subscription_id, Number(payment.is_current)),
   ]);
   return adminDetail(db, userId, now);
 }

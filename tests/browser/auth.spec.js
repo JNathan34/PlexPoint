@@ -251,6 +251,7 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
   const createdAt = Date.UTC(2026, 8, 16);
   let planSaved = false;
   let paymentRecorded = false;
+  let recordedPaymentBody = null;
   let addonsSaved = false;
   const billing = {
     subscription: null, currentPeriod: null, lastPayment: null, payments: [], addons: [],
@@ -277,10 +278,11 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
       billing.currentPeriod = { id: "period", ...billing.subscription, amountDueMinor: 500, confirmedMinor: 0, pendingMinor: 0, outstandingMinor: 500, creditMinor: 0, status: "open", paymentStatus: "unpaid" };
     } else if (body.action === "record_payment") {
       paymentRecorded = true;
+      recordedPaymentBody = body;
       billing.currentPeriod.outstandingMinor = 0;
       billing.currentPeriod.confirmedMinor = body.amountMinor;
       billing.currentPeriod.paymentStatus = "paid";
-      billing.payments = [{ id: "pay", tierId: "gold", tier: "Gold Tier", amountMinor: body.amountMinor, currency: "GBP", status: "confirmed", method: body.method, receivedAt: Date.parse(`${body.receivedOn}T00:00:00Z`), reference: body.reference || null, periodStartsAt: billing.subscription.startsAt, periodEndsAt: billing.subscription.endsAt }];
+      billing.payments = [{ id: "pay", tierId: "gold", tier: "Gold Tier", amountMinor: body.amountMinor, currency: "GBP", status: "confirmed", method: body.method, receivedAt: Date.parse(`${body.receivedOn}T00:00:00Z`), reference: body.reference || null, note: body.note || null, coverageMonths: body.coverageMonths, coverageStartsAt: billing.subscription.startsAt, coverageEndsAt: billing.subscription.endsAt, periodStartsAt: billing.subscription.startsAt, periodEndsAt: billing.subscription.endsAt }];
       billing.lastPayment = billing.payments[0];
     } else if (body.action === "save_addons") {
       addonsSaved = true;
@@ -294,17 +296,24 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
   await page.locator("#admin-plan-access").selectOption("enabled");
   await page.locator("#admin-plan-start").fill("2026-09-01");
   await page.locator("#admin-plan-due").fill("2026-10-01");
-  await page.getByRole("button", { name: "Save plan and dates" }).click();
+  await page.getByRole("button", { name: "Save plan settings" }).click();
   await expect(page.locator("#admin-billing-status")).toHaveText("Plan and billing dates saved.");
   expect(planSaved).toBe(true);
   await page.locator("#admin-payment-amount").fill("5.00");
   await page.locator("#admin-payment-date").fill("2026-09-16");
+  await page.locator("#admin-payment-months").selectOption("3");
+  await page.locator("#admin-payment-amount").fill("15.00");
+  await page.locator("#admin-payment-note").fill("Three months paid together");
   await page.getByRole("button", { name: "Record payment" }).click();
   await expect(page.locator("#admin-billing-status")).toContainText("Payment recorded");
   expect(paymentRecorded).toBe(true);
-  await expect(page.locator("#admin-billing-payments")).toContainText("£5.00");
+  expect(recordedPaymentBody.coverageMonths).toBe(3);
+  expect(recordedPaymentBody.note).toBe("Three months paid together");
+  await expect(page.locator("#admin-billing-payments")).toContainText("£15.00");
+  await expect(page.locator("#admin-billing-payments")).toContainText("3 months");
   await page.locator('#admin-addons-list input[type="checkbox"]').check();
   await page.getByLabel("Extra Movie Request quantity").fill("3");
+  await page.getByLabel("Extra Movie Request duration").selectOption("2");
   await page.getByRole("button", { name: "Save add-ons" }).click();
   await expect(page.locator("#admin-billing-status")).toHaveText("Account add-ons saved.");
   expect(addonsSaved).toBe(true);
