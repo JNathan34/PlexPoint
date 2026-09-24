@@ -5,6 +5,13 @@ test("Plex is the only guest sign-in method", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Continue with Plex" })).toBeEnabled();
   await expect(page.locator("#email-option, #auth-form, #auth-email, #auth-password")).toHaveCount(0);
   await expect(page.locator(".pp-account-shortcuts")).toHaveCount(0);
+  const footer = page.getByTestId("footer");
+  await expect(footer).toContainText("Private streaming, cleanly managed.");
+  await expect(footer).toContainText("Explore");
+  await expect(footer).toContainText("Support");
+  await expect(footer).toContainText("Independent private server. Not affiliated with Plex Inc.");
+  await expect(footer.getByText("PlexPoint", { exact: true })).toHaveCSS("color", "rgb(255, 255, 255)");
+  await expect(page.getByTestId("footer-free-trial-link")).toHaveAttribute("href", "https://wizarr.plexpoint.uk/j/FREE%20TRIAL");
 });
 
 test("unavailable account service offers retry while the main navigation stays usable", async ({ page }) => {
