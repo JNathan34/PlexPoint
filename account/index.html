@@ -110,6 +110,11 @@
                     </div>
                     <div class="pp-referral-rewards" aria-label="Your referral rewards"><span class="pp-step-label">YOUR REWARDS</span><div><article><strong id="referral-season-total">0</strong><span>bonus season requests</span></article><article><strong id="referral-movie-total">0</strong><span>bonus movie requests</span></article></div><small>Maximum reward: 7 season requests and 10 movie requests.</small></div>
                   </div>
+                  <section id="referral-redemption" class="pp-referral-redemption" aria-labelledby="referral-redemption-heading">
+                    <div><span class="pp-step-label">REDEEM REQUESTS</span><h3 id="referral-redemption-heading">Choose how many to use this month</h3><p>Redeemed requests are added to your request service as a temporary monthly adjustment. Anything redeemed but not used expires at the end of this calendar month. Credits you have not redeemed stay available.</p></div>
+                    <div class="pp-referral-redemption-controls"><label for="referral-redeem-movies">Movie credits available <input id="referral-redeem-movies" type="number" min="0" max="0" step="1" value="0" inputmode="numeric" /></label><label for="referral-redeem-seasons">Season credits available <input id="referral-redeem-seasons" type="number" min="0" max="0" step="1" value="0" inputmode="numeric" /></label><button id="referral-redeem" class="pp-button pp-button-primary" type="button">Redeem selected requests</button></div>
+                    <p id="referral-redeem-status" class="pp-small" role="status"></p>
+                  </section>
                   <details id="referral-history" class="pp-referral-history"><summary><span><strong>Referral activity</strong><small id="referral-history-summary">No referrals yet</small></span><span class="pp-secondary-action">View</span></summary><div id="referral-history-list"></div></details>
                 </div>
                 <section id="referral-order" class="pp-referral-order" aria-labelledby="referral-order-heading" hidden>

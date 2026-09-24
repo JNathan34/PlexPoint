@@ -44,6 +44,34 @@ async function overseerrJson(config, path, search, fetcher) {
   } finally { clearTimeout(timeout); }
 }
 
+async function overseerrMutation(config, path, body, fetcher) {
+  const url = new URL(path.replace(/^\/+/, ""), config.apiBase);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetcher(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-Api-Key": config.apiKey,
+      },
+      body: JSON.stringify(body),
+      redirect: "manual",
+      signal: controller.signal,
+    });
+    if (!response.ok) throw new Error("upstream status");
+    const declaredLength = Number(response.headers.get("Content-Length") || 0);
+    if (declaredLength > MAX_JSON_BYTES) throw new Error("upstream response too large");
+    const text = await response.text();
+    if (text.length > MAX_JSON_BYTES) throw new Error("upstream response too large");
+    if (!text.trim()) return null;
+    const data = JSON.parse(text);
+    if (!data || typeof data !== "object") throw new Error("upstream response");
+    return data;
+  } finally { clearTimeout(timeout); }
+}
+
 const normalized = (value) => typeof value === "string" ? value.trim().toLowerCase() : "";
 
 async function findOverseerrUser(config, account, fetcher) {
@@ -54,6 +82,49 @@ async function findOverseerrUser(config, account, fetcher) {
   return users.find((candidate) => email && normalized(candidate?.email) === email)
     || users.find((candidate) => plexUsername && normalized(candidate?.plexUsername) === plexUsername)
     || null;
+}
+
+function quotaBonus(value) {
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) ? parsed : 0;
+}
+
+function settingsPayload(settings, user, movieQuotaBonus, tvQuotaBonus) {
+  return {
+    username: safeText(settings?.username ?? user?.username ?? user?.plexUsername, ""),
+    email: safeText(settings?.email ?? user?.email, ""),
+    discordId: safeText(settings?.discordId, ""),
+    locale: safeText(settings?.locale, ""),
+    discoverRegion: safeText(settings?.discoverRegion, ""),
+    streamingRegion: safeText(settings?.streamingRegion, ""),
+    originalLanguage: typeof settings?.originalLanguage === "string" ? settings.originalLanguage : null,
+    movieQuotaLimit: settings?.movieQuotaLimit ?? null,
+    movieQuotaDays: settings?.movieQuotaDays ?? null,
+    movieQuotaPeriod: settings?.movieQuotaPeriod ?? null,
+    movieQuotaBonus,
+    tvQuotaLimit: settings?.tvQuotaLimit ?? null,
+    tvQuotaDays: settings?.tvQuotaDays ?? null,
+    tvQuotaPeriod: settings?.tvQuotaPeriod ?? null,
+    tvQuotaBonus,
+    watchlistSyncMovies: settings?.watchlistSyncMovies ?? null,
+    watchlistSyncTv: settings?.watchlistSyncTv ?? null,
+  };
+}
+
+export async function applyOverseerrTemporaryRequests(config, user, { movies = 0, seasons = 0 } = {}, fetcher = fetch) {
+  const userId = Number(user?.id);
+  if (!Number.isInteger(userId) || userId < 1) throw new Error("request service user not found");
+  if (!Number.isSafeInteger(movies) || movies < 0 || !Number.isSafeInteger(seasons) || seasons < 0
+    || movies + seasons < 1 || movies + seasons > 100) {
+    throw new Error("invalid temporary request adjustment");
+  }
+  const settings = await overseerrJson(config, `user/${userId}/settings/main`, {}, fetcher);
+  const nextMovieBonus = quotaBonus(settings.movieQuotaBonus) + movies;
+  const nextTvBonus = quotaBonus(settings.tvQuotaBonus) + seasons;
+  if (nextMovieBonus > 10000 || nextTvBonus > 10000) throw new Error("temporary request adjustment too large");
+  await overseerrMutation(config, `user/${userId}/settings/main`,
+    settingsPayload(settings, user, nextMovieBonus, nextTvBonus), fetcher);
+  return { movieBonus: nextMovieBonus, tvBonus: nextTvBonus };
 }
 
 function safeText(value, fallback, limit = 200) {

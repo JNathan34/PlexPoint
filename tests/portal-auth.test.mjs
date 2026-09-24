@@ -9,7 +9,7 @@ function setup(t, { avatars = true } = {}) {
   t.after(() => sqlite.close());
   const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql"];
   if (avatars) migrations.push("0006_plex_avatars.sql");
-  migrations.push("0007_vip_addons.sql", "0008_billing_coverage.sql", "0009_referrals.sql");
+  migrations.push("0007_vip_addons.sql", "0008_billing_coverage.sql", "0009_referrals.sql", "0010_referral_redemptions.sql");
   for (const file of migrations) {
     sqlite.exec(readFileSync(new URL(`../migrations/${file}`, import.meta.url), "utf8"));
   }

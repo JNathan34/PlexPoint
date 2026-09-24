@@ -11,6 +11,7 @@ let requestsBusy = false;
 let billingBusy = false;
 let adminBillingBusy = false;
 let referralBusy = false;
+let referralRedeemEnabled = false;
 let referralData = null;
 let referralStep = 1;
 let referralOrder = null;
@@ -43,6 +44,7 @@ function controls() {
   for (const id of ["referral-copy", "referral-share", "referral-order-back", "referral-order-next", "referral-order-submit"]) {
     byId(id).disabled = referralBusy;
   }
+  byId("referral-redeem").disabled = referralBusy || !referralRedeemEnabled;
   for (const formId of ["admin-plan-form", "admin-payment-form", "admin-addons-form"]) {
     const editorForm = byId(formId);
     for (const control of editorForm.elements) control.disabled = adminBillingBusy;
@@ -192,6 +194,7 @@ function renderUser(next) {
     memberPayments = [];
     memberPaymentsExpanded = false;
     referralData = null;
+    referralRedeemEnabled = false;
     referralOrder = null;
     referralWhatsAppUrl = "";
     byId("referral-panel").hidden = true;
@@ -467,6 +470,23 @@ function renderReferrals(data) {
   byId("referral-progress-count").textContent = `${data.dashboard.completed}/${data.dashboard.maximum}`;
   byId("referral-season-total").textContent = String(data.dashboard.totals.seasons);
   byId("referral-movie-total").textContent = String(data.dashboard.totals.movies);
+  const credits = data.dashboard.available || { movies: 0, seasons: 0 };
+  const movieCredits = Math.max(0, Number(credits.movies) || 0);
+  const seasonCredits = Math.max(0, Number(credits.seasons) || 0);
+  const movieInput = byId("referral-redeem-movies");
+  const seasonInput = byId("referral-redeem-seasons");
+  movieInput.max = String(movieCredits);
+  seasonInput.max = String(seasonCredits);
+  movieInput.value = String(Math.min(Math.max(0, Number(movieInput.value) || 0), movieCredits));
+  seasonInput.value = String(Math.min(Math.max(0, Number(seasonInput.value) || 0), seasonCredits));
+  referralRedeemEnabled = movieCredits + seasonCredits > 0;
+  const availableCopy = [
+    movieCredits ? `${movieCredits} movie` + (movieCredits === 1 ? "" : "s") : "",
+    seasonCredits ? `${seasonCredits} season` + (seasonCredits === 1 ? "" : "s") : "",
+  ].filter(Boolean).join(" and ");
+  byId("referral-redeem-status").textContent = availableCopy
+    ? `${availableCopy} available to redeem for ${data.dashboard.currentMonth || "this month"}. Unused temporary requests expire at month end.`
+    : "No unredeemed referral credits yet. Earn credits when a referred member completes their first payment.";
   byId("referral-next").textContent = data.dashboard.nextReward
     ? `Next friend: +${data.dashboard.nextReward.seasons} season and +${data.dashboard.nextReward.movies} movie requests.`
     : "You’ve unlocked every referral reward — thank you!";
@@ -1246,6 +1266,45 @@ byId("referral-share").addEventListener("click", async () => {
     catch (error) { if (error.name !== "AbortError") byId("referral-status").textContent = "Sharing was unavailable. Copy the link instead."; }
   } else byId("referral-copy").click();
 });
+async function redeemReferralCredits() {
+  if (referralBusy || !referralRedeemEnabled) return;
+  const movies = Number(byId("referral-redeem-movies").value || 0);
+  const seasons = Number(byId("referral-redeem-seasons").value || 0);
+  const statusNode = byId("referral-redeem-status");
+  if (!Number.isSafeInteger(movies) || !Number.isSafeInteger(seasons) || movies < 0 || seasons < 0 || movies + seasons < 1) {
+    statusNode.textContent = "Choose at least one request credit to redeem.";
+    statusNode.dataset.error = "true";
+    return;
+  }
+  referralBusy = true;
+  statusNode.textContent = "Applying your temporary requests…";
+  statusNode.dataset.error = "false";
+  controls();
+  try {
+    const data = await request("referrals", { action: "redeem_reward", movies, seasons }, "");
+    renderReferrals(data);
+    const selectedCopy = [
+      movies ? `${movies} movie request${movies === 1 ? "" : "s"}` : "",
+      seasons ? `${seasons} season request${seasons === 1 ? "" : "s"}` : "",
+    ].filter(Boolean).join(" and ");
+    statusNode.textContent = `${selectedCopy} added for this month. Unused temporary requests expire at month end.`;
+  } catch (error) {
+    statusNode.textContent = error.message;
+    statusNode.dataset.error = "true";
+  } finally {
+    referralBusy = false;
+    controls();
+  }
+}
+byId("referral-redeem").addEventListener("click", () => void redeemReferralCredits());
+for (const id of ["referral-redeem-movies", "referral-redeem-seasons"]) {
+  byId(id).addEventListener("input", () => {
+    const input = byId(id);
+    const max = Number(input.max) || 0;
+    const value = Math.min(max, Math.max(0, Number(input.value) || 0));
+    input.value = String(Number.isSafeInteger(value) ? value : Math.floor(value));
+  });
+}
 byId("referral-order-next").addEventListener("click", async () => {
   if (referralStep === 1 && !byId("referral-plan").reportValidity()) return;
   if (referralStep === 2 && !byId("referral-order-form").reportValidity()) return;

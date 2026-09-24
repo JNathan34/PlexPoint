@@ -1,5 +1,6 @@
 import { AuthError, isAdminEmail, readBody, reply, sessionUser } from "./auth.js";
 import { memberReferralCode, readReferralCode, referralCookie } from "./referral-core.js";
+import { applyOverseerrTemporaryRequests, configuredOverseerr, findOverseerrUser } from "./overseerr.js";
 
 const WHATSAPP_NUMBER = "447481861478";
 const MAX_REFERRALS = 5;
@@ -49,6 +50,88 @@ function mapReferral(row) {
   };
 }
 
+function monthKey(now) {
+  return new Date(now).toISOString().slice(0, 7);
+}
+
+async function referralCredits(db, userId) {
+  const balance = await db.prepare(`SELECT movie_credits, season_credits, updated_at
+    FROM referral_credit_balances WHERE user_id = ?`).bind(userId).first();
+  const result = await db.prepare(`SELECT id, movie_requests, season_requests, month_key, status, created_at, applied_at
+    FROM referral_redemptions WHERE user_id = ? ORDER BY created_at DESC LIMIT 24`).bind(userId).all();
+  return {
+    movies: Number(balance?.movie_credits || 0),
+    seasons: Number(balance?.season_credits || 0),
+    updatedAt: balance?.updated_at == null ? null : Number(balance.updated_at),
+    redemptions: (result.results || []).map((row) => ({
+      id: row.id, movies: Number(row.movie_requests), seasons: Number(row.season_requests),
+      month: row.month_key, status: row.status, createdAt: Number(row.created_at),
+      appliedAt: row.applied_at == null ? null : Number(row.applied_at),
+    })),
+  };
+}
+
+function requestCount(value, label) {
+  if (!Number.isSafeInteger(value) || value < 0 || value > 100) {
+    throw new AuthError(400, `Choose a valid number of ${label} requests.`);
+  }
+  return value;
+}
+
+async function redeemReferralRewards(db, env, user, body, now, fetcher) {
+  const movies = requestCount(body.movies, "movie");
+  const seasons = requestCount(body.seasons, "season");
+  if (movies + seasons < 1) throw new AuthError(400, "Choose at least one request credit to redeem.");
+  const balance = await referralCredits(db, user.id);
+  if (movies > balance.movies || seasons > balance.seasons) {
+    throw new AuthError(409, "You cannot redeem more credits than you have available.");
+  }
+
+  const config = configuredOverseerr(env);
+  const overseerrUser = await findOverseerrUser(config, user, fetcher);
+  if (!overseerrUser || !Number.isInteger(Number(overseerrUser.id))) {
+    throw new AuthError(409, "Your request-service account could not be found yet. Sign in to the request service once, then try again.");
+  }
+
+  const redemptionId = crypto.randomUUID();
+  const currentMonth = monthKey(now);
+  await db.prepare(`INSERT INTO referral_redemptions
+    (id, user_id, movie_requests, season_requests, month_key, status, created_at)
+    VALUES (?, ?, ?, ?, ?, 'pending', ?)`).bind(redemptionId, user.id, movies, seasons, currentMonth, now).run();
+  const reserved = await db.prepare(`UPDATE referral_credit_balances
+    SET movie_credits = movie_credits - ?, season_credits = season_credits - ?, updated_at = ?
+    WHERE user_id = ? AND movie_credits >= ? AND season_credits >= ?`)
+    .bind(movies, seasons, now, user.id, movies, seasons).run();
+  if (Number(reserved?.meta?.changes || 0) !== 1) {
+    await db.prepare(`UPDATE referral_redemptions SET status = 'failed', failure_reason = ?, applied_at = ? WHERE id = ?`)
+      .bind("Credits changed before redemption.", now, redemptionId).run();
+    throw new AuthError(409, "Your referral balance changed. Refresh the page and try again.");
+  }
+
+  try {
+    await applyOverseerrTemporaryRequests(config, overseerrUser, { movies, seasons }, fetcher);
+    await db.batch([
+      db.prepare(`UPDATE referral_redemptions SET status = 'applied', applied_at = ? WHERE id = ?`)
+        .bind(now, redemptionId),
+      db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
+        VALUES (?, ?, ?, 'referral.credits_redeemed', ?, ?)`)
+        .bind(crypto.randomUUID(), user.id, user.id,
+          JSON.stringify({ redemptionId, movies, seasons, month: currentMonth }), now),
+    ]);
+  } catch (error) {
+    await db.batch([
+      db.prepare(`UPDATE referral_credit_balances
+        SET movie_credits = movie_credits + ?, season_credits = season_credits + ?, updated_at = ?
+        WHERE user_id = ?`).bind(movies, seasons, now, user.id),
+      db.prepare(`UPDATE referral_redemptions SET status = 'failed', failure_reason = ?, applied_at = ? WHERE id = ?`)
+        .bind("The request service did not accept the temporary adjustment.", now, redemptionId),
+    ]);
+    console.error(JSON.stringify({ event: "referral_redemption_failed", errorType: error instanceof Error ? error.name : typeof error }));
+    throw new AuthError(502, "The request service could not apply those temporary requests. Your referral credits were not used.");
+  }
+  return { movies, seasons, month: currentMonth };
+}
+
 export async function referralAdminDetail(db, userId) {
   const inbound = await db.prepare(`SELECT r.*, rc.code AS referrer_code, u.display_name AS referrer_name,
       t.name AS tier_name
@@ -88,11 +171,13 @@ async function memberDashboard(db, request, user, now) {
     FROM addon_catalog WHERE enabled = 1 ORDER BY sort_order, name`).all();
   const completed = rewarded.length;
   const nextReward = REWARDS.find((reward) => reward.number > completed) || null;
+  const credits = await referralCredits(db, user.id);
   return {
     landing: await landingReferral(db, request),
     dashboard: {
       code: ownCode.code, link: `${new URL(request.url).origin}/join/${encodeURIComponent(ownCode.code)}`,
-      completed, maximum: MAX_REFERRALS, totals, nextReward, rewards: REWARDS, referrals,
+      completed, maximum: MAX_REFERRALS, totals, available: { movies: credits.movies, seasons: credits.seasons },
+      currentMonth: monthKey(now), redemptions: credits.redemptions, nextReward, rewards: REWARDS, referrals,
     },
     inbound,
     plans: (tiers.results || []).map((tier) => ({ id: tier.id, name: tier.name,
@@ -153,7 +238,7 @@ function whatsappOrder(order, inbound) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
-export async function referralsResponse(request, env) {
+export async function referralsResponse(request, env, fetcher = fetch) {
   try {
     ensureHttps(request);
     if (!["GET", "POST"].includes(request.method)) return reply({ message: "Method not allowed." }, 405, { Allow: "GET, POST" });
@@ -166,6 +251,11 @@ export async function referralsResponse(request, env) {
     const now = Date.now();
     if (request.method === "GET") return reply(await memberDashboard(env.PORTAL_DB, request, user, now));
     const body = await readBody(request);
+    if (body.action === "redeem_reward") {
+      const redeemed = await redeemReferralRewards(env.PORTAL_DB, env, user, body, now, fetcher);
+      const data = await memberDashboard(env.PORTAL_DB, request, user, now);
+      return reply({ ...data, redeemed });
+    }
     if (body.action !== "save_order") throw new AuthError(400, "Choose a valid referral action.");
     const order = await saveOrder(env.PORTAL_DB, user, body, now);
     const data = await memberDashboard(env.PORTAL_DB, request, user, now);

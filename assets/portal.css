@@ -56,7 +56,7 @@
 .pp-account-backdrop > img { width: 100%; height: 100%; object-fit: cover; opacity: .25; }
 .pp-account-backdrop > div { position: absolute; inset: 0; background: linear-gradient(90deg, #080b11, #080b11e6 36%, #080b118c); }
 .pp-account-container { padding: 28px 16px 48px; }
-.pp-account-dashboard { --pp-dashboard-columns: minmax(0,1.55fr) minmax(340px,.85fr); --pp-account-glass: linear-gradient(145deg,#181d2ac2,#0e121b7a); --pp-account-glass-border: #ffffff21; scroll-margin-top: 96px; }
+.pp-account-dashboard { --pp-dashboard-columns: minmax(0,1.55fr) minmax(340px,.85fr); --pp-account-glass: linear-gradient(145deg,#181d2aad,#0e121b85); --pp-account-glass-border: #ffffff21; scroll-margin-top: 96px; }
 .pp-account-dashboard .glass-card { background: var(--pp-account-glass); backdrop-filter: blur(24px) saturate(1.2); -webkit-backdrop-filter: blur(24px) saturate(1.2); border-color: var(--pp-account-glass-border); box-shadow: inset 0 1px #ffffff0f, 0 24px 70px #00000042; }
 .pp-dashboard-top { display: grid; grid-template-columns: var(--pp-dashboard-columns); align-items: stretch; gap: 20px; }
 .pp-auth-grid { display: grid; grid-template-columns: .95fr 1.05fr; align-items: center; gap: 40px; min-height: calc(92vh - 9rem); }
@@ -314,7 +314,7 @@
    homepage membership cards, including the smaller nested panels. */
 .pp-account-dashboard :is(.pp-auth-card, .pp-billing-panel, .pp-requests-panel, .pp-referral-panel, .pp-admin-panel,
   .pp-admin-billing-form, .pp-admin-inline-details, .pp-admin-secondary-section, .pp-admin-addon-option,
-  .pp-referral-share, .pp-referral-rewards, .pp-referral-history, .pp-referral-order, .pp-referral-review,
+  .pp-referral-share, .pp-referral-rewards, .pp-referral-redemption, .pp-referral-history, .pp-referral-order, .pp-referral-review,
   .pp-admin-referral-order, .pp-referral-welcome, .pp-referral-total, .pp-referral-milestones > span,
   .pp-referral-extras label, .pp-referral-rewards article, .pp-referral-review > div, .pp-payment-coverage-preview) {
   background: var(--pp-account-glass);
@@ -356,6 +356,14 @@
 .pp-referral-rewards article strong { display: block; color: #ffad70; font-size: 26px; line-height: 1; }
 .pp-referral-rewards article span { display: block; margin-top: 7px; color: #929eae; font-size: 9px; line-height: 1.35; }
 .pp-referral-rewards > small { display: block; margin-top: 12px; color: #6f7b8c; font-size: 9px; line-height: 1.5; text-align: center; }
+.pp-referral-redemption { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 16px; align-items: end; margin-top: 12px; padding: 18px; border: 1px solid #ffb0672e; border-radius: 14px; background: linear-gradient(135deg,#ff7b000b,#080c136b); }
+.pp-referral-redemption h3 { margin-top: 6px; color: #f3f6fb; font-size: 16px; }
+.pp-referral-redemption p { max-width: 620px; margin-top: 5px; color: #8793a5; font-size: 10px; line-height: 1.55; }
+.pp-referral-redemption-controls { display: grid; grid-template-columns: repeat(2,minmax(120px,1fr)); gap: 8px; min-width: min(100%,420px); }
+.pp-referral-redemption-controls label { display: grid; gap: 5px; color: #aeb8c7; font-size: 9px; font-weight: 600; }
+.pp-referral-redemption-controls input { width: 100%; min-height: 38px; padding: 7px 9px; font-size: 13px; text-align: center; }
+.pp-referral-redemption-controls .pp-button { grid-column: 1 / -1; min-height: 40px; }
+.pp-referral-redemption #referral-redeem-status { grid-column: 1 / -1; margin: 0; }
 .pp-referral-history { margin-top: 12px; border: 1px solid #ffffff12; border-radius: 12px; overflow: hidden; }
 .pp-referral-history > summary { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; list-style: none; }
 .pp-referral-history > summary::-webkit-details-marker { display: none; }
@@ -586,6 +594,8 @@
   .pp-referral-link-row { grid-template-columns: 1fr 1fr; }
   .pp-referral-link-row input { grid-column: 1 / -1; }
   .pp-referral-extras { grid-template-columns: 1fr; }
+  .pp-referral-redemption { grid-template-columns: 1fr; align-items: stretch; }
+  .pp-referral-redemption-controls { min-width: 0; }
   .pp-admin-referral-order { align-items: flex-start; flex-direction: column; }
   .pp-page-heading h1 { font-size: 32px; }
   .pp-content-section { padding-top: 56px; }
@@ -617,6 +627,8 @@
   .pp-dashboard-detail-grid .pp-viewing-grid { grid-template-columns: 1fr; }
   .pp-dashboard-detail-grid .pp-watch-time { grid-column: auto; }
   .pp-referral-rewards > div { grid-template-columns: 1fr; }
+  .pp-referral-redemption-controls { grid-template-columns: 1fr; }
+  .pp-referral-redemption-controls .pp-button { grid-column: auto; }
   .pp-referral-order-actions { flex-direction: column-reverse; }
   .pp-referral-order-actions .pp-button { width: 100%; }
 }

@@ -390,6 +390,13 @@ async function recordPayment(db, actor, body, now) {
             AND paid_subscription.access_status = 'enabled'
             AND paid_tier.monthly_price_minor > 0)`)
       .bind(paymentId, now, now, now, userId),
+    db.prepare(`INSERT INTO referral_credit_balances(user_id, movie_credits, season_credits, updated_at)
+      SELECT referrer_user_id, reward_movie_requests, reward_season_requests, ? FROM referrals
+      WHERE referred_user_id = ? AND completion_payment_id = ? AND rewarded_at IS NOT NULL
+      ON CONFLICT(user_id) DO UPDATE SET
+        movie_credits = referral_credit_balances.movie_credits + excluded.movie_credits,
+        season_credits = referral_credit_balances.season_credits + excluded.season_credits,
+        updated_at = excluded.updated_at`).bind(now, userId, paymentId),
     db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
       VALUES (?, ?, ?, 'billing.payment_recorded', ?, ?)`)
       .bind(crypto.randomUUID(), actor.id, userId, details, now),
@@ -414,12 +421,28 @@ async function voidPayment(db, actor, body, now) {
     JOIN subscriptions s ON s.id = bp.subscription_id
     WHERE p.id = ? AND s.user_id = ? AND p.status != 'void'`).bind(paymentId, userId).first();
   if (!payment) throw new AuthError(404, "That payment could not be found or is already void.");
+  const reward = await db.prepare(`SELECT r.referrer_user_id, r.reward_movie_requests, r.reward_season_requests,
+      COALESCE(SUM(rr.movie_requests), 0) AS redeemed_movies,
+      COALESCE(SUM(rr.season_requests), 0) AS redeemed_seasons
+    FROM referrals r LEFT JOIN referral_redemptions rr
+      ON rr.user_id = r.referrer_user_id AND rr.status = 'applied'
+      AND rr.created_at >= COALESCE(r.completed_at, 0)
+    WHERE r.referred_user_id = ? AND r.completion_payment_id = ?
+    GROUP BY r.id, r.referrer_user_id, r.reward_movie_requests, r.reward_season_requests`)
+    .bind(userId, paymentId).first();
+  if (reward && (Number(reward.redeemed_movies) > 0 || Number(reward.redeemed_seasons) > 0)) {
+    throw new AuthError(409, "That referral reward has already been redeemed, so void the temporary request adjustment first.");
+  }
   await db.batch([
     db.prepare("UPDATE payments SET status = 'void' WHERE id = ? AND status != 'void'").bind(paymentId),
     db.prepare(`UPDATE referrals SET status = 'awaiting_payment', completion_payment_id = NULL,
       completed_at = NULL, rewarded_at = NULL, referral_number = NULL,
       reward_movie_requests = 0, reward_season_requests = 0, updated_at = ?
       WHERE referred_user_id = ? AND completion_payment_id = ?`).bind(now, userId, paymentId),
+    db.prepare(`UPDATE referral_credit_balances SET
+      movie_credits = MAX(0, movie_credits - ?), season_credits = MAX(0, season_credits - ?), updated_at = ?
+      WHERE user_id = ?`).bind(Number(reward?.reward_movie_requests || 0),
+      Number(reward?.reward_season_requests || 0), now, reward?.referrer_user_id || ""),
     db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
       VALUES (?, ?, ?, 'billing.payment_voided', ?, ?)`)
       .bind(crypto.randomUUID(), actor.id, userId, JSON.stringify({ paymentId }), now),

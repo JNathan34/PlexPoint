@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { adminUsersResponse } from "../shared/portal/admin.js";
 import { authResponse } from "../shared/portal/auth.js";
 
-const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql", "0007_vip_addons.sql", "0008_billing_coverage.sql", "0009_referrals.sql"];
+const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql", "0007_vip_addons.sql", "0008_billing_coverage.sql", "0009_referrals.sql", "0010_referral_redemptions.sql"];
 const password = "A very long unique passphrase";
 
 function setup(t, { avatars = true } = {}) {

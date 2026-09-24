@@ -7,7 +7,7 @@ import { adminBillingResponse } from "../shared/portal/billing.js";
 import { adminReferralsResponse, referralLandingResponse, referralsResponse } from "../shared/portal/referrals.js";
 
 const files = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql",
-  "0005_admin_account.sql", "0006_plex_avatars.sql", "0007_vip_addons.sql", "0008_billing_coverage.sql", "0009_referrals.sql"];
+  "0005_admin_account.sql", "0006_plex_avatars.sql", "0007_vip_addons.sql", "0008_billing_coverage.sql", "0009_referrals.sql", "0010_referral_redemptions.sql"];
 const origin = "https://portal.example.test";
 const password = "A very long unique passphrase";
 
@@ -21,7 +21,7 @@ function setup(t) {
     all() { return { success: true, results: sqlite.prepare(sql).all(...values) }; },
     run() { return { success: true, meta: sqlite.prepare(sql).run(...values) }; },
   }; };
-  return { sqlite, env: { PORTAL_DB: { prepare, batch(statements) {
+  return { sqlite, env: { OVERSEERR_API_KEY: "test-overseerr-key-123456", PORTAL_DB: { prepare, batch(statements) {
     sqlite.exec("BEGIN");
     try { const results = statements.map((statement) => statement.all()); sqlite.exec("COMMIT"); return results; }
     catch (error) { sqlite.exec("ROLLBACK"); throw error; }
@@ -173,4 +173,43 @@ test("a member can never receive more than the five configured referral rewards"
   assert.equal(progress.completed, 5);
   assert.deepEqual(progress.totals, { movies: 10, seasons: 7 });
   assert.equal(progress.nextReward, null);
+});
+
+test("a referrer chooses how many earned credits to redeem as a temporary monthly adjustment", async (t) => {
+  const { sqlite, env } = setup(t);
+  const referrer = await register(env, "redeemer@example.test", "Redeemer");
+  sqlite.prepare(`INSERT INTO referral_credit_balances(user_id, movie_credits, season_credits, updated_at)
+    VALUES (?, 4, 2, 100)`).run(referrer.user.id);
+  let posted = null;
+  const fetcher = async (input, options) => {
+    const url = new URL(input);
+    assert.equal(options.headers["X-Api-Key"], "test-overseerr-key-123456");
+    if (url.pathname === "/api/v1/user" && !options.method) {
+      return Response.json({ results: [{ id: 42, email: "redeemer@example.test", plexUsername: "Redeemer" }] });
+    }
+    if (url.pathname === "/api/v1/user/42/settings/main" && !options.method) {
+      return Response.json({ username: "Redeemer", email: "redeemer@example.test", movieQuotaLimit: -1,
+        movieQuotaDays: 7, movieQuotaPeriod: "days", movieQuotaBonus: 1, tvQuotaLimit: -1,
+        tvQuotaDays: 7, tvQuotaPeriod: "days", tvQuotaBonus: 0 });
+    }
+    if (url.pathname === "/api/v1/user/42/settings/main" && options.method === "POST") {
+      posted = JSON.parse(options.body);
+      return Response.json(posted);
+    }
+    return new Response(null, { status: 404 });
+  };
+  const response = await referralsResponse(jsonRequest("/api/portal/referrals", referrer.cookie, {
+    action: "redeem_reward", movies: 3, seasons: 1,
+  }), env, fetcher);
+  assert.equal(response.status, 200);
+  const data = await response.json();
+  assert.deepEqual(data.redeemed, { movies: 3, seasons: 1, month: new Date().toISOString().slice(0, 7) });
+  assert.deepEqual(data.dashboard.available, { movies: 1, seasons: 1 });
+  assert.equal(data.dashboard.redemptions[0].status, "applied");
+  assert.equal(posted.movieQuotaBonus, 4);
+  assert.equal(posted.tvQuotaBonus, 1);
+  const remaining = sqlite.prepare("SELECT movie_credits,season_credits FROM referral_credit_balances WHERE user_id = ?")
+    .get(referrer.user.id);
+  assert.equal(remaining.movie_credits, 1);
+  assert.equal(remaining.season_credits, 1);
 });

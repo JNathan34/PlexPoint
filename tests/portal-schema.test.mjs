@@ -7,6 +7,7 @@ const migration = readFileSync(new URL('../migrations/0001_portal.sql', import.m
 const vipAddonsMigration = readFileSync(new URL('../migrations/0007_vip_addons.sql', import.meta.url), 'utf8');
 const billingCoverageMigration = readFileSync(new URL('../migrations/0008_billing_coverage.sql', import.meta.url), 'utf8');
 const referralsMigration = readFileSync(new URL('../migrations/0009_referrals.sql', import.meta.url), 'utf8');
+const redemptionsMigration = readFileSync(new URL('../migrations/0010_referral_redemptions.sql', import.meta.url), 'utf8');
 function database(t) {
   const db = new DatabaseSync(':memory:');
   t.after(() => db.close());
@@ -92,6 +93,7 @@ test('VIP and assignable add-ons extend the existing account model', (t) => {
   db.exec(vipAddonsMigration);
   db.exec(billingCoverageMigration);
   db.exec(referralsMigration);
+  db.exec(redemptionsMigration);
   const vip = db.prepare("SELECT id, monthly_price_minor FROM subscription_tiers WHERE id='vip'").get();
   assert.equal(vip.id, 'vip');
   assert.equal(vip.monthly_price_minor, 0);
@@ -106,6 +108,8 @@ test('VIP and assignable add-ons extend the existing account model', (t) => {
   assert.ok(db.prepare("PRAGMA table_info(user_addons)").all().some((column) => column.name === 'duration_months'));
   assert.equal(db.prepare("SELECT price_minor FROM addon_catalog WHERE id='extra-season'").get().price_minor, 100);
   assert.ok(db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='referrals'").get());
+  assert.ok(db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='referral_credit_balances'").get());
+  assert.ok(db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='referral_redemptions'").get());
 });
 
 test('a Plex identity cannot be assigned to two portal customers', (t) => {

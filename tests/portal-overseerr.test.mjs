@@ -3,9 +3,9 @@ import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
 import { readFileSync } from "node:fs";
 import { authResponse } from "../shared/portal/auth.js";
-import { avatarResponse, requestsResponse } from "../shared/portal/overseerr.js";
+import { applyOverseerrTemporaryRequests, avatarResponse, configuredOverseerr, requestsResponse } from "../shared/portal/overseerr.js";
 
-const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql", "0007_vip_addons.sql", "0008_billing_coverage.sql", "0009_referrals.sql"];
+const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql", "0007_vip_addons.sql", "0008_billing_coverage.sql", "0009_referrals.sql", "0010_referral_redemptions.sql"];
 
 function setup(t) {
   const sqlite = new DatabaseSync(":memory:");
@@ -120,4 +120,33 @@ test("Overseerr failures stay isolated from the account session", async (t) => {
   }), env, async () => new Response("private upstream failure", { status: 500 }));
   assert.equal(requests.status, 502);
   assert.doesNotMatch(await requests.text(), /private upstream|test-overseerr-key/i);
+});
+
+test("temporary referral requests add to the current month quota bonus without changing other settings", async () => {
+  const config = configuredOverseerr({ OVERSEERR_API_KEY: "test-overseerr-key-123456" });
+  let posted = null;
+  const fetcher = async (input, options) => {
+    const url = new URL(input);
+    assert.equal(options.headers["X-Api-Key"], "test-overseerr-key-123456");
+    if (url.pathname === "/api/v1/user/42/settings/main" && !options.method) {
+      return Response.json({ username: "PlexViewer", email: "viewer@example.test", discordId: "123",
+        locale: "en", discoverRegion: "GB", streamingRegion: "GB", originalLanguage: "en",
+        movieQuotaLimit: -1, movieQuotaDays: 7, movieQuotaPeriod: "days", movieQuotaBonus: 2,
+        tvQuotaLimit: -1, tvQuotaDays: 7, tvQuotaPeriod: "calendarMonth", tvQuotaBonus: 1,
+        watchlistSyncMovies: true, watchlistSyncTv: false });
+    }
+    if (url.pathname === "/api/v1/user/42/settings/main" && options.method === "POST") {
+      posted = JSON.parse(options.body);
+      return Response.json(posted);
+    }
+    return new Response(null, { status: 404 });
+  };
+  const result = await applyOverseerrTemporaryRequests(config,
+    { id: 42, email: "viewer@example.test", plex_username: "PlexViewer" }, { movies: 3, seasons: 2 }, fetcher);
+  assert.deepEqual(result, { movieBonus: 5, tvBonus: 3 });
+  assert.equal(posted.movieQuotaBonus, 5);
+  assert.equal(posted.tvQuotaBonus, 3);
+  assert.equal(posted.movieQuotaLimit, -1);
+  assert.equal(posted.tvQuotaPeriod, "calendarMonth");
+  assert.equal(posted.watchlistSyncMovies, true);
 });

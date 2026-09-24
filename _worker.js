@@ -60,7 +60,7 @@ function notImplementedClass(name) {
 }
 var init_utils = __esm({
   "../node_modules/unenv/dist/runtime/_internal/utils.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -74,7 +74,7 @@ var init_utils = __esm({
 var _timeOrigin, _performanceNow, nodeTiming, PerformanceEntry, PerformanceMark, PerformanceMeasure, PerformanceResourceTiming, PerformanceObserverEntryList, Performance, PerformanceObserver, performance;
 var init_performance = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -321,7 +321,7 @@ var init_performance = __esm({
 // ../node_modules/unenv/dist/runtime/node/perf_hooks.mjs
 var init_perf_hooks = __esm({
   "../node_modules/unenv/dist/runtime/node/perf_hooks.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -359,7 +359,7 @@ var init_performance2 = __esm({
 var noop_default;
 var init_noop = __esm({
   "../node_modules/unenv/dist/runtime/mock/noop.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -373,7 +373,7 @@ import { Writable } from "node:stream";
 var _console, _ignoreErrors, _stderr, _stdout, log, info, trace, debug, table, error, warn, createTask, clear, count, countReset, dir, dirxml, group, groupEnd, groupCollapsed, profile, profileEnd, time, timeEnd, timeLog, timeStamp, Console, _times, _stdoutErrorHandler, _stderrErrorHandler;
 var init_console = __esm({
   "../node_modules/unenv/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -416,7 +416,7 @@ var init_console = __esm({
 var workerdConsole, assert, clear2, context, count2, countReset2, createTask2, debug2, dir2, dirxml2, error2, group2, groupCollapsed2, groupEnd2, info2, log2, profile2, profileEnd2, table2, time2, timeEnd2, timeLog2, timeStamp2, trace2, warn2, console_default;
 var init_console2 = __esm({
   "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -479,7 +479,7 @@ var init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console = __
 var hrtime;
 var init_hrtime = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -507,7 +507,7 @@ var init_hrtime = __esm({
 var ReadStream;
 var init_read_stream = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -533,7 +533,7 @@ var init_read_stream = __esm({
 var WriteStream;
 var init_write_stream = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -591,7 +591,7 @@ var init_write_stream = __esm({
 // ../node_modules/unenv/dist/runtime/node/tty.mjs
 var init_tty = __esm({
   "../node_modules/unenv/dist/runtime/node/tty.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -604,7 +604,7 @@ var init_tty = __esm({
 var NODE_VERSION;
 var init_node_version = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/node-version.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -617,7 +617,7 @@ import { EventEmitter } from "node:events";
 var Process;
 var init_process = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/process.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -864,7 +864,7 @@ var init_process = __esm({
 var globalProcess, getBuiltinModule, workerdProcess, unenvProcess, exit, features, platform, _channel, _debugEnd, _debugProcess, _disconnect, _events, _eventsCount, _exiting, _fatalException, _getActiveHandles, _getActiveRequests, _handleQueue, _kill, _linkedBinding, _maxListeners, _pendingMessage, _preload_modules, _rawDebug, _send, _startProfilerIdleNotifier, _stopProfilerIdleNotifier, _tickCallback, abort, addListener, allowedNodeEnvironmentFlags, arch, argv, argv0, assert2, availableMemory, binding, channel, chdir, config, connected, constrainedMemory, cpuUsage, cwd, debugPort, disconnect, dlopen, domain, emit, emitWarning, env, eventNames, execArgv, execPath, exitCode, finalization, getActiveResourcesInfo, getegid, geteuid, getgid, getgroups, getMaxListeners, getuid, hasUncaughtExceptionCaptureCallback, hrtime3, initgroups, kill, listenerCount, listeners, loadEnvFile, mainModule, memoryUsage, moduleLoadList, nextTick, off, on, once, openStdin, permission, pid, ppid, prependListener, prependOnceListener, rawListeners, reallyExit, ref, release, removeAllListeners, removeListener, report, resourceUsage, send, setegid, seteuid, setgid, setgroups, setMaxListeners, setSourceMapsEnabled, setuid, setUncaughtExceptionCaptureCallback, sourceMapsEnabled, stderr, stdin, stdout, throwDeprecation, title, traceDeprecation, umask, unref, uptime, version, versions, _process, process_default;
 var init_process2 = __esm({
   "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1143,7 +1143,7 @@ async function newAccountReferralStatements(db, request, user, now) {
 var REFERRAL_COOKIE_SECONDS;
 var init_referral_core = __esm({
   "../shared/portal/referral-core.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1389,7 +1389,7 @@ async function authResponse(request, env2, action) {
 var SESSION_SECONDS, ITERATIONS, WINDOW_MS, ADMIN_EMAIL, encoder, hex, randomHex, digest, AuthError;
 var init_auth = __esm({
   "../shared/portal/auth.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1430,6 +1430,327 @@ var init_auth = __esm({
     __name(sessionUser, "sessionUser");
     __name(currentSession, "currentSession");
     __name(authResponse, "authResponse");
+  }
+});
+
+// ../shared/portal/overseerr.js
+function configuredOverseerr(env2) {
+  const apiKey = typeof env2.OVERSEERR_API_KEY === "string" ? env2.OVERSEERR_API_KEY.trim() : "";
+  if (!/^[A-Za-z0-9+/_=-]{16,512}$/.test(apiKey)) {
+    throw new AuthError(503, "Recent requests are not configured yet.");
+  }
+  let root;
+  try {
+    root = new URL(env2.OVERSEERR_URL || DEFAULT_OVERSEERR_URL);
+  } catch {
+    throw new AuthError(503, "Recent requests are not configured yet.");
+  }
+  if (root.protocol !== "https:" || root.username || root.password || root.search || root.hash) {
+    throw new AuthError(503, "Recent requests are not configured yet.");
+  }
+  root.pathname = root.pathname.replace(/\/+$/, "").replace(/\/api\/v1$/i, "") || "/";
+  const apiBase = new URL(`${root.pathname.replace(/\/+$/, "")}/api/v1/`, root.origin);
+  return { root, apiBase, apiKey };
+}
+async function overseerrJson(config2, path, search, fetcher) {
+  const url = new URL(path.replace(/^\/+/, ""), config2.apiBase);
+  for (const [key, value] of Object.entries(search || {})) url.searchParams.set(key, String(value));
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8e3);
+  try {
+    const response = await fetcher(url, {
+      headers: { Accept: "application/json", "X-Api-Key": config2.apiKey },
+      // Workers does not implement redirect:"error". Manual mode keeps the
+      // request on the fixed host and the status check rejects every 3xx.
+      redirect: "manual",
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error("upstream status");
+    const declaredLength = Number(response.headers.get("Content-Length") || 0);
+    if (declaredLength > MAX_JSON_BYTES) throw new Error("upstream response too large");
+    const text = await response.text();
+    if (text.length > MAX_JSON_BYTES) throw new Error("upstream response too large");
+    const data = JSON.parse(text);
+    if (!data || typeof data !== "object") throw new Error("upstream response");
+    return data;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+async function overseerrMutation(config2, path, body, fetcher) {
+  const url = new URL(path.replace(/^\/+/, ""), config2.apiBase);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8e3);
+  try {
+    const response = await fetcher(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-Api-Key": config2.apiKey
+      },
+      body: JSON.stringify(body),
+      redirect: "manual",
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error("upstream status");
+    const declaredLength = Number(response.headers.get("Content-Length") || 0);
+    if (declaredLength > MAX_JSON_BYTES) throw new Error("upstream response too large");
+    const text = await response.text();
+    if (text.length > MAX_JSON_BYTES) throw new Error("upstream response too large");
+    if (!text.trim()) return null;
+    const data = JSON.parse(text);
+    if (!data || typeof data !== "object") throw new Error("upstream response");
+    return data;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+async function findOverseerrUser(config2, account, fetcher) {
+  const payload = await overseerrJson(config2, "user", { take: 100, skip: 0, sort: "created" }, fetcher);
+  const users = Array.isArray(payload.results) ? payload.results : [];
+  const email = normalized(account.email);
+  const plexUsername = normalized(account.plex_username || account.plexUsername);
+  return users.find((candidate) => email && normalized(candidate?.email) === email) || users.find((candidate) => plexUsername && normalized(candidate?.plexUsername) === plexUsername) || null;
+}
+function quotaBonus(value) {
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) ? parsed : 0;
+}
+function settingsPayload(settings, user, movieQuotaBonus, tvQuotaBonus) {
+  return {
+    username: safeText(settings?.username ?? user?.username ?? user?.plexUsername, ""),
+    email: safeText(settings?.email ?? user?.email, ""),
+    discordId: safeText(settings?.discordId, ""),
+    locale: safeText(settings?.locale, ""),
+    discoverRegion: safeText(settings?.discoverRegion, ""),
+    streamingRegion: safeText(settings?.streamingRegion, ""),
+    originalLanguage: typeof settings?.originalLanguage === "string" ? settings.originalLanguage : null,
+    movieQuotaLimit: settings?.movieQuotaLimit ?? null,
+    movieQuotaDays: settings?.movieQuotaDays ?? null,
+    movieQuotaPeriod: settings?.movieQuotaPeriod ?? null,
+    movieQuotaBonus,
+    tvQuotaLimit: settings?.tvQuotaLimit ?? null,
+    tvQuotaDays: settings?.tvQuotaDays ?? null,
+    tvQuotaPeriod: settings?.tvQuotaPeriod ?? null,
+    tvQuotaBonus,
+    watchlistSyncMovies: settings?.watchlistSyncMovies ?? null,
+    watchlistSyncTv: settings?.watchlistSyncTv ?? null
+  };
+}
+async function applyOverseerrTemporaryRequests(config2, user, { movies = 0, seasons = 0 } = {}, fetcher = fetch) {
+  const userId = Number(user?.id);
+  if (!Number.isInteger(userId) || userId < 1) throw new Error("request service user not found");
+  if (!Number.isSafeInteger(movies) || movies < 0 || !Number.isSafeInteger(seasons) || seasons < 0 || movies + seasons < 1 || movies + seasons > 100) {
+    throw new Error("invalid temporary request adjustment");
+  }
+  const settings = await overseerrJson(config2, `user/${userId}/settings/main`, {}, fetcher);
+  const nextMovieBonus = quotaBonus(settings.movieQuotaBonus) + movies;
+  const nextTvBonus = quotaBonus(settings.tvQuotaBonus) + seasons;
+  if (nextMovieBonus > 1e4 || nextTvBonus > 1e4) throw new Error("temporary request adjustment too large");
+  await overseerrMutation(
+    config2,
+    `user/${userId}/settings/main`,
+    settingsPayload(settings, user, nextMovieBonus, nextTvBonus),
+    fetcher
+  );
+  return { movieBonus: nextMovieBonus, tvBonus: nextTvBonus };
+}
+function safeText(value, fallback, limit = 200) {
+  const text = typeof value === "string" ? value.trim().replace(/[\x00-\x1f\x7f]/g, "") : "";
+  return text ? text.slice(0, limit) : fallback;
+}
+function mediaType(media) {
+  const type = normalized(media?.mediaType || media?.type);
+  if (type === "tv" || type === "show") return "tv";
+  if (type === "movie") return "movie";
+  return media?.tvdbId ? "tv" : "movie";
+}
+function requestStatus(request) {
+  const mediaStatus = Number(request?.media?.status);
+  if (mediaStatus === 5) return "added";
+  if (mediaStatus === 4) return "partial";
+  if (mediaStatus === 3) return "processing";
+  if (mediaStatus === 6) return "removed";
+  const status = Number(request?.status);
+  if (status === 3) return "declined";
+  if (status === 2) return "approved";
+  if (status === 1) return "pending";
+  return "unknown";
+}
+function safePoster(path) {
+  return typeof path === "string" && /^\/[A-Za-z0-9._/-]{1,300}$/.test(path) ? `https://image.tmdb.org/t/p/w185${path}` : null;
+}
+function safeTimestamp(value) {
+  const parsed = typeof value === "string" ? Date.parse(value) : NaN;
+  return Number.isFinite(parsed) ? parsed : null;
+}
+async function requestDetails(config2, request, fetcher) {
+  const media = request?.media && typeof request.media === "object" ? request.media : {};
+  const type = mediaType(media);
+  const tmdbId = Number(media.tmdbId);
+  let details = media;
+  if (Number.isInteger(tmdbId) && tmdbId > 0 && tmdbId <= 2147483647) {
+    try {
+      details = await overseerrJson(config2, `${type}/${tmdbId}`, {}, fetcher);
+    } catch (error3) {
+      console.warn(JSON.stringify({ event: "overseerr_request_detail_unavailable", mediaType: type, errorType: error3 instanceof Error ? error3.name : typeof error3 }));
+    }
+  }
+  const title2 = safeText(
+    details.title || details.name || media.title || media.name,
+    type === "tv" ? "TV request" : "Movie request"
+  );
+  const date = details.releaseDate || details.firstAirDate || details.release_date || details.first_air_date;
+  const yearMatch = typeof date === "string" ? date.match(/^\d{4}/) : null;
+  return {
+    id: Number.isFinite(Number(request?.id)) ? Number(request.id) : null,
+    title: title2,
+    type,
+    year: yearMatch ? Number(yearMatch[0]) : null,
+    requestedAt: safeTimestamp(request?.createdAt),
+    status: requestStatus(request),
+    posterUrl: safePoster(details.posterPath || details.poster_path || media.posterPath || media.poster_path)
+  };
+}
+async function requestsResponse(request, env2, fetcher = fetch) {
+  try {
+    const url = new URL(request.url);
+    if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) {
+      throw new AuthError(400, "Account access requires HTTPS.");
+    }
+    if (request.method !== "GET") return reply({ message: "Method not allowed." }, 405, { Allow: "GET" });
+    if (!env2.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
+    const current = await sessionUser(env2.PORTAL_DB, request);
+    if (!current) throw new AuthError(401, "Please sign in to view requests.");
+    const config2 = configuredOverseerr(env2);
+    const overseerrUser = await findOverseerrUser(config2, current, fetcher);
+    if (!overseerrUser || !Number.isInteger(Number(overseerrUser.id))) return reply({ requests: [] });
+    const payload = await overseerrJson(config2, `user/${Number(overseerrUser.id)}/requests`, { take: 4, skip: 0 }, fetcher);
+    const recent = Array.isArray(payload.results) ? payload.results.slice(0, 4) : [];
+    return reply({ requests: await Promise.all(recent.map((item) => requestDetails(config2, item, fetcher))) });
+  } catch (error3) {
+    if (!(error3 instanceof AuthError)) console.error(JSON.stringify({
+      event: "overseerr_requests_error",
+      errorType: error3 instanceof Error ? error3.name : typeof error3,
+      errorMessage: error3 instanceof Error ? error3.message.slice(0, 200) : "Unknown error"
+    }));
+    return reply(
+      { message: error3 instanceof AuthError ? error3.message : "Recent requests are temporarily unavailable. Please try again later." },
+      error3 instanceof AuthError ? error3.status : 502
+    );
+  }
+}
+function safeAvatarSource(value, config2) {
+  if (typeof value !== "string" || value.length > 2048) return null;
+  try {
+    const url = new URL(value, config2?.root || DEFAULT_OVERSEERR_URL);
+    if (url.protocol !== "https:" || url.username || url.password || url.hash) return null;
+    return url;
+  } catch {
+    return null;
+  }
+}
+async function accountForAvatar(db, id) {
+  const avatarSelect = await plexAvatarColumnAvailable(db) ? "p.avatar_url AS plex_avatar_url" : "NULL AS plex_avatar_url";
+  return db.prepare(`SELECT u.id, u.email, p.username AS plex_username, ${avatarSelect}
+    FROM users u LEFT JOIN plex_identities p ON p.user_id = u.id WHERE u.id = ?`).bind(id).first();
+}
+async function proxiedAvatar(source, config2, fetcher) {
+  if (source.origin !== config2?.root.origin) {
+    return new Response(null, { status: 302, headers: { Location: source.href, "Cache-Control": "private, no-store", Vary: "Cookie" } });
+  }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8e3);
+  try {
+    const response = await fetcher(source, {
+      headers: { Accept: "image/avif,image/webp,image/png,image/jpeg,image/gif", "X-Api-Key": config2.apiKey },
+      redirect: "manual",
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error("upstream status");
+    const type = (response.headers.get("Content-Type") || "").split(";")[0].trim().toLowerCase();
+    if (!(/* @__PURE__ */ new Set(["image/avif", "image/webp", "image/png", "image/jpeg", "image/gif"])).has(type)) throw new Error("unsupported avatar");
+    const declaredLength = Number(response.headers.get("Content-Length") || 0);
+    if (declaredLength > MAX_AVATAR_BYTES) throw new Error("avatar too large");
+    const body = await response.arrayBuffer();
+    if (body.byteLength > MAX_AVATAR_BYTES) throw new Error("avatar too large");
+    return new Response(body, { headers: {
+      "Content-Type": type,
+      "Cache-Control": "private, max-age=300",
+      "X-Content-Type-Options": "nosniff",
+      Vary: "Cookie"
+    } });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+async function avatarResponse(request, env2, fetcher = fetch) {
+  try {
+    const url = new URL(request.url);
+    if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) {
+      throw new AuthError(400, "Account access requires HTTPS.");
+    }
+    if (request.method !== "GET") return new Response(null, { status: 405, headers: { Allow: "GET" } });
+    if (!env2.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
+    const current = await sessionUser(env2.PORTAL_DB, request);
+    if (!current) throw new AuthError(401, "Please sign in to view this profile picture.");
+    const requestedId = url.searchParams.get("userId") || current.id;
+    if (!/^[A-Za-z0-9-]{1,64}$/.test(requestedId)) throw new AuthError(400, "Invalid account.");
+    if (requestedId !== current.id && !isAdminEmail(current.email)) throw new AuthError(403, "Administrator access is required.");
+    const account = await accountForAvatar(env2.PORTAL_DB, requestedId);
+    if (!account) throw new AuthError(404, "Profile picture not found.");
+    let config2 = null;
+    let overseerrAvatar = null;
+    try {
+      config2 = configuredOverseerr(env2);
+      const overseerrUser = await findOverseerrUser(config2, account, fetcher);
+      overseerrAvatar = safeAvatarSource(overseerrUser?.avatar, config2);
+    } catch (error3) {
+      console.warn(JSON.stringify({ event: "overseerr_avatar_fallback", errorType: error3 instanceof Error ? error3.name : typeof error3 }));
+    }
+    const source = overseerrAvatar || safeAvatarSource(account.plex_avatar_url, null);
+    if (!source) throw new AuthError(404, "Profile picture not found.");
+    if (source.origin === config2?.root.origin) return await proxiedAvatar(source, config2, fetcher);
+    return new Response(null, { status: 302, headers: { Location: source.href, "Cache-Control": "private, no-store", Vary: "Cookie" } });
+  } catch (error3) {
+    if (!(error3 instanceof AuthError)) console.error(JSON.stringify({ event: "portal_avatar_error", errorType: error3 instanceof Error ? error3.name : typeof error3 }));
+    return reply(
+      { message: error3 instanceof AuthError ? error3.message : "Profile picture is temporarily unavailable." },
+      error3 instanceof AuthError ? error3.status : 502
+    );
+  }
+}
+var DEFAULT_OVERSEERR_URL, MAX_JSON_BYTES, MAX_AVATAR_BYTES, normalized;
+var init_overseerr = __esm({
+  "../shared/portal/overseerr.js"() {
+    init_functionsRoutes_0_4261198671902219();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_auth();
+    DEFAULT_OVERSEERR_URL = "https://request.plexpoint.uk";
+    MAX_JSON_BYTES = 1e6;
+    MAX_AVATAR_BYTES = 2e6;
+    __name(configuredOverseerr, "configuredOverseerr");
+    __name(overseerrJson, "overseerrJson");
+    __name(overseerrMutation, "overseerrMutation");
+    normalized = /* @__PURE__ */ __name((value) => typeof value === "string" ? value.trim().toLowerCase() : "", "normalized");
+    __name(findOverseerrUser, "findOverseerrUser");
+    __name(quotaBonus, "quotaBonus");
+    __name(settingsPayload, "settingsPayload");
+    __name(applyOverseerrTemporaryRequests, "applyOverseerrTemporaryRequests");
+    __name(safeText, "safeText");
+    __name(mediaType, "mediaType");
+    __name(requestStatus, "requestStatus");
+    __name(safePoster, "safePoster");
+    __name(safeTimestamp, "safeTimestamp");
+    __name(requestDetails, "requestDetails");
+    __name(requestsResponse, "requestsResponse");
+    __name(safeAvatarSource, "safeAvatarSource");
+    __name(accountForAvatar, "accountForAvatar");
+    __name(proxiedAvatar, "proxiedAvatar");
+    __name(avatarResponse, "avatarResponse");
   }
 });
 
@@ -1474,6 +1795,85 @@ function mapReferral(row) {
     reward: { movies: Number(row.reward_movie_requests), seasons: Number(row.reward_season_requests) },
     orderId: row.order_id || null
   };
+}
+function monthKey(now) {
+  return new Date(now).toISOString().slice(0, 7);
+}
+async function referralCredits(db, userId) {
+  const balance = await db.prepare(`SELECT movie_credits, season_credits, updated_at
+    FROM referral_credit_balances WHERE user_id = ?`).bind(userId).first();
+  const result = await db.prepare(`SELECT id, movie_requests, season_requests, month_key, status, created_at, applied_at
+    FROM referral_redemptions WHERE user_id = ? ORDER BY created_at DESC LIMIT 24`).bind(userId).all();
+  return {
+    movies: Number(balance?.movie_credits || 0),
+    seasons: Number(balance?.season_credits || 0),
+    updatedAt: balance?.updated_at == null ? null : Number(balance.updated_at),
+    redemptions: (result.results || []).map((row) => ({
+      id: row.id,
+      movies: Number(row.movie_requests),
+      seasons: Number(row.season_requests),
+      month: row.month_key,
+      status: row.status,
+      createdAt: Number(row.created_at),
+      appliedAt: row.applied_at == null ? null : Number(row.applied_at)
+    }))
+  };
+}
+function requestCount(value, label) {
+  if (!Number.isSafeInteger(value) || value < 0 || value > 100) {
+    throw new AuthError(400, `Choose a valid number of ${label} requests.`);
+  }
+  return value;
+}
+async function redeemReferralRewards(db, env2, user, body, now, fetcher) {
+  const movies = requestCount(body.movies, "movie");
+  const seasons = requestCount(body.seasons, "season");
+  if (movies + seasons < 1) throw new AuthError(400, "Choose at least one request credit to redeem.");
+  const balance = await referralCredits(db, user.id);
+  if (movies > balance.movies || seasons > balance.seasons) {
+    throw new AuthError(409, "You cannot redeem more credits than you have available.");
+  }
+  const config2 = configuredOverseerr(env2);
+  const overseerrUser = await findOverseerrUser(config2, user, fetcher);
+  if (!overseerrUser || !Number.isInteger(Number(overseerrUser.id))) {
+    throw new AuthError(409, "Your request-service account could not be found yet. Sign in to the request service once, then try again.");
+  }
+  const redemptionId = crypto.randomUUID();
+  const currentMonth = monthKey(now);
+  await db.prepare(`INSERT INTO referral_redemptions
+    (id, user_id, movie_requests, season_requests, month_key, status, created_at)
+    VALUES (?, ?, ?, ?, ?, 'pending', ?)`).bind(redemptionId, user.id, movies, seasons, currentMonth, now).run();
+  const reserved = await db.prepare(`UPDATE referral_credit_balances
+    SET movie_credits = movie_credits - ?, season_credits = season_credits - ?, updated_at = ?
+    WHERE user_id = ? AND movie_credits >= ? AND season_credits >= ?`).bind(movies, seasons, now, user.id, movies, seasons).run();
+  if (Number(reserved?.meta?.changes || 0) !== 1) {
+    await db.prepare(`UPDATE referral_redemptions SET status = 'failed', failure_reason = ?, applied_at = ? WHERE id = ?`).bind("Credits changed before redemption.", now, redemptionId).run();
+    throw new AuthError(409, "Your referral balance changed. Refresh the page and try again.");
+  }
+  try {
+    await applyOverseerrTemporaryRequests(config2, overseerrUser, { movies, seasons }, fetcher);
+    await db.batch([
+      db.prepare(`UPDATE referral_redemptions SET status = 'applied', applied_at = ? WHERE id = ?`).bind(now, redemptionId),
+      db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
+        VALUES (?, ?, ?, 'referral.credits_redeemed', ?, ?)`).bind(
+        crypto.randomUUID(),
+        user.id,
+        user.id,
+        JSON.stringify({ redemptionId, movies, seasons, month: currentMonth }),
+        now
+      )
+    ]);
+  } catch (error3) {
+    await db.batch([
+      db.prepare(`UPDATE referral_credit_balances
+        SET movie_credits = movie_credits + ?, season_credits = season_credits + ?, updated_at = ?
+        WHERE user_id = ?`).bind(movies, seasons, now, user.id),
+      db.prepare(`UPDATE referral_redemptions SET status = 'failed', failure_reason = ?, applied_at = ? WHERE id = ?`).bind("The request service did not accept the temporary adjustment.", now, redemptionId)
+    ]);
+    console.error(JSON.stringify({ event: "referral_redemption_failed", errorType: error3 instanceof Error ? error3.name : typeof error3 }));
+    throw new AuthError(502, "The request service could not apply those temporary requests. Your referral credits were not used.");
+  }
+  return { movies, seasons, month: currentMonth };
 }
 async function referralAdminDetail(db, userId) {
   const inbound = await db.prepare(`SELECT r.*, rc.code AS referrer_code, u.display_name AS referrer_name,
@@ -1528,6 +1928,7 @@ async function memberDashboard(db, request, user, now) {
     FROM addon_catalog WHERE enabled = 1 ORDER BY sort_order, name`).all();
   const completed = rewarded.length;
   const nextReward = REWARDS.find((reward) => reward.number > completed) || null;
+  const credits = await referralCredits(db, user.id);
   return {
     landing: await landingReferral(db, request),
     dashboard: {
@@ -1536,6 +1937,9 @@ async function memberDashboard(db, request, user, now) {
       completed,
       maximum: MAX_REFERRALS,
       totals,
+      available: { movies: credits.movies, seasons: credits.seasons },
+      currentMonth: monthKey(now),
+      redemptions: credits.redemptions,
       nextReward,
       rewards: REWARDS,
       referrals
@@ -1619,7 +2023,7 @@ function whatsappOrder(order, inbound) {
   ].join("\n");
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
-async function referralsResponse(request, env2) {
+async function referralsResponse(request, env2, fetcher = fetch) {
   try {
     ensureHttps(request);
     if (!["GET", "POST"].includes(request.method)) return reply({ message: "Method not allowed." }, 405, { Allow: "GET, POST" });
@@ -1632,6 +2036,11 @@ async function referralsResponse(request, env2) {
     const now = Date.now();
     if (request.method === "GET") return reply(await memberDashboard(env2.PORTAL_DB, request, user, now));
     const body = await readBody(request);
+    if (body.action === "redeem_reward") {
+      const redeemed = await redeemReferralRewards(env2.PORTAL_DB, env2, user, body, now, fetcher);
+      const data2 = await memberDashboard(env2.PORTAL_DB, request, user, now);
+      return reply({ ...data2, redeemed });
+    }
     if (body.action !== "save_order") throw new AuthError(400, "Choose a valid referral action.");
     const order = await saveOrder(env2.PORTAL_DB, user, body, now);
     const data = await memberDashboard(env2.PORTAL_DB, request, user, now);
@@ -1699,12 +2108,13 @@ async function referralLandingResponse(request, env2, code) {
 var WHATSAPP_NUMBER, MAX_REFERRALS, REWARDS;
 var init_referrals = __esm({
   "../shared/portal/referrals.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
     init_auth();
     init_referral_core();
+    init_overseerr();
     WHATSAPP_NUMBER = "447481861478";
     MAX_REFERRALS = 5;
     REWARDS = [
@@ -1719,6 +2129,10 @@ var init_referrals = __esm({
     __name(landingReferral, "landingReferral");
     __name(ensureOwnCode, "ensureOwnCode");
     __name(mapReferral, "mapReferral");
+    __name(monthKey, "monthKey");
+    __name(referralCredits, "referralCredits");
+    __name(requestCount, "requestCount");
+    __name(redeemReferralRewards, "redeemReferralRewards");
     __name(referralAdminDetail, "referralAdminDetail");
     __name(memberDashboard, "memberDashboard");
     __name(saveOrder, "saveOrder");
@@ -2152,6 +2566,13 @@ async function recordPayment(db, actor, body, now) {
           WHERE paid_subscription.user_id = referrals.referred_user_id
             AND paid_subscription.access_status = 'enabled'
             AND paid_tier.monthly_price_minor > 0)`).bind(paymentId, now, now, now, userId),
+    db.prepare(`INSERT INTO referral_credit_balances(user_id, movie_credits, season_credits, updated_at)
+      SELECT referrer_user_id, reward_movie_requests, reward_season_requests, ? FROM referrals
+      WHERE referred_user_id = ? AND completion_payment_id = ? AND rewarded_at IS NOT NULL
+      ON CONFLICT(user_id) DO UPDATE SET
+        movie_credits = referral_credit_balances.movie_credits + excluded.movie_credits,
+        season_credits = referral_credit_balances.season_credits + excluded.season_credits,
+        updated_at = excluded.updated_at`).bind(now, userId, paymentId),
     db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
       VALUES (?, ?, ?, 'billing.payment_recorded', ?, ?)`).bind(crypto.randomUUID(), actor.id, userId, details, now),
     db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
@@ -2173,12 +2594,31 @@ async function voidPayment(db, actor, body, now) {
     JOIN subscriptions s ON s.id = bp.subscription_id
     WHERE p.id = ? AND s.user_id = ? AND p.status != 'void'`).bind(paymentId, userId).first();
   if (!payment) throw new AuthError(404, "That payment could not be found or is already void.");
+  const reward = await db.prepare(`SELECT r.referrer_user_id, r.reward_movie_requests, r.reward_season_requests,
+      COALESCE(SUM(rr.movie_requests), 0) AS redeemed_movies,
+      COALESCE(SUM(rr.season_requests), 0) AS redeemed_seasons
+    FROM referrals r LEFT JOIN referral_redemptions rr
+      ON rr.user_id = r.referrer_user_id AND rr.status = 'applied'
+      AND rr.created_at >= COALESCE(r.completed_at, 0)
+    WHERE r.referred_user_id = ? AND r.completion_payment_id = ?
+    GROUP BY r.id, r.referrer_user_id, r.reward_movie_requests, r.reward_season_requests`).bind(userId, paymentId).first();
+  if (reward && (Number(reward.redeemed_movies) > 0 || Number(reward.redeemed_seasons) > 0)) {
+    throw new AuthError(409, "That referral reward has already been redeemed, so void the temporary request adjustment first.");
+  }
   await db.batch([
     db.prepare("UPDATE payments SET status = 'void' WHERE id = ? AND status != 'void'").bind(paymentId),
     db.prepare(`UPDATE referrals SET status = 'awaiting_payment', completion_payment_id = NULL,
       completed_at = NULL, rewarded_at = NULL, referral_number = NULL,
       reward_movie_requests = 0, reward_season_requests = 0, updated_at = ?
       WHERE referred_user_id = ? AND completion_payment_id = ?`).bind(now, userId, paymentId),
+    db.prepare(`UPDATE referral_credit_balances SET
+      movie_credits = MAX(0, movie_credits - ?), season_credits = MAX(0, season_credits - ?), updated_at = ?
+      WHERE user_id = ?`).bind(
+      Number(reward?.reward_movie_requests || 0),
+      Number(reward?.reward_season_requests || 0),
+      now,
+      reward?.referrer_user_id || ""
+    ),
     db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
       VALUES (?, ?, ?, 'billing.payment_voided', ?, ?)`).bind(crypto.randomUUID(), actor.id, userId, JSON.stringify({ paymentId }), now)
   ]);
@@ -2229,7 +2669,7 @@ async function adminBillingResponse(request, env2) {
 var DAY_MS, ACCESS_STATUSES, PAYMENT_METHODS;
 var init_billing = __esm({
   "../shared/portal/billing.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2266,7 +2706,7 @@ async function onRequest({ request, env: env2 }) {
 }
 var init_billing2 = __esm({
   "api/portal/admin/billing.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2281,7 +2721,7 @@ async function onRequest2({ request, env: env2 }) {
 }
 var init_referrals2 = __esm({
   "api/portal/admin/referrals.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2400,7 +2840,7 @@ async function adminUsersResponse(request, env2) {
 }
 var init_admin = __esm({
   "../shared/portal/admin.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2417,7 +2857,7 @@ async function onRequest3({ request, env: env2 }) {
 }
 var init_users = __esm({
   "api/portal/admin/users.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2432,7 +2872,7 @@ async function onRequest4({ request, env: env2, params }) {
 }
 var init_action = __esm({
   "api/portal/auth/[action].js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2631,7 +3071,7 @@ async function plexAuthResponse(request, env2, action, fetcher = fetch) {
 var MAX_AGE;
 var init_plex_auth = __esm({
   "../shared/portal/plex-auth.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2656,7 +3096,7 @@ async function onRequest5({ request, env: env2, params }) {
 }
 var init_action2 = __esm({
   "api/portal/plex/[action].js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2669,7 +3109,7 @@ var init_action2 = __esm({
 var require_util = __commonJS({
   "../node_modules/fast-xml-parser/src/util.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2747,7 +3187,7 @@ var require_util = __commonJS({
 var require_validator = __commonJS({
   "../node_modules/fast-xml-parser/src/validator.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3074,7 +3514,7 @@ var require_validator = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
 var require_OptionsBuilder = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"(exports) {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3207,7 +3647,7 @@ var require_OptionsBuilder = __commonJS({
 var require_xmlNode = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3240,7 +3680,7 @@ var require_xmlNode = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js
 var require_DocTypeReader = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js"(exports, module) {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3537,7 +3977,7 @@ var require_DocTypeReader = __commonJS({
 // ../node_modules/strnum/strnum.js
 var require_strnum = __commonJS({
   "../node_modules/strnum/strnum.js"(exports, module) {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3632,7 +4072,7 @@ var require_strnum = __commonJS({
 // ../node_modules/fast-xml-parser/src/ignoreAttributes.js
 var require_ignoreAttributes = __commonJS({
   "../node_modules/fast-xml-parser/src/ignoreAttributes.js"(exports, module) {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3663,7 +4103,7 @@ var require_ignoreAttributes = __commonJS({
 var require_OrderedObjParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4289,7 +4729,7 @@ var require_OrderedObjParser = __commonJS({
 var require_node2json = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/node2json.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4384,7 +4824,7 @@ var require_node2json = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js
 var require_XMLParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js"(exports, module) {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4449,7 +4889,7 @@ var require_XMLParser = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js
 var require_orderedJs2Xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js"(exports, module) {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4593,7 +5033,7 @@ var require_orderedJs2Xml = __commonJS({
 var require_json2xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4847,7 +5287,7 @@ var require_json2xml = __commonJS({
 var require_fxp = __commonJS({
   "../node_modules/fast-xml-parser/src/fxp.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5341,7 +5781,7 @@ async function getFeaturedCollection(env2, options = {}) {
 var import_fast_xml_parser, parser, cache, DEFAULT_PLEX_FETCH_TIMEOUT_MS, DEFAULT_LIBRARY_TITLES;
 var init_plex_client = __esm({
   "../shared/plex-client.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5461,7 +5901,7 @@ async function cachedJson(context2, options) {
 var PLEX_API_CACHE_VERSION;
 var init_pages = __esm({
   "_lib/pages.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5489,7 +5929,7 @@ async function onRequestGet(context2) {
 }
 var init_anime_movies = __esm({
   "api/plex/anime-movies.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5514,7 +5954,7 @@ async function onRequestGet2(context2) {
 }
 var init_anime_shows = __esm({
   "api/plex/anime-shows.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5537,7 +5977,7 @@ async function onRequestGet3(context2) {
 }
 var init_collections = __esm({
   "api/plex/collections.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5558,7 +5998,7 @@ async function onRequestGet4(context2) {
 }
 var init_counts = __esm({
   "api/plex/counts.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5589,7 +6029,7 @@ async function onRequestGet5(context2) {
 }
 var init_featured_collection = __esm({
   "api/plex/featured-collection.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5642,7 +6082,7 @@ async function onRequestGet6(context2) {
 }
 var init_image = __esm({
   "api/plex/image.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5667,7 +6107,7 @@ async function onRequestGet7(context2) {
 }
 var init_movies = __esm({
   "api/plex/movies.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5688,7 +6128,7 @@ async function onRequestGet8(context2) {
 }
 var init_sections = __esm({
   "api/plex/sections.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5713,7 +6153,7 @@ async function onRequestGet9(context2) {
 }
 var init_shows = __esm({
   "api/plex/shows.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5777,7 +6217,7 @@ async function onRequestGet10(context2) {
 }
 var init_status = __esm({
   "api/plex/status.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5806,7 +6246,7 @@ async function onRequestGet11(context2) {
 }
 var init_top_rated = __esm({
   "api/plex/top-rated.ts"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5820,7 +6260,7 @@ var init_top_rated = __esm({
 var defaultLinks, defaultArticles;
 var init_portal_content = __esm({
   "../assets/portal-content.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5912,7 +6352,7 @@ function normalizeContent(content) {
 }
 var init_portal_utils = __esm({
   "../assets/portal-utils.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5948,7 +6388,7 @@ async function publicContentResponse(env2) {
 var publicContentQueries;
 var init_content = __esm({
   "../shared/portal/content.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5969,7 +6409,7 @@ async function onRequestGet12(context2) {
 }
 var init_content2 = __esm({
   "api/portal/content.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6040,9 +6480,9 @@ async function tautulliUserId(config2, current, fetcher) {
   try {
     const data = await tautulliRequest(config2, "get_users", {}, fetcher);
     const users = Array.isArray(data) ? data : [];
-    const plexUsername = normalized(current.plex_username);
-    const email = normalized(current.email);
-    const match2 = users.find((item) => fallback && String(item?.user_id) === fallback) || users.find((item) => email && normalized(item?.email) === email) || users.find((item) => plexUsername && [item?.username, item?.friendly_name].some((value) => normalized(value) === plexUsername));
+    const plexUsername = normalized2(current.plex_username);
+    const email = normalized2(current.email);
+    const match2 = users.find((item) => fallback && String(item?.user_id) === fallback) || users.find((item) => email && normalized2(item?.email) === email) || users.find((item) => plexUsername && [item?.username, item?.friendly_name].some((value) => normalized2(value) === plexUsername));
     const resolved = String(match2?.user_id || "");
     return /^[1-9][0-9]{0,19}$/.test(resolved) ? resolved : fallback;
   } catch (error3) {
@@ -6108,10 +6548,10 @@ async function activityResponse(request, env2, fetcher = fetch) {
     );
   }
 }
-var DEFAULT_TAUTULLI_URL, ACTIVITY_RANGE, ACTIVITY_LABEL, count3, normalized;
+var DEFAULT_TAUTULLI_URL, ACTIVITY_RANGE, ACTIVITY_LABEL, count3, normalized2;
 var init_activity = __esm({
   "../shared/portal/activity.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6127,7 +6567,7 @@ var init_activity = __esm({
     }, "count");
     __name(popularItems, "popularItems");
     __name(watchTime, "watchTime");
-    normalized = /* @__PURE__ */ __name((value) => typeof value === "string" ? value.trim().toLowerCase() : "", "normalized");
+    normalized2 = /* @__PURE__ */ __name((value) => typeof value === "string" ? value.trim().toLowerCase() : "", "normalized");
     __name(tautulliUserId, "tautulliUserId");
     __name(activityResponse, "activityResponse");
   }
@@ -6139,257 +6579,12 @@ async function onRequest6({ request, env: env2 }) {
 }
 var init_activity2 = __esm({
   "api/portal/activity.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
     init_activity();
     __name(onRequest6, "onRequest");
-  }
-});
-
-// ../shared/portal/overseerr.js
-function configuredOverseerr(env2) {
-  const apiKey = typeof env2.OVERSEERR_API_KEY === "string" ? env2.OVERSEERR_API_KEY.trim() : "";
-  if (!/^[A-Za-z0-9+/_=-]{16,512}$/.test(apiKey)) {
-    throw new AuthError(503, "Recent requests are not configured yet.");
-  }
-  let root;
-  try {
-    root = new URL(env2.OVERSEERR_URL || DEFAULT_OVERSEERR_URL);
-  } catch {
-    throw new AuthError(503, "Recent requests are not configured yet.");
-  }
-  if (root.protocol !== "https:" || root.username || root.password || root.search || root.hash) {
-    throw new AuthError(503, "Recent requests are not configured yet.");
-  }
-  root.pathname = root.pathname.replace(/\/+$/, "").replace(/\/api\/v1$/i, "") || "/";
-  const apiBase = new URL(`${root.pathname.replace(/\/+$/, "")}/api/v1/`, root.origin);
-  return { root, apiBase, apiKey };
-}
-async function overseerrJson(config2, path, search, fetcher) {
-  const url = new URL(path.replace(/^\/+/, ""), config2.apiBase);
-  for (const [key, value] of Object.entries(search || {})) url.searchParams.set(key, String(value));
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8e3);
-  try {
-    const response = await fetcher(url, {
-      headers: { Accept: "application/json", "X-Api-Key": config2.apiKey },
-      // Workers does not implement redirect:"error". Manual mode keeps the
-      // request on the fixed host and the status check rejects every 3xx.
-      redirect: "manual",
-      signal: controller.signal
-    });
-    if (!response.ok) throw new Error("upstream status");
-    const declaredLength = Number(response.headers.get("Content-Length") || 0);
-    if (declaredLength > MAX_JSON_BYTES) throw new Error("upstream response too large");
-    const text = await response.text();
-    if (text.length > MAX_JSON_BYTES) throw new Error("upstream response too large");
-    const data = JSON.parse(text);
-    if (!data || typeof data !== "object") throw new Error("upstream response");
-    return data;
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-async function findOverseerrUser(config2, account, fetcher) {
-  const payload = await overseerrJson(config2, "user", { take: 100, skip: 0, sort: "created" }, fetcher);
-  const users = Array.isArray(payload.results) ? payload.results : [];
-  const email = normalized2(account.email);
-  const plexUsername = normalized2(account.plex_username || account.plexUsername);
-  return users.find((candidate) => email && normalized2(candidate?.email) === email) || users.find((candidate) => plexUsername && normalized2(candidate?.plexUsername) === plexUsername) || null;
-}
-function safeText(value, fallback, limit = 200) {
-  const text = typeof value === "string" ? value.trim().replace(/[\x00-\x1f\x7f]/g, "") : "";
-  return text ? text.slice(0, limit) : fallback;
-}
-function mediaType(media) {
-  const type = normalized2(media?.mediaType || media?.type);
-  if (type === "tv" || type === "show") return "tv";
-  if (type === "movie") return "movie";
-  return media?.tvdbId ? "tv" : "movie";
-}
-function requestStatus(request) {
-  const mediaStatus = Number(request?.media?.status);
-  if (mediaStatus === 5) return "added";
-  if (mediaStatus === 4) return "partial";
-  if (mediaStatus === 3) return "processing";
-  if (mediaStatus === 6) return "removed";
-  const status = Number(request?.status);
-  if (status === 3) return "declined";
-  if (status === 2) return "approved";
-  if (status === 1) return "pending";
-  return "unknown";
-}
-function safePoster(path) {
-  return typeof path === "string" && /^\/[A-Za-z0-9._/-]{1,300}$/.test(path) ? `https://image.tmdb.org/t/p/w185${path}` : null;
-}
-function safeTimestamp(value) {
-  const parsed = typeof value === "string" ? Date.parse(value) : NaN;
-  return Number.isFinite(parsed) ? parsed : null;
-}
-async function requestDetails(config2, request, fetcher) {
-  const media = request?.media && typeof request.media === "object" ? request.media : {};
-  const type = mediaType(media);
-  const tmdbId = Number(media.tmdbId);
-  let details = media;
-  if (Number.isInteger(tmdbId) && tmdbId > 0 && tmdbId <= 2147483647) {
-    try {
-      details = await overseerrJson(config2, `${type}/${tmdbId}`, {}, fetcher);
-    } catch (error3) {
-      console.warn(JSON.stringify({ event: "overseerr_request_detail_unavailable", mediaType: type, errorType: error3 instanceof Error ? error3.name : typeof error3 }));
-    }
-  }
-  const title2 = safeText(
-    details.title || details.name || media.title || media.name,
-    type === "tv" ? "TV request" : "Movie request"
-  );
-  const date = details.releaseDate || details.firstAirDate || details.release_date || details.first_air_date;
-  const yearMatch = typeof date === "string" ? date.match(/^\d{4}/) : null;
-  return {
-    id: Number.isFinite(Number(request?.id)) ? Number(request.id) : null,
-    title: title2,
-    type,
-    year: yearMatch ? Number(yearMatch[0]) : null,
-    requestedAt: safeTimestamp(request?.createdAt),
-    status: requestStatus(request),
-    posterUrl: safePoster(details.posterPath || details.poster_path || media.posterPath || media.poster_path)
-  };
-}
-async function requestsResponse(request, env2, fetcher = fetch) {
-  try {
-    const url = new URL(request.url);
-    if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) {
-      throw new AuthError(400, "Account access requires HTTPS.");
-    }
-    if (request.method !== "GET") return reply({ message: "Method not allowed." }, 405, { Allow: "GET" });
-    if (!env2.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
-    const current = await sessionUser(env2.PORTAL_DB, request);
-    if (!current) throw new AuthError(401, "Please sign in to view requests.");
-    const config2 = configuredOverseerr(env2);
-    const overseerrUser = await findOverseerrUser(config2, current, fetcher);
-    if (!overseerrUser || !Number.isInteger(Number(overseerrUser.id))) return reply({ requests: [] });
-    const payload = await overseerrJson(config2, `user/${Number(overseerrUser.id)}/requests`, { take: 4, skip: 0 }, fetcher);
-    const recent = Array.isArray(payload.results) ? payload.results.slice(0, 4) : [];
-    return reply({ requests: await Promise.all(recent.map((item) => requestDetails(config2, item, fetcher))) });
-  } catch (error3) {
-    if (!(error3 instanceof AuthError)) console.error(JSON.stringify({
-      event: "overseerr_requests_error",
-      errorType: error3 instanceof Error ? error3.name : typeof error3,
-      errorMessage: error3 instanceof Error ? error3.message.slice(0, 200) : "Unknown error"
-    }));
-    return reply(
-      { message: error3 instanceof AuthError ? error3.message : "Recent requests are temporarily unavailable. Please try again later." },
-      error3 instanceof AuthError ? error3.status : 502
-    );
-  }
-}
-function safeAvatarSource(value, config2) {
-  if (typeof value !== "string" || value.length > 2048) return null;
-  try {
-    const url = new URL(value, config2?.root || DEFAULT_OVERSEERR_URL);
-    if (url.protocol !== "https:" || url.username || url.password || url.hash) return null;
-    return url;
-  } catch {
-    return null;
-  }
-}
-async function accountForAvatar(db, id) {
-  const avatarSelect = await plexAvatarColumnAvailable(db) ? "p.avatar_url AS plex_avatar_url" : "NULL AS plex_avatar_url";
-  return db.prepare(`SELECT u.id, u.email, p.username AS plex_username, ${avatarSelect}
-    FROM users u LEFT JOIN plex_identities p ON p.user_id = u.id WHERE u.id = ?`).bind(id).first();
-}
-async function proxiedAvatar(source, config2, fetcher) {
-  if (source.origin !== config2?.root.origin) {
-    return new Response(null, { status: 302, headers: { Location: source.href, "Cache-Control": "private, no-store", Vary: "Cookie" } });
-  }
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8e3);
-  try {
-    const response = await fetcher(source, {
-      headers: { Accept: "image/avif,image/webp,image/png,image/jpeg,image/gif", "X-Api-Key": config2.apiKey },
-      redirect: "manual",
-      signal: controller.signal
-    });
-    if (!response.ok) throw new Error("upstream status");
-    const type = (response.headers.get("Content-Type") || "").split(";")[0].trim().toLowerCase();
-    if (!(/* @__PURE__ */ new Set(["image/avif", "image/webp", "image/png", "image/jpeg", "image/gif"])).has(type)) throw new Error("unsupported avatar");
-    const declaredLength = Number(response.headers.get("Content-Length") || 0);
-    if (declaredLength > MAX_AVATAR_BYTES) throw new Error("avatar too large");
-    const body = await response.arrayBuffer();
-    if (body.byteLength > MAX_AVATAR_BYTES) throw new Error("avatar too large");
-    return new Response(body, { headers: {
-      "Content-Type": type,
-      "Cache-Control": "private, max-age=300",
-      "X-Content-Type-Options": "nosniff",
-      Vary: "Cookie"
-    } });
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-async function avatarResponse(request, env2, fetcher = fetch) {
-  try {
-    const url = new URL(request.url);
-    if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) {
-      throw new AuthError(400, "Account access requires HTTPS.");
-    }
-    if (request.method !== "GET") return new Response(null, { status: 405, headers: { Allow: "GET" } });
-    if (!env2.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
-    const current = await sessionUser(env2.PORTAL_DB, request);
-    if (!current) throw new AuthError(401, "Please sign in to view this profile picture.");
-    const requestedId = url.searchParams.get("userId") || current.id;
-    if (!/^[A-Za-z0-9-]{1,64}$/.test(requestedId)) throw new AuthError(400, "Invalid account.");
-    if (requestedId !== current.id && !isAdminEmail(current.email)) throw new AuthError(403, "Administrator access is required.");
-    const account = await accountForAvatar(env2.PORTAL_DB, requestedId);
-    if (!account) throw new AuthError(404, "Profile picture not found.");
-    let config2 = null;
-    let overseerrAvatar = null;
-    try {
-      config2 = configuredOverseerr(env2);
-      const overseerrUser = await findOverseerrUser(config2, account, fetcher);
-      overseerrAvatar = safeAvatarSource(overseerrUser?.avatar, config2);
-    } catch (error3) {
-      console.warn(JSON.stringify({ event: "overseerr_avatar_fallback", errorType: error3 instanceof Error ? error3.name : typeof error3 }));
-    }
-    const source = overseerrAvatar || safeAvatarSource(account.plex_avatar_url, null);
-    if (!source) throw new AuthError(404, "Profile picture not found.");
-    if (source.origin === config2?.root.origin) return await proxiedAvatar(source, config2, fetcher);
-    return new Response(null, { status: 302, headers: { Location: source.href, "Cache-Control": "private, no-store", Vary: "Cookie" } });
-  } catch (error3) {
-    if (!(error3 instanceof AuthError)) console.error(JSON.stringify({ event: "portal_avatar_error", errorType: error3 instanceof Error ? error3.name : typeof error3 }));
-    return reply(
-      { message: error3 instanceof AuthError ? error3.message : "Profile picture is temporarily unavailable." },
-      error3 instanceof AuthError ? error3.status : 502
-    );
-  }
-}
-var DEFAULT_OVERSEERR_URL, MAX_JSON_BYTES, MAX_AVATAR_BYTES, normalized2;
-var init_overseerr = __esm({
-  "../shared/portal/overseerr.js"() {
-    init_functionsRoutes_0_3945739830682994();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
-    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
-    init_performance2();
-    init_auth();
-    DEFAULT_OVERSEERR_URL = "https://request.plexpoint.uk";
-    MAX_JSON_BYTES = 1e6;
-    MAX_AVATAR_BYTES = 2e6;
-    __name(configuredOverseerr, "configuredOverseerr");
-    __name(overseerrJson, "overseerrJson");
-    normalized2 = /* @__PURE__ */ __name((value) => typeof value === "string" ? value.trim().toLowerCase() : "", "normalized");
-    __name(findOverseerrUser, "findOverseerrUser");
-    __name(safeText, "safeText");
-    __name(mediaType, "mediaType");
-    __name(requestStatus, "requestStatus");
-    __name(safePoster, "safePoster");
-    __name(safeTimestamp, "safeTimestamp");
-    __name(requestDetails, "requestDetails");
-    __name(requestsResponse, "requestsResponse");
-    __name(safeAvatarSource, "safeAvatarSource");
-    __name(accountForAvatar, "accountForAvatar");
-    __name(proxiedAvatar, "proxiedAvatar");
-    __name(avatarResponse, "avatarResponse");
   }
 });
 
@@ -6399,7 +6594,7 @@ async function onRequest7({ request, env: env2 }) {
 }
 var init_avatar = __esm({
   "api/portal/avatar.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6414,7 +6609,7 @@ async function onRequest8({ request, env: env2 }) {
 }
 var init_billing3 = __esm({
   "api/portal/billing.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6429,7 +6624,7 @@ async function onRequest9({ request, env: env2 }) {
 }
 var init_referrals3 = __esm({
   "api/portal/referrals.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6444,7 +6639,7 @@ async function onRequest10({ request, env: env2 }) {
 }
 var init_requests = __esm({
   "api/portal/requests.js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6459,7 +6654,7 @@ async function onRequest11({ request, env: env2, params }) {
 }
 var init_code = __esm({
   "join/[code].js"() {
-    init_functionsRoutes_0_3945739830682994();
+    init_functionsRoutes_0_4261198671902219();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6468,10 +6663,10 @@ var init_code = __esm({
   }
 });
 
-// ../.wrangler/tmp/pages-XM39Vb/functionsRoutes-0.3945739830682994.mjs
+// ../.wrangler/tmp/pages-uzMG75/functionsRoutes-0.4261198671902219.mjs
 var routes;
-var init_functionsRoutes_0_3945739830682994 = __esm({
-  "../.wrangler/tmp/pages-XM39Vb/functionsRoutes-0.3945739830682994.mjs"() {
+var init_functionsRoutes_0_4261198671902219 = __esm({
+  "../.wrangler/tmp/pages-uzMG75/functionsRoutes-0.4261198671902219.mjs"() {
     init_billing2();
     init_referrals2();
     init_users();
@@ -6662,13 +6857,13 @@ var init_functionsRoutes_0_3945739830682994 = __esm({
 });
 
 // ../node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_3945739830682994();
+init_functionsRoutes_0_4261198671902219();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
 init_performance2();
 
 // ../node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_3945739830682994();
+init_functionsRoutes_0_4261198671902219();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
 init_performance2();
