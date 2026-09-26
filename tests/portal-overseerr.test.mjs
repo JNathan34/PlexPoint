@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
 import { readFileSync } from "node:fs";
 import { authResponse } from "../shared/portal/auth.js";
-import { applyOverseerrTemporaryRequests, avatarResponse, configuredOverseerr, requestsResponse } from "../shared/portal/overseerr.js";
+import { applyOverseerrRequestCredits, avatarResponse, configuredOverseerr, findOverseerrUser, requestsResponse } from "../shared/portal/overseerr.js";
 
 const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql", "0007_vip_addons.sql", "0008_billing_coverage.sql", "0009_referrals.sql", "0010_referral_redemptions.sql"];
 
@@ -122,31 +122,80 @@ test("Overseerr failures stay isolated from the account session", async (t) => {
   assert.doesNotMatch(await requests.text(), /private upstream|test-overseerr-key/i);
 });
 
-test("temporary referral requests add to the current month quota bonus without changing other settings", async () => {
+test("request-service account matching searches every page and prefers the immutable Plex id", async () => {
+  const config = configuredOverseerr({ OVERSEERR_API_KEY: "test-overseerr-key-123456" });
+  const calls = [];
+  const fetcher = async (input) => {
+    const url = new URL(input);
+    calls.push(Number(url.searchParams.get("skip")));
+    if (url.searchParams.get("skip") === "0") {
+      return Response.json({ pageInfo: { results: 101 }, results: [
+        { id: 5, email: "current@example.test", plexId: 999, plexUsername: "OldName" },
+        ...Array.from({ length: 99 }, (_, index) => ({ id: 1000 + index, email: `other-${index}@example.test` })),
+      ] });
+    }
+    return Response.json({ pageInfo: { results: 101 }, results: [
+      { id: 42, email: "old@example.test", plexId: 123456, plexUsername: "PreviousName" },
+    ] });
+  };
+  const result = await findOverseerrUser(config, {
+    email: "current@example.test", plex_id: "123456", plex_username: "CurrentName",
+  }, fetcher);
+  assert.equal(result.id, 42);
+  assert.deepEqual(calls, [0, 100]);
+});
+
+test("referral credits increase the real account quota without changing other settings", async () => {
   const config = configuredOverseerr({ OVERSEERR_API_KEY: "test-overseerr-key-123456" });
   let posted = null;
+  const quota = { movie: { limit: 5, used: 4, remaining: 1 }, tv: { limit: 4, used: 4, remaining: 0 } };
   const fetcher = async (input, options) => {
     const url = new URL(input);
     assert.equal(options.headers["X-Api-Key"], "test-overseerr-key-123456");
     if (url.pathname === "/api/v1/user/42/settings/main" && !options.method) {
       return Response.json({ username: "PlexViewer", email: "viewer@example.test", discordId: "123",
         locale: "en", discoverRegion: "GB", streamingRegion: "GB", originalLanguage: "en",
-        movieQuotaLimit: -1, movieQuotaDays: 7, movieQuotaPeriod: "days", movieQuotaBonus: 2,
-        tvQuotaLimit: -1, tvQuotaDays: 7, tvQuotaPeriod: "calendarMonth", tvQuotaBonus: 1,
+        movieQuotaLimit: 5, movieQuotaDays: 30, tvQuotaLimit: 4, tvQuotaDays: 30,
         watchlistSyncMovies: true, watchlistSyncTv: false });
     }
+    if (url.pathname === "/api/v1/user/42/quota" && !options.method) return Response.json(quota);
     if (url.pathname === "/api/v1/user/42/settings/main" && options.method === "POST") {
       posted = JSON.parse(options.body);
+      quota.movie.limit = posted.movieQuotaLimit;
+      quota.movie.remaining = Math.max(0, quota.movie.limit - quota.movie.used);
+      quota.tv.limit = posted.tvQuotaLimit;
+      quota.tv.remaining = Math.max(0, quota.tv.limit - quota.tv.used);
       return Response.json(posted);
     }
     return new Response(null, { status: 404 });
   };
-  const result = await applyOverseerrTemporaryRequests(config,
+  const result = await applyOverseerrRequestCredits(config,
     { id: 42, email: "viewer@example.test", plex_username: "PlexViewer" }, { movies: 3, seasons: 2 }, fetcher);
-  assert.deepEqual(result, { movieBonus: 5, tvBonus: 3 });
-  assert.equal(posted.movieQuotaBonus, 5);
-  assert.equal(posted.tvQuotaBonus, 3);
-  assert.equal(posted.movieQuotaLimit, -1);
-  assert.equal(posted.tvQuotaPeriod, "calendarMonth");
+  assert.deepEqual(result, { movieLimit: 8, tvLimit: 6 });
+  assert.equal(posted.movieQuotaLimit, 8);
+  assert.equal(posted.tvQuotaLimit, 6);
+  assert.equal(posted.movieQuotaDays, 30);
+  assert.equal(posted.tvQuotaDays, 30);
   assert.equal(posted.watchlistSyncMovies, true);
+  assert.equal("movieQuotaBonus" in posted, false);
+  assert.equal("tvQuotaBonus" in posted, false);
+  assert.equal("discordId" in posted, false);
+});
+
+test("an ignored quota update is rejected instead of spending referral credits", async () => {
+  const config = configuredOverseerr({ OVERSEERR_API_KEY: "test-overseerr-key-123456" });
+  const fetcher = async (input, options) => {
+    const url = new URL(input);
+    if (url.pathname.endsWith("/settings/main") && !options.method) {
+      return Response.json({ email: "viewer@example.test", movieQuotaLimit: 5, movieQuotaDays: 30,
+        tvQuotaLimit: 4, tvQuotaDays: 30 });
+    }
+    if (url.pathname.endsWith("/quota")) {
+      return Response.json({ movie: { limit: 5, used: 4, remaining: 1 }, tv: { limit: 4, used: 4, remaining: 0 } });
+    }
+    if (url.pathname.endsWith("/settings/main") && options.method === "POST") return Response.json({});
+    return new Response(null, { status: 404 });
+  };
+  await assert.rejects(() => applyOverseerrRequestCredits(config,
+    { id: 42, email: "viewer@example.test" }, { movies: 1, seasons: 0 }, fetcher), /did not save/);
 });

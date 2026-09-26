@@ -431,7 +431,7 @@ async function voidPayment(db, actor, body, now) {
     GROUP BY r.id, r.referrer_user_id, r.reward_movie_requests, r.reward_season_requests`)
     .bind(userId, paymentId).first();
   if (reward && (Number(reward.redeemed_movies) > 0 || Number(reward.redeemed_seasons) > 0)) {
-    throw new AuthError(409, "That referral reward has already been redeemed, so void the temporary request adjustment first.");
+    throw new AuthError(409, "That referral reward has already been redeemed. Reduce the member's request-service allowance before voiding this payment.");
   }
   await db.batch([
     db.prepare("UPDATE payments SET status = 'void' WHERE id = ? AND status != 'void'").bind(paymentId),

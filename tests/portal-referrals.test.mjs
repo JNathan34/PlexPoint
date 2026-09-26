@@ -175,12 +175,13 @@ test("a member can never receive more than the five configured referral rewards"
   assert.equal(progress.nextReward, null);
 });
 
-test("a referrer chooses how many earned credits to redeem as a temporary monthly adjustment", async (t) => {
+test("a referrer can add earned request credits to their request-service account", async (t) => {
   const { sqlite, env } = setup(t);
   const referrer = await register(env, "redeemer@example.test", "Redeemer");
   sqlite.prepare(`INSERT INTO referral_credit_balances(user_id, movie_credits, season_credits, updated_at)
     VALUES (?, 4, 2, 100)`).run(referrer.user.id);
   let posted = null;
+  const quota = { movie: { limit: 5, used: 4, remaining: 1 }, tv: { limit: 3, used: 3, remaining: 0 } };
   const fetcher = async (input, options) => {
     const url = new URL(input);
     assert.equal(options.headers["X-Api-Key"], "test-overseerr-key-123456");
@@ -188,12 +189,14 @@ test("a referrer chooses how many earned credits to redeem as a temporary monthl
       return Response.json({ results: [{ id: 42, email: "redeemer@example.test", plexUsername: "Redeemer" }] });
     }
     if (url.pathname === "/api/v1/user/42/settings/main" && !options.method) {
-      return Response.json({ username: "Redeemer", email: "redeemer@example.test", movieQuotaLimit: -1,
-        movieQuotaDays: 7, movieQuotaPeriod: "days", movieQuotaBonus: 1, tvQuotaLimit: -1,
-        tvQuotaDays: 7, tvQuotaPeriod: "days", tvQuotaBonus: 0 });
+      return Response.json({ username: "Redeemer", email: "redeemer@example.test", movieQuotaLimit: 5,
+        movieQuotaDays: 30, tvQuotaLimit: 3, tvQuotaDays: 30 });
     }
+    if (url.pathname === "/api/v1/user/42/quota" && !options.method) return Response.json(quota);
     if (url.pathname === "/api/v1/user/42/settings/main" && options.method === "POST") {
       posted = JSON.parse(options.body);
+      quota.movie.limit = posted.movieQuotaLimit;
+      quota.tv.limit = posted.tvQuotaLimit;
       return Response.json(posted);
     }
     return new Response(null, { status: 404 });
@@ -206,10 +209,46 @@ test("a referrer chooses how many earned credits to redeem as a temporary monthl
   assert.deepEqual(data.redeemed, { movies: 3, seasons: 1, month: new Date().toISOString().slice(0, 7) });
   assert.deepEqual(data.dashboard.available, { movies: 1, seasons: 1 });
   assert.equal(data.dashboard.redemptions[0].status, "applied");
-  assert.equal(posted.movieQuotaBonus, 4);
-  assert.equal(posted.tvQuotaBonus, 1);
+  assert.equal(posted.movieQuotaLimit, 8);
+  assert.equal(posted.tvQuotaLimit, 4);
   const remaining = sqlite.prepare("SELECT movie_credits,season_credits FROM referral_credit_balances WHERE user_id = ?")
     .get(referrer.user.id);
   assert.equal(remaining.movie_credits, 1);
   assert.equal(remaining.season_credits, 1);
+});
+
+test("credits are restored when the request service does not persist the account quota", async (t) => {
+  const { sqlite, env } = setup(t);
+  const referrer = await register(env, "safe-redeemer@example.test", "Safe Redeemer");
+  sqlite.prepare(`INSERT INTO referral_credit_balances(user_id, movie_credits, season_credits, updated_at)
+    VALUES (?, 2, 1, 100)`).run(referrer.user.id);
+  const fetcher = async (input, options) => {
+    const url = new URL(input);
+    if (url.pathname === "/api/v1/user") {
+      return Response.json({ results: [{ id: 52, email: "safe-redeemer@example.test" }] });
+    }
+    if (url.pathname === "/api/v1/user/52/settings/main" && !options.method) {
+      return Response.json({ email: "safe-redeemer@example.test", movieQuotaLimit: 5,
+        movieQuotaDays: 30, tvQuotaLimit: 3, tvQuotaDays: 30 });
+    }
+    if (url.pathname === "/api/v1/user/52/quota") {
+      return Response.json({ movie: { limit: 5, used: 5, remaining: 0 },
+        tv: { limit: 3, used: 3, remaining: 0 } });
+    }
+    if (url.pathname === "/api/v1/user/52/settings/main" && options.method === "POST") {
+      return Response.json(JSON.parse(options.body));
+    }
+    return new Response(null, { status: 404 });
+  };
+  const response = await referralsResponse(jsonRequest("/api/portal/referrals", referrer.cookie, {
+    action: "redeem_reward", movies: 2, seasons: 1,
+  }), env, fetcher);
+  assert.equal(response.status, 502);
+  assert.match((await response.json()).message, /credits were not used/i);
+  const remaining = sqlite.prepare("SELECT movie_credits,season_credits FROM referral_credit_balances WHERE user_id = ?")
+    .get(referrer.user.id);
+  assert.equal(remaining.movie_credits, 2);
+  assert.equal(remaining.season_credits, 1);
+  assert.equal(sqlite.prepare("SELECT status FROM referral_redemptions WHERE user_id = ?")
+    .get(referrer.user.id).status, "failed");
 });

@@ -112,11 +112,23 @@ test("members can share a referral and review a referred friend order in three c
     plans: [{ id: "gold", name: "Gold Tier", monthlyPriceMinor: 500, currency: "GBP" }],
     addons: [{ id: "extra-season", name: "Extra Season Request", description: "Adds a season request.", priceMinor: 100, currency: "GBP", billingLabel: "one-off" }],
   };
-  await page.route("**/api/portal/referrals", (route) => route.fulfill({ json: route.request().method() === "POST"
-    ? { ...referralFixture, inbound: { ...referralFixture.inbound, order: { id: "PP-REVIEW", tierId: "gold",
-      addons: [{ id: "extra-season", name: "Extra Season Request", quantity: 2 }] } },
-      order: { id: "PP-REVIEW" }, whatsappUrl: "https://wa.me/447481861478?text=review" }
-    : referralFixture }));
+  let redeemedBody = null;
+  await page.route("**/api/portal/referrals", (route) => {
+    if (route.request().method() !== "POST") return route.fulfill({ json: referralFixture });
+    const body = route.request().postDataJSON();
+    if (body.action === "redeem_reward") {
+      redeemedBody = body;
+      return route.fulfill({ json: { ...referralFixture,
+        dashboard: { ...referralFixture.dashboard, available: { movies: 1, seasons: 1 } },
+        redeemed: { movies: 3, seasons: 1, month: "2026-09" },
+      } });
+    }
+    return route.fulfill({ json: { ...referralFixture,
+      inbound: { ...referralFixture.inbound, order: { id: "PP-REVIEW", tierId: "gold",
+        addons: [{ id: "extra-season", name: "Extra Season Request", quantity: 2 }] } },
+      order: { id: "PP-REVIEW" }, whatsappUrl: "https://wa.me/447481861478?text=review",
+    } });
+  });
   await page.goto("/account/#account");
   await expect(page.locator("#referral-panel")).toBeVisible();
   await expect(page.locator("#referral-link")).toHaveValue("https://plexpoint.uk/join/NEWFRIEND-123ABC");
@@ -125,7 +137,14 @@ test("members can share a referral and review a referred friend order in three c
   await expect(page.locator("#referral-movie-total")).toHaveText("4");
   await expect(page.locator("#referral-movie-available")).toHaveText("4 available");
   await expect(page.locator("#referral-season-available")).toHaveText("2 available");
-  await expect(page.locator("#referral-redeem-status")).toContainText("September 2026");
+  await expect(page.locator("#referral-redeem-status")).toContainText("added directly");
+  await page.locator("#referral-redeem-movies").fill("3");
+  await page.locator("#referral-redeem-seasons").fill("1");
+  await page.getByRole("button", { name: "Use credits" }).click();
+  await expect(page.locator("#referral-redeem-status")).toContainText("added to your request-service account");
+  await expect(page.locator("#referral-movie-available")).toHaveText("1 available");
+  await expect(page.locator("#referral-season-available")).toHaveText("1 available");
+  expect(redeemedBody).toEqual({ action: "redeem_reward", movies: 3, seasons: 1 });
   await expect(page.locator("#referral-order-by")).toContainText("JACOB-ABC123");
   await page.getByRole("button", { name: "Choose extras" }).click();
   await expect(page.locator('[data-referral-step="2"]')).toBeVisible();

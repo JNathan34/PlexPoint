@@ -1,8 +1,7 @@
 PRAGMA foreign_keys = ON;
 
--- Referral rewards are earned in PlexPoint first. Members redeem them in
--- whatever amount they want before the credits are applied to the current
--- calendar month's temporary request adjustment in the request service.
+-- Referral rewards are earned in PlexPoint first. Members choose how many
+-- credits to apply to their request-service account at a time.
 CREATE TABLE referral_credit_balances (
   user_id TEXT PRIMARY KEY NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   movie_credits INTEGER NOT NULL DEFAULT 0 CHECK (movie_credits >= 0),

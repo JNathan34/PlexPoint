@@ -1,6 +1,6 @@
 import { AuthError, isAdminEmail, readBody, reply, sessionUser } from "./auth.js";
 import { memberReferralCode, readReferralCode, referralCookie } from "./referral-core.js";
-import { applyOverseerrTemporaryRequests, configuredOverseerr, findOverseerrUser } from "./overseerr.js";
+import { applyOverseerrRequestCredits, configuredOverseerr, findOverseerrUser } from "./overseerr.js";
 
 const WHATSAPP_NUMBER = "447481861478";
 const MAX_REFERRALS = 5;
@@ -109,7 +109,7 @@ async function redeemReferralRewards(db, env, user, body, now, fetcher) {
   }
 
   try {
-    await applyOverseerrTemporaryRequests(config, overseerrUser, { movies, seasons }, fetcher);
+    await applyOverseerrRequestCredits(config, overseerrUser, { movies, seasons }, fetcher);
     await db.batch([
       db.prepare(`UPDATE referral_redemptions SET status = 'applied', applied_at = ? WHERE id = ?`)
         .bind(now, redemptionId),
@@ -124,10 +124,10 @@ async function redeemReferralRewards(db, env, user, body, now, fetcher) {
         SET movie_credits = movie_credits + ?, season_credits = season_credits + ?, updated_at = ?
         WHERE user_id = ?`).bind(movies, seasons, now, user.id),
       db.prepare(`UPDATE referral_redemptions SET status = 'failed', failure_reason = ?, applied_at = ? WHERE id = ?`)
-        .bind("The request service did not accept the temporary adjustment.", now, redemptionId),
+        .bind("The request service did not save the request allowance.", now, redemptionId),
     ]);
     console.error(JSON.stringify({ event: "referral_redemption_failed", errorType: error instanceof Error ? error.name : typeof error }));
-    throw new AuthError(502, "The request service could not apply those temporary requests. Your referral credits were not used.");
+    throw new AuthError(502, "The request service could not add those requests to your account. Your referral credits were not used.");
   }
   return { movies, seasons, month: currentMonth };
 }

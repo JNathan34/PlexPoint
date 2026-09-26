@@ -3,6 +3,8 @@ import { AuthError, isAdminEmail, plexAvatarColumnAvailable, reply, sessionUser 
 const DEFAULT_OVERSEERR_URL = "https://request.plexpoint.uk";
 const MAX_JSON_BYTES = 1_000_000;
 const MAX_AVATAR_BYTES = 2_000_000;
+const USER_PAGE_SIZE = 100;
+const MAX_USER_PAGES = 20;
 
 function configuredOverseerr(env) {
   const apiKey = typeof env.OVERSEERR_API_KEY === "string" ? env.OVERSEERR_API_KEY.trim() : "";
@@ -75,56 +77,88 @@ async function overseerrMutation(config, path, body, fetcher) {
 const normalized = (value) => typeof value === "string" ? value.trim().toLowerCase() : "";
 
 async function findOverseerrUser(config, account, fetcher) {
-  const payload = await overseerrJson(config, "user", { take: 100, skip: 0, sort: "created" }, fetcher);
-  const users = Array.isArray(payload.results) ? payload.results : [];
+  const plexId = String(account.plex_id ?? account.plexId ?? "").trim();
   const email = normalized(account.email);
   const plexUsername = normalized(account.plex_username || account.plexUsername);
-  return users.find((candidate) => email && normalized(candidate?.email) === email)
-    || users.find((candidate) => plexUsername && normalized(candidate?.plexUsername) === plexUsername)
-    || null;
+  let emailMatch = null;
+  let usernameMatch = null;
+
+  for (let page = 0; page < MAX_USER_PAGES; page++) {
+    const skip = page * USER_PAGE_SIZE;
+    const payload = await overseerrJson(config, "user",
+      { take: USER_PAGE_SIZE, skip, sort: "created" }, fetcher);
+    const users = Array.isArray(payload.results) ? payload.results : [];
+    const plexMatch = users.find((candidate) => plexId && String(candidate?.plexId ?? "").trim() === plexId);
+    if (plexMatch) return plexMatch;
+    emailMatch ||= users.find((candidate) => email && normalized(candidate?.email) === email) || null;
+    usernameMatch ||= users.find((candidate) => plexUsername
+      && normalized(candidate?.plexUsername) === plexUsername) || null;
+
+    const resultCount = Number(payload?.pageInfo?.results);
+    if (users.length < USER_PAGE_SIZE
+      || (Number.isSafeInteger(resultCount) && skip + users.length >= resultCount)) break;
+  }
+  return emailMatch || usernameMatch;
 }
 
-function quotaBonus(value) {
+function quotaLimit(value) {
   const parsed = Number(value);
-  return Number.isSafeInteger(parsed) ? parsed : 0;
+  return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : null;
 }
 
-function settingsPayload(settings, user, movieQuotaBonus, tvQuotaBonus) {
+function nullableText(value, limit = 200) {
+  const text = safeText(value, "", limit);
+  return text || null;
+}
+
+function settingsPayload(settings, user, movieQuotaLimit, tvQuotaLimit) {
   return {
-    username: safeText(settings?.username ?? user?.username ?? user?.plexUsername, ""),
+    username: nullableText(settings?.username ?? user?.username ?? user?.plexUsername),
     email: safeText(settings?.email ?? user?.email, ""),
-    discordId: safeText(settings?.discordId, ""),
-    locale: safeText(settings?.locale, ""),
-    discoverRegion: safeText(settings?.discoverRegion, ""),
-    streamingRegion: safeText(settings?.streamingRegion, ""),
-    originalLanguage: typeof settings?.originalLanguage === "string" ? settings.originalLanguage : null,
-    movieQuotaLimit: settings?.movieQuotaLimit ?? null,
+    locale: nullableText(settings?.locale),
+    discoverRegion: nullableText(settings?.discoverRegion),
+    streamingRegion: nullableText(settings?.streamingRegion),
+    originalLanguage: nullableText(settings?.originalLanguage),
+    movieQuotaLimit,
     movieQuotaDays: settings?.movieQuotaDays ?? null,
-    movieQuotaPeriod: settings?.movieQuotaPeriod ?? null,
-    movieQuotaBonus,
-    tvQuotaLimit: settings?.tvQuotaLimit ?? null,
+    tvQuotaLimit,
     tvQuotaDays: settings?.tvQuotaDays ?? null,
-    tvQuotaPeriod: settings?.tvQuotaPeriod ?? null,
-    tvQuotaBonus,
     watchlistSyncMovies: settings?.watchlistSyncMovies ?? null,
     watchlistSyncTv: settings?.watchlistSyncTv ?? null,
   };
 }
 
-export async function applyOverseerrTemporaryRequests(config, user, { movies = 0, seasons = 0 } = {}, fetcher = fetch) {
+function requestedQuotaLimit(quota, type, amount) {
+  const current = quotaLimit(quota?.[type]?.limit);
+  if (current === null) throw new Error("request service returned an invalid quota");
+  if (current === 0) throw new Error(`${type} requests are already unlimited`);
+  const next = current + amount;
+  if (!Number.isSafeInteger(next) || next > 10000) throw new Error("request limit adjustment too large");
+  return next;
+}
+
+export async function applyOverseerrRequestCredits(config, user, { movies = 0, seasons = 0 } = {}, fetcher = fetch) {
   const userId = Number(user?.id);
   if (!Number.isInteger(userId) || userId < 1) throw new Error("request service user not found");
   if (!Number.isSafeInteger(movies) || movies < 0 || !Number.isSafeInteger(seasons) || seasons < 0
     || movies + seasons < 1 || movies + seasons > 100) {
-    throw new Error("invalid temporary request adjustment");
+    throw new Error("invalid request limit adjustment");
   }
   const settings = await overseerrJson(config, `user/${userId}/settings/main`, {}, fetcher);
-  const nextMovieBonus = quotaBonus(settings.movieQuotaBonus) + movies;
-  const nextTvBonus = quotaBonus(settings.tvQuotaBonus) + seasons;
-  if (nextMovieBonus > 10000 || nextTvBonus > 10000) throw new Error("temporary request adjustment too large");
+  const currentQuota = await overseerrJson(config, `user/${userId}/quota`, {}, fetcher);
+  const nextMovieLimit = movies
+    ? requestedQuotaLimit(currentQuota, "movie", movies) : quotaLimit(settings.movieQuotaLimit);
+  const nextTvLimit = seasons
+    ? requestedQuotaLimit(currentQuota, "tv", seasons) : quotaLimit(settings.tvQuotaLimit);
   await overseerrMutation(config, `user/${userId}/settings/main`,
-    settingsPayload(settings, user, nextMovieBonus, nextTvBonus), fetcher);
-  return { movieBonus: nextMovieBonus, tvBonus: nextTvBonus };
+    settingsPayload(settings, user, nextMovieLimit, nextTvLimit), fetcher);
+
+  const savedQuota = await overseerrJson(config, `user/${userId}/quota`, {}, fetcher);
+  if ((movies && quotaLimit(savedQuota?.movie?.limit) !== nextMovieLimit)
+    || (seasons && quotaLimit(savedQuota?.tv?.limit) !== nextTvLimit)) {
+    throw new Error("request service did not save the quota adjustment");
+  }
+  return { movieLimit: nextMovieLimit, tvLimit: nextTvLimit };
 }
 
 function safeText(value, fallback, limit = 200) {
