@@ -74,6 +74,7 @@ test("the main and account headers keep Account attached and the trial visible",
   await expect(accountTrial).toBeVisible();
   await expect(accountTrial).toHaveAttribute("href", "https://wizarr.plexpoint.uk/j/FREE%20TRIAL");
   await expect(accountTrial).toHaveCSS("color", "rgb(255, 255, 255)");
+  await expect(page.locator('#portal-navigation a[aria-current="page"]')).toHaveCSS("view-transition-name", "plexpoint-active-navigation");
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
@@ -81,7 +82,14 @@ test("the main and account headers keep Account attached and the trial visible",
   const mobileLink = page.locator('[data-testid="mobile-account-link"]');
   await expect(mobileLink).toBeVisible();
   await expect(mobileLink).toHaveAttribute("href", "/account/");
+  await mobileLink.evaluate((link) => link.addEventListener("click", (event) => event.preventDefault(), { once: true }));
   await mobileLink.click();
+  await expect(page.locator("html")).toHaveClass(/pp-navigation-leaving/);
+  await expect(page.locator('[data-mobile-navigation-tray]')).toBeHidden();
+  expect((await page.locator('[data-testid="navigation"]').boundingBox()).height).toBeLessThan(100);
+  await page.locator("html").evaluate((root) => root.classList.remove("pp-navigation-leaving"));
+  await page.locator('[data-testid="mobile-menu-button"]').click();
+  await page.locator('[data-testid="mobile-account-link"]').click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Your Account");
   expect(await page.evaluate(() => document.documentElement.classList.contains("pp-from-main-navigation"))).toBe(true);
   await page.locator("#portal-menu-toggle").click();
@@ -89,6 +97,9 @@ test("the main and account headers keep Account attached and the trial visible",
   await expect(mobileAccountTrial).toBeVisible();
   await expect(mobileAccountTrial).toHaveAttribute("href", "https://wizarr.plexpoint.uk/j/FREE%20TRIAL");
   await expect(mobileAccountTrial).toHaveCSS("color", "rgb(255, 255, 255)");
+  await page.locator('#portal-navigation a[href="/"]').click();
+  await page.waitForURL("/");
+  expect((await page.locator('[data-testid="navigation"]').boundingBox()).height).toBeLessThan(100);
 });
 
 test("account section links keep the main navigation visible during the return to the homepage", async ({ page }) => {

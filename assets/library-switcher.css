@@ -4,8 +4,13 @@
   view-transition-name: plexpoint-navigation;
 }
 
-[data-testid^="nav-link-"] > .absolute.inset-0 {
+[data-testid^="nav-link-"]:has(> .absolute.inset-0) {
   view-transition-name: plexpoint-active-navigation;
+}
+
+/* Never morph the expanded mobile drawer into the compact account header. */
+html.pp-navigation-leaving [data-mobile-navigation-tray] {
+  display: none !important;
 }
 
 html.pp-from-account-navigation [data-testid="navigation"] {
@@ -13,15 +18,34 @@ html.pp-from-account-navigation [data-testid="navigation"] {
   transform: translate3d(0, 0, 0) !important;
 }
 
-::view-transition-old(plexpoint-navigation),
-::view-transition-new(plexpoint-navigation) {
-  animation-duration: 220ms;
+::view-transition-group(plexpoint-navigation),
+::view-transition-group(plexpoint-active-navigation) {
+  animation-duration: 360ms;
+  animation-timing-function: cubic-bezier(.22, 1, .36, 1);
 }
 
-::view-transition-old(root) { animation: 160ms ease both pp-page-out; }
-::view-transition-new(root) { animation: 220ms ease both pp-page-in; }
+::view-transition-old(plexpoint-navigation),
+::view-transition-new(plexpoint-navigation) {
+  animation-duration: 360ms;
+  animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(plexpoint-active-navigation),
+::view-transition-new(plexpoint-active-navigation) {
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) { animation: 220ms ease-out both pp-page-out; }
+::view-transition-new(root) { animation: 360ms cubic-bezier(.22, 1, .36, 1) both pp-page-in; }
 @keyframes pp-page-out { to { opacity: .88; } }
 @keyframes pp-page-in { from { opacity: .82; } }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}
 
 [data-plex-shows-panel] select,
 [data-plex-anime-panel] select {

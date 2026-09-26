@@ -101,6 +101,7 @@ test("members can share a referral and review a referred friend order in three c
     landing: null,
     dashboard: { code: "NEWFRIEND-123ABC", link: "https://plexpoint.uk/join/NEWFRIEND-123ABC",
       completed: 2, maximum: 5, totals: { seasons: 2, movies: 4 },
+      available: { seasons: 2, movies: 4 }, currentMonth: "2026-09",
       nextReward: { number: 3, seasons: 2, movies: 2 },
       rewards: [{ number: 1, seasons: 1, movies: 2 }, { number: 2, seasons: 1, movies: 2 },
         { number: 3, seasons: 2, movies: 2 }, { number: 4, seasons: 1, movies: 2 }, { number: 5, seasons: 2, movies: 2 }],
@@ -122,6 +123,9 @@ test("members can share a referral and review a referred friend order in three c
   await expect(page.locator("#referral-progress-count")).toHaveText("2/5");
   await expect(page.locator("#referral-season-total")).toHaveText("2");
   await expect(page.locator("#referral-movie-total")).toHaveText("4");
+  await expect(page.locator("#referral-movie-available")).toHaveText("4 available");
+  await expect(page.locator("#referral-season-available")).toHaveText("2 available");
+  await expect(page.locator("#referral-redeem-status")).toContainText("September 2026");
   await expect(page.locator("#referral-order-by")).toContainText("JACOB-ABC123");
   await page.getByRole("button", { name: "Choose extras" }).click();
   await expect(page.locator('[data-referral-step="2"]')).toBeVisible();

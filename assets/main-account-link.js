@@ -19,6 +19,12 @@ function installAccountLinks() {
     mobileTutorials.after(accountLink("mobile-account-link",
       "flex min-h-[48px] items-center rounded-xl px-4 py-3 text-left text-sm text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground"));
   }
+
+  // The home page animates its mobile menu open. Mark that tray so it can be
+  // removed from the outgoing view-transition snapshot before changing pages.
+  const mobileAccountLink = document.querySelector('[data-testid="mobile-account-link"]');
+  const mobileTray = mobileAccountLink?.closest('.md\\:hidden');
+  if (mobileTray) mobileTray.dataset.mobileNavigationTray = "";
 }
 
 installAccountLinks();
@@ -27,5 +33,16 @@ new MutationObserver(installAccountLinks).observe(document.getElementById("root"
 document.addEventListener("click", (event) => {
   const link = event.target.closest('a[href="/account/"]');
   if (!link) return;
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+  // Close React's drawer state as well as hiding it for the outgoing frame so
+  // browser Back never restores the homepage with a tall, still-open header.
+  if (link.dataset.testid === "mobile-account-link") {
+    document.querySelector('[data-testid="mobile-menu-button"]')?.click();
+  }
+  document.documentElement.classList.add("pp-navigation-leaving");
+  window.setTimeout(() => document.documentElement.classList.remove("pp-navigation-leaving"), 1000);
   try { sessionStorage.setItem("plexpoint:main-navigation", "1"); } catch { /* Storage is optional. */ }
 }, { capture: true });
+
+window.addEventListener("pageshow", () => document.documentElement.classList.remove("pp-navigation-leaving"));

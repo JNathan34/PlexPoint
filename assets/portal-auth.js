@@ -356,6 +356,9 @@ const dateText = (value) => value == null ? "—" : new Date(value).toLocaleDate
 const dateInput = (value) => value == null ? "" : new Date(value).toISOString().slice(0, 10);
 const moneyText = (minor, currency = "GBP") => new Intl.NumberFormat(undefined,
   { style: "currency", currency }).format((Number(minor) || 0) / 100);
+const monthText = (value) => /^\d{4}-\d{2}$/.test(String(value || ""))
+  ? new Date(`${value}-01T00:00:00Z`).toLocaleDateString(undefined, { month: "long", year: "numeric", timeZone: "UTC" })
+  : "this month";
 const paymentLabels = {
   none: "No plan", paid: "Paid", due_soon: "Due soon", overdue: "Overdue",
   unpaid: "Payment due", partially_paid: "Part paid", awaiting_confirmation: "Awaiting confirmation", void: "Void",
@@ -480,15 +483,14 @@ function renderReferrals(data) {
   movieInput.value = String(Math.min(Math.max(0, Number(movieInput.value) || 0), movieCredits));
   seasonInput.value = String(Math.min(Math.max(0, Number(seasonInput.value) || 0), seasonCredits));
   referralRedeemEnabled = movieCredits + seasonCredits > 0;
-  const availableCopy = [
-    movieCredits ? `${movieCredits} movie` + (movieCredits === 1 ? "" : "s") : "",
-    seasonCredits ? `${seasonCredits} season` + (seasonCredits === 1 ? "" : "s") : "",
-  ].filter(Boolean).join(" and ");
-  byId("referral-redeem-status").textContent = availableCopy
-    ? `${availableCopy} available to redeem for ${data.dashboard.currentMonth || "this month"}. Unused temporary requests expire at month end.`
+  byId("referral-redemption").dataset.empty = String(!referralRedeemEnabled);
+  byId("referral-movie-available").textContent = `${movieCredits} available`;
+  byId("referral-season-available").textContent = `${seasonCredits} available`;
+  byId("referral-redeem-status").textContent = referralRedeemEnabled
+    ? `Used credits apply to ${monthText(data.dashboard.currentMonth)} and expire at month end. Unused credits stay in your balance.`
     : "No unredeemed referral credits yet. Earn credits when a referred member completes their first payment.";
   byId("referral-next").textContent = data.dashboard.nextReward
-    ? `Next friend: +${data.dashboard.nextReward.seasons} season and +${data.dashboard.nextReward.movies} movie requests.`
+    ? `Next referral earns ${data.dashboard.nextReward.seasons} season + ${data.dashboard.nextReward.movies} movie requests.`
     : "You’ve unlocked every referral reward — thank you!";
   byId("referral-milestones").replaceChildren(...data.dashboard.rewards.map((reward) => {
     const item = document.createElement("span");
@@ -496,6 +498,7 @@ function renderReferrals(data) {
     item.className = complete ? "is-complete" : "";
     item.textContent = complete ? "✓" : String(reward.number);
     item.title = `Friend ${reward.number}: +${reward.seasons} season, +${reward.movies} movie requests`;
+    item.setAttribute("aria-label", item.title);
     return item;
   }));
   renderReferralHistory(data.dashboard.referrals || []);
@@ -1256,7 +1259,7 @@ byId("referral-copy").addEventListener("click", async () => {
     if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(link);
     else { byId("referral-link").select(); document.execCommand("copy"); }
     byId("referral-copy").textContent = "Copied ✓";
-    setTimeout(() => { byId("referral-copy").textContent = "Copy link"; }, 1800);
+    setTimeout(() => { byId("referral-copy").textContent = "Copy"; }, 1800);
   } catch { byId("referral-status").textContent = "Could not copy automatically. Select the link and copy it manually."; }
 });
 byId("referral-share").addEventListener("click", async () => {
