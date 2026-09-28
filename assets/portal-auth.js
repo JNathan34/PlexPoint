@@ -10,6 +10,7 @@ let adminBusy = false;
 let requestsBusy = false;
 let billingBusy = false;
 let adminBillingBusy = false;
+let adminRequestCreditsBusy = false;
 let referralBusy = false;
 let referralRedeemEnabled = false;
 let referralData = null;
@@ -50,6 +51,12 @@ function controls() {
     for (const control of editorForm.elements) control.disabled = adminBillingBusy;
     editorForm.setAttribute("aria-busy", String(adminBillingBusy));
   }
+  const requestCreditsForm = byId("admin-request-credits-form");
+  for (const control of requestCreditsForm.elements) control.disabled = adminBillingBusy || adminRequestCreditsBusy;
+  requestCreditsForm.setAttribute("aria-busy", String(adminRequestCreditsBusy));
+  const requestCreditTotal = Number(byId("admin-request-movies").value || 0)
+    + Number(byId("admin-request-seasons").value || 0);
+  byId("admin-request-credits-save").disabled = adminBillingBusy || adminRequestCreditsBusy || requestCreditTotal < 1;
   const selectedPrice = Number(byId("admin-plan-tier").selectedOptions[0]?.dataset.priceMinor);
   const paymentUnavailable = adminBillingBusy || !adminBillingData?.billing?.subscription || selectedPrice === 0;
   for (const control of byId("admin-payment-form").elements) control.disabled = paymentUnavailable;
@@ -412,17 +419,44 @@ function renderReferralReview() {
 
 function renderReferralHistory(referrals) {
   byId("referral-history-summary").textContent = referrals.length
-    ? `${referrals.length} friend${referrals.length === 1 ? "" : "s"}` : "No referrals yet";
+    ? `${referrals.length} invite${referrals.length === 1 ? "" : "s"}` : "No invites yet";
+  if (!referrals.length) {
+    const empty = document.createElement("p");
+    empty.className = "pp-referral-invite-empty";
+    empty.textContent = "Your invited friends will appear here once they create an account.";
+    byId("referral-history-list").replaceChildren(empty);
+    return;
+  }
   byId("referral-history-list").replaceChildren(...referrals.map((referral) => {
     const row = document.createElement("div");
+    row.className = "pp-referral-invite";
+    row.dataset.status = referral.status;
+    const avatar = document.createElement("span");
+    avatar.className = "pp-referral-invite-avatar";
+    avatar.dataset.status = referral.status;
+    avatar.textContent = String(referral.member || "Friend").trim().split(/\s+/).slice(0, 2)
+      .map((part) => part[0] || "").join("").toUpperCase() || "F";
     const copy = document.createElement("span");
     const name = document.createElement("strong"); name.textContent = referral.member;
-    const detail = document.createElement("small"); detail.textContent = referral.completedAt
-      ? `Completed ${dateText(referral.completedAt)}` : `Joined ${dateText(referral.createdAt)}`;
+    const detail = document.createElement("small");
+    detail.textContent = referral.completedAt
+      ? `Reward unlocked ${dateText(referral.completedAt)}`
+      : referral.status === "awaiting_payment"
+        ? `Joined ${dateText(referral.createdAt)} · awaiting first payment`
+        : referral.status === "cancelled"
+          ? `Invite closed · joined ${dateText(referral.createdAt)}`
+          : `Joined ${dateText(referral.createdAt)} · membership not completed`;
     copy.append(name, detail);
-    const state = document.createElement("span"); state.className = "pp-billing-state"; state.dataset.status = referral.status;
-    state.textContent = referralStatusLabels[referral.status] || referral.status;
-    row.append(copy, state); return row;
+    const outcome = document.createElement("span");
+    outcome.className = "pp-referral-invite-outcome";
+    const reward = document.createElement("strong");
+    reward.textContent = referral.referralNumber
+      ? `+${referral.reward.seasons} season · +${referral.reward.movies} movies`
+      : referralStatusLabels[referral.status] || referral.status;
+    const state = document.createElement("small");
+    state.textContent = referral.referralNumber ? "Completed" : referral.status === "awaiting_payment" ? "In progress" : "Pending";
+    outcome.append(reward, state);
+    row.append(avatar, copy, outcome); return row;
   }));
 }
 
@@ -966,6 +1000,10 @@ function renderAdminBilling(data) {
   byId("admin-billing-balance-summary").textContent = subscription && Number(subscription.monthlyPriceMinor) === 0
     ? "No payment"
     : period ? moneyText(period.outstandingMinor, period.currency) : "Not set";
+  byId("admin-request-movies").value = "0";
+  byId("admin-request-seasons").value = "0";
+  byId("admin-request-credits-status").textContent = "";
+  byId("admin-request-credits-status").dataset.error = "false";
   const referral = data.referral;
   byId("admin-referral-order").hidden = !referral;
   if (referral) {
@@ -1124,6 +1162,34 @@ async function updateAdminBilling(body, progress, success) {
   }
 }
 
+async function grantAdminRequestCredits() {
+  if (!user?.isAdmin || adminBillingBusy || adminRequestCreditsBusy || !adminBillingData?.account?.id) return;
+  const movies = Number(byId("admin-request-movies").value);
+  const seasons = Number(byId("admin-request-seasons").value);
+  adminRequestCreditsBusy = true;
+  byId("admin-request-credits-status").textContent = "Adding and verifying request credits…";
+  byId("admin-request-credits-status").dataset.error = "false";
+  controls();
+  try {
+    const data = await request("request-credits", {
+      userId: adminBillingData.account.id, movies, seasons,
+    }, "admin");
+    const granted = [
+      data.granted.movies ? `${data.granted.movies} movie` : "",
+      data.granted.seasons ? `${data.granted.seasons} season` : "",
+    ].filter(Boolean).join(" and ");
+    byId("admin-request-credits-status").textContent = `Added ${granted} request${movies + seasons === 1 ? "" : "s"}. Verified limits: ${data.limits.movies} movies and ${data.limits.seasons} seasons.`;
+    byId("admin-request-movies").value = "0";
+    byId("admin-request-seasons").value = "0";
+  } catch (error) {
+    byId("admin-request-credits-status").textContent = error.message;
+    byId("admin-request-credits-status").dataset.error = "true";
+  } finally {
+    adminRequestCreditsBusy = false;
+    controls();
+  }
+}
+
 async function acceptUser(next) {
   renderUser(next);
   if (next) await Promise.all([loadBilling(), loadWatchTime(), loadRequests(), loadReferrals(),
@@ -1256,7 +1322,7 @@ byId("referral-copy").addEventListener("click", async () => {
     if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(link);
     else { byId("referral-link").select(); document.execCommand("copy"); }
     byId("referral-copy").textContent = "Copied ✓";
-    setTimeout(() => { byId("referral-copy").textContent = "Copy"; }, 1800);
+    setTimeout(() => { byId("referral-copy").textContent = "Copy link"; }, 1800);
   } catch { byId("referral-status").textContent = "Could not copy automatically. Select the link and copy it manually."; }
 });
 byId("referral-share").addEventListener("click", async () => {
@@ -1356,6 +1422,12 @@ byId("admin-plan-tier").addEventListener("change", () => {
 });
 byId("admin-payment-months").addEventListener("change", () => refreshPaymentCoverage());
 byId("admin-payment-amount").addEventListener("input", refreshPaymentAction);
+for (const id of ["admin-request-movies", "admin-request-seasons"]) byId(id).addEventListener("input", controls);
+byId("admin-request-credits-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!event.currentTarget.reportValidity()) return;
+  void grantAdminRequestCredits();
+});
 for (const id of ["admin-payment-date", "admin-payment-method", "admin-payment-reference", "admin-payment-note"]) {
   byId(id).addEventListener("input", refreshPaymentDetailsSummary);
   byId(id).addEventListener("change", refreshPaymentDetailsSummary);

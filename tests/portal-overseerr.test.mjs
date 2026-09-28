@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
 import { readFileSync } from "node:fs";
 import { authResponse } from "../shared/portal/auth.js";
-import { applyOverseerrRequestCredits, avatarResponse, configuredOverseerr, findOverseerrUser, requestsResponse } from "../shared/portal/overseerr.js";
+import { adminRequestCreditsResponse, applyOverseerrRequestCredits, avatarResponse, configuredOverseerr, findOverseerrUser, requestsResponse } from "../shared/portal/overseerr.js";
 
 const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql", "0007_vip_addons.sql", "0008_billing_coverage.sql", "0009_referrals.sql", "0010_referral_redemptions.sql"];
 
@@ -198,4 +198,81 @@ test("an ignored quota update is rejected instead of spending referral credits",
   };
   await assert.rejects(() => applyOverseerrRequestCredits(config,
     { id: 42, email: "viewer@example.test" }, { movies: 1, seasons: 0 }, fetcher), /did not save/);
+});
+
+test("an administrator can grant and verify request credits for a member", async (t) => {
+  const { sqlite, env } = setup(t);
+  const adminRegistration = await authResponse(authRequest("register", {
+    email: "jacobnathan1718@gmail.com", displayName: "Jacob", password: "A very long unique admin passphrase",
+  }), env, "register");
+  const memberRegistration = await authResponse(authRequest("register", {
+    email: "member@example.test", displayName: "Member", password: "A very long unique member passphrase",
+  }), env, "register");
+  const member = (await memberRegistration.clone().json()).user;
+  sqlite.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at) VALUES (?, ?, ?, ?)")
+    .run("999", member.id, "MemberPlex", Date.now());
+  const request = new Request("https://portal.example.test/api/portal/admin/request-credits", {
+    method: "POST",
+    headers: {
+      Origin: "https://portal.example.test", "Content-Type": "application/json", "X-PlexPoint-Request": "1",
+      Cookie: cookieOf(adminRegistration),
+    },
+    body: JSON.stringify({ userId: member.id, movies: 3, seasons: 2 }),
+  });
+  const quota = { movie: { limit: 5, used: 1, remaining: 4 }, tv: { limit: 4, used: 1, remaining: 3 } };
+  const fetcher = async (input, options) => {
+    const url = new URL(input);
+    if (url.pathname === "/api/v1/user") {
+      return Response.json({ results: [{ id: 42, email: "member@example.test", plexId: 999, plexUsername: "MemberPlex" }] });
+    }
+    if (url.pathname === "/api/v1/user/42/settings/main" && !options.method) {
+      return Response.json({ username: "MemberPlex", email: "member@example.test",
+        movieQuotaLimit: quota.movie.limit, movieQuotaDays: 30, tvQuotaLimit: quota.tv.limit, tvQuotaDays: 30 });
+    }
+    if (url.pathname === "/api/v1/user/42/quota") return Response.json(quota);
+    if (url.pathname === "/api/v1/user/42/settings/main" && options.method === "POST") {
+      const body = JSON.parse(options.body);
+      quota.movie.limit = body.movieQuotaLimit;
+      quota.tv.limit = body.tvQuotaLimit;
+      return Response.json(body);
+    }
+    return new Response(null, { status: 404 });
+  };
+  const response = await adminRequestCreditsResponse(request, env, fetcher);
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), {
+    granted: { movies: 3, seasons: 2 }, limits: { movies: 8, seasons: 6 },
+  });
+  const audit = sqlite.prepare("SELECT actor_id, subject_user_id, action, details_json FROM audit_events WHERE action = 'admin.requests_granted'").get();
+  assert.equal(audit.subject_user_id, member.id);
+  assert.equal(audit.action, "admin.requests_granted");
+  assert.deepEqual(JSON.parse(audit.details_json), { movies: 3, seasons: 2, movieLimit: 8, seasonLimit: 6 });
+});
+
+test("request-credit grants reject non-admins and invalid amounts before contacting the service", async (t) => {
+  const { env } = setup(t);
+  const memberRegistration = await authResponse(authRequest("register", {
+    email: "member@example.test", displayName: "Member", password: "A very long unique member passphrase",
+  }), env, "register");
+  let calls = 0;
+  const request = (cookie, body) => new Request("https://portal.example.test/api/portal/admin/request-credits", {
+    method: "POST",
+    headers: {
+      Origin: "https://portal.example.test", "Content-Type": "application/json", "X-PlexPoint-Request": "1", Cookie: cookie,
+    },
+    body: JSON.stringify(body),
+  });
+  const forbidden = await adminRequestCreditsResponse(request(cookieOf(memberRegistration), {
+    userId: "member", movies: 1, seasons: 0,
+  }), env, async () => { calls++; return Response.json({}); });
+  assert.equal(forbidden.status, 403);
+
+  const adminRegistration = await authResponse(authRequest("register", {
+    email: "jacobnathan1718@gmail.com", displayName: "Jacob", password: "A very long unique admin passphrase",
+  }), env, "register");
+  const invalid = await adminRequestCreditsResponse(request(cookieOf(adminRegistration), {
+    userId: "member", movies: 101, seasons: 0,
+  }), env, async () => { calls++; return Response.json({}); });
+  assert.equal(invalid.status, 400);
+  assert.equal(calls, 0);
 });

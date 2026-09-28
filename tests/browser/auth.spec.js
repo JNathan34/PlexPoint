@@ -124,6 +124,8 @@ test("the full account dashboard stays compact and scroll-free on a phone", asyn
   await expect(page.locator("#billing-payments tr")).toHaveCount(1);
   await expect(page.locator("#referral-content")).toBeVisible();
   await expect(page.locator("#overview-watch-time")).toHaveText("0m");
+  await expect(page.locator(".pp-metric-watch .pp-metric-period")).toHaveText("Last 7 days");
+  await expect(page.locator(".pp-metric-watch .pp-metric-period")).toBeVisible();
   const layout = await page.evaluate(() => ({
     viewport: innerWidth,
     documentWidth: document.documentElement.scrollWidth,
@@ -135,6 +137,11 @@ test("the full account dashboard stays compact and scroll-free on a phone", asyn
       return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
     }),
     avatarWidth: document.querySelector(".pp-profile-avatar").getBoundingClientRect().width,
+    watchPeriod: (() => {
+      const card = document.querySelector(".pp-metric-watch").getBoundingClientRect();
+      const badge = document.querySelector(".pp-metric-watch .pp-metric-period").getBoundingClientRect();
+      return { cardRight: card.right, badgeRight: badge.right, cardTop: card.top, badgeTop: badge.top };
+    })(),
   }));
   expect(layout.documentWidth).toBeLessThanOrEqual(layout.viewport);
   expect(layout.tableOverflow.every((overflow) => overflow <= 1)).toBe(true);
@@ -143,6 +150,8 @@ test("the full account dashboard stays compact and scroll-free on a phone", asyn
   expect(layout.metricRects[2].y).toBeGreaterThan(layout.metricRects[0].y);
   expect(layout.metricRects.every((rect) => rect.width < 190 && rect.height < 110)).toBe(true);
   expect(layout.avatarWidth).toBeLessThanOrEqual(56);
+  expect(layout.watchPeriod.cardRight - layout.watchPeriod.badgeRight).toBeLessThanOrEqual(12);
+  expect(layout.watchPeriod.badgeTop - layout.watchPeriod.cardTop).toBeLessThanOrEqual(12);
   await expect(page.locator("#billing-history .pp-admin-table")).toHaveCSS("min-width", "0px");
   await expect(page.locator("#admin-table-wrap .pp-admin-table")).toHaveCSS("min-width", "0px");
 });
@@ -205,9 +214,40 @@ test("members can share a referral and review a referred friend order in three c
   await expect(page.locator("#referral-movie-available")).toHaveText("4 available");
   await expect(page.locator("#referral-season-available")).toHaveText("2 available");
   await expect(page.locator("#referral-redeem-status")).toContainText("added directly");
+  await expect(page.locator("#referral-how-heading")).toHaveText("What your friend needs to do");
+  await expect(page.locator(".pp-referral-how li")).toHaveCount(4);
+  await expect(page.getByRole("button", { name: "Invite friends" })).toBeVisible();
+  await expect(page.locator("#referral-history-heading")).toHaveText("All invites");
+  await expect(page.locator(".pp-referral-invite")).toHaveCount(1);
+  await expect(page.locator(".pp-referral-invite")).toContainText("First Friend");
+  await expect(page.locator(".pp-referral-invite")).toContainText("Completed");
+  await expect(page.locator(".pp-referral-invite")).toContainText("+1 season · +2 movies");
+  await page.setViewportSize({ width: 390, height: 844 });
+  const referralMobile = await page.locator("#referral-panel").evaluate((panel) => ({
+    overflows: panel.scrollWidth > panel.clientWidth,
+    shareButtonHeight: panel.querySelector("#referral-share").getBoundingClientRect().height,
+    inviteWidth: panel.querySelector(".pp-referral-invite").getBoundingClientRect().width,
+  }));
+  expect(referralMobile.overflows).toBe(false);
+  expect(referralMobile.shareButtonHeight).toBeGreaterThanOrEqual(44);
+  expect(referralMobile.inviteWidth).toBeLessThanOrEqual(360);
+  await page.setViewportSize({ width: 1280, height: 720 });
+  const referralPolish = await page.locator("#referral-panel").evaluate((panel) => ({
+    smallestHelperText: Math.min(...[
+      ".pp-referral-total span", ".pp-referral-share > label", ".pp-referral-next",
+      ".pp-referral-rewards article span", ".pp-referral-rewards > small",
+      ".pp-referral-redemption p", ".pp-referral-redemption-controls label small",
+      ".pp-referral-history-heading > small",
+    ].map((selector) => Number.parseFloat(getComputedStyle(panel.querySelector(selector)).fontSize))),
+    milestoneHeight: panel.querySelector(".pp-referral-milestones > span").getBoundingClientRect().height,
+    milestoneText: [...panel.querySelectorAll(".pp-referral-milestones > span")].map((item) => item.textContent),
+  }));
+  expect(referralPolish.smallestHelperText).toBeGreaterThanOrEqual(10);
+  expect(referralPolish.milestoneHeight).toBeGreaterThanOrEqual(28);
+  expect(referralPolish.milestoneText).toEqual(["✓", "✓", "3", "4", "5"]);
   await page.locator("#referral-redeem-movies").fill("3");
   await page.locator("#referral-redeem-seasons").fill("1");
-  await page.getByRole("button", { name: "Use credits" }).click();
+  await page.getByRole("button", { name: "Add to account" }).click();
   await expect(page.locator("#referral-redeem-status")).toContainText("added to your request-service account");
   await expect(page.locator("#referral-movie-available")).toHaveText("1 available");
   await expect(page.locator("#referral-season-available")).toHaveText("1 available");
@@ -393,6 +433,7 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
   let paymentRecorded = false;
   let recordedPaymentBody = null;
   let addonsSaved = false;
+  let grantedRequestsBody = null;
   const billing = {
     subscription: null, currentPeriod: null, lastPayment: null, payments: [], addons: [],
   };
@@ -430,9 +471,22 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
     }
     return route.fulfill({ json: detail() });
   });
+  await page.route("**/api/portal/admin/request-credits", async (route) => {
+    grantedRequestsBody = route.request().postDataJSON();
+    return route.fulfill({ json: {
+      granted: { movies: grantedRequestsBody.movies, seasons: grantedRequestsBody.seasons },
+      limits: { movies: 12, seasons: 7 },
+    } });
+  });
   await page.goto("/account/#account");
   await page.getByRole("button", { name: "Manage" }).click();
   await expect(page.locator("#admin-billing-editor")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Grant request credits" })).toBeVisible();
+  await page.getByLabel("Movies", { exact: true }).fill("2");
+  await page.getByLabel("Seasons", { exact: true }).fill("1");
+  await page.getByRole("button", { name: "Grant requests" }).click();
+  await expect(page.locator("#admin-request-credits-status")).toHaveText("Added 2 movie and 1 season requests. Verified limits: 12 movies and 7 seasons.");
+  expect(grantedRequestsBody).toEqual({ userId: "member", movies: 2, seasons: 1 });
   await page.locator("#admin-plan-access").selectOption("enabled");
   await page.locator("#admin-plan-start").fill("2026-09-01");
   await page.locator("#admin-plan-due").fill("2026-10-01");
@@ -462,6 +516,17 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
   await expect(page.locator("#admin-billing-status")).toHaveText("Account add-ons saved.");
   expect(addonsSaved).toBe(true);
   await expect(page.getByLabel("Extra Movie Request quantity")).toHaveValue("3");
+  await page.setViewportSize({ width: 390, height: 844 });
+  const requestGrantMobileLayout = await page.locator("#admin-request-credits-form").evaluate((form) => ({
+    formOverflow: form.scrollWidth - form.clientWidth,
+    pageOverflow: document.documentElement.scrollWidth - innerWidth,
+    helperFontSize: Number.parseFloat(getComputedStyle(form.querySelector("div > p")).fontSize),
+    controls: [...form.querySelectorAll("input, button")].map((control) => control.getBoundingClientRect().width),
+  }));
+  expect(requestGrantMobileLayout.formOverflow).toBeLessThanOrEqual(1);
+  expect(requestGrantMobileLayout.pageOverflow).toBeLessThanOrEqual(0);
+  expect(requestGrantMobileLayout.helperFontSize).toBeGreaterThanOrEqual(12);
+  expect(requestGrantMobileLayout.controls.every((width) => width > 100)).toBe(true);
 });
 
 test("the viewing panel stays removed while the summary shows seven-day watch time", async ({ page }) => {

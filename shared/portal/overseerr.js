@@ -1,4 +1,4 @@
-import { AuthError, isAdminEmail, plexAvatarColumnAvailable, reply, sessionUser } from "./auth.js";
+import { AuthError, isAdminEmail, plexAvatarColumnAvailable, readBody, reply, sessionUser } from "./auth.js";
 
 const DEFAULT_OVERSEERR_URL = "https://request.plexpoint.uk";
 const MAX_JSON_BYTES = 1_000_000;
@@ -159,6 +159,67 @@ export async function applyOverseerrRequestCredits(config, user, { movies = 0, s
     throw new Error("request service did not save the quota adjustment");
   }
   return { movieLimit: nextMovieLimit, tvLimit: nextTvLimit };
+}
+
+function adminGrantAmount(value) {
+  return Number.isSafeInteger(value) && value >= 0 && value <= 100 ? value : null;
+}
+
+export async function adminRequestCreditsResponse(request, env, fetcher = fetch) {
+  try {
+    const url = new URL(request.url);
+    if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) {
+      throw new AuthError(400, "Account access requires HTTPS.");
+    }
+    if (request.method !== "POST") return reply({ message: "Method not allowed." }, 405, { Allow: "POST" });
+    if (!env.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
+    const current = await sessionUser(env.PORTAL_DB, request);
+    if (!current) throw new AuthError(401, "Please sign in to continue.");
+    if (!isAdminEmail(current.email)) throw new AuthError(403, "Administrator access is required.");
+    const body = await readBody(request);
+    const userId = typeof body.userId === "string" && body.userId.length <= 128
+      && !/[\x00-\x1f\x7f]/.test(body.userId) ? body.userId : "";
+    const movies = adminGrantAmount(body.movies);
+    const seasons = adminGrantAmount(body.seasons);
+    if (!userId) throw new AuthError(400, "Select a valid member.");
+    if (movies === null || seasons === null || movies + seasons < 1 || movies + seasons > 100) {
+      throw new AuthError(400, "Add between 1 and 100 movie or season requests.");
+    }
+    const account = await env.PORTAL_DB.prepare(`SELECT
+      u.id, u.email, p.plex_id, p.username AS plex_username
+      FROM users u LEFT JOIN plex_identities p ON p.user_id = u.id
+      WHERE u.id = ?`).bind(userId).first();
+    if (!account) throw new AuthError(404, "That user account could not be found.");
+    const config = configuredOverseerr(env);
+    const overseerrUser = await findOverseerrUser(config, account, fetcher);
+    if (!overseerrUser || !Number.isInteger(Number(overseerrUser.id))) {
+      throw new AuthError(409, "No matching request-service account was found. Ask the member to sign in there once, then retry.");
+    }
+    const limits = await applyOverseerrRequestCredits(config, overseerrUser, { movies, seasons }, fetcher);
+    try {
+      await env.PORTAL_DB.prepare(`INSERT INTO audit_events
+        (id, actor_id, subject_user_id, action, details_json, created_at)
+        VALUES (?, ?, ?, 'admin.requests_granted', ?, ?)`).bind(
+        crypto.randomUUID(), current.id, account.id,
+        JSON.stringify({ movies, seasons, movieLimit: limits.movieLimit, seasonLimit: limits.tvLimit }), Date.now(),
+      ).run();
+    } catch (error) {
+      // The verified external update has already completed. Do not invite a
+      // retry that would grant the allowance twice merely because audit storage failed.
+      console.error(JSON.stringify({ event: "admin_request_credit_audit_failed", errorType: error instanceof Error ? error.name : typeof error }));
+    }
+    return reply({
+      granted: { movies, seasons },
+      limits: { movies: limits.movieLimit, seasons: limits.tvLimit },
+    });
+  } catch (error) {
+    if (!(error instanceof AuthError)) console.error(JSON.stringify({
+      event: "admin_request_credit_error",
+      errorType: error instanceof Error ? error.name : typeof error,
+    }));
+    return reply({ message: error instanceof AuthError ? error.message : "Request credits could not be added. Please try again later." },
+      error instanceof AuthError ? error.status : 502);
+  }
 }
 
 function safeText(value, fallback, limit = 200) {
