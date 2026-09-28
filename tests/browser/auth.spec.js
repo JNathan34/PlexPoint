@@ -434,6 +434,7 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
   let recordedPaymentBody = null;
   let addonsSaved = false;
   let grantedRequestsBody = null;
+  let grantShouldReturnInvalid = false;
   const billing = {
     subscription: null, currentPeriod: null, lastPayment: null, payments: [], addons: [],
   };
@@ -472,6 +473,9 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
     return route.fulfill({ json: detail() });
   });
   await page.route("**/api/portal/admin/request-credits", async (route) => {
+    if (grantShouldReturnInvalid) return route.fulfill({
+      status: 502, contentType: "text/html", body: "<h1>Temporary upstream error</h1>",
+    });
     grantedRequestsBody = route.request().postDataJSON();
     return route.fulfill({ json: {
       granted: { movies: grantedRequestsBody.movies, seasons: grantedRequestsBody.seasons },
@@ -487,6 +491,11 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
   await page.getByRole("button", { name: "Grant requests" }).click();
   await expect(page.locator("#admin-request-credits-status")).toHaveText("Added 2 movie and 1 season requests. Verified limits: 12 movies and 7 seasons.");
   expect(grantedRequestsBody).toEqual({ userId: "member", movies: 2, seasons: 1 });
+  grantShouldReturnInvalid = true;
+  await page.getByLabel("Movies", { exact: true }).fill("1");
+  await page.getByRole("button", { name: "Grant requests" }).click();
+  await expect(page.locator("#admin-request-credits-status")).toContainText("invalid 502 response");
+  await expect(page.locator("#admin-request-credits-status")).not.toContainText("Check your connection");
   await page.locator("#admin-plan-access").selectOption("enabled");
   await page.locator("#admin-plan-start").fill("2026-09-01");
   await page.locator("#admin-plan-due").fill("2026-10-01");

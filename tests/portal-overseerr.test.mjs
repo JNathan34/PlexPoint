@@ -64,7 +64,7 @@ function overseerrFetcher(calls) {
     assert.equal(options.headers["X-Api-Key"], "test-overseerr-key-123456");
     assert.equal(options.redirect, "manual");
     if (url.pathname === "/api/v1/user") return Response.json({ results: [{
-      id: 42, email: "viewer@example.test", plexUsername: "PlexViewer", avatar: "/avatarproxy/42",
+      id: 42, email: "viewer@example.test", plexId: 123456, plexUsername: "PlexViewer", avatar: "/avatarproxy/42",
     }] });
     if (url.pathname === "/api/v1/user/42/requests") return Response.json({ results: [{
       id: 8, status: 2, createdAt: "2026-09-15T12:00:00.000Z",
@@ -127,7 +127,8 @@ test("request-service account matching searches every page and prefers the immut
   const calls = [];
   const fetcher = async (input) => {
     const url = new URL(input);
-    calls.push(Number(url.searchParams.get("skip")));
+    calls.push({ q: url.searchParams.get("q"), skip: Number(url.searchParams.get("skip")) });
+    if (url.searchParams.has("q")) return Response.json({ pageInfo: { results: 0 }, results: [] });
     if (url.searchParams.get("skip") === "0") {
       return Response.json({ pageInfo: { results: 101 }, results: [
         { id: 5, email: "current@example.test", plexId: 999, plexUsername: "OldName" },
@@ -142,7 +143,46 @@ test("request-service account matching searches every page and prefers the immut
     email: "current@example.test", plex_id: "123456", plex_username: "CurrentName",
   }, fetcher);
   assert.equal(result.id, 42);
-  assert.deepEqual(calls, [0, 100]);
+  assert.deepEqual(calls, [
+    { q: "current@example.test", skip: 0 },
+    { q: "currentname", skip: 0 },
+    { q: null, skip: 0 },
+    { q: null, skip: 100 },
+  ]);
+});
+
+test("request-service account matching uses the targeted user search first", async () => {
+  const config = configuredOverseerr({ OVERSEERR_API_KEY: "test-overseerr-key-123456" });
+  const calls = [];
+  const fetcher = async (input) => {
+    const url = new URL(input);
+    calls.push(Object.fromEntries(url.searchParams));
+    return Response.json({ pageInfo: { results: 1 }, results: [
+      { id: 42, email: "viewer@example.test", plexId: 123456, plexUsername: "PlexViewer" },
+    ] });
+  };
+  const result = await findOverseerrUser(config, {
+    email: "viewer@example.test", plex_id: "123456", plex_username: "PlexViewer",
+  }, fetcher);
+  assert.equal(result.id, 42);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].q, "viewer@example.test");
+  assert.equal(calls[0].take, "20");
+});
+
+test("targeted account matching supports older request servers that omit Plex ids", async () => {
+  const config = configuredOverseerr({ OVERSEERR_API_KEY: "test-overseerr-key-123456" });
+  let calls = 0;
+  const result = await findOverseerrUser(config, {
+    email: "viewer@example.test", plex_id: "123456", plex_username: "PlexViewer",
+  }, async () => {
+    calls++;
+    return Response.json({ results: [
+      { id: 42, email: "viewer@example.test", plexUsername: "PlexViewer" },
+    ] });
+  });
+  assert.equal(result.id, 42);
+  assert.equal(calls, 1);
 });
 
 test("referral credits increase the real account quota without changing other settings", async () => {

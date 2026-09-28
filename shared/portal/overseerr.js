@@ -83,16 +83,40 @@ async function findOverseerrUser(config, account, fetcher) {
   let emailMatch = null;
   let usernameMatch = null;
 
+  const inspectUsers = (users) => {
+    const plexMatch = users.find((candidate) => plexId && String(candidate?.plexId ?? "").trim() === plexId);
+    emailMatch ||= users.find((candidate) => email && normalized(candidate?.email) === email) || null;
+    usernameMatch ||= users.find((candidate) => plexUsername
+      && normalized(candidate?.plexUsername) === plexUsername) || null;
+    // Older Overseerr/Zima builds omit plexId even for API-key admins. An
+    // exact match on both remaining account signals is safe to use
+    // without falling back to a full paginated scan.
+    const legacyMatch = users.find((candidate) => candidate?.plexId == null
+      && email && normalized(candidate?.email) === email
+      && plexUsername && normalized(candidate?.plexUsername) === plexUsername);
+    return plexMatch || legacyMatch;
+  };
+
+  // Overseerr/Seerr supports `q` across email and Plex username. In normal use
+  // this resolves one account in a single request instead of downloading every
+  // user page, which keeps admin grants well inside the browser timeout.
+  for (const query of [...new Set([email, plexUsername].filter(Boolean))]) {
+    const payload = await overseerrJson(config, "user",
+      { take: 20, skip: 0, sort: "created", q: query }, fetcher);
+    const users = Array.isArray(payload.results) ? payload.results : [];
+    const plexMatch = inspectUsers(users);
+    if (plexMatch) return plexMatch;
+  }
+
+  if (!plexId) return emailMatch || usernameMatch;
+
   for (let page = 0; page < MAX_USER_PAGES; page++) {
     const skip = page * USER_PAGE_SIZE;
     const payload = await overseerrJson(config, "user",
       { take: USER_PAGE_SIZE, skip, sort: "created" }, fetcher);
     const users = Array.isArray(payload.results) ? payload.results : [];
-    const plexMatch = users.find((candidate) => plexId && String(candidate?.plexId ?? "").trim() === plexId);
+    const plexMatch = inspectUsers(users);
     if (plexMatch) return plexMatch;
-    emailMatch ||= users.find((candidate) => email && normalized(candidate?.email) === email) || null;
-    usernameMatch ||= users.find((candidate) => plexUsername
-      && normalized(candidate?.plexUsername) === plexUsername) || null;
 
     const resultCount = Number(payload?.pageInfo?.results);
     if (users.length < USER_PAGE_SIZE
@@ -144,8 +168,10 @@ export async function applyOverseerrRequestCredits(config, user, { movies = 0, s
     || movies + seasons < 1 || movies + seasons > 100) {
     throw new Error("invalid request limit adjustment");
   }
-  const settings = await overseerrJson(config, `user/${userId}/settings/main`, {}, fetcher);
-  const currentQuota = await overseerrJson(config, `user/${userId}/quota`, {}, fetcher);
+  const [settings, currentQuota] = await Promise.all([
+    overseerrJson(config, `user/${userId}/settings/main`, {}, fetcher),
+    overseerrJson(config, `user/${userId}/quota`, {}, fetcher),
+  ]);
   const nextMovieLimit = movies
     ? requestedQuotaLimit(currentQuota, "movie", movies) : quotaLimit(settings.movieQuotaLimit);
   const nextTvLimit = seasons
@@ -321,7 +347,7 @@ function safeAvatarSource(value, config) {
 
 async function accountForAvatar(db, id) {
   const avatarSelect = await plexAvatarColumnAvailable(db) ? "p.avatar_url AS plex_avatar_url" : "NULL AS plex_avatar_url";
-  return db.prepare(`SELECT u.id, u.email, p.username AS plex_username, ${avatarSelect}
+  return db.prepare(`SELECT u.id, u.email, p.plex_id, p.username AS plex_username, ${avatarSelect}
     FROM users u LEFT JOIN plex_identities p ON p.user_id = u.id WHERE u.id = ?`).bind(id).first();
 }
 

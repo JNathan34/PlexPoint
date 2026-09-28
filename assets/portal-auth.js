@@ -1173,7 +1173,10 @@ async function grantAdminRequestCredits() {
   try {
     const data = await request("request-credits", {
       userId: adminBillingData.account.id, movies, seasons,
-    }, "admin");
+    }, "admin", {
+      timeoutMs: 35000,
+      timeoutMessage: "The request service took too long to respond. Nothing was confirmed—please try again.",
+    });
     const granted = [
       data.granted.movies ? `${data.granted.movies} movie` : "",
       data.granted.seasons ? `${data.granted.seasons} season` : "",
@@ -1197,9 +1200,9 @@ async function acceptUser(next) {
   else await loadReferrals();
 }
 
-async function request(action, body, group = "auth") {
+async function request(action, body, group = "auth", options = {}) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15000);
+  const timeout = setTimeout(() => controller.abort(), options.timeoutMs || 15000);
   try {
     const route = group ? `/api/portal/${group}/${action}` : `/api/portal/${action}`;
     const response = await fetch(route, {
@@ -1207,13 +1210,25 @@ async function request(action, body, group = "auth") {
       credentials: "same-origin", cache: "no-store", signal: controller.signal,
       ...(body === undefined ? {} : { headers: { "Content-Type": "application/json", "X-PlexPoint-Request": "1" }, body: JSON.stringify(body) }),
     });
-    const data = await response.json();
+    const responseText = await response.text();
+    let data = {};
+    if (responseText) {
+      try { data = JSON.parse(responseText); }
+      catch {
+        throw new Error(response.ok
+          ? "Account services returned an unexpected response. Please try again."
+          : `Account services returned an invalid ${response.status} response. Please try again.`);
+      }
+    }
     if (!response.ok) throw new Error(data.message || "Account services are temporarily unavailable.");
     if (group !== "auth") return data;
     if (!("user" in data)) throw new Error("Account services returned an unexpected response.");
     return data.user;
   } catch (error) {
-    if (error.name === "AbortError" || error instanceof TypeError || error instanceof SyntaxError) {
+    if (error.name === "AbortError") {
+      throw new Error(options.timeoutMessage || "Account services took too long to respond. Please try again.");
+    }
+    if (error instanceof TypeError) {
       throw new Error("Could not reach account services. Check your connection and try again.");
     }
     throw error;
