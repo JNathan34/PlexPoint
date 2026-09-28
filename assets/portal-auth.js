@@ -1181,7 +1181,11 @@ async function grantAdminRequestCredits() {
       data.granted.movies ? `${data.granted.movies} movie` : "",
       data.granted.seasons ? `${data.granted.seasons} season` : "",
     ].filter(Boolean).join(" and ");
-    byId("admin-request-credits-status").textContent = `Added ${granted} request${movies + seasons === 1 ? "" : "s"}. Verified limits: ${data.limits.movies} movies and ${data.limits.seasons} seasons.`;
+    const requestLabel = (value, type) => `${value} ${type} request${value === 1 ? "" : "s"}`;
+    const verified = data.verified.mode === "monthly_bonus"
+      ? `Monthly bonus now: ${requestLabel(data.verified.movies, "movie")} and ${requestLabel(data.verified.seasons, "season")}.`
+      : `Limits now: ${requestLabel(data.verified.movies, "movie")} and ${requestLabel(data.verified.seasons, "season")}.`;
+    byId("admin-request-credits-status").textContent = `Added ${granted} request${movies + seasons === 1 ? "" : "s"}. ${verified}`;
     byId("admin-request-movies").value = "0";
     byId("admin-request-seasons").value = "0";
   } catch (error) {

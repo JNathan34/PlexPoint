@@ -126,6 +126,7 @@ async function findOverseerrUser(config, account, fetcher) {
 }
 
 function quotaLimit(value) {
+  if (value === null || value === undefined || value === "") return null;
   const parsed = Number(value);
   return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : null;
 }
@@ -135,21 +136,49 @@ function nullableText(value, limit = 200) {
   return text || null;
 }
 
-function settingsPayload(settings, user, movieQuotaLimit, tvQuotaLimit) {
+function quotaPeriod(value) {
+  return value === "days" || value === "calendarMonth" ? value : null;
+}
+
+function settingsPayload(settings, user, overrides = {}) {
   return {
     username: nullableText(settings?.username ?? user?.username ?? user?.plexUsername),
     email: safeText(settings?.email ?? user?.email, ""),
+    discordId: nullableText(settings?.discordId),
     locale: nullableText(settings?.locale),
     discoverRegion: nullableText(settings?.discoverRegion),
     streamingRegion: nullableText(settings?.streamingRegion),
+    // Overseerr used `region`; Zima/Seerr split it into discovery and
+    // streaming regions. Supplying both preserves either server variant.
+    region: nullableText(settings?.region ?? settings?.discoverRegion),
     originalLanguage: nullableText(settings?.originalLanguage),
-    movieQuotaLimit,
-    movieQuotaDays: settings?.movieQuotaDays ?? null,
-    tvQuotaLimit,
-    tvQuotaDays: settings?.tvQuotaDays ?? null,
+    movieQuotaLimit: quotaLimit(settings?.movieQuotaLimit),
+    movieQuotaDays: quotaLimit(settings?.movieQuotaDays),
+    movieQuotaPeriod: quotaPeriod(settings?.movieQuotaPeriod),
+    movieQuotaBonus: quotaLimit(settings?.movieQuotaBonus),
+    tvQuotaLimit: quotaLimit(settings?.tvQuotaLimit),
+    tvQuotaDays: quotaLimit(settings?.tvQuotaDays),
+    tvQuotaPeriod: quotaPeriod(settings?.tvQuotaPeriod),
+    tvQuotaBonus: quotaLimit(settings?.tvQuotaBonus),
     watchlistSyncMovies: settings?.watchlistSyncMovies ?? null,
     watchlistSyncTv: settings?.watchlistSyncTv ?? null,
+    ...overrides,
   };
+}
+
+function quotaBonus(settings, quota, type) {
+  const value = quotaLimit(settings?.[`${type}QuotaBonus`])
+    ?? quotaLimit(quota?.[type === "movie" ? "movie" : "tv"]?.bonus)
+    ?? 0;
+  if (value > 10000) throw new Error("request service returned an invalid bonus allowance");
+  return value;
+}
+
+function supportsQuotaBonus(settings, quota) {
+  return Object.hasOwn(settings || {}, "movieQuotaBonus")
+    || Object.hasOwn(settings || {}, "tvQuotaBonus")
+    || Object.hasOwn(quota?.movie || {}, "bonus")
+    || Object.hasOwn(quota?.tv || {}, "bonus");
 }
 
 function requestedQuotaLimit(quota, type, amount) {
@@ -172,19 +201,51 @@ export async function applyOverseerrRequestCredits(config, user, { movies = 0, s
     overseerrJson(config, `user/${userId}/settings/main`, {}, fetcher),
     overseerrJson(config, `user/${userId}/quota`, {}, fetcher),
   ]);
+
+  // Zima/Seerr exposes explicit bonus allowances for one-off credits. They
+  // increase what the member can request this month without permanently
+  // changing their normal plan quota.
+  if (supportsQuotaBonus(settings, currentQuota)) {
+    const currentMovieBonus = quotaBonus(settings, currentQuota, "movie");
+    const currentTvBonus = quotaBonus(settings, currentQuota, "tv");
+    const nextMovieBonus = currentMovieBonus + movies;
+    const nextTvBonus = currentTvBonus + seasons;
+    if (nextMovieBonus > 10000 || nextTvBonus > 10000) {
+      throw new Error("request bonus adjustment too large");
+    }
+    await overseerrMutation(config, `user/${userId}/settings/main`, settingsPayload(settings, user, {
+      movieQuotaBonus: nextMovieBonus,
+      tvQuotaBonus: nextTvBonus,
+    }), fetcher);
+
+    const savedQuota = await overseerrJson(config, `user/${userId}/quota`, {}, fetcher);
+    if ((movies && quotaLimit(savedQuota?.movie?.bonus) !== nextMovieBonus)
+      || (seasons && quotaLimit(savedQuota?.tv?.bonus) !== nextTvBonus)) {
+      throw new Error("request service did not save the bonus allowance");
+    }
+    return {
+      mode: "monthly_bonus",
+      movieValue: nextMovieBonus,
+      tvValue: nextTvBonus,
+    };
+  }
+
+  // Compatibility fallback for older Overseerr builds without bonus quotas.
   const nextMovieLimit = movies
     ? requestedQuotaLimit(currentQuota, "movie", movies) : quotaLimit(settings.movieQuotaLimit);
   const nextTvLimit = seasons
     ? requestedQuotaLimit(currentQuota, "tv", seasons) : quotaLimit(settings.tvQuotaLimit);
-  await overseerrMutation(config, `user/${userId}/settings/main`,
-    settingsPayload(settings, user, nextMovieLimit, nextTvLimit), fetcher);
+  await overseerrMutation(config, `user/${userId}/settings/main`, settingsPayload(settings, user, {
+    movieQuotaLimit: nextMovieLimit,
+    tvQuotaLimit: nextTvLimit,
+  }), fetcher);
 
   const savedQuota = await overseerrJson(config, `user/${userId}/quota`, {}, fetcher);
   if ((movies && quotaLimit(savedQuota?.movie?.limit) !== nextMovieLimit)
     || (seasons && quotaLimit(savedQuota?.tv?.limit) !== nextTvLimit)) {
     throw new Error("request service did not save the quota adjustment");
   }
-  return { movieLimit: nextMovieLimit, tvLimit: nextTvLimit };
+  return { mode: "quota_limit", movieValue: nextMovieLimit, tvValue: nextTvLimit };
 }
 
 function adminGrantAmount(value) {
@@ -227,7 +288,8 @@ export async function adminRequestCreditsResponse(request, env, fetcher = fetch)
         (id, actor_id, subject_user_id, action, details_json, created_at)
         VALUES (?, ?, ?, 'admin.requests_granted', ?, ?)`).bind(
         crypto.randomUUID(), current.id, account.id,
-        JSON.stringify({ movies, seasons, movieLimit: limits.movieLimit, seasonLimit: limits.tvLimit }), Date.now(),
+        JSON.stringify({ movies, seasons, verifiedMode: limits.mode,
+          verifiedMovies: limits.movieValue, verifiedSeasons: limits.tvValue }), Date.now(),
       ).run();
     } catch (error) {
       // The verified external update has already completed. Do not invite a
@@ -236,12 +298,13 @@ export async function adminRequestCreditsResponse(request, env, fetcher = fetch)
     }
     return reply({
       granted: { movies, seasons },
-      limits: { movies: limits.movieLimit, seasons: limits.tvLimit },
+      verified: { mode: limits.mode, movies: limits.movieValue, seasons: limits.tvValue },
     });
   } catch (error) {
     if (!(error instanceof AuthError)) console.error(JSON.stringify({
       event: "admin_request_credit_error",
       errorType: error instanceof Error ? error.name : typeof error,
+      errorMessage: error instanceof Error ? error.message.slice(0, 200) : "Unknown error",
     }));
     return reply({ message: error instanceof AuthError ? error.message : "Request credits could not be added. Please try again later." },
       error instanceof AuthError ? error.status : 502);

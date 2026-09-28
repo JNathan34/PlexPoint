@@ -185,41 +185,48 @@ test("targeted account matching supports older request servers that omit Plex id
   assert.equal(calls, 1);
 });
 
-test("referral credits increase the real account quota without changing other settings", async () => {
+test("referral credits increase Zima monthly bonuses without changing plan settings", async () => {
   const config = configuredOverseerr({ OVERSEERR_API_KEY: "test-overseerr-key-123456" });
   let posted = null;
-  const quota = { movie: { limit: 5, used: 4, remaining: 1 }, tv: { limit: 4, used: 4, remaining: 0 } };
+  const settings = { username: "PlexViewer", email: "viewer@example.test", discordId: "123",
+    locale: "en", discoverRegion: "GB", streamingRegion: "GB", originalLanguage: "en",
+    movieQuotaLimit: 5, movieQuotaDays: 30, movieQuotaPeriod: "calendarMonth", movieQuotaBonus: 1,
+    tvQuotaLimit: 4, tvQuotaDays: 30, tvQuotaPeriod: "calendarMonth", tvQuotaBonus: 0,
+    watchlistSyncMovies: true, watchlistSyncTv: false };
+  const quota = { movie: { limit: 5, bonus: 1, used: 4, remaining: 2 },
+    tv: { limit: 4, bonus: 0, used: 4, remaining: 0 } };
   const fetcher = async (input, options) => {
     const url = new URL(input);
     assert.equal(options.headers["X-Api-Key"], "test-overseerr-key-123456");
     if (url.pathname === "/api/v1/user/42/settings/main" && !options.method) {
-      return Response.json({ username: "PlexViewer", email: "viewer@example.test", discordId: "123",
-        locale: "en", discoverRegion: "GB", streamingRegion: "GB", originalLanguage: "en",
-        movieQuotaLimit: 5, movieQuotaDays: 30, tvQuotaLimit: 4, tvQuotaDays: 30,
-        watchlistSyncMovies: true, watchlistSyncTv: false });
+      return Response.json(settings);
     }
     if (url.pathname === "/api/v1/user/42/quota" && !options.method) return Response.json(quota);
     if (url.pathname === "/api/v1/user/42/settings/main" && options.method === "POST") {
       posted = JSON.parse(options.body);
-      quota.movie.limit = posted.movieQuotaLimit;
-      quota.movie.remaining = Math.max(0, quota.movie.limit - quota.movie.used);
-      quota.tv.limit = posted.tvQuotaLimit;
-      quota.tv.remaining = Math.max(0, quota.tv.limit - quota.tv.used);
+      settings.movieQuotaBonus = posted.movieQuotaBonus;
+      settings.tvQuotaBonus = posted.tvQuotaBonus;
+      quota.movie.bonus = posted.movieQuotaBonus;
+      quota.movie.remaining = Math.max(0, quota.movie.limit + quota.movie.bonus - quota.movie.used);
+      quota.tv.bonus = posted.tvQuotaBonus;
+      quota.tv.remaining = Math.max(0, quota.tv.limit + quota.tv.bonus - quota.tv.used);
       return Response.json(posted);
     }
     return new Response(null, { status: 404 });
   };
   const result = await applyOverseerrRequestCredits(config,
     { id: 42, email: "viewer@example.test", plex_username: "PlexViewer" }, { movies: 3, seasons: 2 }, fetcher);
-  assert.deepEqual(result, { movieLimit: 8, tvLimit: 6 });
-  assert.equal(posted.movieQuotaLimit, 8);
-  assert.equal(posted.tvQuotaLimit, 6);
+  assert.deepEqual(result, { mode: "monthly_bonus", movieValue: 4, tvValue: 2 });
+  assert.equal(posted.movieQuotaLimit, 5);
+  assert.equal(posted.tvQuotaLimit, 4);
+  assert.equal(posted.movieQuotaBonus, 4);
+  assert.equal(posted.tvQuotaBonus, 2);
   assert.equal(posted.movieQuotaDays, 30);
   assert.equal(posted.tvQuotaDays, 30);
+  assert.equal(posted.movieQuotaPeriod, "calendarMonth");
+  assert.equal(posted.tvQuotaPeriod, "calendarMonth");
   assert.equal(posted.watchlistSyncMovies, true);
-  assert.equal("movieQuotaBonus" in posted, false);
-  assert.equal("tvQuotaBonus" in posted, false);
-  assert.equal("discordId" in posted, false);
+  assert.equal(posted.discordId, "123");
 });
 
 test("an ignored quota update is rejected instead of spending referral credits", async () => {
@@ -238,6 +245,26 @@ test("an ignored quota update is rejected instead of spending referral credits",
   };
   await assert.rejects(() => applyOverseerrRequestCredits(config,
     { id: 42, email: "viewer@example.test" }, { movies: 1, seasons: 0 }, fetcher), /did not save/);
+});
+
+test("an ignored Zima bonus update is rejected instead of reporting a grant", async () => {
+  const config = configuredOverseerr({ OVERSEERR_API_KEY: "test-overseerr-key-123456" });
+  const fetcher = async (input, options) => {
+    const url = new URL(input);
+    if (url.pathname.endsWith("/settings/main") && !options.method) {
+      return Response.json({ email: "viewer@example.test", movieQuotaLimit: 5, movieQuotaDays: 30,
+        movieQuotaPeriod: "calendarMonth", movieQuotaBonus: 1, tvQuotaLimit: 4, tvQuotaDays: 30,
+        tvQuotaPeriod: "calendarMonth", tvQuotaBonus: 0 });
+    }
+    if (url.pathname.endsWith("/quota")) {
+      return Response.json({ movie: { limit: 5, bonus: 1, used: 4, remaining: 2 },
+        tv: { limit: 4, bonus: 0, used: 4, remaining: 0 } });
+    }
+    if (url.pathname.endsWith("/settings/main") && options.method === "POST") return Response.json({});
+    return new Response(null, { status: 404 });
+  };
+  await assert.rejects(() => applyOverseerrRequestCredits(config,
+    { id: 42, email: "viewer@example.test" }, { movies: 1, seasons: 0 }, fetcher), /bonus allowance/);
 });
 
 test("an administrator can grant and verify request credits for a member", async (t) => {
@@ -259,7 +286,8 @@ test("an administrator can grant and verify request credits for a member", async
     },
     body: JSON.stringify({ userId: member.id, movies: 3, seasons: 2 }),
   });
-  const quota = { movie: { limit: 5, used: 1, remaining: 4 }, tv: { limit: 4, used: 1, remaining: 3 } };
+  const quota = { movie: { limit: 5, bonus: 1, used: 1, remaining: 5 },
+    tv: { limit: 4, bonus: 0, used: 1, remaining: 3 } };
   const fetcher = async (input, options) => {
     const url = new URL(input);
     if (url.pathname === "/api/v1/user") {
@@ -267,13 +295,15 @@ test("an administrator can grant and verify request credits for a member", async
     }
     if (url.pathname === "/api/v1/user/42/settings/main" && !options.method) {
       return Response.json({ username: "MemberPlex", email: "member@example.test",
-        movieQuotaLimit: quota.movie.limit, movieQuotaDays: 30, tvQuotaLimit: quota.tv.limit, tvQuotaDays: 30 });
+        movieQuotaLimit: quota.movie.limit, movieQuotaDays: 30, movieQuotaPeriod: "calendarMonth",
+        movieQuotaBonus: quota.movie.bonus, tvQuotaLimit: quota.tv.limit, tvQuotaDays: 30,
+        tvQuotaPeriod: "calendarMonth", tvQuotaBonus: quota.tv.bonus });
     }
     if (url.pathname === "/api/v1/user/42/quota") return Response.json(quota);
     if (url.pathname === "/api/v1/user/42/settings/main" && options.method === "POST") {
       const body = JSON.parse(options.body);
-      quota.movie.limit = body.movieQuotaLimit;
-      quota.tv.limit = body.tvQuotaLimit;
+      quota.movie.bonus = body.movieQuotaBonus;
+      quota.tv.bonus = body.tvQuotaBonus;
       return Response.json(body);
     }
     return new Response(null, { status: 404 });
@@ -281,12 +311,14 @@ test("an administrator can grant and verify request credits for a member", async
   const response = await adminRequestCreditsResponse(request, env, fetcher);
   assert.equal(response.status, 200);
   assert.deepEqual(await response.json(), {
-    granted: { movies: 3, seasons: 2 }, limits: { movies: 8, seasons: 6 },
+    granted: { movies: 3, seasons: 2 },
+    verified: { mode: "monthly_bonus", movies: 4, seasons: 2 },
   });
   const audit = sqlite.prepare("SELECT actor_id, subject_user_id, action, details_json FROM audit_events WHERE action = 'admin.requests_granted'").get();
   assert.equal(audit.subject_user_id, member.id);
   assert.equal(audit.action, "admin.requests_granted");
-  assert.deepEqual(JSON.parse(audit.details_json), { movies: 3, seasons: 2, movieLimit: 8, seasonLimit: 6 });
+  assert.deepEqual(JSON.parse(audit.details_json), { movies: 3, seasons: 2,
+    verifiedMode: "monthly_bonus", verifiedMovies: 4, verifiedSeasons: 2 });
 });
 
 test("request-credit grants reject non-admins and invalid amounts before contacting the service", async (t) => {

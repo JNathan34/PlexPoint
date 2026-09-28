@@ -479,7 +479,7 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
     grantedRequestsBody = route.request().postDataJSON();
     return route.fulfill({ json: {
       granted: { movies: grantedRequestsBody.movies, seasons: grantedRequestsBody.seasons },
-      limits: { movies: 12, seasons: 7 },
+      verified: { mode: "monthly_bonus", movies: 4, seasons: 2 },
     } });
   });
   await page.goto("/account/#account");
@@ -489,7 +489,7 @@ test("the owner can edit a member plan and record a payment", async ({ page }) =
   await page.getByLabel("Movies", { exact: true }).fill("2");
   await page.getByLabel("Seasons", { exact: true }).fill("1");
   await page.getByRole("button", { name: "Grant requests" }).click();
-  await expect(page.locator("#admin-request-credits-status")).toHaveText("Added 2 movie and 1 season requests. Verified limits: 12 movies and 7 seasons.");
+  await expect(page.locator("#admin-request-credits-status")).toHaveText("Added 2 movie and 1 season requests. Monthly bonus now: 4 movie requests and 2 season requests.");
   expect(grantedRequestsBody).toEqual({ userId: "member", movies: 2, seasons: 1 });
   grantShouldReturnInvalid = true;
   await page.getByLabel("Movies", { exact: true }).fill("1");
