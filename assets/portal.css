@@ -558,10 +558,10 @@
   .pp-referral-rewards { padding: 18px 0 0; border-top: 1px solid #ffffff12; border-left: 0; }
 }
 @media (max-width: 767px) {
-  .pp-site-header { padding-block: 12px; }
+  .pp-site-header { padding-block: 10px; }
   .pp-site-nav { flex-wrap: wrap; justify-content: space-between; }
-  .pp-brand img { width: 36px; height: 36px; }
-  .pp-brand > span { font-size: 18px; }
+  .pp-brand img { width: 34px; height: 34px; }
+  .pp-brand > span { font-size: 17px; }
   .pp-menu-toggle { display: inline-flex; }
   .pp-home-button { display: none; }
   .pp-account-mobile-trial { display: flex !important; align-items: center; justify-content: center !important; gap: 8px; margin-bottom: 8px; color: #fff !important; background: var(--gradient-primary); font-weight: 600; }
@@ -570,22 +570,69 @@
   .pp-navigation a { justify-content: flex-start; min-height: 48px; padding: 12px 16px; border-radius: 12px; font-size: 14px; }
   .pp-navigation a > span { display: block; margin-right: 12px; }
   .pp-navigation a[aria-current="page"] { color: var(--primary); background: #ff7b001a; }
-  .pp-account-hero { padding-top: 76px; }
-  .pp-account-container { padding-top: 22px; padding-bottom: 36px; }
-  .pp-dashboard-top { display: flex; flex-direction: column; }
+  .pp-account-hero { padding: 64px 0 24px; }
+  .pp-account-backdrop > img { opacity: .14; }
+  .pp-account-container { width: 100%; padding: 16px 12px 28px; }
+  .pp-dashboard-top { display: flex; flex-direction: column; gap: 12px; }
   .pp-auth-intro { display: contents; }
   #account-heading-slot { order: 1; }
   .pp-auth-card { order: 2; }
-  .pp-metrics { order: 4; }
-  .pp-auth-intro h1 { font-size: 46px; line-height: 1; }
-  .pp-auth-intro .pp-page-heading > p { font-size: 16px; }
+  .pp-metrics { order: 3; gap: 8px; }
+  .pp-auth-intro .pp-page-heading { margin: 6px 2px 4px; }
+  .pp-auth-intro h1 { margin-top: 7px; font-size: 30px; line-height: 1.05; letter-spacing: -.025em; }
+  .pp-auth-intro .pp-page-heading > p { max-width: 340px; margin-top: 8px; font-size: 13px; line-height: 1.55; }
+  .pp-eyebrow { font-size: 9px; letter-spacing: .15em; }
+  .pp-card { border-radius: 14px; }
+  .pp-auth-card { min-height: 0; padding: 14px; }
+  .pp-profile-header { grid-template-columns: auto minmax(0,1fr) auto; gap: 11px; padding: 0 0 13px; }
+  .pp-profile-avatar { width: 56px; height: 56px; flex-basis: 56px; border-width: 1px; }
+  .pp-profile-avatar img { padding: 9px; }
+  #auth-user h2 { font-size: 18px; }
+  .pp-profile-copy > p:not(.pp-small) { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+  .pp-profile-active { gap: 5px; margin-top: 6px; padding: 3px 7px; font-size: 9px; }
+  .pp-profile-active > span { width: 5px; height: 5px; }
+  .pp-profile-logout { min-height: 34px; padding-inline: 9px; font-size: 10px; }
+  .pp-profile-membership { padding: 12px; border-radius: 12px; }
+  .pp-profile-plan { gap: 9px; padding-bottom: 9px; }
+  .pp-profile-plan .pp-tier-icon { width: 34px; height: 34px; flex-basis: 34px; }
+  .pp-profile-plan strong { font-size: 14px; }
+  .pp-profile-plan small { font-size: 9px; }
+  .pp-profile-addons { padding: 8px 0 9px; }
+  .pp-profile-membership dl > div { min-height: 36px; gap: 8px; }
+  .pp-profile-membership :is(dt,dd) { font-size: 10px; }
+  .pp-profile-membership dt { gap: 7px; }
+  .pp-profile-membership dt .pp-icon { width: 14px; height: 14px; }
+  .pp-profile-membership .pp-billing-state { padding: 4px 7px; font-size: 9px; }
+  .pp-account-dashboard .pp-metric { min-height: 94px; padding: 12px; }
+  .pp-metric :is(.pp-icon-tile,.pp-tier-icon) { width: 24px; height: 24px; }
+  .pp-metric :is(.pp-icon-tile,.pp-tier-icon) svg { width: 18px; height: 18px; }
+  .pp-metric h3 { margin-top: 5px; font-size: 10px; }
+  .pp-metric > strong { font-size: 17px; line-height: 1.18; white-space: normal; }
+  .pp-metric p { display: none; }
+  .pp-dashboard-detail-grid { gap: 12px; margin-top: 12px; }
   .pp-viewing-panel { padding: 20px; }
   .pp-viewing-grid { grid-template-columns: 1fr; }
   .pp-watch-time { grid-column: auto; }
-  .pp-admin-panel { padding: 20px; }
-  .pp-billing-panel { padding: 20px; }
-  .pp-admin-summary { width: 100%; }
-  .pp-admin-summary > span { flex: 1; min-width: 0; padding-inline: 8px; }
+  .pp-billing-panel, .pp-requests-panel { padding: 14px; }
+  .pp-payment-history-heading h2, .pp-requests-heading h2 { font-size: 17px; }
+  .pp-payment-history-heading .pp-icon-tile { width: 25px; height: 25px; }
+  .pp-payment-history-heading .pp-icon { width: 18px; height: 18px; }
+  .pp-requests-heading .pp-badge { padding: 4px 7px; font-size: 9px; }
+  .pp-requests-heading .pp-text-link, .pp-payment-history-heading .pp-text-link { font-size: 11px; }
+  .pp-request-list { margin-top: 8px; }
+  .pp-request-item { grid-template-columns: 38px minmax(0,1fr) auto; gap: 9px; padding: 7px 0; }
+  .pp-request-item > img, .pp-request-poster-placeholder { width: 38px; height: 53px; border-radius: 6px; }
+  .pp-request-item strong { font-size: 12px; }
+  .pp-request-item small { margin-top: 3px; font-size: 9px; }
+  .pp-request-state { grid-column: 3; grid-row: 1 / span 2; padding: 4px 7px; font-size: 9px; }
+  .pp-request-arrow { display: none; }
+  .pp-admin-panel { margin-top: 12px; padding: 16px; }
+  .pp-admin-heading { gap: 16px; }
+  .pp-admin-heading h2 { margin-top: 8px; font-size: 20px; }
+  .pp-admin-heading p { font-size: 12px; line-height: 1.55; }
+  .pp-admin-summary { width: 100%; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 6px; }
+  .pp-admin-summary > span { min-width: 0; padding: 9px 4px; font-size: 8px; }
+  .pp-admin-summary strong { font-size: 16px; }
   .pp-admin-editor-heading { flex-direction: column; }
   .pp-admin-billing-summary { grid-template-columns: repeat(3,minmax(0,1fr)); }
   .pp-admin-billing-summary > span { padding: 10px; }
@@ -594,14 +641,89 @@
   .pp-form-grid { grid-template-columns: 1fr; }
   .pp-payment-quick-fields { grid-template-columns: 1fr 1fr; }
   .pp-payment-coverage-preview { grid-column: 1 / -1; }
-  .pp-referral-panel { padding: 20px; }
+  .pp-referral-panel { margin-top: 12px; padding: 16px; }
+  .pp-referral-heading { align-items: flex-start; gap: 12px; padding-bottom: 14px; }
+  .pp-referral-heading h2 { margin-top: 7px; font-size: 20px; line-height: 1.2; }
+  .pp-referral-heading p { max-width: 250px; font-size: 11px; line-height: 1.5; }
+  .pp-referral-total { display: grid; justify-items: end; gap: 2px; }
+  .pp-referral-total strong { font-size: 21px; }
+  .pp-referral-total span { font-size: 7px; }
+  .pp-referral-grid { gap: 14px; margin-top: 14px; }
   .pp-referral-link-row { grid-template-columns: 1fr 1fr; }
   .pp-referral-link-row input { grid-column: 1 / -1; }
+  .pp-referral-link-row .pp-button { min-height: 40px; font-size: 12px; }
+  .pp-referral-milestones { margin-top: 12px; }
+  .pp-referral-rewards { display: grid; grid-template-columns: auto minmax(0,1fr); align-items: center; gap: 12px; padding: 12px 0 0; }
+  .pp-referral-rewards > div { gap: 14px; margin-top: 0; }
+  .pp-referral-rewards article strong { font-size: 22px; }
+  .pp-referral-rewards > small { grid-column: 1 / -1; margin-top: 0; }
   .pp-referral-extras { grid-template-columns: 1fr; }
-  .pp-referral-redemption { grid-template-columns: 1fr; align-items: stretch; }
+  .pp-referral-redemption { grid-template-columns: 1fr; gap: 14px; align-items: stretch; margin-top: 16px; padding-top: 15px; }
   .pp-referral-redemption-controls { grid-template-columns: 1fr 1fr; min-width: 0; }
   .pp-referral-redemption-controls .pp-button { grid-column: 1 / -1; }
+  .pp-referral-history { margin-top: 14px; padding-top: 12px; }
   .pp-admin-referral-order { align-items: flex-start; flex-direction: column; }
+
+  /* Tables become compact cards on phones instead of forcing a second,
+     nested horizontal scroll area. */
+  .pp-account-dashboard .pp-admin-table-wrap { overflow: visible; border: 0; }
+  .pp-account-dashboard .pp-admin-table { display: block; width: 100%; min-width: 0; }
+  .pp-account-dashboard .pp-admin-table thead { display: none; }
+  .pp-account-dashboard .pp-admin-table tbody { display: grid; gap: 8px; }
+  .pp-account-dashboard .pp-admin-table tr { display: grid; min-width: 0; padding: 11px; border: 1px solid #ffffff12; border-radius: 11px; background: #ffffff04; }
+  .pp-account-dashboard .pp-admin-table td { width: auto !important; min-width: 0; padding: 3px 0; border: 0; text-align: left !important; }
+  .pp-account-dashboard .pp-admin-table td:only-child { grid-column: 1 / -1; padding: 10px 2px; color: #8f9bad; }
+  #billing-history .pp-admin-table tr { grid-template: "plan amount" auto "date status" auto / minmax(0,1fr) auto; column-gap: 12px; }
+  #billing-history .pp-admin-table td:nth-child(1) { grid-area: date; color: #7f8b9d; font-size: 9px; }
+  #billing-history .pp-admin-table td:nth-child(2) { grid-area: plan; }
+  #billing-history .pp-admin-table td:nth-child(2) strong { font-size: 12px; }
+  #billing-history .pp-admin-table td:nth-child(2) small { margin-top: 2px; font-size: 9px; }
+  #billing-history .pp-admin-table td:nth-child(3) { grid-area: amount; color: #eef2f7; font-size: 12px; font-weight: 600; }
+  #billing-history .pp-admin-table td:nth-child(4) { grid-area: status; justify-self: end; }
+  #billing-history .pp-billing-state { padding: 3px 7px; font-size: 9px; }
+  #admin-table-wrap { margin-top: 14px; }
+  #admin-table-wrap .pp-admin-table tr { grid-template: "user manage" auto "plan payment" auto "status status" auto / minmax(0,1fr) minmax(110px,.8fr); column-gap: 12px; padding: 12px; }
+  #admin-table-wrap .pp-admin-table td:nth-child(1) { grid-area: user; padding-bottom: 8px; }
+  #admin-table-wrap .pp-admin-table td:nth-child(2) { display: none; }
+  #admin-table-wrap .pp-admin-table td:nth-child(3) { grid-area: plan; padding-top: 9px; border-top: 1px solid #ffffff0d; }
+  #admin-table-wrap .pp-admin-table td:nth-child(4) { grid-area: payment; padding-top: 9px; border-top: 1px solid #ffffff0d; }
+  #admin-table-wrap .pp-admin-table td:nth-child(5) { grid-area: status; padding-top: 9px; }
+  #admin-table-wrap .pp-admin-table td:nth-child(6) { grid-area: manage; justify-self: end; padding-bottom: 8px; }
+  #admin-table-wrap .pp-admin-table td:nth-child(3)::before, #admin-table-wrap .pp-admin-table td:nth-child(4)::before { display: block; margin-bottom: 4px; color: #718096; font-size: 8px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  #admin-table-wrap .pp-admin-table td:nth-child(3)::before { content: "Plan"; }
+  #admin-table-wrap .pp-admin-table td:nth-child(4)::before { content: "Payment"; }
+  #admin-table-wrap .pp-admin-tier { min-width: 0; gap: 7px; }
+  #admin-table-wrap .pp-tier-icon { width: 28px; height: 28px; flex-basis: 28px; }
+  #admin-table-wrap .pp-admin-avatar { width: 34px; height: 34px; flex-basis: 34px; }
+  #admin-table-wrap .pp-admin-manage { min-height: 34px; padding-inline: 10px; font-size: 10px; }
+  .pp-admin-history-section .pp-admin-table tr, .pp-admin-referrals .pp-admin-table tr { grid-template-columns: 1fr 1fr; gap: 8px 12px; }
+  .pp-admin-history-section .pp-admin-table td, .pp-admin-referrals .pp-admin-table td { font-size: 10px; }
+  .pp-admin-history-section .pp-admin-table td::before, .pp-admin-referrals .pp-admin-table td::before { display: block; margin-bottom: 3px; color: #718096; font-size: 7px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+  .pp-admin-history-section .pp-admin-table td:nth-child(1)::before { content: "Paid"; }
+  .pp-admin-history-section .pp-admin-table td:nth-child(2)::before { content: "Payment"; }
+  .pp-admin-history-section .pp-admin-table td:nth-child(3)::before { content: "Covers"; }
+  .pp-admin-history-section .pp-admin-table td:nth-child(4)::before { content: "Details"; }
+  .pp-admin-history-section .pp-admin-table td:nth-child(5)::before { content: "Status"; }
+  .pp-admin-history-section .pp-admin-table td:nth-child(6)::before { content: "Action"; }
+  .pp-admin-referrals .pp-admin-table td:nth-child(1)::before { content: "Friend"; }
+  .pp-admin-referrals .pp-admin-table td:nth-child(2)::before { content: "Referred by"; }
+  .pp-admin-referrals .pp-admin-table td:nth-child(3)::before { content: "Order"; }
+  .pp-admin-referrals .pp-admin-table td:nth-child(4)::before { content: "Status"; }
+  .pp-admin-referrals .pp-admin-table td:nth-child(5)::before { content: "Reward"; }
+  .pp-admin-referrals .pp-admin-table td:nth-child(6)::before { content: "Action"; }
+  .pp-admin-history-section .pp-admin-table td:nth-child(4), .pp-admin-referrals .pp-admin-table td:nth-child(5) { grid-column: 1 / -1; }
+  .pp-admin-history-section .pp-admin-table td:nth-child(6), .pp-admin-referrals .pp-admin-table td:nth-child(6) { justify-self: end; }
+
+  .pp-admin-billing-editor { margin-top: 18px; padding-top: 18px; }
+  .pp-admin-billing-form { padding: 14px; }
+  .pp-admin-payment-form { padding: 16px; }
+  .pp-admin-addon-fields { grid-template-columns: 1fr; }
+  .pp-admin-secondary-section > summary { min-height: 60px; padding: 12px; }
+  .pp-admin-addons-form > .pp-button { width: 100%; min-width: 0; }
+  .pp-portal [data-testid="footer"] { padding-block: 28px; }
+  .pp-portal [data-testid="footer"] > div > .grid { grid-template-columns: 1fr 1fr; gap: 24px 18px; }
+  .pp-portal [data-testid="footer"] > div > .grid > div:first-child { grid-column: 1 / -1; }
+  .pp-portal [data-testid="footer"] .mt-10 { margin-top: 24px; }
   .pp-page-heading h1 { font-size: 32px; }
   .pp-content-section { padding-top: 56px; }
   .pp-content-heading h2 { font-size: 25px; }
@@ -611,19 +733,18 @@
   .pp-inline-help { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 639px) {
-  .pp-auth-intro h1 { font-size: 40px; line-height: 1.02; }
-  .pp-auth-card { padding: 20px; }
-  .pp-profile-header { align-items: flex-start; }
-  .pp-profile-avatar { width: 72px; height: 72px; flex-basis: 72px; }
-  .pp-profile-avatar img { width: 100%; height: 100%; padding: 12px; }
+  .pp-auth-intro h1 { font-size: 30px; line-height: 1.05; }
+  .pp-auth-card { padding: 14px; }
+  .pp-profile-header { align-items: center; }
+  .pp-profile-avatar { width: 56px; height: 56px; flex-basis: 56px; }
+  .pp-profile-avatar img { width: 100%; height: 100%; padding: 9px; }
   .pp-profile-avatar.has-plex-avatar img { padding: 0; }
-  .pp-profile-membership { padding: 14px; }
-  .pp-request-item { grid-template-columns: 42px minmax(0,1fr) 10px; }
-  .pp-request-item > img, .pp-request-poster-placeholder { width: 42px; height: 59px; }
-  .pp-request-state { grid-column: 2; justify-self: start; }
-  .pp-request-arrow { grid-column: 3; grid-row: 1 / span 2; }
-  .pp-metric { padding: 18px 16px; }
-  .pp-metric > strong { font-size: 20px; }
+  .pp-profile-membership { padding: 12px; }
+  .pp-request-item { grid-template-columns: 38px minmax(0,1fr) auto; }
+  .pp-request-item > img, .pp-request-poster-placeholder { width: 38px; height: 53px; }
+  .pp-request-state { grid-column: 3; justify-self: end; }
+  .pp-metric { padding: 12px; }
+  .pp-metric > strong { font-size: 17px; }
   .pp-section-heading h2 { font-size: 18px; }
   .pp-support-card, .pp-support-tip, .pp-support-form { padding: 24px; }
 }

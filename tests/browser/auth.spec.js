@@ -80,6 +80,73 @@ test("the owner account sees the user dashboard with compact profile actions", a
   await expect(page.getByRole("link", { name: /Manage membership|Billing history|Plex activity|Request on Overseerr/i })).toHaveCount(0);
 });
 
+test("the full account dashboard stays compact and scroll-free on a phone", async ({ page }) => {
+  const createdAt = Date.UTC(2026, 8, 16);
+  const due = createdAt + 30 * 86400000;
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {
+    id: "owner", email: "jacobnathan1718@gmail.com", displayName: "Jacob", createdAt, isAdmin: true,
+    plex: { username: "JNathan34" },
+  } } }));
+  await page.route("**/api/portal/billing", (route) => route.fulfill({ json: { billing: {
+    subscription: { id: "sub", tierId: "platinum", tier: "Platinum Tier", accessStatus: "enabled", startsAt: createdAt, endsAt: due, monthlyPriceMinor: 500, currency: "GBP" },
+    currentPeriod: { id: "period", tierId: "platinum", tier: "Platinum Tier", startsAt: createdAt, endsAt: due, amountDueMinor: 500, currency: "GBP", status: "open", confirmedMinor: 500, pendingMinor: 0, outstandingMinor: 0, creditMinor: 0, paymentStatus: "paid" },
+    lastPayment: { id: "payment", tier: "Platinum Tier", amountMinor: 500, currency: "GBP", status: "confirmed", method: "bank_transfer", receivedAt: createdAt, coverageStartsAt: createdAt, coverageEndsAt: due },
+    payments: [{ id: "payment", tier: "Platinum Tier", amountMinor: 500, currency: "GBP", status: "confirmed", method: "bank_transfer", receivedAt: createdAt, coverageStartsAt: createdAt, coverageEndsAt: due }],
+    addons: [],
+  } } }));
+  await page.route("**/api/portal/activity?**", (route) => route.fulfill({ json: {
+    range: "7", periodLabel: "Last 7 days", popularMovies: [], popularShows: [], watchTime: { seconds: 0, plays: 0 },
+  } }));
+  await page.route("**/api/portal/requests", (route) => route.fulfill({ json: { requests: [{
+    id: 1, title: "A Recent Request", type: "movie", year: 2026, requestedAt: createdAt,
+    status: "added", posterUrl: null,
+  }] } }));
+  await page.route("**/api/portal/referrals", (route) => route.fulfill({ json: {
+    landing: null,
+    dashboard: { code: "JACOB-ABC123", link: "https://plexpoint.uk/join/JACOB-ABC123", completed: 1, maximum: 5,
+      totals: { seasons: 1, movies: 2 }, available: { seasons: 1, movies: 2 }, currentMonth: "2026-09",
+      nextReward: { number: 2, seasons: 1, movies: 2 },
+      rewards: Array.from({ length: 5 }, (_, index) => ({ number: index + 1, seasons: 1, movies: 2 })), referrals: [] },
+    inbound: null, plans: [], addons: [],
+  } }));
+  await page.route("**/api/portal/admin/users", (route) => route.fulfill({ json: {
+    summary: { total: 2, enabled: 2, subscribed: 1, overdue: 0 },
+    users: [
+      { id: "owner", displayName: "Jacob", email: "jacobnathan1718@gmail.com", isAdmin: true, accountStatus: "enabled", createdAt, updatedAt: createdAt, signInMethods: ["Plex"], plexUsername: "JNathan34", subscription: { tier: "Platinum Tier", status: "enabled" }, billing: { status: "paid", outstandingMinor: 0, currency: "GBP", nextDueAt: due } },
+      { id: "member", displayName: "Movie Fan", email: "fan@example.test", isAdmin: false, accountStatus: "enabled", createdAt, updatedAt: createdAt, signInMethods: ["Plex"], subscription: null, billing: null },
+    ],
+  } }));
+  await page.route("**/api/portal/admin/referrals", (route) => route.fulfill({ json: { referrals: [] } }));
+
+  await page.goto("/account/#account");
+  await expect(page.locator("#admin-users tr")).toHaveCount(2);
+  await expect(page.locator("#billing-payments tr")).toHaveCount(1);
+  await expect(page.locator("#referral-content")).toBeVisible();
+  await expect(page.locator("#overview-watch-time")).toHaveText("0m");
+  const layout = await page.evaluate(() => ({
+    viewport: innerWidth,
+    documentWidth: document.documentElement.scrollWidth,
+    tableOverflow: [...document.querySelectorAll(".pp-admin-table-wrap")]
+      .filter((element) => !element.closest("[hidden]"))
+      .map((element) => element.scrollWidth - element.clientWidth),
+    metricRects: [...document.querySelectorAll(".pp-metric")].map((element) => {
+      const rect = element.getBoundingClientRect();
+      return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+    }),
+    avatarWidth: document.querySelector(".pp-profile-avatar").getBoundingClientRect().width,
+  }));
+  expect(layout.documentWidth).toBeLessThanOrEqual(layout.viewport);
+  expect(layout.tableOverflow.every((overflow) => overflow <= 1)).toBe(true);
+  expect(layout.metricRects).toHaveLength(4);
+  expect(Math.abs(layout.metricRects[0].y - layout.metricRects[1].y)).toBeLessThan(1);
+  expect(layout.metricRects[2].y).toBeGreaterThan(layout.metricRects[0].y);
+  expect(layout.metricRects.every((rect) => rect.width < 190 && rect.height < 110)).toBe(true);
+  expect(layout.avatarWidth).toBeLessThanOrEqual(56);
+  await expect(page.locator("#billing-history .pp-admin-table")).toHaveCSS("min-width", "0px");
+  await expect(page.locator("#admin-table-wrap .pp-admin-table")).toHaveCSS("min-width", "0px");
+});
+
 test("ordinary accounts never request or reveal the admin dashboard", async ({ page }) => {
   let adminRequests = 0;
   await page.route("**/api/portal/auth/session", (route) => route.fulfill({ json: { user: {

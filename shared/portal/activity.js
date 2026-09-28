@@ -26,15 +26,31 @@ async function tautulliRequest(config, command, parameters, fetcher) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
   try {
-    const response = await fetcher(url, {
-      headers: { Accept: "application/json", "X-Api-Key": config.apiKey },
-      // Workers supports manual redirects at the edge; the status check below
-      // rejects every 3xx so credentials never follow an upstream redirect.
-      redirect: "manual",
-      signal: controller.signal,
-    });
-    if (!response.ok) throw new Error("upstream status");
-    const payload = await response.json();
+    const send = async (useQueryKey) => {
+      const requestUrl = new URL(url);
+      const headers = { Accept: "application/json" };
+      if (useQueryKey) requestUrl.searchParams.set("apikey", config.apiKey);
+      else headers["X-Api-Key"] = config.apiKey;
+      const response = await fetcher(requestUrl, {
+        headers,
+        // Workers supports manual redirects at the edge; the status check below
+        // rejects every 3xx so credentials never follow an upstream redirect.
+        redirect: "manual",
+        signal: controller.signal,
+      });
+      let payload = null;
+      try { payload = await response.json(); } catch { /* handled below */ }
+      return { response, payload };
+    };
+
+    let result = await send(false);
+    const message = String(result.payload?.response?.message || "");
+    const needsLegacyAuth = [400, 401, 403].includes(result.response.status)
+      || (result.response.ok && result.payload?.response?.result !== "success"
+        && /api.?key|unauthori[sz]ed/i.test(message));
+    if (needsLegacyAuth) result = await send(true);
+    if (!result.response.ok) throw new Error("upstream status");
+    const payload = result.payload;
     if (payload?.response?.result !== "success") throw new Error("upstream response");
     return payload.response.data;
   } finally { clearTimeout(timeout); }
@@ -45,22 +61,12 @@ const count = (value) => {
   return Number.isFinite(parsed) && parsed >= 0 ? Math.floor(parsed) : 0;
 };
 
-function popularItems(data, statId) {
-  const stats = Array.isArray(data) ? data : [data];
-  const rows = stats.find((stat) => stat?.stat_id === statId)?.rows;
-  if (!Array.isArray(rows)) return [];
-  return rows.slice(0, 5).flatMap((row) => {
-    const title = typeof row?.title === "string" ? row.title.trim().slice(0, 200) : "";
-    if (!title) return [];
-    const year = /^\d{4}$/.test(String(row.year || "")) ? Number(row.year) : null;
-    return [{ title, year, plays: count(row.total_plays), viewers: count(row.users_watched) }];
-  });
-}
-
 function watchTime(data, range) {
   if (!Array.isArray(data)) return null;
   const row = data.find((entry) => String(entry?.query_days) === range);
-  return row ? { seconds: count(row.total_time), plays: count(row.total_plays) } : null;
+  return row
+    ? { seconds: count(row.total_time), plays: count(row.total_plays) }
+    : { seconds: 0, plays: 0 };
 }
 
 const normalized = (value) => typeof value === "string" ? value.trim().toLowerCase() : "";
@@ -80,7 +86,8 @@ async function tautulliUserId(config, current, fetcher) {
     return /^[1-9][0-9]{0,19}$/.test(resolved) ? resolved : fallback;
   } catch (error) {
     console.warn(JSON.stringify({ event: "tautulli_user_lookup_unavailable", errorType: error instanceof Error ? error.name : typeof error }));
-    return fallback;
+    if (fallback) return fallback;
+    throw error;
   }
 }
 
@@ -99,33 +106,18 @@ export async function activityResponse(request, env, fetcher = fetch) {
     const current = await sessionUser(env.PORTAL_DB, request);
     if (!current) throw new AuthError(401, "Please sign in to view activity.");
     const config = configuredEndpoint(env);
-    const common = { grouping: "1", time_range: ACTIVITY_RANGE, stats_type: "plays", stats_count: "5" };
-    const [moviesResult, showsResult, userId] = await Promise.all([
-      tautulliRequest(config, "get_home_stats", { ...common, stat_id: "popular_movies" }, fetcher),
-      tautulliRequest(config, "get_home_stats", { ...common, stat_id: "popular_tv" }, fetcher),
-      tautulliUserId(config, current, fetcher),
-    ].map((promise) => Promise.resolve(promise).then((value) => ({ value }), (error) => ({ error }))));
-    const resolvedUserId = userId.value || "";
-    let watchData = null;
-    let watchError = null;
-    if (resolvedUserId) {
-      try {
-        watchData = await tautulliRequest(config, "get_user_watch_time_stats",
-          { grouping: "1", query_days: ACTIVITY_RANGE, user_id: resolvedUserId }, fetcher);
-      } catch (error) { watchError = error; }
-    }
-    if (moviesResult.error && showsResult.error && (!resolvedUserId || watchError)) {
-      throw moviesResult.error;
-    }
-    for (const [source, result] of [["movies", moviesResult], ["shows", showsResult]]) {
-      if (result.error) console.warn(JSON.stringify({ event: "tautulli_partial_activity", source, errorType: result.error instanceof Error ? result.error.name : typeof result.error }));
-    }
-    if (watchError) console.warn(JSON.stringify({ event: "tautulli_partial_activity", source: "watch_time", errorType: watchError instanceof Error ? watchError.name : typeof watchError }));
+    const resolvedUserId = await tautulliUserId(config, current, fetcher);
+    const watchData = resolvedUserId
+      ? await tautulliRequest(config, "get_user_watch_time_stats",
+        { grouping: "1", query_days: ACTIVITY_RANGE, user_id: resolvedUserId }, fetcher)
+      : null;
     return reply({
       range: ACTIVITY_RANGE,
       periodLabel: ACTIVITY_LABEL,
-      popularMovies: popularItems(moviesResult.value, "popular_movies"),
-      popularShows: popularItems(showsResult.value, "popular_tv"),
+      // Kept for response compatibility; the retired viewing panel no longer
+      // needs two extra home-stat requests on every account-page load.
+      popularMovies: [],
+      popularShows: [],
       watchTime: resolvedUserId ? watchTime(watchData, ACTIVITY_RANGE) : null,
     });
   } catch (error) {

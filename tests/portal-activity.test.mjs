@@ -52,20 +52,14 @@ function successfulTautulli(calls) {
     const url = new URL(input);
     calls.push({ url, options });
     const command = url.searchParams.get("cmd");
-    const statId = url.searchParams.get("stat_id");
     let data;
     if (command === "get_user_watch_time_stats") data = [{ query_days: 7, total_plays: 4, total_time: 7384 }];
     else if (command === "get_users") data = [{ user_id: 123456, username: "Viewer", email: "viewer@example.test" }];
-    else if (statId === "popular_movies") data = [{ stat_id: statId, rows: [
-      { title: "Movie One", year: 2026, total_plays: 12, users_watched: 5 },
-      { title: "Movie Two", year: "2025", total_plays: "8", users_watched: "3" },
-    ] }];
-    else data = [{ stat_id: statId, rows: [{ title: "Show One", year: 2024, total_plays: 20, users_watched: 7 }] }];
     return Response.json({ response: { result: "success", message: null, data } });
   };
 }
 
-test("signed-in Plex users receive sanitized popular titles and personal watch time", async (t) => {
+test("signed-in Plex users receive personal watch time without unused home-stat requests", async (t) => {
   const { sqlite, env } = setup(t);
   const registration = await authResponse(authRequest({ email: "viewer@example.test", displayName: "Viewer", password: "A very long unique passphrase" }), env, "register");
   const user = (await registration.clone().json()).user;
@@ -78,14 +72,11 @@ test("signed-in Plex users receive sanitized popular titles and personal watch t
   assert.deepEqual(await response.json(), {
     range: "7",
     periodLabel: "Last 7 days",
-    popularMovies: [
-      { title: "Movie One", year: 2026, plays: 12, viewers: 5 },
-      { title: "Movie Two", year: 2025, plays: 8, viewers: 3 },
-    ],
-    popularShows: [{ title: "Show One", year: 2024, plays: 20, viewers: 7 }],
+    popularMovies: [],
+    popularShows: [],
     watchTime: { seconds: 7384, plays: 4 },
   });
-  assert.equal(calls.length, 4);
+  assert.equal(calls.length, 2);
   for (const call of calls) {
     assert.equal(call.url.origin, "https://tautulli.plexpoint.uk");
     assert.equal(call.url.pathname, "/api/v2");
@@ -98,16 +89,57 @@ test("signed-in Plex users receive sanitized popular titles and personal watch t
   assert.equal(personal.url.searchParams.get("query_days"), "7");
 });
 
-test("email-only accounts still receive popular titles without another user's watch time", async (t) => {
+test("email-only accounts do not receive another user's watch time", async (t) => {
   const { env } = setup(t);
   const registration = await authResponse(authRequest({ email: "email@example.test", displayName: "Email User", password: "A very long unique passphrase" }), env, "register");
   const calls = [];
   const response = await activityResponse(activityRequest(cookieOf(registration)), env, successfulTautulli(calls));
   assert.equal(response.status, 200);
   assert.equal((await response.json()).watchTime, null);
-  assert.equal(calls.length, 3);
-  assert.equal(calls.filter((call) => call.url.searchParams.get("cmd") === "get_home_stats").length, 2);
+  assert.equal(calls.length, 1);
   assert.equal(calls.filter((call) => call.url.searchParams.get("cmd") === "get_users").length, 1);
+});
+
+test("legacy Tautulli installs retry with the API key query parameter", async (t) => {
+  const { sqlite, env } = setup(t);
+  const registration = await authResponse(authRequest({ email: "viewer@example.test", displayName: "Viewer", password: "A very long unique passphrase" }), env, "register");
+  const user = (await registration.clone().json()).user;
+  sqlite.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at) VALUES (?, ?, ?, ?)")
+    .run("123456", user.id, "Viewer", Date.now());
+  const calls = [];
+  const fetcher = async (input, options) => {
+    const url = new URL(input);
+    calls.push({ url, options });
+    if (!url.searchParams.has("apikey")) {
+      return Response.json({ response: { result: "error", message: "Parameter apikey is required.", data: {} } });
+    }
+    const data = url.searchParams.get("cmd") === "get_users"
+      ? [{ user_id: 123456, username: "Viewer", email: "viewer@example.test" }]
+      : [{ query_days: 7, total_plays: 1, total_time: 60 }];
+    return Response.json({ response: { result: "success", message: null, data } });
+  };
+  const response = await activityResponse(activityRequest(cookieOf(registration)), env, fetcher);
+  assert.equal(response.status, 200);
+  assert.deepEqual((await response.json()).watchTime, { seconds: 60, plays: 1 });
+  assert.equal(calls.length, 4);
+  assert.equal(calls[0].options.headers["X-Api-Key"], env.TAUTULLI_API_KEY);
+  assert.equal(calls[1].url.searchParams.get("apikey"), env.TAUTULLI_API_KEY);
+  assert.equal(calls[1].options.headers["X-Api-Key"], undefined);
+});
+
+test("a linked user with no seven-day history receives zero watch time", async (t) => {
+  const { sqlite, env } = setup(t);
+  const registration = await authResponse(authRequest({ email: "viewer@example.test", displayName: "Viewer", password: "A very long unique passphrase" }), env, "register");
+  const user = (await registration.clone().json()).user;
+  sqlite.prepare("INSERT INTO plex_identities(plex_id, user_id, username, linked_at) VALUES (?, ?, ?, ?)")
+    .run("123456", user.id, "Viewer", Date.now());
+  const response = await activityResponse(activityRequest(cookieOf(registration)), env, async (input) => {
+    const command = new URL(input).searchParams.get("cmd");
+    const data = command === "get_users" ? [{ user_id: 123456, username: "Viewer" }] : [];
+    return Response.json({ response: { result: "success", message: null, data } });
+  });
+  assert.equal(response.status, 200);
+  assert.deepEqual((await response.json()).watchTime, { seconds: 0, plays: 0 });
 });
 
 test("activity rejects unauthenticated, invalid, unconfigured, and unsupported requests", async (t) => {
