@@ -118,7 +118,7 @@ test("account page shares the membership section's translucent glass treatment",
   }));
   expect(portal).toEqual(main);
   expect(await page.locator(".pp-auth-card").evaluate((card) => getComputedStyle(card).backgroundImage)).toBe(main.card);
-  expect(await page.locator(".pp-metric").first().evaluate((card) => getComputedStyle(card).backgroundImage)).toContain("rgba(24, 29, 42, 0.68)");
+  expect(await page.locator(".pp-metric").first().evaluate((card) => getComputedStyle(card).backgroundImage)).toContain("rgba(24, 29, 42, 0.42)");
   await page.evaluate(() => window.scrollTo(0, 100));
   await expect(page.locator(".pp-site-header.navbar-custom")).toBeVisible();
   await expect(page.locator(".pp-sidebar")).toHaveCount(0);

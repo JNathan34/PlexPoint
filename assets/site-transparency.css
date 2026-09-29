@@ -1,0 +1,126 @@
+/* Site-wide glass treatment. Keep primary action gradients solid, while every
+   neutral surface shares the lighter account-dashboard transparency. */
+:root {
+  --pp-site-glass: linear-gradient(145deg, rgb(24 29 42 / .46), rgb(14 18 27 / .28));
+  --pp-site-glass-soft: linear-gradient(135deg, rgb(29 35 47 / .4), rgb(18 24 33 / .22));
+  --pp-site-glass-border: rgb(255 255 255 / .11);
+  --pp-site-glass-shadow: inset 0 1px rgb(255 255 255 / .05), 0 24px 70px rgb(0 0 0 / .16);
+}
+
+.navbar-custom {
+  background: rgb(8 11 17 / .48);
+}
+
+.glass {
+  background: var(--pp-site-glass-soft);
+  backdrop-filter: blur(18px) saturate(1.12);
+  -webkit-backdrop-filter: blur(18px) saturate(1.12);
+  border-color: var(--pp-site-glass-border);
+  box-shadow: inset 0 1px rgb(255 255 255 / .05);
+}
+
+.glass-card,
+.membership-tier,
+.membership-tier.addon {
+  background: var(--pp-site-glass);
+  backdrop-filter: blur(20px) saturate(1.16);
+  -webkit-backdrop-filter: blur(20px) saturate(1.16);
+  border-color: var(--pp-site-glass-border);
+  box-shadow: var(--pp-site-glass-shadow);
+}
+
+.membership-tier.featured {
+  background: linear-gradient(180deg, rgb(255 121 26 / .1), rgb(19 22 32 / .28) 30%);
+}
+
+.bg-card,
+.bg-background,
+.bg-popover {
+  background-color: rgb(15 20 29 / .34);
+  backdrop-filter: blur(18px) saturate(1.12);
+  -webkit-backdrop-filter: blur(18px) saturate(1.12);
+}
+
+.hero-backdrop > img {
+  opacity: .38;
+}
+
+.hero-backdrop > div {
+  background: linear-gradient(90deg, rgb(8 11 17 / .78), rgb(8 11 17 / .6) 36%, rgb(8 11 17 / .32));
+}
+
+.movies-page-hero {
+  background: var(--pp-site-glass);
+  backdrop-filter: blur(20px) saturate(1.16);
+  -webkit-backdrop-filter: blur(20px) saturate(1.16);
+  box-shadow: var(--pp-site-glass-shadow);
+}
+
+.movies-page-hero::before {
+  background: linear-gradient(90deg, rgb(8 11 17 / .72), rgb(8 11 17 / .48) 42%, rgb(8 11 17 / .16)),
+    linear-gradient(180deg, rgb(8 11 17 / .08), rgb(8 11 17 / .42));
+}
+
+.movies-page-hero::after {
+  box-shadow: inset 0 0 90px rgb(7 9 14 / .4);
+}
+
+.movie-library-panel {
+  background: radial-gradient(680px circle at 10% -12%, rgb(255 123 0 / .05), transparent 60%),
+    linear-gradient(145deg, rgb(16 20 30 / .44), rgb(8 11 17 / .28));
+  backdrop-filter: blur(20px) saturate(1.14);
+  -webkit-backdrop-filter: blur(20px) saturate(1.14);
+  box-shadow: var(--pp-site-glass-shadow);
+}
+
+.movie-library-card,
+.quiz-result-card {
+  background: radial-gradient(220px circle at 50% 0%, rgb(255 123 0 / .08), transparent 64%),
+    linear-gradient(180deg, rgb(24 29 42 / .42), rgb(10 13 21 / .24));
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  box-shadow: inset 0 1px rgb(255 255 255 / .05), 0 18px 44px rgb(0 0 0 / .16);
+}
+
+.movie-quiz-dialog,
+[role="dialog"].bg-background {
+  background: radial-gradient(720px circle at 14% 0%, rgb(255 123 0 / .1), transparent 58%),
+    radial-gradient(700px circle at 94% 18%, rgb(26 217 255 / .08), transparent 58%),
+    var(--pp-site-glass);
+  backdrop-filter: blur(24px) saturate(1.18);
+  -webkit-backdrop-filter: blur(24px) saturate(1.18);
+  border-color: var(--pp-site-glass-border);
+  box-shadow: inset 0 1px rgb(255 255 255 / .06), 0 36px 100px rgb(0 0 0 / .3);
+}
+
+.movie-quiz-header {
+  background: linear-gradient(90deg, rgb(8 11 17 / .42), rgb(8 11 17 / .18)),
+    linear-gradient(135deg, rgb(255 117 26 / .12), rgb(26 217 255 / .05));
+}
+
+[data-state][class*="bg-black/80"] {
+  background-color: rgb(0 0 0 / .52);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.plex-library-switcher__menu,
+.plex-media-preview {
+  background: rgb(11 15 22 / .46);
+  backdrop-filter: blur(20px) saturate(1.14);
+  -webkit-backdrop-filter: blur(20px) saturate(1.14);
+  border-color: var(--pp-site-glass-border);
+  box-shadow: 0 24px 70px rgb(0 0 0 / .28);
+}
+
+.plex-media-preview__close {
+  background: rgb(8 11 17 / .34);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (max-width: 767px) {
+  .navbar-custom {
+    background: rgb(8 11 17 / .56);
+  }
+}
