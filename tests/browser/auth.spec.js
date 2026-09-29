@@ -63,6 +63,12 @@ test("the owner account sees the user dashboard with compact profile actions", a
       { id: "member", displayName: "Movie Fan", email: "fan@example.test", isAdmin: false, accountStatus: "disabled", createdAt, updatedAt: createdAt, signInMethods: ["Email"], subscription: { tier: "Gold Tier", status: "enabled", startsAt: createdAt, endsAt: createdAt + 86400000 } },
     ],
   } }));
+  await page.route("**/api/portal/admin/referrals", (route) => route.fulfill({ json: { referrals: [{
+    id: "referral-1", status: "completed", orderId: "PP-MOVIE-FAN", referralNumber: 1,
+    referrer: { name: "Jacob", code: "JACOB-ABC123" }, referred: { id: "member", name: "Movie Fan" },
+    tier: "Gold Tier", totalMinor: 500, currency: "GBP", reward: { movies: 2, seasons: 1 },
+    createdAt, completedAt: createdAt,
+  }] } }));
   await page.goto("/account/#account");
   await expect(page.locator("#admin-panel")).toBeVisible();
   await expect(page.locator("#admin-total")).toHaveText("2");
@@ -71,6 +77,13 @@ test("the owner account sees the user dashboard with compact profile actions", a
   await expect(page.locator("#admin-users tr")).toHaveCount(2);
   await expect(page.locator("#admin-users")).toContainText("Movie Fan");
   await expect(page.locator("#admin-users")).toContainText("Gold Tier");
+  await expect(page.locator("#admin-referrals")).toHaveAttribute("open", "");
+  await expect(page.locator("#admin-referrals-completed")).toHaveText("1");
+  await expect(page.locator("#admin-referrals-total")).toHaveText("1");
+  await expect(page.locator("#admin-referrals-list tr")).toHaveCount(1);
+  await expect(page.locator("#admin-referrals-list")).toContainText("Movie Fan");
+  await expect(page.locator("#admin-referrals-list")).toContainText("Gold Tier");
+  await expect(page.locator("#admin-referrals-list .pp-admin-user-identity")).toHaveCount(1);
   await expect(page.getByText("Plex connected", { exact: false })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveCount(0);
   const profile = await page.locator(".pp-auth-card").boundingBox();

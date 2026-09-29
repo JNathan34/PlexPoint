@@ -850,13 +850,21 @@ async function loadAdminUsers() {
 
 function renderAdminReferrals(data) {
   if (!Array.isArray(data?.referrals)) throw new Error("The referral list returned an unexpected response.");
-  byId("admin-referrals").hidden = false;
+  const panel = byId("admin-referrals");
+  const completed = data.referrals.filter((item) => item.status === "completed").length;
+  panel.hidden = false;
+  byId("admin-referrals-completed").textContent = String(completed);
+  byId("admin-referrals-total").textContent = String(data.referrals.length);
   byId("admin-referrals-summary").textContent = data.referrals.length
-    ? `${data.referrals.filter((item) => item.status === "completed").length} completed · ${data.referrals.length} total`
+    ? `${completed} completed · ${data.referrals.length} total`
     : "No referrals yet";
+  if (!panel.dataset.initialized) {
+    panel.open = data.referrals.length > 0;
+    panel.dataset.initialized = "true";
+  }
   const rows = data.referrals.map((referral) => {
     const row = document.createElement("tr");
-    adminCell(row, referral.referred.name, referral.orderId || "No order yet");
+    adminUserCell(row, { displayName: referral.referred.name, email: referral.orderId || "No order yet" });
     adminCell(row, referral.referrer.name, referral.referrer.code);
     adminCell(row, referral.tier || "Not chosen", referral.totalMinor == null ? "—" : moneyText(referral.totalMinor, referral.currency));
     const stateCell = document.createElement("td");
