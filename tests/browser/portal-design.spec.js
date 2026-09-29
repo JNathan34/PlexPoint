@@ -65,6 +65,29 @@ test("desktop account reuses the home backdrop and presents the compact dashboar
   expect(intro.x + intro.width).toBeLessThan(profile.x);
 });
 
+for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 }]) {
+  test(`account backdrop keeps the homepage crop at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    const homeImage = await page.locator(".hero-backdrop img").boundingBox();
+    const homeStyles = await page.locator(".hero-backdrop img").evaluate((image) => ({
+      opacity: getComputedStyle(image).opacity,
+      position: getComputedStyle(image).objectPosition,
+    }));
+
+    await page.goto("/account/");
+    await page.locator(".pp-account-hero").evaluate((hero) => { hero.style.minHeight = "2200px"; });
+    const accountImage = await page.locator(".pp-account-backdrop img").boundingBox();
+    const accountStyles = await page.locator(".pp-account-backdrop img").evaluate((image) => ({
+      opacity: getComputedStyle(image).opacity,
+      position: getComputedStyle(image).objectPosition,
+    }));
+
+    expect(Math.abs(accountImage.height - homeImage.height)).toBeLessThan(1);
+    expect(accountStyles).toEqual(homeStyles);
+  });
+}
+
 for (const width of [320, 390]) {
   test(`mobile Plex sign-in is on the first screen at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 667 });

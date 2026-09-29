@@ -55,7 +55,7 @@
 .pp-page-heading > p { font-size: 16px; line-height: 28px; margin-top: 16px; max-width: 672px; }
 .pp-account-hero { position: relative; isolation: isolate; min-height: 100vh; padding: 96px 0 40px; overflow: clip; }
 .pp-account-backdrop { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
-.pp-account-backdrop > img { width: 100%; height: 100%; object-fit: cover; opacity: .38; }
+.pp-account-backdrop > img { width: 100%; height: calc(92vh + 80px); height: calc(92dvh + 80px); object-fit: cover; object-position: 50% 50%; opacity: .38; }
 .pp-account-backdrop > div { position: absolute; inset: 0; background: linear-gradient(90deg, #080b11c7, #080b1199 36%, #080b1152); }
 .pp-account-container { padding: 28px 16px 48px; }
 .pp-account-dashboard { --pp-dashboard-columns: minmax(0,1.55fr) minmax(340px,.85fr); --pp-account-glass: linear-gradient(145deg,rgb(24 29 42 / .46),rgb(14 18 27 / .28)); --pp-account-glass-border: #ffffff1c; scroll-margin-top: 96px; }
@@ -610,7 +610,7 @@
   .pp-navigation a > span { display: block; margin-right: 12px; }
   .pp-navigation a[aria-current="page"] { color: var(--primary); background: #ff7b001a; }
   .pp-account-hero { padding: 64px 0 24px; }
-  .pp-account-backdrop > img { opacity: .14; }
+  .pp-account-backdrop > img { height: max(744px,calc(92vh + 32px)); height: max(744px,calc(92dvh + 32px)); opacity: .38; }
   .pp-account-container { width: 100%; padding: 16px 12px 28px; }
   .pp-dashboard-top { display: flex; flex-direction: column; gap: 12px; }
   .pp-auth-intro { display: contents; }
