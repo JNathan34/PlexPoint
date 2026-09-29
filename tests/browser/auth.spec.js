@@ -269,10 +269,20 @@ test("members can share a referral and review a referred friend order in three c
     ].map((selector) => Number.parseFloat(getComputedStyle(panel.querySelector(selector)).fontSize))),
     overviewColumns: getComputedStyle(panel.querySelector(".pp-referral-overview")).gridTemplateColumns.split(" ").length,
     howColumns: getComputedStyle(panel.querySelector(".pp-referral-how ol")).gridTemplateColumns.split(" ").length,
+    headingSize: Number.parseFloat(getComputedStyle(panel.querySelector(".pp-referral-heading h2")).fontSize),
+    headingWeight: getComputedStyle(panel.querySelector(".pp-referral-heading h2")).fontWeight,
+    copyColor: getComputedStyle(panel.querySelector("#referral-copy")).color,
+    iconWidth: panel.querySelector(".pp-referral-icon").getBoundingClientRect().width,
+    headingIconWidth: panel.querySelector(".pp-referral-heading-icon").getBoundingClientRect().width,
   }));
   expect(referralPolish.smallestHelperText).toBeGreaterThanOrEqual(10);
   expect(referralPolish.overviewColumns).toBe(2);
   expect(referralPolish.howColumns).toBe(4);
+  expect(referralPolish.headingSize).toBeLessThanOrEqual(34);
+  expect(referralPolish.headingWeight).toBe("700");
+  expect(referralPolish.copyColor).toBe("rgb(255, 255, 255)");
+  expect(referralPolish.iconWidth).toBe(34);
+  expect(referralPolish.headingIconWidth).toBe(24);
   await page.locator("#referral-redemption summary").click();
   await page.locator("#referral-redeem-movies").fill("3");
   await page.locator("#referral-redeem-seasons").fill("1");
