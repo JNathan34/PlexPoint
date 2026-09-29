@@ -214,10 +214,11 @@ test("members can share a referral and review a referred friend order in three c
   await expect(page.locator("#referral-movie-available")).toHaveText("4 available");
   await expect(page.locator("#referral-season-available")).toHaveText("2 available");
   await expect(page.locator("#referral-redeem-status")).toContainText("added directly");
-  await expect(page.locator("#referral-how-heading")).toHaveText("What your friend needs to do");
+  await expect(page.locator("#referral-heading")).toHaveText("Invite friends to PlexPoint");
+  await expect(page.locator("#referral-how-heading")).toHaveText("How it works");
   await expect(page.locator(".pp-referral-how li")).toHaveCount(4);
-  await expect(page.getByRole("button", { name: "Invite friends" })).toBeVisible();
-  await expect(page.locator("#referral-history-heading")).toHaveText("All invites");
+  await expect(page.getByRole("button", { name: "Copy link" })).toBeVisible();
+  await expect(page.locator("#referral-history-heading")).toHaveText("Recent invites");
   await expect(page.locator(".pp-referral-invite")).toHaveCount(1);
   await expect(page.locator(".pp-referral-invite")).toContainText("First Friend");
   await expect(page.locator(".pp-referral-invite")).toContainText("Completed");
@@ -225,26 +226,27 @@ test("members can share a referral and review a referred friend order in three c
   await page.setViewportSize({ width: 390, height: 844 });
   const referralMobile = await page.locator("#referral-panel").evaluate((panel) => ({
     overflows: panel.scrollWidth > panel.clientWidth,
-    shareButtonHeight: panel.querySelector("#referral-share").getBoundingClientRect().height,
+    copyButtonHeight: panel.querySelector("#referral-copy").getBoundingClientRect().height,
     inviteWidth: panel.querySelector(".pp-referral-invite").getBoundingClientRect().width,
   }));
   expect(referralMobile.overflows).toBe(false);
-  expect(referralMobile.shareButtonHeight).toBeGreaterThanOrEqual(44);
+  expect(referralMobile.copyButtonHeight).toBeGreaterThanOrEqual(44);
   expect(referralMobile.inviteWidth).toBeLessThanOrEqual(360);
   await page.setViewportSize({ width: 1280, height: 720 });
   const referralPolish = await page.locator("#referral-panel").evaluate((panel) => ({
     smallestHelperText: Math.min(...[
-      ".pp-referral-total span", ".pp-referral-share > label", ".pp-referral-next",
-      ".pp-referral-rewards article span", ".pp-referral-rewards > small",
-      ".pp-referral-redemption p", ".pp-referral-redemption-controls label small",
+      ".pp-referral-total span", ".pp-referral-card-heading p",
+      ".pp-referral-reward-stats article span:not(.pp-referral-stat-icon)", ".pp-referral-rewards > small",
+      ".pp-referral-redemption-body > p", ".pp-referral-redemption-controls label small",
       ".pp-referral-history-heading > small",
     ].map((selector) => Number.parseFloat(getComputedStyle(panel.querySelector(selector)).fontSize))),
-    milestoneHeight: panel.querySelector(".pp-referral-milestones > span").getBoundingClientRect().height,
-    milestoneText: [...panel.querySelectorAll(".pp-referral-milestones > span")].map((item) => item.textContent),
+    overviewColumns: getComputedStyle(panel.querySelector(".pp-referral-overview")).gridTemplateColumns.split(" ").length,
+    howColumns: getComputedStyle(panel.querySelector(".pp-referral-how ol")).gridTemplateColumns.split(" ").length,
   }));
   expect(referralPolish.smallestHelperText).toBeGreaterThanOrEqual(10);
-  expect(referralPolish.milestoneHeight).toBeGreaterThanOrEqual(28);
-  expect(referralPolish.milestoneText).toEqual(["✓", "✓", "3", "4", "5"]);
+  expect(referralPolish.overviewColumns).toBe(2);
+  expect(referralPolish.howColumns).toBe(4);
+  await page.locator("#referral-redemption summary").click();
   await page.locator("#referral-redeem-movies").fill("3");
   await page.locator("#referral-redeem-seasons").fill("1");
   await page.getByRole("button", { name: "Add to account" }).click();

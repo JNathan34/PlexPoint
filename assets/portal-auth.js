@@ -42,7 +42,7 @@ function controls() {
   byId("admin-retry").disabled = adminBusy;
   byId("requests-retry").disabled = requestsBusy;
   byId("billing-retry").disabled = billingBusy;
-  for (const id of ["referral-copy", "referral-share", "referral-order-back", "referral-order-next", "referral-order-submit"]) {
+  for (const id of ["referral-copy", "referral-order-back", "referral-order-next", "referral-order-submit"]) {
     byId(id).disabled = referralBusy;
   }
   byId("referral-redeem").disabled = referralBusy || !referralRedeemEnabled;
@@ -517,21 +517,13 @@ function renderReferrals(data) {
   byId("referral-redemption").dataset.empty = String(!referralRedeemEnabled);
   byId("referral-movie-available").textContent = `${movieCredits} available`;
   byId("referral-season-available").textContent = `${seasonCredits} available`;
+  byId("referral-redeem-summary").textContent = [
+    movieCredits ? `${movieCredits} movie${movieCredits === 1 ? "" : "s"}` : "",
+    seasonCredits ? `${seasonCredits} season${seasonCredits === 1 ? "" : "s"}` : "",
+  ].filter(Boolean).join(" · ") || "0 available";
   byId("referral-redeem-status").textContent = referralRedeemEnabled
     ? "Credits are added directly to your request-service allowance. Unused credits stay here until you redeem them."
     : "No unredeemed referral credits yet. Earn credits when a referred member completes their first payment.";
-  byId("referral-next").textContent = data.dashboard.nextReward
-    ? `Next referral earns ${data.dashboard.nextReward.seasons} season + ${data.dashboard.nextReward.movies} movie requests.`
-    : "You’ve unlocked every referral reward — thank you!";
-  byId("referral-milestones").replaceChildren(...data.dashboard.rewards.map((reward) => {
-    const item = document.createElement("span");
-    const complete = reward.number <= data.dashboard.completed;
-    item.className = complete ? "is-complete" : "";
-    item.textContent = complete ? "✓" : String(reward.number);
-    item.title = `Friend ${reward.number}: +${reward.seasons} season, +${reward.movies} movie requests`;
-    item.setAttribute("aria-label", item.title);
-    return item;
-  }));
   renderReferralHistory(data.dashboard.referrals || []);
   renderReferralOrder(data);
 }
@@ -1343,13 +1335,6 @@ byId("referral-copy").addEventListener("click", async () => {
     byId("referral-copy").textContent = "Copied ✓";
     setTimeout(() => { byId("referral-copy").textContent = "Copy link"; }, 1800);
   } catch { byId("referral-status").textContent = "Could not copy automatically. Select the link and copy it manually."; }
-});
-byId("referral-share").addEventListener("click", async () => {
-  const link = byId("referral-link").value;
-  if (navigator.share) {
-    try { await navigator.share({ title: "Join me on PlexPoint", text: "Use my PlexPoint referral link:", url: link }); }
-    catch (error) { if (error.name !== "AbortError") byId("referral-status").textContent = "Sharing was unavailable. Copy the link instead."; }
-  } else byId("referral-copy").click();
 });
 async function redeemReferralCredits() {
   if (referralBusy || !referralRedeemEnabled) return;

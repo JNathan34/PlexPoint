@@ -327,7 +327,7 @@
 .pp-account-dashboard :is(.pp-auth-card, .pp-billing-panel, .pp-requests-panel, .pp-referral-panel, .pp-admin-panel,
   .pp-admin-billing-form, .pp-admin-request-credits-form, .pp-admin-inline-details, .pp-admin-secondary-section, .pp-admin-addon-option,
   .pp-referral-order, .pp-referral-review, .pp-admin-referral-order, .pp-referral-welcome, .pp-referral-share,
-  .pp-referral-how, .pp-referral-rewards, .pp-referral-redemption, .pp-referral-history,
+  .pp-referral-how, .pp-referral-rewards, .pp-referral-history,
   .pp-referral-extras label, .pp-referral-review > div, .pp-payment-coverage-preview) {
   background: var(--pp-account-glass);
   backdrop-filter: blur(24px) saturate(1.2);
@@ -345,56 +345,65 @@
 .pp-referral-welcome strong, .pp-referral-welcome small { display: block; }
 .pp-referral-welcome strong { color: #eefcf4; font-size: 12px; }
 .pp-referral-welcome small { margin-top: 2px; color: #91aa9c; font-size: 10px; }
-.pp-referral-panel { margin-top: 20px; padding: 28px; overflow: hidden; background: radial-gradient(circle at 100% 0,#ff7b0010,transparent 30%),var(--pp-account-glass) !important; }
-.pp-referral-heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-bottom: 20px; border-bottom: 1px solid #ffffff12; }
-.pp-referral-heading h2 { margin-top: 10px; font-size: 24px; letter-spacing: -.02em; }
-.pp-referral-heading p { margin-top: 6px; font-size: 14px; line-height: 1.5; }
-.pp-referral-total { display: flex; align-items: baseline; gap: 7px; flex: 0 0 auto; }
-.pp-referral-total strong { color: #ffad70; font-size: 25px; line-height: 1; }
-.pp-referral-total span { color: #95a1b2; font-size: 10px; font-weight: 650; text-transform: uppercase; letter-spacing: .08em; }
-.pp-referral-grid { display: grid; grid-template-columns: minmax(0,1.12fr) minmax(360px,.88fr); gap: 16px; align-items: start; margin-top: 20px; }
-.pp-referral-invite-column, .pp-referral-reward-column { display: grid; align-content: start; gap: 14px; min-width: 0; }
-.pp-referral-share, .pp-referral-how, .pp-referral-rewards, .pp-referral-redemption, .pp-referral-history { min-width: 0; padding: 18px; border: 1px solid #ffffff14; border-radius: 15px; background: linear-gradient(145deg,#151b2790,#0b1018a6); }
-.pp-referral-share h3, .pp-referral-how h3, .pp-referral-rewards h3, .pp-referral-history-heading h3 { color: #f5f7fb; font-size: 17px; font-weight: 650; letter-spacing: -.01em; }
-.pp-referral-share > p { margin: 6px 0 16px; color: #9aa6b7; font-size: 12px; line-height: 1.55; }
-.pp-referral-share > label { display: block; margin-bottom: 8px; color: #b8c1ce; font-size: 11px; font-weight: 650; }
-.pp-referral-link-row { display: grid; grid-template-columns: minmax(0,1fr) auto auto; gap: 8px; }
-.pp-referral-link-row input { min-width: 0; min-height: 48px; padding-block: 8px; color: #e0e6ee; font-size: 13px; background: #090d14a8; }
-.pp-referral-link-row .pp-button { min-height: 48px; }
-.pp-referral-milestones { display: grid; grid-template-columns: repeat(5,1fr); gap: 7px; margin-top: 14px; }
-.pp-referral-milestones > span { display: grid; place-items: center; width: 100%; height: 28px; overflow: hidden; border: 1px solid #ffffff14; border-radius: 9px; color: #7f8b9d; background: #ffffff05; font-size: 10px; font-weight: 700; }
-.pp-referral-milestones > span.is-complete { border-color: #ff9a4d7a; color: #17100a; background: linear-gradient(135deg,#ff7b00,#ffad64); box-shadow: 0 5px 18px #ff7b0024; }
-.pp-referral-next { margin-top: 9px !important; color: #a8b2c0 !important; font-size: 11px; line-height: 1.45; text-align: left; }
-.pp-referral-how ol { display: grid; gap: 0; margin: 12px 0 0; padding: 0; list-style: none; }
-.pp-referral-how li { display: grid; grid-template-columns: 32px minmax(0,1fr); align-items: center; gap: 12px; min-height: 62px; padding: 10px 0; border-top: 1px solid #ffffff0d; }
-.pp-referral-how li > span { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid #ff9b5260; border-radius: 50%; color: #ffb579; background: #ff7b000d; font-size: 11px; font-weight: 750; }
-.pp-referral-how li:last-child > span { border-color: #4ade8060; color: #08130d; background: #69dfa0; }
-.pp-referral-how li strong, .pp-referral-how li small { display: block; }
-.pp-referral-how li strong { color: #edf1f7; font-size: 13px; font-weight: 600; }
-.pp-referral-how li small { margin-top: 3px; color: #8995a6; font-size: 11px; line-height: 1.45; }
-.pp-referral-rewards { display: flex; flex-direction: column; justify-content: center; }
-.pp-referral-rewards h3 { margin-bottom: 2px; }
-.pp-referral-rewards > div { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 8px; }
-.pp-referral-rewards article { min-width: 0; padding: 14px; border: 1px solid #ffffff10; border-radius: 12px; background: #080c1380; }
-.pp-referral-rewards article strong { display: block; color: #ffad70; font-size: 27px; line-height: 1; }
-.pp-referral-rewards article span { display: block; margin-top: 6px; color: #b2bcc9; font-size: 11px; line-height: 1.35; }
-.pp-referral-rewards > small { display: block; margin-top: 10px; color: #8390a2; font-size: 10px; line-height: 1.45; }
-.pp-referral-redemption { display: grid; gap: 16px; }
-.pp-referral-redemption h3 { margin-top: 5px; color: #f3f6fb; font-size: 18px; }
-.pp-referral-redemption p { max-width: 620px; margin-top: 7px; color: #929eaf; font-size: 12px; line-height: 1.55; }
-.pp-referral-redemption-controls { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 9px; min-width: 0; }
-.pp-referral-redemption-controls label { display: grid; gap: 6px; color: #c0c8d4; font-size: 11px; font-weight: 600; }
+.pp-referral-panel { margin-top: 20px; padding: 34px 38px; overflow: hidden; background: radial-gradient(circle at 93% 8%,#ff7b0014,transparent 26%),linear-gradient(145deg,#0d1420e8,#090e16e3) !important; }
+.pp-referral-heading { max-width: 780px; }
+.pp-referral-heading h2 { color: #f7f8fb; font-size: clamp(30px,3vw,42px); line-height: 1.08; letter-spacing: -.035em; }
+.pp-referral-heading h2 span { color: #ff8b2b; }
+.pp-referral-heading p { max-width: 680px; margin-top: 9px; color: #aeb9c9; font-size: 16px; line-height: 1.5; }
+.pp-referral-overview { display: grid; grid-template-columns: minmax(0,1.45fr) minmax(360px,.95fr); gap: 18px; margin-top: 22px; }
+.pp-referral-share, .pp-referral-how, .pp-referral-rewards, .pp-referral-history { min-width: 0; padding: 22px; border: 1px solid #ffffff17; border-radius: 16px; background: linear-gradient(145deg,#131b29cc,#0a1019d6); }
+.pp-referral-rewards { background: radial-gradient(circle at 100% 0,#ff7b0012,transparent 44%),linear-gradient(145deg,#151a25d6,#0b1019dc); }
+.pp-referral-card-heading, .pp-referral-section-heading { display: flex; align-items: center; gap: 13px; min-width: 0; }
+.pp-referral-card-heading > div:not(.pp-referral-total) { min-width: 0; }
+.pp-referral-card-heading h3, .pp-referral-section-heading h3 { color: #f7f8fb; font-size: 19px; font-weight: 650; letter-spacing: -.015em; }
+.pp-referral-card-heading p { margin-top: 4px; color: #9ba7b8; font-size: 12px; line-height: 1.5; }
+.pp-referral-icon, .pp-referral-heading-icon { display: grid; place-items: center; flex: 0 0 auto; border: 1px solid #ff812f75; border-radius: 50%; color: #ff922f; background: radial-gradient(circle,#ff7b001d,#ff7b0008); box-shadow: 0 9px 26px #ff7b0015; }
+.pp-referral-icon { width: 52px; height: 52px; }
+.pp-referral-heading-icon { width: 34px; height: 34px; }
+.pp-referral-icon .pp-icon { width: 25px; height: 25px; stroke-width: 1.8; }
+.pp-referral-heading-icon .pp-icon { width: 18px; height: 18px; stroke-width: 1.9; }
+.pp-referral-link-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; margin-top: 22px; }
+.pp-referral-link-row input { min-width: 0; min-height: 54px; padding-inline: 18px; color: #e9edf3; border-color: #ffffff20; font-size: 14px; background: #070c13b8; }
+.pp-referral-link-row .pp-button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-width: 150px; min-height: 54px; padding-inline: 22px; color: #17100a; font-size: 14px; box-shadow: 0 7px 24px #ff7b0034; }
+.pp-referral-link-row .pp-icon { width: 18px; height: 18px; }
+.pp-referral-total { display: flex; align-items: baseline; gap: 6px; margin-left: auto; flex: 0 0 auto; }
+.pp-referral-total strong { color: #ff9d4f; font-size: 22px; line-height: 1; }
+.pp-referral-total span { color: #a3adbd; font-size: 10px; font-weight: 600; white-space: nowrap; }
+.pp-referral-reward-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.pp-referral-reward-stats article { display: grid; grid-template-columns: 36px minmax(0,1fr); align-items: center; gap: 10px; min-width: 0; padding: 14px; border: 1px solid #ffffff16; border-radius: 12px; background: #080d15a8; }
+.pp-referral-stat-icon { display: grid !important; place-items: center; margin: 0 !important; color: #ff8d2a !important; }
+.pp-referral-stat-icon .pp-icon { width: 26px; height: 26px; stroke-width: 1.8; }
+.pp-referral-reward-stats article span:not(.pp-referral-stat-icon) { display: block; margin: 0; color: #c3cad5; font-size: 11px; line-height: 1.3; }
+.pp-referral-reward-stats article strong { display: block; margin-top: 4px; color: #f7f8fb; font-size: 25px; line-height: 1; }
+.pp-referral-rewards > small { display: block; margin-top: 12px; color: #8f9bad; font-size: 10px; line-height: 1.45; }
+.pp-referral-redemption { margin-top: 13px; border-top: 1px solid #ffffff12; }
+.pp-referral-redemption[data-empty="true"] { display: none; }
+.pp-referral-redemption summary { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-top: 12px; color: #ffab69; cursor: pointer; font-size: 11px; font-weight: 650; list-style: none; }
+.pp-referral-redemption summary::-webkit-details-marker { display: none; }
+.pp-referral-redemption summary::after { content: "+"; display: grid; place-items: center; width: 20px; height: 20px; margin-left: auto; border: 1px solid #ff8b3745; border-radius: 50%; }
+.pp-referral-redemption[open] summary::after { content: "−"; }
+.pp-referral-redemption summary small { color: #8f9bad; font-size: 9px; font-weight: 500; }
+.pp-referral-redemption-body { padding-top: 12px; }
+.pp-referral-redemption-body > p { margin: 0 0 9px; color: #929eaf; font-size: 10px; line-height: 1.45; }
+.pp-referral-redemption-controls { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 8px; min-width: 0; }
+.pp-referral-redemption-controls label { display: grid; gap: 5px; color: #c0c8d4; font-size: 10px; font-weight: 600; }
 .pp-referral-redemption-controls label > span { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .pp-referral-redemption-controls label small { color: #8b97a8; font-size: 10px; font-weight: 500; white-space: nowrap; }
-.pp-referral-redemption-controls input { width: 100%; min-height: 44px; padding: 8px 10px; font-size: 14px; text-align: center; background: #090d14a8; }
-.pp-referral-redemption-controls .pp-button { grid-column: 1 / -1; min-height: 46px; padding-inline: 20px; white-space: nowrap; }
-.pp-referral-redemption[data-empty="true"] .pp-referral-redemption-controls { display: none; }
-.pp-referral-history { margin-top: 16px; }
-.pp-referral-history-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; padding-bottom: 12px; }
-.pp-referral-history-heading > small { color: #8b97a8; font-size: 11px; }
+.pp-referral-redemption-controls input { width: 100%; min-height: 40px; padding: 7px 9px; font-size: 13px; text-align: center; background: #070c13b8; }
+.pp-referral-redemption-controls .pp-button { grid-column: 1 / -1; min-height: 41px; padding-inline: 16px; white-space: nowrap; }
+.pp-referral-how { margin-top: 18px; }
+.pp-referral-how ol { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 28px; margin: 17px 0 0; padding: 0; list-style: none; }
+.pp-referral-how li { position: relative; display: grid; grid-template-columns: 52px minmax(0,1fr); align-items: center; gap: 13px; min-width: 0; }
+.pp-referral-how li:not(:last-child)::after { content: ""; position: absolute; top: 26px; right: -19px; width: 18px; height: 1px; background: #ffffff22; }
+.pp-referral-how li strong, .pp-referral-how li small { display: block; }
+.pp-referral-how li strong { color: #eef2f7; font-size: 12px; font-weight: 600; }
+.pp-referral-how li small { margin-top: 4px; color: #8f9bad; font-size: 10px; line-height: 1.45; }
+.pp-referral-history { margin-top: 18px; }
+.pp-referral-history-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 13px; }
+.pp-referral-history-heading > small { color: #9da8b8; font-size: 10px; }
 #referral-history-list { display: grid; gap: 8px; }
-.pp-referral-invite { display: grid; grid-template-columns: 44px minmax(0,1fr) auto; align-items: center; gap: 12px; min-width: 0; padding: 12px; border: 1px solid #ffffff0e; border-radius: 12px; background: #080c136b; }
-.pp-referral-invite-avatar { position: relative; display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid #ffffff18; border-radius: 50%; color: #f1f5f9; background: linear-gradient(135deg,#475569,#1e293b); font-size: 13px; font-weight: 700; }
+.pp-referral-invite { display: grid; grid-template-columns: 44px minmax(0,1fr) auto; align-items: center; gap: 13px; min-width: 0; padding: 11px 13px; border: 1px solid #ffffff0e; border-radius: 12px; background: #070c1380; }
+.pp-referral-invite-avatar { position: relative; display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid #ffffff18; border-radius: 50%; color: #f1f5f9; background: linear-gradient(135deg,#506077,#1d293a); font-size: 13px; font-weight: 700; }
 .pp-referral-invite-avatar::after { content: "•"; position: absolute; right: -2px; bottom: -2px; display: grid; place-items: center; width: 17px; height: 17px; border: 3px solid #0b1018; border-radius: 50%; color: #fbbf24; background: #fbbf24; font-size: 0; }
 .pp-referral-invite-avatar[data-status="completed"]::after { content: "✓"; color: #07120d; background: #4ade80; font-size: 9px; }
 .pp-referral-invite-avatar[data-status="cancelled"]::after { content: "×"; color: #1a090c; background: #fb7185; font-size: 10px; }
@@ -583,8 +592,9 @@
   .pp-admin-heading { align-items: flex-start; flex-direction: column; }
   .pp-admin-billing-grid { grid-template-columns: 1fr; }
   .pp-admin-addons-list { grid-template-columns: 1fr; }
-  .pp-referral-grid { grid-template-columns: 1fr; }
-  .pp-referral-rewards { padding: 16px; border: 1px solid #ffffff12; }
+  .pp-referral-overview { grid-template-columns: 1fr; }
+  .pp-referral-how ol { grid-template-columns: repeat(2,minmax(0,1fr)); row-gap: 18px; }
+  .pp-referral-how li:nth-child(2)::after { display: none; }
 }
 @media (max-width: 767px) {
   .pp-site-header { padding-block: 10px; }
@@ -671,31 +681,35 @@
   .pp-form-grid { grid-template-columns: 1fr; }
   .pp-payment-quick-fields { grid-template-columns: 1fr 1fr; }
   .pp-payment-coverage-preview { grid-column: 1 / -1; }
-  .pp-referral-panel { margin-top: 12px; padding: 16px; }
-  .pp-referral-heading { align-items: flex-start; gap: 12px; padding-bottom: 14px; }
-  .pp-referral-heading h2 { margin-top: 7px; font-size: 20px; line-height: 1.2; }
-  .pp-referral-heading p { max-width: 250px; font-size: 12px; line-height: 1.5; }
+  .pp-referral-panel { margin-top: 12px; padding: 23px 16px 18px; }
+  .pp-referral-heading h2 { font-size: 27px; line-height: 1.08; }
+  .pp-referral-heading p { max-width: 520px; margin-top: 8px; font-size: 12px; line-height: 1.5; }
+  .pp-referral-overview { gap: 12px; margin-top: 17px; }
+  .pp-referral-share, .pp-referral-how, .pp-referral-rewards, .pp-referral-history { padding: 16px; border-radius: 13px; }
+  .pp-referral-card-heading h3, .pp-referral-section-heading h3 { font-size: 16px; }
+  .pp-referral-card-heading p { font-size: 10px; }
+  .pp-referral-icon { width: 43px; height: 43px; }
+  .pp-referral-icon .pp-icon { width: 21px; height: 21px; }
+  .pp-referral-link-row { margin-top: 15px; }
+  .pp-referral-link-row input { min-height: 46px; padding-inline: 12px; font-size: 11px; }
+  .pp-referral-link-row .pp-button { min-width: 116px; min-height: 46px; padding-inline: 15px; font-size: 12px; }
   .pp-referral-total { display: grid; justify-items: end; gap: 2px; }
-  .pp-referral-total strong { font-size: 21px; }
-  .pp-referral-total span { font-size: 9px; }
-  .pp-referral-grid { gap: 14px; margin-top: 14px; }
-  .pp-referral-invite-column, .pp-referral-reward-column { gap: 12px; }
-  .pp-referral-share, .pp-referral-how, .pp-referral-rewards, .pp-referral-redemption, .pp-referral-history { padding: 15px; border-radius: 13px; }
-  .pp-referral-share h3, .pp-referral-how h3, .pp-referral-rewards h3, .pp-referral-history-heading h3 { font-size: 16px; }
-  .pp-referral-link-row { grid-template-columns: 1fr 1fr; }
-  .pp-referral-link-row input { grid-column: 1 / -1; }
-  .pp-referral-link-row .pp-button { min-height: 44px; font-size: 12px; }
-  .pp-referral-milestones { margin-top: 12px; }
-  .pp-referral-how li { min-height: 60px; }
-  .pp-referral-rewards { gap: 0; }
-  .pp-referral-rewards > div { gap: 8px; margin-top: 10px; }
-  .pp-referral-rewards article { padding: 13px; }
-  .pp-referral-rewards article strong { font-size: 22px; }
+  .pp-referral-total strong { font-size: 19px; }
+  .pp-referral-total span { font-size: 8px; }
+  .pp-referral-reward-stats { gap: 7px; margin-top: 13px; }
+  .pp-referral-reward-stats article { grid-template-columns: 30px minmax(0,1fr); gap: 7px; padding: 11px 9px; }
+  .pp-referral-stat-icon .pp-icon { width: 21px; height: 21px; }
+  .pp-referral-reward-stats article span:not(.pp-referral-stat-icon) { font-size: 9px; }
+  .pp-referral-reward-stats article strong { font-size: 21px; }
+  .pp-referral-how, .pp-referral-history { margin-top: 12px; }
+  .pp-referral-how ol { grid-template-columns: 1fr; gap: 14px; margin-top: 15px; }
+  .pp-referral-how li:not(:last-child)::after { display: none; }
+  .pp-referral-how li { grid-template-columns: 43px minmax(0,1fr); gap: 11px; }
+  .pp-referral-how li strong { font-size: 12px; }
+  .pp-referral-how li small { font-size: 10px; }
   .pp-referral-extras { grid-template-columns: 1fr; }
-  .pp-referral-redemption { grid-template-columns: 1fr; gap: 14px; align-items: stretch; margin: 0; }
   .pp-referral-redemption-controls { grid-template-columns: 1fr 1fr; min-width: 0; }
   .pp-referral-redemption-controls .pp-button { grid-column: 1 / -1; }
-  .pp-referral-history { margin-top: 14px; }
   .pp-referral-history-heading { align-items: center; }
   .pp-referral-invite { grid-template-columns: 42px minmax(0,1fr); gap: 10px; }
   .pp-referral-invite-avatar { width: 40px; height: 40px; }
@@ -794,6 +808,10 @@
   .pp-metrics { grid-template-columns: 1fr 1fr; }
   .pp-dashboard-detail-grid .pp-viewing-grid { grid-template-columns: 1fr; }
   .pp-dashboard-detail-grid .pp-watch-time { grid-column: auto; }
+  .pp-referral-link-row { grid-template-columns: 1fr; }
+  .pp-referral-link-row .pp-button { width: 100%; }
+  .pp-referral-card-heading { align-items: flex-start; }
+  .pp-referral-reward-stats { grid-template-columns: 1fr 1fr; }
   .pp-referral-order-actions { flex-direction: column-reverse; }
   .pp-referral-order-actions .pp-button { width: 100%; }
 }
