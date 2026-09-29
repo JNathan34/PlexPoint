@@ -141,29 +141,31 @@ function quotaPeriod(value) {
 }
 
 function settingsPayload(settings, user, overrides = {}) {
-  return {
+  const source = settings && typeof settings === "object" ? settings : {};
+  const payload = {
     username: nullableText(settings?.username ?? user?.username ?? user?.plexUsername),
     email: safeText(settings?.email ?? user?.email, ""),
-    discordId: nullableText(settings?.discordId),
-    locale: nullableText(settings?.locale),
-    discoverRegion: nullableText(settings?.discoverRegion),
-    streamingRegion: nullableText(settings?.streamingRegion),
-    // Overseerr used `region`; Zima/Seerr split it into discovery and
-    // streaming regions. Supplying both preserves either server variant.
-    region: nullableText(settings?.region ?? settings?.discoverRegion),
-    originalLanguage: nullableText(settings?.originalLanguage),
-    movieQuotaLimit: quotaLimit(settings?.movieQuotaLimit),
-    movieQuotaDays: quotaLimit(settings?.movieQuotaDays),
-    movieQuotaPeriod: quotaPeriod(settings?.movieQuotaPeriod),
-    movieQuotaBonus: quotaLimit(settings?.movieQuotaBonus),
-    tvQuotaLimit: quotaLimit(settings?.tvQuotaLimit),
-    tvQuotaDays: quotaLimit(settings?.tvQuotaDays),
-    tvQuotaPeriod: quotaPeriod(settings?.tvQuotaPeriod),
-    tvQuotaBonus: quotaLimit(settings?.tvQuotaBonus),
-    watchlistSyncMovies: settings?.watchlistSyncMovies ?? null,
-    watchlistSyncTv: settings?.watchlistSyncTv ?? null,
-    ...overrides,
   };
+  // Settings endpoints reject fields from other Overseerr/Seerr variants.
+  // Preserve the exact shape returned by this server, including valid empty
+  // strings, and only override the quota values involved in the grant.
+  for (const field of ["discordId", "locale", "discoverRegion", "streamingRegion", "region"]) {
+    if (Object.hasOwn(source, field)) payload[field] = safeText(source[field], "");
+  }
+  if (Object.hasOwn(source, "originalLanguage")) {
+    payload.originalLanguage = nullableText(source.originalLanguage);
+  }
+  for (const field of ["movieQuotaLimit", "movieQuotaDays", "movieQuotaBonus",
+    "tvQuotaLimit", "tvQuotaDays", "tvQuotaBonus"]) {
+    if (Object.hasOwn(source, field)) payload[field] = quotaLimit(source[field]);
+  }
+  for (const field of ["movieQuotaPeriod", "tvQuotaPeriod"]) {
+    if (Object.hasOwn(source, field)) payload[field] = quotaPeriod(source[field]);
+  }
+  for (const field of ["watchlistSyncMovies", "watchlistSyncTv"]) {
+    if (Object.hasOwn(source, field)) payload[field] = source[field] ?? null;
+  }
+  return { ...payload, ...overrides };
 }
 
 function quotaBonus(settings, quota, type) {

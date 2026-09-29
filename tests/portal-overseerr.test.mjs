@@ -188,11 +188,14 @@ test("targeted account matching supports older request servers that omit Plex id
 test("referral credits increase Zima monthly bonuses without changing plan settings", async () => {
   const config = configuredOverseerr({ OVERSEERR_API_KEY: "test-overseerr-key-123456" });
   let posted = null;
-  const settings = { username: "PlexViewer", email: "viewer@example.test", discordId: "123",
-    locale: "en", discoverRegion: "GB", streamingRegion: "GB", originalLanguage: "en",
-    movieQuotaLimit: 5, movieQuotaDays: 30, movieQuotaPeriod: "calendarMonth", movieQuotaBonus: 1,
-    tvQuotaLimit: 4, tvQuotaDays: 30, tvQuotaPeriod: "calendarMonth", tvQuotaBonus: 0,
-    watchlistSyncMovies: true, watchlistSyncTv: false };
+  // This mirrors the live Zima response shape. Empty strings are accepted
+  // values, while legacy fields such as `region` make this endpoint reject
+  // the entire update.
+  const settings = { username: "PlexViewer", email: "viewer@example.test", discordId: "",
+    locale: "", discoverRegion: "", streamingRegion: "", originalLanguage: null,
+    movieQuotaLimit: 5, movieQuotaDays: 7, movieQuotaPeriod: "calendarMonth", movieQuotaBonus: 1,
+    tvQuotaLimit: 4, tvQuotaDays: 7, tvQuotaPeriod: "calendarMonth", tvQuotaBonus: 0,
+    watchlistSyncMovies: null, watchlistSyncTv: null };
   const quota = { movie: { limit: 5, bonus: 1, used: 4, remaining: 2 },
     tv: { limit: 4, bonus: 0, used: 4, remaining: 0 } };
   const fetcher = async (input, options) => {
@@ -217,16 +220,11 @@ test("referral credits increase Zima monthly bonuses without changing plan setti
   const result = await applyOverseerrRequestCredits(config,
     { id: 42, email: "viewer@example.test", plex_username: "PlexViewer" }, { movies: 3, seasons: 2 }, fetcher);
   assert.deepEqual(result, { mode: "monthly_bonus", movieValue: 4, tvValue: 2 });
-  assert.equal(posted.movieQuotaLimit, 5);
-  assert.equal(posted.tvQuotaLimit, 4);
-  assert.equal(posted.movieQuotaBonus, 4);
-  assert.equal(posted.tvQuotaBonus, 2);
-  assert.equal(posted.movieQuotaDays, 30);
-  assert.equal(posted.tvQuotaDays, 30);
-  assert.equal(posted.movieQuotaPeriod, "calendarMonth");
-  assert.equal(posted.tvQuotaPeriod, "calendarMonth");
-  assert.equal(posted.watchlistSyncMovies, true);
-  assert.equal(posted.discordId, "123");
+  assert.deepEqual(posted, { username: "PlexViewer", email: "viewer@example.test", discordId: "",
+    locale: "", discoverRegion: "", streamingRegion: "", originalLanguage: null,
+    movieQuotaLimit: 5, movieQuotaDays: 7, movieQuotaPeriod: "calendarMonth", movieQuotaBonus: 4,
+    tvQuotaLimit: 4, tvQuotaDays: 7, tvQuotaPeriod: "calendarMonth", tvQuotaBonus: 2,
+    watchlistSyncMovies: null, watchlistSyncTv: null });
 });
 
 test("an ignored quota update is rejected instead of spending referral credits", async () => {
