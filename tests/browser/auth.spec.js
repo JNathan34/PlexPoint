@@ -233,11 +233,18 @@ test("members can share a referral and review a referred friend order in three c
   const referralIconEffects = await page.locator(".pp-referral-icon, .pp-referral-heading-icon, .pp-referral-stat-icon").evaluateAll((icons) => icons.map((icon) => {
     const style = getComputedStyle(icon);
     const glyphStyle = getComputedStyle(icon.querySelector(".pp-icon"));
-    return { boxShadow: style.boxShadow, filter: style.filter, textShadow: style.textShadow, glyphFilter: glyphStyle.filter };
+    return {
+      boxShadow: style.boxShadow, filter: style.filter, textShadow: style.textShadow, glyphFilter: glyphStyle.filter,
+      borderTopWidth: style.borderTopWidth, backgroundImage: style.backgroundImage, backgroundColor: style.backgroundColor,
+    };
   }));
   expect(referralIconEffects.every((effect) => effect.boxShadow === "none" && effect.filter === "none"
-    && effect.textShadow === "none" && effect.glyphFilter === "none")).toBe(true);
+    && effect.textShadow === "none" && effect.glyphFilter === "none" && effect.borderTopWidth === "0px"
+    && effect.backgroundImage === "none" && effect.backgroundColor === "rgba(0, 0, 0, 0)")).toBe(true);
   await expect(page.getByRole("button", { name: "Copy link" })).toBeVisible();
+  await expect(page.locator("#referral-copy")).toHaveCSS("box-shadow", "none");
+  await page.locator("#referral-copy").hover();
+  await expect(page.locator("#referral-copy")).toHaveCSS("box-shadow", "none");
   await expect(page.locator("#referral-history-heading")).toHaveText("Recent invites");
   await expect(page.locator(".pp-referral-invite")).toHaveCount(1);
   await expect(page.locator(".pp-referral-invite")).toContainText("First Friend");
