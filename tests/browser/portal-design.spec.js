@@ -65,6 +65,30 @@ test("desktop account reuses the home backdrop and presents the compact dashboar
   expect(intro.x + intro.width).toBeLessThan(profile.x);
 });
 
+test("desktop account navigation uses the homepage glass treatment", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const readGlass = () => page.evaluate(() => {
+    const header = document.querySelector('[data-testid="navigation"]') || document.querySelector(".pp-site-header");
+    const pill = document.querySelector(".glass");
+    const headerStyle = getComputedStyle(header);
+    const pillStyle = getComputedStyle(pill);
+    return {
+      header: { backgroundColor: headerStyle.backgroundColor, backdropFilter: headerStyle.backdropFilter },
+      pill: {
+        backgroundImage: pillStyle.backgroundImage,
+        backdropFilter: pillStyle.backdropFilter,
+        borderColor: pillStyle.borderColor,
+        boxShadow: pillStyle.boxShadow,
+      },
+    };
+  });
+
+  await page.goto("/");
+  const reference = await readGlass();
+  await page.goto("/account/");
+  expect(await readGlass()).toEqual(reference);
+});
+
 for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 }]) {
   test(`account backdrop keeps the homepage crop at ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);

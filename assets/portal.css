@@ -24,8 +24,8 @@
 .pp-portal .container { margin-inline: auto; }
 .pp-layout { min-height: 100dvh; }
 .pp-icon { display: block; width: 20px; height: 20px; flex-shrink: 0; }
-.pp-site-header { position: fixed; inset: 0 0 auto; z-index: 50; padding: 16px 0; background: color-mix(in srgb, var(--background) 56%, transparent); backdrop-filter: blur(14px) saturate(1.1); transition: padding 300ms, background 300ms; }
-.pp-site-header.navbar-custom { background: #080b117a; backdrop-filter: blur(24px) saturate(1.2); border-bottom: 1px solid #ffffff17; }
+.pp-site-header { position: fixed; inset: 0 0 auto; z-index: 50; padding: 16px 0; background: transparent; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); transition: padding 300ms, background 300ms, backdrop-filter 300ms; }
+.pp-site-header.navbar-custom { background: rgb(8 11 17 / .48); backdrop-filter: blur(24px) saturate(1.2); -webkit-backdrop-filter: blur(24px) saturate(1.2); border-bottom: 1px solid #ffffff17; }
 .pp-site-header.pp-scrolled { padding-block: 8px; }
 .pp-site-nav { display: flex; align-items: center; gap: 12px; padding-inline: 16px; }
 .pp-brand { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; color: var(--foreground); transition: color 180ms; }
@@ -36,6 +36,7 @@
 .pp-brand > span { font-size: 20px; font-weight: 700; line-height: 28px; }
 .pp-brand > .pp-brand-mark { font-size: inherit; line-height: normal; }
 .pp-navigation { display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 999px; margin-left: auto; }
+.pp-navigation.glass { background: linear-gradient(135deg,rgb(29 35 47 / .4),rgb(18 24 33 / .22)); backdrop-filter: blur(18px) saturate(1.12); -webkit-backdrop-filter: blur(18px) saturate(1.12); border-color: rgb(255 255 255 / .11); box-shadow: inset 0 1px rgb(255 255 255 / .05); }
 .pp-navigation a { display: flex; align-items: center; justify-content: center; min-height: 36px; padding: 8px 20px; border-radius: 999px; font-size: 14px; line-height: 20px; font-weight: 500; white-space: nowrap; color: var(--muted-foreground); transition: background 180ms, color 180ms; }
 .pp-navigation a > span { display: none; }
 .pp-navigation a:hover { color: var(--foreground); }
@@ -609,6 +610,7 @@
 }
 @media (max-width: 767px) {
   .pp-site-header { padding-block: 10px; }
+  .pp-site-header.navbar-custom { background: rgb(8 11 17 / .56); }
   .pp-site-nav { flex-wrap: wrap; justify-content: space-between; }
   .pp-brand img { width: 34px; height: 34px; }
   .pp-brand > span { font-size: 17px; }
