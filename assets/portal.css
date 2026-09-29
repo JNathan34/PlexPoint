@@ -358,7 +358,7 @@
 .pp-referral-card-heading > div:not(.pp-referral-total) { min-width: 0; }
 .pp-referral-card-heading h3, .pp-referral-section-heading h3 { color: #f7f8fb; font-size: 19px; font-weight: 650; letter-spacing: -.015em; }
 .pp-referral-card-heading p { margin-top: 4px; color: #9ba7b8; font-size: 12px; line-height: 1.5; }
-.pp-referral-icon, .pp-referral-heading-icon { display: grid; place-items: center; flex: 0 0 auto; border: 1px solid #ff812f75; border-radius: 50%; color: #ff922f; background: radial-gradient(circle,#ff7b001d,#ff7b0008); box-shadow: 0 9px 26px #ff7b0015; }
+.pp-referral-icon, .pp-referral-heading-icon { display: grid; place-items: center; flex: 0 0 auto; border: 1px solid #ff812f75; border-radius: 50%; color: #ff922f; background: rgb(255 123 0 / .035); box-shadow: none; filter: none; text-shadow: none; }
 .pp-referral-icon { width: 52px; height: 52px; }
 .pp-referral-heading-icon { width: 34px; height: 34px; }
 .pp-referral-icon .pp-icon { width: 25px; height: 25px; stroke-width: 1.8; }
@@ -374,6 +374,7 @@
 .pp-referral-reward-stats article { display: grid; grid-template-columns: 36px minmax(0,1fr); align-items: center; gap: 10px; min-width: 0; padding: 14px; border: 1px solid #ffffff16; border-radius: 12px; background: #080d15a8; }
 .pp-referral-stat-icon { display: grid !important; place-items: center; margin: 0 !important; color: #ff8d2a !important; }
 .pp-referral-stat-icon .pp-icon { width: 26px; height: 26px; stroke-width: 1.8; }
+#referral-content :is(.pp-referral-icon,.pp-referral-heading-icon,.pp-referral-stat-icon) .pp-icon { filter: none; text-shadow: none; }
 .pp-referral-reward-stats article span:not(.pp-referral-stat-icon) { display: block; margin: 0; color: #c3cad5; font-size: 11px; line-height: 1.3; }
 .pp-referral-reward-stats article strong { display: block; margin-top: 4px; color: #f7f8fb; font-size: 25px; line-height: 1; }
 .pp-referral-rewards > small { display: block; margin-top: 12px; color: #8f9bad; font-size: 10px; line-height: 1.45; }

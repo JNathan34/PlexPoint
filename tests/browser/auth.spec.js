@@ -230,6 +230,13 @@ test("members can share a referral and review a referred friend order in three c
   await expect(page.locator("#referral-heading")).toHaveText("Invite friends to PlexPoint");
   await expect(page.locator("#referral-how-heading")).toHaveText("How it works");
   await expect(page.locator(".pp-referral-how li")).toHaveCount(4);
+  const referralIconEffects = await page.locator(".pp-referral-icon, .pp-referral-heading-icon, .pp-referral-stat-icon").evaluateAll((icons) => icons.map((icon) => {
+    const style = getComputedStyle(icon);
+    const glyphStyle = getComputedStyle(icon.querySelector(".pp-icon"));
+    return { boxShadow: style.boxShadow, filter: style.filter, textShadow: style.textShadow, glyphFilter: glyphStyle.filter };
+  }));
+  expect(referralIconEffects.every((effect) => effect.boxShadow === "none" && effect.filter === "none"
+    && effect.textShadow === "none" && effect.glyphFilter === "none")).toBe(true);
   await expect(page.getByRole("button", { name: "Copy link" })).toBeVisible();
   await expect(page.locator("#referral-history-heading")).toHaveText("Recent invites");
   await expect(page.locator(".pp-referral-invite")).toHaveCount(1);
