@@ -77,6 +77,22 @@ test("the configured owner email is returned and stored as an administrator", as
   assert.equal(sqlite.prepare("SELECT role FROM users WHERE id = ?").get(data.user.id).role, "admin");
 });
 
+test("Simply Pay Pages can sign an administrator in to the shared payment manager", async (t) => {
+  const { call } = setup(t);
+  await call("register", { ...details, email: "jacobnathan1718@gmail.com" });
+  const login = await call("login", { email: "jacobnathan1718@gmail.com", password: details.password }, {
+    origin: "https://simply-pay.pages.dev", headers: { "Sec-Fetch-Site": "cross-site" },
+  });
+  assert.equal(login.status, 200);
+  assert.equal(login.headers.get("Access-Control-Allow-Origin"), "https://simply-pay.pages.dev");
+  assert.equal(login.headers.get("Access-Control-Allow-Credentials"), "true");
+  assert.match(login.headers.get("Set-Cookie"), /SameSite=None; Max-Age=604800; Secure$/);
+  const preflight = await call("login", undefined, {
+    origin: "https://simply-pay.pages.dev", method: "OPTIONS", headers: { "Access-Control-Request-Method": "POST" },
+  });
+  assert.equal(preflight.status, 204);
+});
+
 test("sessions remain available while the optional Plex avatar migration is pending", async (t) => {
   const { call, sqlite } = setup(t, { avatars: false });
   const registered = await call("register", details);

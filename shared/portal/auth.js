@@ -41,6 +41,11 @@ function reply(data, status = 200, headers = {}) {
   } });
 }
 
+function withHeaders(response, headers) {
+  for (const [name, value] of Object.entries(headers)) response.headers.set(name, value);
+  return response;
+}
+
 function managerCorsHeaders(request) {
   const origin = request.headers.get("Origin");
   if (!SIMPLY_PAY_MANAGER_ORIGINS.has(origin)) return {};
@@ -239,6 +244,7 @@ async function currentSession(db, request, now) {
 export { ADMIN_EMAIL, AuthError, randomHex, digest, managerCorsHeaders, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail, plexAvatarColumnAvailable };
 
 export async function authResponse(request, env, action) {
+  const cors = action === "login" ? managerCorsHeaders(request) : {};
   try {
     const url = new URL(request.url);
     if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) {
@@ -246,13 +252,14 @@ export async function authResponse(request, env, action) {
     }
     if (!["register", "login", "session", "logout"].includes(action)) throw new AuthError(404, "Not found.");
     const method = action === "session" ? "GET" : "POST";
-    if (request.method !== method) return reply({ message: "Method not allowed." }, 405, { Allow: method });
-    const body = method === "POST" ? await readBody(request) : null;
+    if (request.method === "OPTIONS" && action === "login") return new Response(null, { status: 204, headers: cors });
+    if (request.method !== method) return reply({ message: "Method not allowed." }, 405, { Allow: method, ...cors });
+    const body = method === "POST" ? await readBody(request, { allowManagerOrigin: action === "login" }) : null;
     if (!env.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
     const db = env.PORTAL_DB;
     const now = Date.now();
     if (action === "register") return await register(db, request, body, now);
-    if (action === "login") return await login(db, request, body, now);
+    if (action === "login") return withHeaders(await login(db, request, body, now), cors);
     if (action === "session") return await currentSession(db, request, now);
     const token = readToken(request);
     if (token) await db.prepare("DELETE FROM auth_sessions WHERE token_hash = ?").bind(await digest(token)).run();
@@ -260,6 +267,6 @@ export async function authResponse(request, env, action) {
   } catch (error) {
     if (!(error instanceof AuthError)) console.error(JSON.stringify({ event: "portal_auth_error", action, errorType: error?.name || "UnknownError" }));
     return reply({ message: error instanceof AuthError ? error.message : "Account services are temporarily unavailable. Please try again later." },
-      error instanceof AuthError ? error.status : 503, error.status === 429 ? { "Retry-After": "900" } : {});
+      error instanceof AuthError ? error.status : 503, { ...(error.status === 429 ? { "Retry-After": "900" } : {}), ...cors });
   }
 }
