@@ -55,6 +55,7 @@ test("return from Plex completes sign-in, cleans the URL, and survives reload", 
   await expect(page.locator("#auth-user-name")).toHaveText(plexUser.displayName);
   await expect(page.getByText("Plex connected", { exact: false })).toHaveCount(0);
   await expect(page).toHaveURL("http://127.0.0.1:8791/account/#account");
+  await expect(page.locator("#auth-status")).toHaveText("", { timeout: 6000 });
   await page.reload();
   await expect(page.locator("#auth-user-email")).toHaveText(plexUser.email);
   await expect(page.locator("#auth-user")).toBeVisible();

@@ -21,6 +21,7 @@ let adminReferralsBusy = false;
 let adminBillingData = null;
 let memberPayments = [];
 let memberPaymentsExpanded = false;
+let statusDismissTimer = null;
 const returnUrl = new URL(location.href);
 let plexReturning = returnUrl.searchParams.get("plex") === "return";
 if (plexReturning) {
@@ -29,10 +30,19 @@ if (plexReturning) {
   history.replaceState(null, "", returnUrl);
 }
 
-function message(text, error = false, focus = false) {
+function message(text, error = false, focus = false, dismissAfterMs = 0) {
+  if (statusDismissTimer) {
+    clearTimeout(statusDismissTimer);
+    statusDismissTimer = null;
+  }
   status.textContent = text;
   status.dataset.error = String(error);
   if (focus) status.focus();
+  if (text && !error && dismissAfterMs > 0) {
+    statusDismissTimer = setTimeout(() => {
+      if (status.textContent === text && status.dataset.error === "false") message("");
+    }, dismissAfterMs);
+  }
 }
 
 function controls() {
@@ -1303,7 +1313,7 @@ async function completePlex() {
     if (plexPending) message("Waiting for Plex approval. Check again after you finish signing in.");
     else if (data.user) {
       await acceptUser(data.user);
-      message("You are signed in with Plex.", false, true);
+      message("You are signed in with Plex.", false, true, 4000);
       channel?.postMessage("session-changed");
     } else throw new Error("Plex sign-in returned an unexpected response. Please start again.");
   } catch (error) {
