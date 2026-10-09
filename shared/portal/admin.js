@@ -18,6 +18,7 @@ function adminUser(row, now) {
     ...(row.referrer_code ? { referredBy: { code: row.referrer_code, displayName: row.referrer_name,
       status: row.referral_status, orderId: row.referral_order_id || null } } : {}),
     plexAvatarUrl: `/api/portal/avatar?userId=${encodeURIComponent(row.id)}`,
+    ...(row.plex_avatar_url ? { plexProfileAvatarUrl: row.plex_avatar_url } : {}),
     subscription: row.tier_name ? {
       tier: row.tier_name,
       status: row.subscription_status,
