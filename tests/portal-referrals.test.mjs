@@ -102,6 +102,21 @@ test("a referral survives signup, produces an order, and is rewarded once after 
   assert.equal(list.referrals[0].orderId, selectedData.order.id);
 });
 
+test("a referral landing is shown only on its immediate redirect and clears a stale cookie", async (t) => {
+  const { env } = setup(t);
+  const referrer = await register(env, "referrer@example.test", "Friendly Referrer");
+  const dashboard = await (await referralsResponse(jsonRequest("/api/portal/referrals", referrer.cookie), env)).json();
+  const landing = await referralLandingResponse(new Request(`${origin}/join/${dashboard.dashboard.code}`), env, dashboard.dashboard.code);
+  const referralCookie = landing.headers.getSetCookie()[0].split(";")[0];
+
+  const fresh = await referralsResponse(jsonRequest(`/api/portal/referrals?referred=${dashboard.dashboard.code}`, referralCookie), env);
+  assert.equal((await fresh.json()).landing.code, dashboard.dashboard.code);
+
+  const stale = await referralsResponse(jsonRequest("/api/portal/referrals", referralCookie), env);
+  assert.equal((await stale.json()).landing, null);
+  assert.match(stale.headers.get("Set-Cookie"), /Max-Age=0/);
+});
+
 test("self-referral, free plans, and duplicate referrers are blocked", async (t) => {
   const { sqlite, env } = setup(t);
   const owner = await register(env, "owner@example.test", "Owner");

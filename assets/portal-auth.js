@@ -533,7 +533,11 @@ async function loadReferrals() {
   referralBusy = true;
   if (user) byId("referral-status").textContent = "Loading your referral rewards…";
   controls();
-  try { renderReferrals(await request("referrals", undefined, "")); }
+  const referred = new URL(location.href).searchParams.get("referred");
+  const referralRoute = /^[A-Z0-9-]{6,32}$/i.test(referred || "")
+    ? `referrals?referred=${encodeURIComponent(referred)}`
+    : "referrals";
+  try { renderReferrals(await request(referralRoute, undefined, "")); }
   catch (error) {
     if (user) {
       byId("referral-panel").hidden = false;

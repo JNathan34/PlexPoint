@@ -27,7 +27,8 @@ function mapAddon(row) {
 
 async function landingReferral(db, request) {
   const code = readReferralCode(request);
-  if (!code) return null;
+  const landingCode = new URL(request.url).searchParams.get("referred")?.toUpperCase();
+  if (!code || landingCode !== code) return null;
   const row = await db.prepare(`SELECT rc.code, u.display_name
     FROM referral_codes rc JOIN users u ON u.id = rc.user_id
     WHERE rc.code = ? AND u.account_status = 'enabled'`).bind(code).first();
@@ -246,7 +247,9 @@ export async function referralsResponse(request, env, fetcher = fetch) {
     const user = await sessionUser(env.PORTAL_DB, request);
     if (!user) {
       if (request.method === "POST") throw new AuthError(401, "Please sign in to continue.");
-      return reply({ landing: await landingReferral(env.PORTAL_DB, request), dashboard: null, inbound: null, plans: [], addons: [] });
+      const landing = await landingReferral(env.PORTAL_DB, request);
+      return reply({ landing, dashboard: null, inbound: null, plans: [], addons: [] }, 200,
+        !landing && readReferralCode(request) ? { "Set-Cookie": referralCookie(request, "", 0) } : {});
     }
     const now = Date.now();
     if (request.method === "GET") return reply(await memberDashboard(env.PORTAL_DB, request, user, now));
