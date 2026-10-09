@@ -58,6 +58,10 @@ function managerCorsHeaders(request) {
   };
 }
 
+function isManagerOrigin(value) {
+  return SIMPLY_PAY_MANAGER_ORIGINS.has(value);
+}
+
 async function readBody(request, { allowManagerOrigin = false } = {}) {
   const url = new URL(request.url);
   const origin = request.headers.get("Origin");
@@ -241,7 +245,7 @@ async function currentSession(db, request, now) {
     !row && readToken(request) ? { "Set-Cookie": sessionCookie(request, "", 0) } : {});
 }
 
-export { ADMIN_EMAIL, AuthError, randomHex, digest, managerCorsHeaders, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail, plexAvatarColumnAvailable };
+export { ADMIN_EMAIL, AuthError, randomHex, digest, isManagerOrigin, managerCorsHeaders, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail, plexAvatarColumnAvailable, withHeaders };
 
 export async function authResponse(request, env, action) {
   const cors = action === "login" ? managerCorsHeaders(request) : {};

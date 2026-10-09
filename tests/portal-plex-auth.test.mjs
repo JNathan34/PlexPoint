@@ -76,7 +76,7 @@ test("Plex start creates a short-lived browser-bound flow and a fixed authorizat
   const { response, state } = await begin(call);
   const data = await response.json();
   assert.equal(response.headers.get("Cache-Control"), "no-store");
-  assert.match(response.headers.get("Set-Cookie"), /^__Host-plexpoint_plex=[a-f0-9]{64}; Path=\/; HttpOnly; SameSite=Lax; Max-Age=600; Secure$/);
+  assert.match(response.headers.get("Set-Cookie"), /^__Host-plexpoint_plex=[a-f0-9]{64}; Path=\/; HttpOnly; SameSite=None; Max-Age=600; Secure$/);
   const url = new URL(data.authorizationUrl);
   assert.equal(url.origin, "https://app.plex.tv");
   assert.equal(url.pathname, "/auth");

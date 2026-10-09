@@ -1,4 +1,4 @@
-import { AuthError, randomHex, digest, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail, plexAvatarColumnAvailable } from "./auth.js";
+import { AuthError, randomHex, digest, isManagerOrigin, managerCorsHeaders, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail, plexAvatarColumnAvailable, withHeaders } from "./auth.js";
 import { newAccountReferralStatements, readReferralCode, referralCookie } from "./referral-core.js";
 
 const MAX_AGE = 600;
@@ -6,7 +6,8 @@ function stateName(request) {
   return new URL(request.url).protocol === "https:" ? "__Host-plexpoint_plex" : "plexpoint_local_plex";
 }
 function stateCookie(request, state, seconds = MAX_AGE) {
-  return `${stateName(request)}=${state}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${seconds}${new URL(request.url).protocol === "https:" ? "; Secure" : ""}`;
+  const secure = new URL(request.url).protocol === "https:";
+  return `${stateName(request)}=${state}; Path=/; HttpOnly; SameSite=${secure ? "None" : "Lax"}; Max-Age=${seconds}${secure ? "; Secure" : ""}`;
 }
 function readState(request) {
   const prefix = `${stateName(request)}=`;
@@ -43,7 +44,21 @@ async function plexRequest(fetcher, path, clientId, { method = "GET", token, bod
   } finally { clearTimeout(timeout); }
 }
 
-async function start(request, db, fetcher) {
+function returnUrl(request, body) {
+  if (typeof body?.returnTo === "string") {
+    try {
+      const candidate = new URL(body.returnTo);
+      if (isManagerOrigin(candidate.origin) && candidate.pathname === "/" && !candidate.username && !candidate.password) {
+        candidate.searchParams.set("plex", "return");
+        candidate.hash = "";
+        return candidate;
+      }
+    } catch {}
+  }
+  return new URL("/account/?plex=return#account", request.url);
+}
+
+async function start(request, db, fetcher, body) {
   const now = Date.now();
   await rateLimit(db, request, "plex-start", null, now);
   const current = await sessionUser(db, request, now);
@@ -63,7 +78,7 @@ async function start(request, db, fetcher) {
       VALUES (?, ?, ?, ?, ?, ?, ?)`).bind(await digest(state), pin.id, pin.code, clientId, current?.id || null,
       current ? await digest(readToken(request)) : null, expiresAt),
   ]);
-  const forward = new URL("/account/?plex=return#account", request.url);
+  const forward = returnUrl(request, body);
   const query = new URLSearchParams({ clientID: clientId, code: pin.code, "context[device][product]": "PlexPoint", forwardUrl: forward.href });
   return reply({ authorizationUrl: `https://app.plex.tv/auth#?${query}`, expiresAt }, 200,
     { "Set-Cookie": stateCookie(request, state, seconds) });
@@ -156,20 +171,22 @@ async function complete(request, db, fetcher) {
 }
 
 export async function plexAuthResponse(request, env, action, fetcher = fetch) {
+  const cors = managerCorsHeaders(request);
   try {
     const url = new URL(request.url);
     if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) throw new AuthError(400, "Account access requires HTTPS.");
     if (!["start", "complete", "cancel"].includes(action)) throw new AuthError(404, "Not found.");
-    if (request.method !== "POST") return reply({ message: "Method not allowed." }, 405, { Allow: "POST" });
-    await readBody(request);
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+    if (request.method !== "POST") return reply({ message: "Method not allowed." }, 405, { Allow: "POST", ...cors });
+    const body = await readBody(request, { allowManagerOrigin: true });
     if (!env.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
-    if (action === "start") return await start(request, env.PORTAL_DB, fetcher);
-    if (action === "complete") return await complete(request, env.PORTAL_DB, fetcher);
+    if (action === "start") return withHeaders(await start(request, env.PORTAL_DB, fetcher, body), cors);
+    if (action === "complete") return withHeaders(await complete(request, env.PORTAL_DB, fetcher), cors);
     const state = readState(request);
     if (state) await env.PORTAL_DB.prepare("DELETE FROM plex_login_attempts WHERE state_hash = ?").bind(await digest(state)).run();
-    return reply({ cancelled: true }, 200, { "Set-Cookie": stateCookie(request, "", 0) });
+    return reply({ cancelled: true }, 200, { "Set-Cookie": stateCookie(request, "", 0), ...cors });
   } catch (error) {
     return reply({ message: error instanceof AuthError ? error.message : "Plex sign-in is temporarily unavailable. Please try again later." },
-      error instanceof AuthError ? error.status : 503, error.status === 429 ? { "Retry-After": "900" } : {});
+      error instanceof AuthError ? error.status : 503, { ...(error.status === 429 ? { "Retry-After": "900" } : {}), ...cors });
   }
 }
