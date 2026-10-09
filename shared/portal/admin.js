@@ -23,6 +23,8 @@ function adminUser(row, now) {
       status: row.subscription_status,
       startsAt: row.starts_at,
       endsAt: row.ends_at,
+      monthlyPriceMinor: Number(row.monthly_price_minor),
+      currency: row.subscription_currency,
     } : null,
     billing: row.billing_period_id ? (() => {
       const amountDueMinor = Number(row.amount_due_minor);
@@ -69,7 +71,7 @@ export async function adminUsersResponse(request, env) {
       referrer.display_name AS referrer_name, rc.code AS referrer_code,
       r.status AS referral_status, r.order_id AS referral_order_id,
       s.access_status AS subscription_status, s.starts_at, s.ends_at,
-      t.name AS tier_name,
+      t.name AS tier_name, t.monthly_price_minor, t.currency AS subscription_currency,
       bp.id AS billing_period_id, bp.ends_at AS billing_ends_at,
       bp.amount_due_minor, bp.currency AS billing_currency,
       COALESCE(pt.confirmed_minor, 0) AS confirmed_minor,
