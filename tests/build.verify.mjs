@@ -16,7 +16,7 @@ async function compare(path) {
 }
 
 test('the public website is copied byte-for-byte without rewriting its bundle', async () => {
-  for (const path of ['index.html','account','assets','icons','plex-posters','preview-pictures','plex-preview.json',
+  for (const path of ['index.html','account','billing','assets','icons','plex-posters','preview-pictures','plex-preview.json',
     'plexpoint-logo.png','homepage.png','request.jpg','manifest.webmanifest','sw.js','_routes.json']) {
     await compare(path);
   }
@@ -42,7 +42,7 @@ test('production fetches same-zone media services through Cloudflare public rout
 
 test('only intended public assets and the generated worker are shipped', async () => {
   assert.deepEqual((await readdir(output)).sort(), [
-    'index.html','account','assets','icons','plex-posters','preview-pictures','plex-preview.json',
+    'index.html','account','billing','assets','icons','plex-posters','preview-pictures','plex-preview.json',
     'plexpoint-logo.png','homepage.png','request.jpg','manifest.webmanifest','sw.js','_routes.json','_worker.js',
   ].sort());
   const entry = resolve(output, '_worker.js/index.js');

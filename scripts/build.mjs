@@ -7,7 +7,7 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const output = resolve(root, "dist");
 // An explicit public-asset list keeps backend source and migrations out of the site.
 const publicPaths = [
-  "index.html", "account", "assets", "icons", "plex-posters", "preview-pictures",
+  "index.html", "account", "billing", "assets", "icons", "plex-posters", "preview-pictures",
   "plex-preview.json", "plexpoint-logo.png", "homepage.png", "request.jpg",
   "manifest.webmanifest", "sw.js", "_routes.json",
 ];

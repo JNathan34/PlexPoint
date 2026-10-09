@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#091614" />
+    <title>PlexPoint Billing</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/account/"><img src="/plexpoint-logo.png" alt="PlexPoint" /><span><small>Plex Billing</small><strong>Payment manager</strong></span></a>
+      <a class="account-link" href="/account/">Full account admin</a>
+    </header>
+    <main class="workspace">
+      <section id="signedOut" class="panel hidden"><h1>Sign in required</h1><p>Sign in to your PlexPoint administrator account before managing customer payments.</p><a class="button" href="/account/">Open PlexPoint account</a></section>
+      <section id="manager" class="hidden">
+        <div class="page-heading"><div><p class="eyebrow">Live data</p><h1>Customer payments</h1><p>Changes here update the same billing records used by PlexPoint.</p></div><button id="refresh" class="button secondary" type="button">Refresh</button></div>
+        <p id="notice" class="notice" role="status"></p>
+        <section class="summary" aria-label="Billing summary"><article><span>Total users</span><strong id="totalUsers">0</strong></article><article><span>With a plan</span><strong id="subscribedUsers">0</strong></article><article><span>Overdue</span><strong id="overdueUsers">0</strong></article></section>
+        <section class="layout">
+          <section class="panel"><h2>Choose a user</h2><label>Search users<input id="search" type="search" placeholder="Name, email, or Plex username" /></label><div id="userList" class="user-list" aria-live="polite"></div></section>
+          <section class="panel details"><div id="emptyDetail" class="empty"><h2>Select a user</h2><p>Choose a PlexPoint user to view or update their plan and payments.</p></div>
+            <div id="userDetail" class="hidden">
+              <div class="detail-heading"><div><p class="eyebrow">Customer</p><h2 id="detailName">—</h2><p id="detailEmail"></p></div><span id="detailStatus" class="status">—</span></div>
+              <section class="current"><span>Current plan</span><strong id="currentPlan">Not assigned</strong><span id="currentDue">No payment date set</span></section>
+              <form id="planForm" class="form"><h3>Membership</h3><div class="grid"><label>Plan<select id="tier" required></select></label><label>Access<select id="access"><option value="enabled">Enabled</option><option value="pending">Pending</option><option value="suspended">Suspended</option><option value="cancelled">Cancelled</option></select></label><label>Plan starts<input id="startsOn" type="date" required /></label><label>Next due<input id="nextDueOn" type="date" required /></label></div><button class="button" type="submit">Save membership</button></form>
+              <form id="paymentForm" class="form"><h3>Record payment</h3><div class="grid"><label>Amount (£)<input id="amount" type="number" min="0.01" step="0.01" required /></label><label>Months covered<select id="months"><option value="1">1 month</option><option value="2">2 months</option><option value="3">3 months</option><option value="6">6 months</option><option value="12">12 months</option></select></label><label>Method<select id="method"><option value="bank_transfer">Bank transfer</option><option value="cash">Cash</option><option value="card">Card</option><option value="paypal">PayPal</option><option value="other">Other</option></select></label><label>Date paid<input id="receivedOn" type="date" required /></label></div><label>Reference <small>Optional</small><input id="reference" maxlength="80" /></label><button class="button" type="submit">Record payment</button></form>
+              <section class="history"><h3>Recent payments</h3><div id="paymentHistory"></div></section>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
