@@ -42,7 +42,7 @@ for (const width of [390, 768, 1024, 1440, 1920]) {
   });
 }
 
-test("desktop account reveals more of the home backdrop through its compact dashboard", async ({ page }) => {
+test("desktop account reuses the home backdrop and presents the compact dashboard composition", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const backdrop = await page.locator(".hero-backdrop img").getAttribute("src");
@@ -56,8 +56,8 @@ test("desktop account reveals more of the home backdrop through its compact dash
     imageOpacity: getComputedStyle(document.querySelector(".pp-account-backdrop img")).opacity,
     overlayBackground: getComputedStyle(document.querySelector(".pp-account-backdrop > div")).backgroundImage,
   }));
-  expect(Number.parseFloat(accountBackdropStyles.imageOpacity)).toBeGreaterThan(Number.parseFloat(homeBackdropStyles.imageOpacity));
-  expect(accountBackdropStyles.overlayBackground).toBe("linear-gradient(90deg, rgba(8, 11, 17, 0.56), rgba(8, 11, 17, 0.392) 36%, rgba(8, 11, 17, 0.15))");
+  expect(accountBackdropStyles).toEqual(homeBackdropStyles);
+  await expect(page.locator(".pp-account-backdrop")).toHaveCSS("position", "fixed");
   await expect(page.locator(".pp-account-art")).toHaveCount(0);
   await expect(page.locator(".pp-metric")).toHaveCount(4);
   await expect(page.locator(".pp-account-shortcuts")).toHaveCount(0);
@@ -109,12 +109,7 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 
     }));
 
     expect(Math.abs(accountImage.height - homeImage.height)).toBeLessThan(1);
-    expect(accountStyles.position).toBe(homeStyles.position);
-    if (viewport.width >= 1024) {
-      expect(Number.parseFloat(accountStyles.opacity)).toBeGreaterThan(Number.parseFloat(homeStyles.opacity));
-    } else {
-      expect(accountStyles.opacity).toBe(homeStyles.opacity);
-    }
+    expect(accountStyles).toEqual(homeStyles);
   });
 }
 

@@ -100,7 +100,7 @@ test("signed-in accounts show account actions without Plex connection messaging"
   await expect(page.getByRole("link", { name: "Open Overseerr", exact: false })).toHaveCount(0);
 });
 
-test("account page uses an intentionally lighter translucent glass treatment", async ({ page }) => {
+test("account page shares the membership section's translucent glass treatment", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/");
   await expect(page.locator(".membership-tier").first()).toBeVisible();
@@ -117,10 +117,9 @@ test("account page uses an intentionally lighter translucent glass treatment", a
     card: getComputedStyle(document.querySelector("#billing-panel")).backgroundImage,
     gradient: getComputedStyle(document.documentElement).getPropertyValue("--gradient-primary"),
   }));
-  expect(portal).toMatchObject({ background: main.background, font: main.font, gradient: main.gradient });
-  expect(portal.card).toBe("linear-gradient(145deg, rgba(24, 29, 42, 0.22), rgba(14, 18, 27, 0.1))");
-  expect(await page.locator(".pp-auth-card").evaluate((card) => getComputedStyle(card).backgroundImage)).toBe(portal.card);
-  expect(await page.locator(".pp-metric").first().evaluate((card) => getComputedStyle(card).backgroundImage)).toContain("rgba(24, 29, 42, 0.19)");
+  expect(portal).toEqual(main);
+  expect(await page.locator(".pp-auth-card").evaluate((card) => getComputedStyle(card).backgroundImage)).toBe(main.card);
+  expect(await page.locator(".pp-metric").first().evaluate((card) => getComputedStyle(card).backgroundImage)).toContain("rgba(24, 29, 42, 0.42)");
   await page.evaluate(() => window.scrollTo(0, 100));
   await expect(page.locator(".pp-site-header.navbar-custom")).toBeVisible();
   await expect(page.locator(".pp-sidebar")).toHaveCount(0);
