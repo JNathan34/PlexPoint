@@ -235,6 +235,7 @@ test("members can share a referral and review a referred friend order in three c
   await expect(page.locator("#referral-redeem-status")).toContainText("added directly");
   await expect(page.locator("#referral-heading")).toHaveText("Invite friends to PlexPoint");
   await expect(page.locator("#referral-how-heading")).toHaveText("How it works");
+  await expect(page.locator(".pp-referral-share .pp-referral-how")).toHaveCount(1);
   await expect(page.locator(".pp-referral-how li")).toHaveCount(4);
   const referralIconEffects = await page.locator(".pp-referral-icon, .pp-referral-heading-icon, .pp-referral-stat-icon").evaluateAll((icons) => icons.map((icon) => {
     const style = getComputedStyle(icon);
