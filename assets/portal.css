@@ -421,22 +421,22 @@
 .pp-referral-history { margin-top: 18px; background: linear-gradient(145deg,#131b29cc,#0a1019d6); }
 .pp-referral-history-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 15px; }
 .pp-referral-history-heading > small { padding: 5px 9px; border: 1px solid #ffffff16; border-radius: 999px; color: #c4ceda; background: #ffffff06; font-size: 10px; font-weight: 700; }
-#referral-history-list { display: grid; gap: 8px; }
-.pp-referral-invite { display: grid; grid-template-columns: 44px minmax(0,1fr) auto; align-items: center; gap: 13px; min-width: 0; padding: 13px 14px; border: 1px solid #ffffff0e; border-radius: 12px; background: #070c1380; transition: border-color .16s ease; }
-.pp-referral-invite:hover { border-color: #ffffff20; }
-.pp-referral-invite[data-status="completed"] { border-color: #ffffff0e; background: #070c1380; }
-.pp-referral-invite-avatar { position: relative; display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid #ffffff18; border-radius: 50%; color: #f1f5f9; background: linear-gradient(135deg,#506077,#1d293a); font-size: 13px; font-weight: 700; }
+#referral-history-list { display: grid; gap: 9px; }
+.pp-referral-invite { display: grid; grid-template-columns: 44px minmax(0,1fr) auto; align-items: center; gap: 13px; min-width: 0; padding: 13px 15px; border: 1px solid #ffffff12; border-radius: 12px; background: linear-gradient(105deg,#080d15cf,#0a1019a8); box-shadow: inset 0 1px #ffffff08; transition: border-color .16s ease, transform .16s ease; }
+.pp-referral-invite:hover { border-color: #ffffff28; transform: translateY(-1px); }
+.pp-referral-invite[data-status="completed"] { border-color: #4ade8026; }
+.pp-referral-invite-avatar { position: relative; display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid #ffffff1f; border-radius: 50%; color: #f1f5f9; background: linear-gradient(135deg,#506077,#1d293a); box-shadow: inset 0 1px #ffffff12; font-size: 13px; font-weight: 700; }
 .pp-referral-invite-avatar::after { content: "•"; position: absolute; right: -2px; bottom: -2px; display: grid; place-items: center; width: 17px; height: 17px; border: 3px solid #0b1018; border-radius: 50%; color: #fbbf24; background: #fbbf24; font-size: 0; }
 .pp-referral-invite-avatar[data-status="completed"]::after { content: "✓"; color: #07120d; background: #4ade80; font-size: 9px; }
 .pp-referral-invite-avatar[data-status="cancelled"]::after { content: "×"; color: #1a090c; background: #fb7185; font-size: 10px; }
 .pp-referral-invite > span:nth-child(2) { min-width: 0; }
 .pp-referral-invite > span:nth-child(2) strong, .pp-referral-invite > span:nth-child(2) small, .pp-referral-invite-outcome strong, .pp-referral-invite-outcome small { display: block; }
-.pp-referral-invite > span:nth-child(2) strong { overflow: hidden; color: #edf1f7; font-size: 14px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
-.pp-referral-invite > span:nth-child(2) small { margin-top: 3px; overflow: hidden; color: #9ba7b8; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
-.pp-referral-invite-outcome { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 6px; text-align: right; }
-.pp-referral-invite-reward, .pp-referral-invite-state { display: inline-flex; align-items: center; min-height: 25px; padding: 4px 8px; border: 1px solid #ffffff18; border-radius: 999px; color: #b9c4d1; background: #ffffff05; font-size: 10px; font-weight: 700; white-space: nowrap; }
-.pp-referral-invite[data-status="completed"] .pp-referral-invite-reward { border-color: #4ade8044; color: #79eaaa; background: #4ade800a; }
-.pp-referral-invite[data-status="completed"] .pp-referral-invite-state { border-color: #4ade8038; color: #8decb6; background: transparent; }
+.pp-referral-invite > span:nth-child(2) strong { overflow: hidden; color: #f2f5f9; font-size: 14px; font-weight: 750; letter-spacing: -.01em; text-overflow: ellipsis; white-space: nowrap; }
+.pp-referral-invite > span:nth-child(2) small { margin-top: 4px; overflow: hidden; color: #9faabc; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.pp-referral-invite-outcome { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 6px; min-width: 0; padding-left: 13px; border-left: 1px solid #ffffff10; text-align: right; }
+.pp-referral-invite-reward, .pp-referral-invite-state { display: inline-flex; align-items: center; min-height: 27px; padding: 4px 9px; border: 1px solid #ffffff1c; border-radius: 999px; color: #bdc7d4; background: #ffffff07; box-shadow: inset 0 1px #ffffff08; font-size: 10px; font-weight: 700; letter-spacing: .005em; white-space: nowrap; }
+.pp-referral-invite[data-status="completed"] .pp-referral-invite-reward { border-color: #4ade8046; color: #7cecad; background: #4ade800c; }
+.pp-referral-invite[data-status="completed"] .pp-referral-invite-state { border-color: #4ade8032; color: #92efba; background: #4ade8008; }
 .pp-referral-invite-empty { padding: 18px; border: 1px dashed #ffffff14; border-radius: 12px; color: #8f9bad; font-size: 12px; text-align: center; }
 .pp-referral-order { margin-top: 18px; padding: 20px; border: 1px solid #65d99a32; border-radius: 15px; background: radial-gradient(circle at 0 0,#65d99a0b,transparent 34%),#080d14a3; }
 .pp-referral-order-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
@@ -757,7 +757,7 @@
   .pp-referral-history-heading { align-items: center; }
   .pp-referral-invite { grid-template-columns: 42px minmax(0,1fr); gap: 10px; }
   .pp-referral-invite-avatar { width: 40px; height: 40px; }
-  .pp-referral-invite-outcome { grid-column: 2; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; text-align: left; }
+  .pp-referral-invite-outcome { grid-column: 2; display: flex; align-items: baseline; justify-content: flex-start; gap: 7px; padding-left: 0; border-left: 0; text-align: left; }
   .pp-referral-invite-outcome small { margin-top: 0; }
   .pp-admin-referral-order { align-items: flex-start; flex-direction: column; }
   .pp-admin-request-credits-form { grid-template-columns: 1fr; padding: 16px; }
