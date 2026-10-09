@@ -459,15 +459,23 @@ function renderReferralHistory(referrals) {
     copy.append(name, detail);
     const outcome = document.createElement("span");
     outcome.className = "pp-referral-invite-outcome";
-    const reward = document.createElement("strong");
-    reward.className = "pp-referral-invite-reward";
-    reward.textContent = referral.referralNumber
-      ? `+${referral.reward.seasons} season · +${referral.reward.movies} movies`
-      : referralStatusLabels[referral.status] || referral.status;
     const state = document.createElement("small");
     state.className = "pp-referral-invite-state";
     state.textContent = referral.referralNumber ? "Completed" : referral.status === "awaiting_payment" ? "In progress" : "Pending";
-    outcome.append(reward, state);
+    if (referral.referralNumber) {
+      const seasonReward = document.createElement("strong");
+      seasonReward.className = "pp-referral-invite-reward";
+      seasonReward.textContent = `+${referral.reward.seasons} season`;
+      const movieReward = document.createElement("strong");
+      movieReward.className = "pp-referral-invite-reward";
+      movieReward.textContent = `+${referral.reward.movies} movies`;
+      outcome.append(seasonReward, movieReward, state);
+    } else {
+      const reward = document.createElement("strong");
+      reward.className = "pp-referral-invite-reward";
+      reward.textContent = referralStatusLabels[referral.status] || referral.status;
+      outcome.append(reward, state);
+    }
     row.append(avatar, copy, outcome); return row;
   }));
 }

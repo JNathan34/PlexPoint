@@ -256,7 +256,7 @@ test("members can share a referral and review a referred friend order in three c
   await expect(page.locator(".pp-referral-invite")).toHaveCount(1);
   await expect(page.locator(".pp-referral-invite")).toContainText("First Friend");
   await expect(page.locator(".pp-referral-invite")).toContainText("Completed");
-  await expect(page.locator(".pp-referral-invite")).toContainText("+1 season · +2 movies");
+  await expect(page.locator(".pp-referral-invite-reward")).toHaveText(["+1 season", "+2 movies"]);
   await page.setViewportSize({ width: 390, height: 844 });
   const referralMobile = await page.locator("#referral-panel").evaluate((panel) => ({
     overflows: panel.scrollWidth > panel.clientWidth,

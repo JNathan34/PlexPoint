@@ -433,7 +433,7 @@
 .pp-referral-invite > span:nth-child(2) strong, .pp-referral-invite > span:nth-child(2) small, .pp-referral-invite-outcome strong, .pp-referral-invite-outcome small { display: block; }
 .pp-referral-invite > span:nth-child(2) strong { overflow: hidden; color: #edf1f7; font-size: 14px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
 .pp-referral-invite > span:nth-child(2) small { margin-top: 3px; overflow: hidden; color: #9ba7b8; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
-.pp-referral-invite-outcome { display: grid; justify-items: end; gap: 6px; text-align: right; }
+.pp-referral-invite-outcome { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 6px; text-align: right; }
 .pp-referral-invite-reward, .pp-referral-invite-state { display: inline-flex; align-items: center; min-height: 25px; padding: 4px 8px; border: 1px solid #ffffff18; border-radius: 999px; color: #b9c4d1; background: #ffffff05; font-size: 10px; font-weight: 700; white-space: nowrap; }
 .pp-referral-invite[data-status="completed"] .pp-referral-invite-reward { border-color: #4ade8044; color: #79eaaa; background: #4ade800a; }
 .pp-referral-invite[data-status="completed"] .pp-referral-invite-state { border-color: #4ade8038; color: #8decb6; background: transparent; }
