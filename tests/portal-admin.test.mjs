@@ -78,7 +78,7 @@ test("the owner can view a safe account list with Plex and subscription details"
   assert.deepEqual(listedMember.signInMethods, ["Email", "Plex"]);
   assert.equal(listedMember.plexUsername, "PlexMember");
   assert.equal(listedMember.plexAvatarUrl, `/api/portal/avatar?userId=${encodeURIComponent(member.id)}`);
-  assert.deepEqual(listedMember.subscription, { tier: "Gold Tier", status: "enabled", startsAt: now, endsAt: now + 86400000 });
+  assert.deepEqual(listedMember.subscription, { tier: "Gold Tier", status: "enabled", startsAt: now, endsAt: now + 86400000, monthlyPriceMinor: 500, currency: "GBP" });
   assert.doesNotMatch(JSON.stringify(data), /password_hash|token_hash|pin_code|\"salt\"/i);
 });
 
