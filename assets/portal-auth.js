@@ -460,10 +460,12 @@ function renderReferralHistory(referrals) {
     const outcome = document.createElement("span");
     outcome.className = "pp-referral-invite-outcome";
     const reward = document.createElement("strong");
+    reward.className = "pp-referral-invite-reward";
     reward.textContent = referral.referralNumber
       ? `+${referral.reward.seasons} season · +${referral.reward.movies} movies`
       : referralStatusLabels[referral.status] || referral.status;
     const state = document.createElement("small");
+    state.className = "pp-referral-invite-state";
     state.textContent = referral.referralNumber ? "Completed" : referral.status === "awaiting_payment" ? "In progress" : "Pending";
     outcome.append(reward, state);
     row.append(avatar, copy, outcome); return row;

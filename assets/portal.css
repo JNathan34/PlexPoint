@@ -418,23 +418,26 @@
 .pp-referral-how li strong, .pp-referral-how li small { display: block; }
 .pp-referral-how li strong { color: #f5f7fa; font-size: 14px; font-weight: 700; }
 .pp-referral-how li small { margin-top: 3px; color: #a5b0c0; font-size: 11px; line-height: 1.35; }
-.pp-referral-history { margin-top: 18px; }
-.pp-referral-history-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 16px; }
-.pp-referral-history-heading > small { color: #b3bdcc; font-size: 11px; font-weight: 600; }
-#referral-history-list { display: grid; gap: 8px; }
-.pp-referral-invite { display: grid; grid-template-columns: 44px minmax(0,1fr) auto; align-items: center; gap: 13px; min-width: 0; padding: 13px 14px; border: 1px solid #ffffff0e; border-radius: 12px; background: #070c1380; }
-.pp-referral-invite-avatar { position: relative; display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid #ffffff18; border-radius: 50%; color: #f1f5f9; background: linear-gradient(135deg,#506077,#1d293a); font-size: 13px; font-weight: 700; }
-.pp-referral-invite-avatar::after { content: "•"; position: absolute; right: -2px; bottom: -2px; display: grid; place-items: center; width: 17px; height: 17px; border: 3px solid #0b1018; border-radius: 50%; color: #fbbf24; background: #fbbf24; font-size: 0; }
+.pp-referral-history { margin-top: 18px; background: radial-gradient(circle at 100% 0,#8b5cf60b,transparent 34%),linear-gradient(145deg,#121927d6,#090e17dc); }
+.pp-referral-history-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 15px; }
+.pp-referral-history-heading > small { padding: 5px 9px; border: 1px solid #ffffff16; border-radius: 999px; color: #c7d0dc; font-size: 10px; font-weight: 700; }
+#referral-history-list { display: grid; gap: 10px; }
+.pp-referral-invite { display: grid; grid-template-columns: 48px minmax(0,1fr) auto; align-items: center; gap: 14px; min-width: 0; min-height: 76px; padding: 13px 15px; border: 1px solid #ffffff12; border-radius: 14px; background: linear-gradient(110deg,#070d16d9,#0b111cb3); transition: border-color .16s ease, transform .16s ease; }
+.pp-referral-invite:hover { border-color: #ffffff25; transform: translateY(-1px); }
+.pp-referral-invite[data-status="completed"] { border-color: #4ade8029; background: radial-gradient(circle at 100% 50%,#4ade8010,transparent 31%),linear-gradient(110deg,#07140fdb,#0b1516b3); }
+.pp-referral-invite-avatar { position: relative; display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid #ffffff20; border-radius: 14px; color: #f1f5f9; background: linear-gradient(135deg,#506077,#1d293a); box-shadow: inset 0 1px #ffffff12; font-size: 13px; font-weight: 750; }
+.pp-referral-invite-avatar::after { content: "•"; position: absolute; right: -4px; bottom: -4px; display: grid; place-items: center; width: 18px; height: 18px; border: 3px solid #0b1018; border-radius: 50%; color: #fbbf24; background: #fbbf24; font-size: 0; }
 .pp-referral-invite-avatar[data-status="completed"]::after { content: "✓"; color: #07120d; background: #4ade80; font-size: 9px; }
 .pp-referral-invite-avatar[data-status="cancelled"]::after { content: "×"; color: #1a090c; background: #fb7185; font-size: 10px; }
 .pp-referral-invite > span:nth-child(2) { min-width: 0; }
 .pp-referral-invite > span:nth-child(2) strong, .pp-referral-invite > span:nth-child(2) small, .pp-referral-invite-outcome strong, .pp-referral-invite-outcome small { display: block; }
-.pp-referral-invite > span:nth-child(2) strong { overflow: hidden; color: #edf1f7; font-size: 14px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
-.pp-referral-invite > span:nth-child(2) small { margin-top: 3px; overflow: hidden; color: #9ba7b8; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
-.pp-referral-invite-outcome { text-align: right; }
-.pp-referral-invite-outcome strong { color: #ffad70; font-size: 12px; font-weight: 700; }
-.pp-referral-invite[data-status="completed"] .pp-referral-invite-outcome strong, .pp-referral-invite[data-status="completed"] .pp-referral-invite-outcome small { color: #6ee7a1; }
-.pp-referral-invite-outcome small { margin-top: 3px; color: #9ba7b8; font-size: 10px; font-weight: 600; }
+.pp-referral-invite > span:nth-child(2) strong { overflow: hidden; color: #f3f6fa; font-size: 14px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+.pp-referral-invite > span:nth-child(2) small { margin-top: 4px; overflow: hidden; color: #a7b2c2; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.pp-referral-invite-outcome { display: flex; align-items: center; justify-content: flex-end; gap: 8px; text-align: right; }
+.pp-referral-invite-reward { padding: 7px 9px; border: 1px solid #ffad7040; border-radius: 8px; color: #ffbd88; background: #ff7b000d; font-size: 11px; font-weight: 750; white-space: nowrap; }
+.pp-referral-invite-state { padding: 7px 8px; border: 1px solid #ffffff18; border-radius: 8px; color: #bdc7d4; background: #ffffff08; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.pp-referral-invite[data-status="completed"] .pp-referral-invite-reward { border-color: #4ade8050; color: #78efae; background: #4ade8010; }
+.pp-referral-invite[data-status="completed"] .pp-referral-invite-state { border-color: #4ade8040; color: #8af2b9; background: #4ade8014; }
 .pp-referral-invite-empty { padding: 18px; border: 1px dashed #ffffff14; border-radius: 12px; color: #8f9bad; font-size: 12px; text-align: center; }
 .pp-referral-order { margin-top: 18px; padding: 20px; border: 1px solid #65d99a32; border-radius: 15px; background: radial-gradient(circle at 0 0,#65d99a0b,transparent 34%),#080d14a3; }
 .pp-referral-order-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
