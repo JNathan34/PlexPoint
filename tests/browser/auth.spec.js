@@ -235,8 +235,8 @@ test("members can share a referral and review a referred friend order in three c
   await expect(page.locator("#referral-redeem-status")).toContainText("added directly");
   await expect(page.locator("#referral-heading")).toHaveText("Invite friends to PlexPoint");
   await expect(page.locator("#referral-how-heading")).toHaveCount(0);
-  await expect(page.locator(".pp-referral-share .pp-referral-how")).toHaveCount(1);
-  await expect(page.locator(".pp-referral-how li")).toHaveCount(4);
+  await expect(page.locator(".pp-referral-share .pp-referral-timeline")).toHaveCount(1);
+  await expect(page.locator(".pp-referral-timeline li")).toHaveCount(4);
   const referralIconEffects = await page.locator(".pp-referral-icon, .pp-referral-heading-icon, .pp-referral-stat-icon").evaluateAll((icons) => icons.map((icon) => {
     const style = getComputedStyle(icon);
     const glyphStyle = getComputedStyle(icon.querySelector(".pp-icon"));
@@ -274,7 +274,7 @@ test("members can share a referral and review a referred friend order in three c
       ".pp-referral-history-heading > small",
     ].map((selector) => Number.parseFloat(getComputedStyle(panel.querySelector(selector)).fontSize))),
     overviewColumns: getComputedStyle(panel.querySelector(".pp-referral-overview")).gridTemplateColumns.split(" ").length,
-    howColumns: getComputedStyle(panel.querySelector(".pp-referral-how ol")).gridTemplateColumns.split(" ").length,
+    timelineColumns: getComputedStyle(panel.querySelector(".pp-referral-timeline ol")).gridTemplateColumns.split(" ").length,
     overviewCardHeights: [".pp-referral-share", ".pp-referral-rewards"].map((selector) => panel.querySelector(selector).getBoundingClientRect().height),
     headingSize: Number.parseFloat(getComputedStyle(panel.querySelector(".pp-referral-heading h2")).fontSize),
     headingWeight: getComputedStyle(panel.querySelector(".pp-referral-heading h2")).fontWeight,
@@ -284,7 +284,7 @@ test("members can share a referral and review a referred friend order in three c
   }));
   expect(referralPolish.smallestHelperText).toBeGreaterThanOrEqual(10);
   expect(referralPolish.overviewColumns).toBe(2);
-  expect(referralPolish.howColumns).toBe(4);
+  expect(referralPolish.timelineColumns).toBe(4);
   expect(Math.abs(referralPolish.overviewCardHeights[0] - referralPolish.overviewCardHeights[1])).toBeLessThan(1);
   expect(referralPolish.headingSize).toBeLessThanOrEqual(34);
   expect(referralPolish.headingWeight).toBe("700");

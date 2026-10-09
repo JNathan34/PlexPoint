@@ -395,14 +395,13 @@
 .pp-referral-redemption-controls input { width: 100%; min-height: 40px; padding: 7px 9px; font-size: 13px; text-align: center; background: #070c13b8; }
 .pp-referral-redemption-controls .pp-button { grid-column: 1 / -1; min-height: 41px; padding-inline: 16px; white-space: nowrap; }
 .pp-referral-how { margin-top: 18px; }
-.pp-referral-how-inline { margin-top: 22px; padding: 17px 0 0; border: 0; border-top: 1px solid #ffffff12; border-radius: 0; background: transparent !important; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
-.pp-referral-share .pp-referral-how-inline ol { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 0; margin: 0; padding: 0; list-style: none; counter-reset: none; }
-.pp-referral-share .pp-referral-how-inline li { position: relative; display: grid; grid-template-columns: 1fr; grid-template-rows: 30px auto; justify-items: center; align-items: start; gap: 7px; min-width: 0; min-height: 51px; padding: 0; border: 0; border-radius: 0; background: transparent; counter-increment: none; text-align: center; }
-.pp-referral-share .pp-referral-how-inline li::before { content: none; }
-.pp-referral-share .pp-referral-how-inline li:not(:last-child)::after { content: ""; position: absolute; z-index: 0; top: 15px; left: calc(50% + 18px); right: calc(-50% + 18px); display: block; height: 1px; background: linear-gradient(90deg,#ff8b2b88,#ffffff1f); }
-.pp-referral-share .pp-referral-how-inline li .pp-referral-icon { position: relative; z-index: 1; width: 30px; height: 30px; }
-.pp-referral-share .pp-referral-how-inline li .pp-referral-icon .pp-icon { width: 22px; height: 22px; }
-.pp-referral-share .pp-referral-how-inline li strong { position: relative; z-index: 1; color: #eef2f7; font-size: 12px; font-weight: 700; line-height: 1.15; white-space: nowrap; }
+.pp-referral-timeline { margin-top: 22px; padding: 17px 0 0; border-top: 1px solid #ffffff12; }
+.pp-referral-timeline ol { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 0; margin: 0; padding: 0; list-style: none; }
+.pp-referral-timeline li { position: relative; display: grid; grid-template-columns: 1fr; grid-template-rows: 30px auto; justify-items: center; align-items: start; gap: 7px; min-width: 0; min-height: 51px; padding: 0; text-align: center; }
+.pp-referral-timeline li:not(:last-child)::after { content: ""; position: absolute; z-index: 0; top: 15px; left: calc(50% + 18px); right: calc(-50% + 18px); height: 1px; background: linear-gradient(90deg,#ff8b2b88,#ffffff1f); }
+.pp-referral-timeline li .pp-referral-icon { position: relative; z-index: 1; width: 30px; height: 30px; }
+.pp-referral-timeline li .pp-referral-icon .pp-icon { width: 22px; height: 22px; }
+.pp-referral-timeline li strong { position: relative; z-index: 1; color: #eef2f7; font-size: 12px; font-weight: 700; line-height: 1.15; white-space: nowrap; }
 .pp-referral-how ol { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin: 19px 0 0; padding: 0; list-style: none; counter-reset: referral-step; }
 .pp-referral-how li { position: relative; display: grid; grid-template-columns: 34px minmax(0,1fr); align-items: center; gap: 11px; min-width: 0; min-height: 74px; padding: 12px; border: 1px solid #ffffff10; border-radius: 12px; background: #080d1570; counter-increment: referral-step; }
 .pp-referral-how li::before { content: counter(referral-step); position: absolute; top: 8px; right: 9px; color: #ffac68; font-size: 11px; font-weight: 800; }
@@ -618,7 +617,7 @@
   .pp-referral-overview { grid-template-columns: 1fr; }
   .pp-referral-how ol { grid-template-columns: repeat(2,minmax(0,1fr)); row-gap: 18px; }
   .pp-referral-how li:nth-child(2)::after { display: none; }
-  .pp-referral-share .pp-referral-how-inline li:not(:last-child)::after { display: none; }
+  .pp-referral-timeline li:not(:last-child)::after { display: none; }
 }
 @media (max-width: 767px) {
   .pp-site-header { padding-block: 10px; }
@@ -733,13 +732,13 @@
   .pp-referral-reward-stats article span:not(.pp-referral-stat-icon) { font-size: 10px; }
   .pp-referral-reward-stats article strong { font-size: 21px; }
   .pp-referral-how, .pp-referral-history { margin-top: 12px; }
-  .pp-referral-how-inline { margin-top: 17px; padding: 14px 0 0; }
-  .pp-referral-share .pp-referral-how-inline ol { grid-template-columns: 1fr 1fr; gap: 14px 8px; }
+  .pp-referral-timeline { margin-top: 17px; padding: 14px 0 0; }
+  .pp-referral-timeline ol { grid-template-columns: 1fr 1fr; gap: 14px 8px; }
   .pp-referral-how li:not(:last-child)::after { display: none; }
-  .pp-referral-share .pp-referral-how-inline li { grid-template-columns: 28px minmax(0,1fr); grid-template-rows: none; justify-items: start; align-items: center; gap: 7px; min-height: 30px; padding: 0; text-align: left; }
-  .pp-referral-share .pp-referral-how-inline li .pp-referral-icon { width: 28px; height: 28px; }
-  .pp-referral-share .pp-referral-how-inline li .pp-referral-icon .pp-icon { width: 20px; height: 20px; }
-  .pp-referral-share .pp-referral-how-inline li strong { font-size: 11px; white-space: normal; }
+  .pp-referral-timeline li { grid-template-columns: 28px minmax(0,1fr); grid-template-rows: none; justify-items: start; align-items: center; gap: 7px; min-height: 30px; padding: 0; text-align: left; }
+  .pp-referral-timeline li .pp-referral-icon { width: 28px; height: 28px; }
+  .pp-referral-timeline li .pp-referral-icon .pp-icon { width: 20px; height: 20px; }
+  .pp-referral-timeline li strong { font-size: 11px; white-space: normal; }
   .pp-referral-extras { grid-template-columns: 1fr; }
   .pp-referral-redemption-controls { grid-template-columns: 1fr 1fr; min-width: 0; }
   .pp-referral-redemption-controls .pp-button { grid-column: 1 / -1; }
