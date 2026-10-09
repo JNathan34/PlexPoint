@@ -23,8 +23,8 @@
     <link rel="prefetch" href="/" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/index-GJ5txONd.css" />
-    <link rel="stylesheet" href="/assets/portal.css?v=20261009-referral-simplify-1" />
-    <script type="module" src="/assets/portal-auth.js?v=20261009-referral-simplify-1"></script>
+    <link rel="stylesheet" href="/assets/portal.css?v=20261009-referral-simplify-2" />
+    <script type="module" src="/assets/portal-auth.js?v=20261009-referral-simplify-2"></script>
     <script type="module" src="/assets/portal-navigation.js?v=20260918-dashboard-3"></script>
     <script type="module" src="/assets/portal.js?v=20260929-referral-layout-1"></script>
   </head>
@@ -108,12 +108,11 @@
                       <div class="pp-referral-link-row"><input id="referral-link" readonly /><button id="referral-copy" class="pp-button pp-button-primary" type="button"><span data-icon="copy" aria-hidden="true"></span>Copy link</button></div>
                     </section>
                     <section class="pp-referral-rewards" aria-label="Earned referral credits">
-                      <div class="pp-referral-card-heading"><span class="pp-referral-icon" data-icon="gift" aria-hidden="true"></span><div><h3>Your rewards</h3><p>Credits ready to use on requests.</p></div><div class="pp-referral-total"><strong id="referral-progress-count">0/5</strong><span>friends rewarded</span></div></div>
+                      <div class="pp-referral-card-heading"><span class="pp-referral-icon" data-icon="gift" aria-hidden="true"></span><h3>Your rewards</h3><div class="pp-referral-total"><strong id="referral-progress-count">0/5</strong></div></div>
                       <div id="referral-progress-track" class="pp-referral-progress" role="progressbar" aria-label="Friends rewarded" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><span></span></div>
                       <div class="pp-referral-reward-stats"><article><span class="pp-referral-stat-icon" data-icon="film" aria-hidden="true"></span><div><span>Movie requests</span><strong id="referral-movie-total">0</strong></div></article><article><span class="pp-referral-stat-icon" data-icon="layers" aria-hidden="true"></span><div><span>Season requests</span><strong id="referral-season-total">0</strong></div></article></div>
-                      <small>Invite up to 5 friends to earn up to 10 movies and 7 seasons.</small>
                       <details id="referral-redemption" class="pp-referral-redemption" data-empty="true">
-                        <summary><span>Use available credits</span><small id="referral-redeem-summary">0 available</small></summary>
+                        <summary><span>Use credits</span></summary>
                         <div class="pp-referral-redemption-body"><p id="referral-redeem-status" class="pp-small" role="status"></p><div class="pp-referral-redemption-controls"><label for="referral-redeem-movies"><span>Movies <small id="referral-movie-available">0 available</small></span><input id="referral-redeem-movies" type="number" min="0" max="0" step="1" value="0" inputmode="numeric" /></label><label for="referral-redeem-seasons"><span>Seasons <small id="referral-season-available">0 available</small></span><input id="referral-redeem-seasons" type="number" min="0" max="0" step="1" value="0" inputmode="numeric" /></label><button id="referral-redeem" class="pp-button pp-button-primary" type="button">Add to account</button></div></div>
                       </details>
                     </section>

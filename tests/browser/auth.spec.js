@@ -268,8 +268,7 @@ test("members can share a referral and review a referred friend order in three c
   await page.setViewportSize({ width: 1280, height: 720 });
   const referralPolish = await page.locator("#referral-panel").evaluate((panel) => ({
     smallestHelperText: Math.min(...[
-      ".pp-referral-total span", ".pp-referral-card-heading p",
-      ".pp-referral-reward-stats article span:not(.pp-referral-stat-icon)", ".pp-referral-rewards > small",
+      ".pp-referral-reward-stats article span:not(.pp-referral-stat-icon)",
       ".pp-referral-redemption-body > p", ".pp-referral-redemption-controls label small",
       ".pp-referral-history-heading > small",
     ].map((selector) => Number.parseFloat(getComputedStyle(panel.querySelector(selector)).fontSize))),

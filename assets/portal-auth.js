@@ -533,10 +533,6 @@ function renderReferrals(data) {
   byId("referral-redemption").dataset.empty = String(!referralRedeemEnabled);
   byId("referral-movie-available").textContent = `${movieCredits} available`;
   byId("referral-season-available").textContent = `${seasonCredits} available`;
-  byId("referral-redeem-summary").textContent = [
-    movieCredits ? `${movieCredits} movie${movieCredits === 1 ? "" : "s"}` : "",
-    seasonCredits ? `${seasonCredits} season${seasonCredits === 1 ? "" : "s"}` : "",
-  ].filter(Boolean).join(" · ") || "0 available";
   byId("referral-redeem-status").textContent = referralRedeemEnabled
     ? "Credits are added directly to your request-service allowance. Unused credits stay here until you redeem them."
     : "No unredeemed referral credits yet. Earn credits when a referred member completes their first payment.";
