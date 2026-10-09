@@ -275,6 +275,7 @@ test("members can share a referral and review a referred friend order in three c
     ].map((selector) => Number.parseFloat(getComputedStyle(panel.querySelector(selector)).fontSize))),
     overviewColumns: getComputedStyle(panel.querySelector(".pp-referral-overview")).gridTemplateColumns.split(" ").length,
     howColumns: getComputedStyle(panel.querySelector(".pp-referral-how ol")).gridTemplateColumns.split(" ").length,
+    overviewCardHeights: [".pp-referral-share", ".pp-referral-rewards"].map((selector) => panel.querySelector(selector).getBoundingClientRect().height),
     headingSize: Number.parseFloat(getComputedStyle(panel.querySelector(".pp-referral-heading h2")).fontSize),
     headingWeight: getComputedStyle(panel.querySelector(".pp-referral-heading h2")).fontWeight,
     copyColor: getComputedStyle(panel.querySelector("#referral-copy")).color,
@@ -284,6 +285,7 @@ test("members can share a referral and review a referred friend order in three c
   expect(referralPolish.smallestHelperText).toBeGreaterThanOrEqual(10);
   expect(referralPolish.overviewColumns).toBe(2);
   expect(referralPolish.howColumns).toBe(4);
+  expect(Math.abs(referralPolish.overviewCardHeights[0] - referralPolish.overviewCardHeights[1])).toBeLessThan(1);
   expect(referralPolish.headingSize).toBeLessThanOrEqual(34);
   expect(referralPolish.headingWeight).toBe("700");
   expect(referralPolish.copyColor).toBe("rgb(255, 255, 255)");
