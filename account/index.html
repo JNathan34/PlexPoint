@@ -98,19 +98,20 @@
                 </section>
               </div>
               <section id="referral-panel" class="pp-card glass-card pp-referral-panel" aria-labelledby="referral-heading" hidden>
-                <div class="pp-referral-heading"><h2 id="referral-heading">Invite friends to <span>PlexPoint</span></h2><p>Give your friends access to great movies and shows. Earn request credits after their first confirmed payment.</p></div>
+                <div class="pp-referral-heading"><h2 id="referral-heading">Invite friends to <span>PlexPoint</span></h2><p><span class="pp-referral-heading-icon" data-icon="gift" aria-hidden="true"></span>Share your link. When they pay, you get request credits.</p></div>
                 <p id="referral-status" class="pp-small" role="status"></p>
                 <div id="referral-content" hidden>
                   <div class="pp-referral-overview">
                     <section class="pp-referral-share" aria-labelledby="referral-share-heading">
-                      <div class="pp-referral-card-heading"><span class="pp-referral-icon" data-icon="link" aria-hidden="true"></span><div><h3 id="referral-share-heading">Your invite link</h3><p>Share this link with your friends. They’ll use it to create their PlexPoint account.</p></div></div>
+                      <div class="pp-referral-card-heading"><span class="pp-referral-icon" data-icon="link" aria-hidden="true"></span><div><h3 id="referral-share-heading">Send your invite</h3><p>Copy your personal link and send it to a friend.</p></div></div>
                       <label class="pp-sr-only" for="referral-link">Personal invite link</label>
                       <div class="pp-referral-link-row"><input id="referral-link" readonly /><button id="referral-copy" class="pp-button pp-button-primary" type="button"><span data-icon="copy" aria-hidden="true"></span>Copy link</button></div>
                     </section>
                     <section class="pp-referral-rewards" aria-label="Earned referral credits">
-                      <div class="pp-referral-card-heading"><span class="pp-referral-icon" data-icon="gift" aria-hidden="true"></span><h3>Your rewards</h3><div class="pp-referral-total"><strong id="referral-progress-count">0/5</strong><span>friends rewarded</span></div></div>
+                      <div class="pp-referral-card-heading"><span class="pp-referral-icon" data-icon="gift" aria-hidden="true"></span><div><h3>Your rewards</h3><p>Credits ready to use on requests.</p></div><div class="pp-referral-total"><strong id="referral-progress-count">0/5</strong><span>friends rewarded</span></div></div>
+                      <div id="referral-progress-track" class="pp-referral-progress" role="progressbar" aria-label="Friends rewarded" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><span></span></div>
                       <div class="pp-referral-reward-stats"><article><span class="pp-referral-stat-icon" data-icon="film" aria-hidden="true"></span><div><span>Movie requests</span><strong id="referral-movie-total">0</strong></div></article><article><span class="pp-referral-stat-icon" data-icon="layers" aria-hidden="true"></span><div><span>Season requests</span><strong id="referral-season-total">0</strong></div></article></div>
-                      <small>You can earn up to 7 season and 10 movie requests from five friends.</small>
+                      <small>Invite up to 5 friends to earn up to 10 movies and 7 seasons.</small>
                       <details id="referral-redemption" class="pp-referral-redemption" data-empty="true">
                         <summary><span>Use available credits</span><small id="referral-redeem-summary">0 available</small></summary>
                         <div class="pp-referral-redemption-body"><p id="referral-redeem-status" class="pp-small" role="status"></p><div class="pp-referral-redemption-controls"><label for="referral-redeem-movies"><span>Movies <small id="referral-movie-available">0 available</small></span><input id="referral-redeem-movies" type="number" min="0" max="0" step="1" value="0" inputmode="numeric" /></label><label for="referral-redeem-seasons"><span>Seasons <small id="referral-season-available">0 available</small></span><input id="referral-redeem-seasons" type="number" min="0" max="0" step="1" value="0" inputmode="numeric" /></label><button id="referral-redeem" class="pp-button pp-button-primary" type="button">Add to account</button></div></div>
@@ -120,10 +121,10 @@
                   <section class="pp-referral-how" aria-labelledby="referral-how-heading">
                     <div class="pp-referral-section-heading"><span class="pp-referral-heading-icon" data-icon="info" aria-hidden="true"></span><h3 id="referral-how-heading">How it works</h3></div>
                     <ol>
-                      <li><span class="pp-referral-icon" data-icon="link" aria-hidden="true"></span><div><strong>Share your link</strong><small>Send your invite link to friends.</small></div></li>
-                      <li><span class="pp-referral-icon" data-icon="membership" aria-hidden="true"></span><div><strong>They sign up</strong><small>Your friend creates a PlexPoint account.</small></div></li>
-                      <li><span class="pp-referral-icon" data-icon="payment" aria-hidden="true"></span><div><strong>First payment</strong><small>They purchase a membership.</small></div></li>
-                      <li><span class="pp-referral-icon" data-icon="gift" aria-hidden="true"></span><div><strong>You get credits</strong><small>Movie and season credits are added to your account.</small></div></li>
+                      <li><span class="pp-referral-icon" data-icon="link" aria-hidden="true"></span><div><strong>Share</strong><small>Send your link</small></div></li>
+                      <li><span class="pp-referral-icon" data-icon="membership" aria-hidden="true"></span><div><strong>Join</strong><small>They create an account</small></div></li>
+                      <li><span class="pp-referral-icon" data-icon="payment" aria-hidden="true"></span><div><strong>Pay</strong><small>They start a membership</small></div></li>
+                      <li><span class="pp-referral-icon" data-icon="gift" aria-hidden="true"></span><div><strong>Earn</strong><small>Credits are added</small></div></li>
                     </ol>
                   </section>
                   <section id="referral-history" class="pp-referral-history" aria-labelledby="referral-history-heading"><div class="pp-referral-history-heading"><div class="pp-referral-section-heading"><span class="pp-referral-heading-icon" data-icon="clock" aria-hidden="true"></span><h3 id="referral-history-heading">Recent invites</h3></div><small id="referral-history-summary">No invites yet</small></div><div id="referral-history-list"></div></section>

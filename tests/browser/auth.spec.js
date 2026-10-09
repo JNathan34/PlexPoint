@@ -222,6 +222,12 @@ test("members can share a referral and review a referred friend order in three c
   await expect(page.locator("#referral-panel")).toBeVisible();
   await expect(page.locator("#referral-link")).toHaveValue("https://plexpoint.uk/join/NEWFRIEND-123ABC");
   await expect(page.locator("#referral-progress-count")).toHaveText("2/5");
+  await expect(page.locator("#referral-progress-track")).toHaveAttribute("aria-valuenow", "2");
+  const referralProgressWidth = await page.locator("#referral-progress-track").evaluate((track) => {
+    const fill = track.querySelector("span");
+    return fill.getBoundingClientRect().width / track.getBoundingClientRect().width;
+  });
+  expect(referralProgressWidth).toBeCloseTo(.4, 2);
   await expect(page.locator("#referral-season-total")).toHaveText("2");
   await expect(page.locator("#referral-movie-total")).toHaveText("4");
   await expect(page.locator("#referral-movie-available")).toHaveText("4 available");

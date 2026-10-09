@@ -512,6 +512,12 @@ function renderReferrals(data) {
   byId("referral-status").textContent = "";
   byId("referral-link").value = data.dashboard.link;
   byId("referral-progress-count").textContent = `${data.dashboard.completed}/${data.dashboard.maximum}`;
+  const referralMaximum = Math.max(1, Number(data.dashboard.maximum) || 1);
+  const referralCompleted = Math.min(referralMaximum, Math.max(0, Number(data.dashboard.completed) || 0));
+  const referralProgress = byId("referral-progress-track");
+  referralProgress.style.setProperty("--referral-progress", `${(referralCompleted / referralMaximum) * 100}%`);
+  referralProgress.setAttribute("aria-valuemax", String(referralMaximum));
+  referralProgress.setAttribute("aria-valuenow", String(referralCompleted));
   byId("referral-season-total").textContent = String(data.dashboard.totals.seasons);
   byId("referral-movie-total").textContent = String(data.dashboard.totals.movies);
   const credits = data.dashboard.available || { movies: 0, seasons: 0 };
