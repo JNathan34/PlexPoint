@@ -5,7 +5,10 @@ const SESSION_SECONDS = 7 * 24 * 60 * 60;
 const ITERATIONS = 100000;
 const WINDOW_MS = 15 * 60 * 1000;
 const ADMIN_EMAIL = "jacobnathan1718@gmail.com";
-const SIMPLY_PAY_MANAGER_ORIGIN = "https://simply-pay.plexpoint.uk";
+const SIMPLY_PAY_MANAGER_ORIGINS = new Set([
+  "https://simply-pay.pages.dev",
+  "https://simply-pay.plexpoint.uk",
+]);
 const encoder = new TextEncoder();
 const hex = (bytes) => Array.from(new Uint8Array(bytes), (value) => value.toString(16).padStart(2, "0")).join("");
 const randomHex = (length) => hex(crypto.getRandomValues(new Uint8Array(length)));
@@ -20,8 +23,9 @@ function cookieName(request) {
 }
 
 function sessionCookie(request, token, seconds = SESSION_SECONDS) {
-  const secure = new URL(request.url).protocol === "https:" ? "; Secure" : "";
-  return `${cookieName(request)}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${seconds}${secure}`;
+  const secure = new URL(request.url).protocol === "https:";
+  const sameSite = secure ? "None" : "Lax";
+  return `${cookieName(request)}=${token}; Path=/; HttpOnly; SameSite=${sameSite}; Max-Age=${seconds}${secure ? "; Secure" : ""}`;
 }
 
 function readToken(request) {
@@ -38,9 +42,10 @@ function reply(data, status = 200, headers = {}) {
 }
 
 function managerCorsHeaders(request) {
-  if (request.headers.get("Origin") !== SIMPLY_PAY_MANAGER_ORIGIN) return {};
+  const origin = request.headers.get("Origin");
+  if (!SIMPLY_PAY_MANAGER_ORIGINS.has(origin)) return {};
   return {
-    "Access-Control-Allow-Origin": SIMPLY_PAY_MANAGER_ORIGIN,
+    "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Credentials": "true",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, X-PlexPoint-Request",
@@ -51,9 +56,9 @@ function managerCorsHeaders(request) {
 async function readBody(request, { allowManagerOrigin = false } = {}) {
   const url = new URL(request.url);
   const origin = request.headers.get("Origin");
-  const allowedManagerRequest = allowManagerOrigin && origin === SIMPLY_PAY_MANAGER_ORIGIN;
+  const allowedManagerRequest = allowManagerOrigin && SIMPLY_PAY_MANAGER_ORIGINS.has(origin);
   if ((origin !== url.origin && !allowedManagerRequest) || request.headers.get("X-PlexPoint-Request") !== "1"
-    || request.headers.get("Sec-Fetch-Site") === "cross-site") {
+    || (!allowedManagerRequest && request.headers.get("Sec-Fetch-Site") === "cross-site")) {
     throw new AuthError(403, "Please submit this form from My PlexPoint.");
   }
   if (request.headers.get("Content-Type")?.split(";")[0].trim().toLowerCase() !== "application/json") {

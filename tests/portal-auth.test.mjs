@@ -50,7 +50,7 @@ test("registration normalizes email, persists hashes, and creates no privileges 
   const response = await call("register", { ...details, email: " FAN@EXAMPLE.TEST ", role: "admin", account_status: "disabled" });
   assert.equal(response.status, 201);
   assert.equal(response.headers.get("Cache-Control"), "no-store");
-  assert.match(response.headers.get("Set-Cookie"), /^__Host-plexpoint_session=[a-f0-9]{64}; Path=\/; HttpOnly; SameSite=Lax; Max-Age=604800; Secure$/);
+  assert.match(response.headers.get("Set-Cookie"), /^__Host-plexpoint_session=[a-f0-9]{64}; Path=\/; HttpOnly; SameSite=None; Max-Age=604800; Secure$/);
   const data = await response.json();
   assert.deepEqual(Object.keys(data.user).sort(), ["createdAt", "displayName", "email", "id"]);
   assert.equal(data.user.email, "fan@example.test");
