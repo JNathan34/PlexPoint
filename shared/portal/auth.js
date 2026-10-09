@@ -29,6 +29,8 @@ function sessionCookie(request, token, seconds = SESSION_SECONDS) {
 }
 
 function readToken(request) {
+  const managerToken = request.headers.get("X-PlexPoint-Manager-Session") || "";
+  if (isManagerOrigin(request.headers.get("Origin")) && /^[a-f0-9]{64}$/.test(managerToken)) return managerToken;
   const prefix = `${cookieName(request)}=`;
   const matches = (request.headers.get("Cookie") || "").split(";").map((part) => part.trim()).filter((part) => part.startsWith(prefix));
   const token = matches.length === 1 ? matches[0].slice(prefix.length) : "";
@@ -53,7 +55,7 @@ function managerCorsHeaders(request) {
     "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Credentials": "true",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, X-PlexPoint-Request",
+    "Access-Control-Allow-Headers": "Content-Type, X-PlexPoint-Request, X-PlexPoint-Manager-Session",
     "Vary": "Cookie, Origin",
   };
 }

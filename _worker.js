@@ -60,7 +60,7 @@ function notImplementedClass(name) {
 }
 var init_utils = __esm({
   "../node_modules/unenv/dist/runtime/_internal/utils.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -74,7 +74,7 @@ var init_utils = __esm({
 var _timeOrigin, _performanceNow, nodeTiming, PerformanceEntry, PerformanceMark, PerformanceMeasure, PerformanceResourceTiming, PerformanceObserverEntryList, Performance, PerformanceObserver, performance;
 var init_performance = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -321,7 +321,7 @@ var init_performance = __esm({
 // ../node_modules/unenv/dist/runtime/node/perf_hooks.mjs
 var init_perf_hooks = __esm({
   "../node_modules/unenv/dist/runtime/node/perf_hooks.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -359,7 +359,7 @@ var init_performance2 = __esm({
 var noop_default;
 var init_noop = __esm({
   "../node_modules/unenv/dist/runtime/mock/noop.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -373,7 +373,7 @@ import { Writable } from "node:stream";
 var _console, _ignoreErrors, _stderr, _stdout, log, info, trace, debug, table, error, warn, createTask, clear, count, countReset, dir, dirxml, group, groupEnd, groupCollapsed, profile, profileEnd, time, timeEnd, timeLog, timeStamp, Console, _times, _stdoutErrorHandler, _stderrErrorHandler;
 var init_console = __esm({
   "../node_modules/unenv/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -416,7 +416,7 @@ var init_console = __esm({
 var workerdConsole, assert, clear2, context, count2, countReset2, createTask2, debug2, dir2, dirxml2, error2, group2, groupCollapsed2, groupEnd2, info2, log2, profile2, profileEnd2, table2, time2, timeEnd2, timeLog2, timeStamp2, trace2, warn2, console_default;
 var init_console2 = __esm({
   "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -479,7 +479,7 @@ var init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console = __
 var hrtime;
 var init_hrtime = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -507,7 +507,7 @@ var init_hrtime = __esm({
 var ReadStream;
 var init_read_stream = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -533,7 +533,7 @@ var init_read_stream = __esm({
 var WriteStream;
 var init_write_stream = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -591,7 +591,7 @@ var init_write_stream = __esm({
 // ../node_modules/unenv/dist/runtime/node/tty.mjs
 var init_tty = __esm({
   "../node_modules/unenv/dist/runtime/node/tty.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -604,7 +604,7 @@ var init_tty = __esm({
 var NODE_VERSION;
 var init_node_version = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/node-version.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -617,7 +617,7 @@ import { EventEmitter } from "node:events";
 var Process;
 var init_process = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/process.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -864,7 +864,7 @@ var init_process = __esm({
 var globalProcess, getBuiltinModule, workerdProcess, unenvProcess, exit, features, platform, _channel, _debugEnd, _debugProcess, _disconnect, _events, _eventsCount, _exiting, _fatalException, _getActiveHandles, _getActiveRequests, _handleQueue, _kill, _linkedBinding, _maxListeners, _pendingMessage, _preload_modules, _rawDebug, _send, _startProfilerIdleNotifier, _stopProfilerIdleNotifier, _tickCallback, abort, addListener, allowedNodeEnvironmentFlags, arch, argv, argv0, assert2, availableMemory, binding, channel, chdir, config, connected, constrainedMemory, cpuUsage, cwd, debugPort, disconnect, dlopen, domain, emit, emitWarning, env, eventNames, execArgv, execPath, exitCode, finalization, getActiveResourcesInfo, getegid, geteuid, getgid, getgroups, getMaxListeners, getuid, hasUncaughtExceptionCaptureCallback, hrtime3, initgroups, kill, listenerCount, listeners, loadEnvFile, mainModule, memoryUsage, moduleLoadList, nextTick, off, on, once, openStdin, permission, pid, ppid, prependListener, prependOnceListener, rawListeners, reallyExit, ref, release, removeAllListeners, removeListener, report, resourceUsage, send, setegid, seteuid, setgid, setgroups, setMaxListeners, setSourceMapsEnabled, setuid, setUncaughtExceptionCaptureCallback, sourceMapsEnabled, stderr, stdin, stdout, throwDeprecation, title, traceDeprecation, umask, unref, uptime, version, versions, _process, process_default;
 var init_process2 = __esm({
   "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1143,7 +1143,7 @@ async function newAccountReferralStatements(db, request, user, now) {
 var REFERRAL_COOKIE_SECONDS;
 var init_referral_core = __esm({
   "../shared/portal/referral-core.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1166,6 +1166,8 @@ function sessionCookie(request, token, seconds = SESSION_SECONDS) {
   return `${cookieName(request)}=${token}; Path=/; HttpOnly; SameSite=${sameSite}; Max-Age=${seconds}${secure ? "; Secure" : ""}`;
 }
 function readToken(request) {
+  const managerToken = request.headers.get("X-PlexPoint-Manager-Session") || "";
+  if (isManagerOrigin(request.headers.get("Origin")) && /^[a-f0-9]{64}$/.test(managerToken)) return managerToken;
   const prefix = `${cookieName(request)}=`;
   const matches = (request.headers.get("Cookie") || "").split(";").map((part) => part.trim()).filter((part) => part.startsWith(prefix));
   const token = matches.length === 1 ? matches[0].slice(prefix.length) : "";
@@ -1190,7 +1192,7 @@ function managerCorsHeaders(request) {
     "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Credentials": "true",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, X-PlexPoint-Request",
+    "Access-Control-Allow-Headers": "Content-Type, X-PlexPoint-Request, X-PlexPoint-Manager-Session",
     "Vary": "Cookie, Origin"
   };
 }
@@ -1412,7 +1414,7 @@ async function authResponse(request, env2, action) {
 var SESSION_SECONDS, ITERATIONS, WINDOW_MS, ADMIN_EMAIL, SIMPLY_PAY_MANAGER_ORIGINS, encoder, hex, randomHex, digest, AuthError;
 var init_auth = __esm({
   "../shared/portal/auth.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1915,7 +1917,7 @@ async function avatarResponse(request, env2, fetcher = fetch) {
 var DEFAULT_OVERSEERR_URL, MAX_JSON_BYTES, MAX_AVATAR_BYTES, USER_PAGE_SIZE, MAX_USER_PAGES, normalized;
 var init_overseerr = __esm({
   "../shared/portal/overseerr.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2314,7 +2316,7 @@ async function referralLandingResponse(request, env2, code) {
 var WHATSAPP_NUMBER, MAX_REFERRALS, REWARDS;
 var init_referrals = __esm({
   "../shared/portal/referrals.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2878,7 +2880,7 @@ async function adminBillingResponse(request, env2) {
 var DAY_MS, ACCESS_STATUSES, PAYMENT_METHODS;
 var init_billing = __esm({
   "../shared/portal/billing.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2915,7 +2917,7 @@ async function onRequest({ request, env: env2 }) {
 }
 var init_billing2 = __esm({
   "api/portal/admin/billing.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2930,7 +2932,7 @@ async function onRequest2({ request, env: env2 }) {
 }
 var init_referrals2 = __esm({
   "api/portal/admin/referrals.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2945,7 +2947,7 @@ async function onRequest3({ request, env: env2 }) {
 }
 var init_request_credits = __esm({
   "api/portal/admin/request-credits.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3067,7 +3069,7 @@ async function adminUsersResponse(request, env2) {
 }
 var init_admin = __esm({
   "../shared/portal/admin.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3084,7 +3086,7 @@ async function onRequest4({ request, env: env2 }) {
 }
 var init_users = __esm({
   "api/portal/admin/users.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3099,7 +3101,7 @@ async function onRequest5({ request, env: env2, params }) {
 }
 var init_action = __esm({
   "api/portal/auth/[action].js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3174,6 +3176,15 @@ function returnUrl(request, body) {
   }
   return new URL("/account/?plex=return#account", request.url);
 }
+function managerReturnUrl(request, body) {
+  if (typeof body?.returnTo !== "string") return null;
+  try {
+    const candidate = new URL(body.returnTo);
+    if (isManagerOrigin(candidate.origin) && candidate.pathname === "/" && !candidate.username && !candidate.password) return candidate;
+  } catch {
+  }
+  return null;
+}
 async function start(request, db, fetcher, body) {
   const now = Date.now();
   await rateLimit(db, request, "plex-start", null, now);
@@ -3200,7 +3211,8 @@ async function start(request, db, fetcher, body) {
       expiresAt
     )
   ]);
-  const forward = returnUrl(request, body);
+  const managerReturn = managerReturnUrl(request, body);
+  const forward = managerReturn ? new URL(`/api/portal/plex/return?returnTo=${encodeURIComponent(managerReturn.href)}`, request.url) : returnUrl(request, body);
   const query = new URLSearchParams({ clientID: clientId, code: pin.code, "context[device][product]": "PlexPoint", forwardUrl: forward.href });
   return reply(
     { authorizationUrl: `https://app.plex.tv/auth#?${query}`, expiresAt },
@@ -3225,7 +3237,7 @@ function profileIdentity(profile3) {
   }
   return { id, username, email, avatarUrl };
 }
-async function complete(request, db, fetcher) {
+async function complete(request, db, fetcher, { handoff = false } = {}) {
   const state = readState(request);
   if (!state) throw expired();
   const stateHash = await digest(state);
@@ -3281,7 +3293,7 @@ async function complete(request, db, fetcher) {
     throw new AuthError(409, "The account could not be connected. Please start sign-in again or contact support.");
   }
   const response = reply(
-    { user: publicUser({ ...row, plex_username: profile3.username, plex_avatar_url: profile3.avatarUrl }, true) },
+    { user: publicUser({ ...row, plex_username: profile3.username, plex_avatar_url: profile3.avatarUrl }, true), ...handoff ? { managerSession: session.token } : {} },
     200,
     { "Set-Cookie": sessionCookie(request, session.token) }
   );
@@ -3294,11 +3306,25 @@ async function plexAuthResponse(request, env2, action, fetcher = fetch) {
   try {
     const url = new URL(request.url);
     if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) throw new AuthError(400, "Account access requires HTTPS.");
+    if (!env2.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
+    const requestedReturn = url.searchParams.get("returnTo") || "";
+    if (action === "start" && request.method === "GET" && managerReturnUrl(request, { returnTo: requestedReturn })) {
+      const result = await start(request, env2.PORTAL_DB, fetcher, { returnTo: requestedReturn });
+      const data = await result.clone().json();
+      return new Response(null, { status: 302, headers: { Location: data.authorizationUrl, "Set-Cookie": result.headers.get("Set-Cookie"), "Cache-Control": "no-store" } });
+    }
+    if (action === "return" && request.method === "GET") {
+      const destination = managerReturnUrl(request, { returnTo: url.searchParams.get("returnTo") || "" });
+      if (!destination) throw new AuthError(400, "Invalid manager return address.");
+      const completed = await complete(request, env2.PORTAL_DB, fetcher, { handoff: true });
+      const data = await completed.clone().json();
+      destination.hash = `manager_session=${data.managerSession}`;
+      return new Response(null, { status: 302, headers: { Location: destination.href, "Set-Cookie": completed.headers.get("Set-Cookie"), "Cache-Control": "no-store", "Referrer-Policy": "no-referrer" } });
+    }
     if (!["start", "complete", "cancel"].includes(action)) throw new AuthError(404, "Not found.");
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     if (request.method !== "POST") return reply({ message: "Method not allowed." }, 405, { Allow: "POST", ...cors });
     const body = await readBody(request, { allowManagerOrigin: true });
-    if (!env2.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
     if (action === "start") return withHeaders(await start(request, env2.PORTAL_DB, fetcher, body), cors);
     if (action === "complete") return withHeaders(await complete(request, env2.PORTAL_DB, fetcher), cors);
     const state = readState(request);
@@ -3315,7 +3341,7 @@ async function plexAuthResponse(request, env2, action, fetcher = fetch) {
 var MAX_AGE;
 var init_plex_auth = __esm({
   "../shared/portal/plex-auth.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3328,6 +3354,7 @@ var init_plex_auth = __esm({
     __name(expired, "expired");
     __name(plexRequest, "plexRequest");
     __name(returnUrl, "returnUrl");
+    __name(managerReturnUrl, "managerReturnUrl");
     __name(start, "start");
     __name(profileIdentity, "profileIdentity");
     __name(complete, "complete");
@@ -3341,7 +3368,7 @@ async function onRequest6({ request, env: env2, params }) {
 }
 var init_action2 = __esm({
   "api/portal/plex/[action].js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3354,7 +3381,7 @@ var init_action2 = __esm({
 var require_util = __commonJS({
   "../node_modules/fast-xml-parser/src/util.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3432,7 +3459,7 @@ var require_util = __commonJS({
 var require_validator = __commonJS({
   "../node_modules/fast-xml-parser/src/validator.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3759,7 +3786,7 @@ var require_validator = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
 var require_OptionsBuilder = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"(exports) {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3892,7 +3919,7 @@ var require_OptionsBuilder = __commonJS({
 var require_xmlNode = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3925,7 +3952,7 @@ var require_xmlNode = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js
 var require_DocTypeReader = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js"(exports, module) {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4222,7 +4249,7 @@ var require_DocTypeReader = __commonJS({
 // ../node_modules/strnum/strnum.js
 var require_strnum = __commonJS({
   "../node_modules/strnum/strnum.js"(exports, module) {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4317,7 +4344,7 @@ var require_strnum = __commonJS({
 // ../node_modules/fast-xml-parser/src/ignoreAttributes.js
 var require_ignoreAttributes = __commonJS({
   "../node_modules/fast-xml-parser/src/ignoreAttributes.js"(exports, module) {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4348,7 +4375,7 @@ var require_ignoreAttributes = __commonJS({
 var require_OrderedObjParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4974,7 +5001,7 @@ var require_OrderedObjParser = __commonJS({
 var require_node2json = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/node2json.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5069,7 +5096,7 @@ var require_node2json = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js
 var require_XMLParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js"(exports, module) {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5134,7 +5161,7 @@ var require_XMLParser = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js
 var require_orderedJs2Xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js"(exports, module) {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5278,7 +5305,7 @@ var require_orderedJs2Xml = __commonJS({
 var require_json2xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5532,7 +5559,7 @@ var require_json2xml = __commonJS({
 var require_fxp = __commonJS({
   "../node_modules/fast-xml-parser/src/fxp.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6026,7 +6053,7 @@ async function getFeaturedCollection(env2, options = {}) {
 var import_fast_xml_parser, parser, cache, DEFAULT_PLEX_FETCH_TIMEOUT_MS, DEFAULT_LIBRARY_TITLES;
 var init_plex_client = __esm({
   "../shared/plex-client.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6146,7 +6173,7 @@ async function cachedJson(context2, options) {
 var PLEX_API_CACHE_VERSION;
 var init_pages = __esm({
   "_lib/pages.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6174,7 +6201,7 @@ async function onRequestGet(context2) {
 }
 var init_anime_movies = __esm({
   "api/plex/anime-movies.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6199,7 +6226,7 @@ async function onRequestGet2(context2) {
 }
 var init_anime_shows = __esm({
   "api/plex/anime-shows.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6222,7 +6249,7 @@ async function onRequestGet3(context2) {
 }
 var init_collections = __esm({
   "api/plex/collections.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6243,7 +6270,7 @@ async function onRequestGet4(context2) {
 }
 var init_counts = __esm({
   "api/plex/counts.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6274,7 +6301,7 @@ async function onRequestGet5(context2) {
 }
 var init_featured_collection = __esm({
   "api/plex/featured-collection.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6327,7 +6354,7 @@ async function onRequestGet6(context2) {
 }
 var init_image = __esm({
   "api/plex/image.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6352,7 +6379,7 @@ async function onRequestGet7(context2) {
 }
 var init_movies = __esm({
   "api/plex/movies.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6373,7 +6400,7 @@ async function onRequestGet8(context2) {
 }
 var init_sections = __esm({
   "api/plex/sections.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6398,7 +6425,7 @@ async function onRequestGet9(context2) {
 }
 var init_shows = __esm({
   "api/plex/shows.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6462,7 +6489,7 @@ async function onRequestGet10(context2) {
 }
 var init_status = __esm({
   "api/plex/status.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6491,7 +6518,7 @@ async function onRequestGet11(context2) {
 }
 var init_top_rated = __esm({
   "api/plex/top-rated.ts"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6505,7 +6532,7 @@ var init_top_rated = __esm({
 var defaultLinks, defaultArticles;
 var init_portal_content = __esm({
   "../assets/portal-content.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6597,7 +6624,7 @@ function normalizeContent(content) {
 }
 var init_portal_utils = __esm({
   "../assets/portal-utils.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6633,7 +6660,7 @@ async function publicContentResponse(env2) {
 var publicContentQueries;
 var init_content = __esm({
   "../shared/portal/content.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6654,7 +6681,7 @@ async function onRequestGet12(context2) {
 }
 var init_content2 = __esm({
   "api/portal/content.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6783,7 +6810,7 @@ async function activityResponse(request, env2, fetcher = fetch) {
 var DEFAULT_TAUTULLI_URL, ACTIVITY_RANGE, ACTIVITY_LABEL, count3, normalized2;
 var init_activity = __esm({
   "../shared/portal/activity.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6810,7 +6837,7 @@ async function onRequest7({ request, env: env2 }) {
 }
 var init_activity2 = __esm({
   "api/portal/activity.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6825,7 +6852,7 @@ async function onRequest8({ request, env: env2 }) {
 }
 var init_avatar = __esm({
   "api/portal/avatar.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6840,7 +6867,7 @@ async function onRequest9({ request, env: env2 }) {
 }
 var init_billing3 = __esm({
   "api/portal/billing.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6855,7 +6882,7 @@ async function onRequest10({ request, env: env2 }) {
 }
 var init_referrals3 = __esm({
   "api/portal/referrals.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6870,7 +6897,7 @@ async function onRequest11({ request, env: env2 }) {
 }
 var init_requests = __esm({
   "api/portal/requests.js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6885,7 +6912,7 @@ async function onRequest12({ request, env: env2, params }) {
 }
 var init_code = __esm({
   "join/[code].js"() {
-    init_functionsRoutes_0_9731769877087916();
+    init_functionsRoutes_0_2957362154177773();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6894,10 +6921,10 @@ var init_code = __esm({
   }
 });
 
-// ../.wrangler/tmp/pages-3NITq8/functionsRoutes-0.9731769877087916.mjs
+// ../.wrangler/tmp/pages-KvtJF3/functionsRoutes-0.2957362154177773.mjs
 var routes;
-var init_functionsRoutes_0_9731769877087916 = __esm({
-  "../.wrangler/tmp/pages-3NITq8/functionsRoutes-0.9731769877087916.mjs"() {
+var init_functionsRoutes_0_2957362154177773 = __esm({
+  "../.wrangler/tmp/pages-KvtJF3/functionsRoutes-0.2957362154177773.mjs"() {
     init_billing2();
     init_referrals2();
     init_request_credits();
@@ -7096,13 +7123,13 @@ var init_functionsRoutes_0_9731769877087916 = __esm({
 });
 
 // ../node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_9731769877087916();
+init_functionsRoutes_0_2957362154177773();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
 init_performance2();
 
 // ../node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_9731769877087916();
+init_functionsRoutes_0_2957362154177773();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
 init_performance2();

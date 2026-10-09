@@ -58,6 +58,15 @@ function returnUrl(request, body) {
   return new URL("/account/?plex=return#account", request.url);
 }
 
+function managerReturnUrl(request, body) {
+  if (typeof body?.returnTo !== "string") return null;
+  try {
+    const candidate = new URL(body.returnTo);
+    if (isManagerOrigin(candidate.origin) && candidate.pathname === "/" && !candidate.username && !candidate.password) return candidate;
+  } catch {}
+  return null;
+}
+
 async function start(request, db, fetcher, body) {
   const now = Date.now();
   await rateLimit(db, request, "plex-start", null, now);
@@ -78,7 +87,8 @@ async function start(request, db, fetcher, body) {
       VALUES (?, ?, ?, ?, ?, ?, ?)`).bind(await digest(state), pin.id, pin.code, clientId, current?.id || null,
       current ? await digest(readToken(request)) : null, expiresAt),
   ]);
-  const forward = returnUrl(request, body);
+  const managerReturn = managerReturnUrl(request, body);
+  const forward = managerReturn ? new URL(`/api/portal/plex/return?returnTo=${encodeURIComponent(managerReturn.href)}`, request.url) : returnUrl(request, body);
   const query = new URLSearchParams({ clientID: clientId, code: pin.code, "context[device][product]": "PlexPoint", forwardUrl: forward.href });
   return reply({ authorizationUrl: `https://app.plex.tv/auth#?${query}`, expiresAt }, 200,
     { "Set-Cookie": stateCookie(request, state, seconds) });
@@ -101,7 +111,7 @@ function profileIdentity(profile) {
   return { id, username, email, avatarUrl };
 }
 
-async function complete(request, db, fetcher) {
+async function complete(request, db, fetcher, { handoff = false } = {}) {
   const state = readState(request);
   if (!state) throw expired();
   const stateHash = await digest(state);
@@ -163,7 +173,7 @@ async function complete(request, db, fetcher) {
       .bind(profile.username, profile.id));
   try { await db.batch([...statements, ...session.statements]); }
   catch { throw new AuthError(409, "The account could not be connected. Please start sign-in again or contact support."); }
-  const response = reply({ user: publicUser({ ...row, plex_username: profile.username, plex_avatar_url: profile.avatarUrl }, true) }, 200,
+  const response = reply({ user: publicUser({ ...row, plex_username: profile.username, plex_avatar_url: profile.avatarUrl }, true), ...(handoff ? { managerSession: session.token } : {}) }, 200,
     { "Set-Cookie": sessionCookie(request, session.token) });
   response.headers.append("Set-Cookie", stateCookie(request, "", 0));
   if (isNewAccount && readReferralCode(request)) response.headers.append("Set-Cookie", referralCookie(request, "", 0));
@@ -175,11 +185,25 @@ export async function plexAuthResponse(request, env, action, fetcher = fetch) {
   try {
     const url = new URL(request.url);
     if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) throw new AuthError(400, "Account access requires HTTPS.");
+    if (!env.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
+    const requestedReturn = url.searchParams.get("returnTo") || "";
+    if (action === "start" && request.method === "GET" && managerReturnUrl(request, { returnTo: requestedReturn })) {
+      const result = await start(request, env.PORTAL_DB, fetcher, { returnTo: requestedReturn });
+      const data = await result.clone().json();
+      return new Response(null, { status: 302, headers: { Location: data.authorizationUrl, "Set-Cookie": result.headers.get("Set-Cookie"), "Cache-Control": "no-store" } });
+    }
+    if (action === "return" && request.method === "GET") {
+      const destination = managerReturnUrl(request, { returnTo: url.searchParams.get("returnTo") || "" });
+      if (!destination) throw new AuthError(400, "Invalid manager return address.");
+      const completed = await complete(request, env.PORTAL_DB, fetcher, { handoff: true });
+      const data = await completed.clone().json();
+      destination.hash = `manager_session=${data.managerSession}`;
+      return new Response(null, { status: 302, headers: { Location: destination.href, "Set-Cookie": completed.headers.get("Set-Cookie"), "Cache-Control": "no-store", "Referrer-Policy": "no-referrer" } });
+    }
     if (!["start", "complete", "cancel"].includes(action)) throw new AuthError(404, "Not found.");
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     if (request.method !== "POST") return reply({ message: "Method not allowed." }, 405, { Allow: "POST", ...cors });
     const body = await readBody(request, { allowManagerOrigin: true });
-    if (!env.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
     if (action === "start") return withHeaders(await start(request, env.PORTAL_DB, fetcher, body), cors);
     if (action === "complete") return withHeaders(await complete(request, env.PORTAL_DB, fetcher), cors);
     const state = readState(request);
