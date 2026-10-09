@@ -1,4 +1,4 @@
-import { AuthError, isAdminEmail, plexAvatarColumnAvailable, reply, sessionUser } from "./auth.js";
+import { AuthError, isAdminEmail, managerCorsHeaders, plexAvatarColumnAvailable, reply, sessionUser } from "./auth.js";
 import { paymentState } from "./billing.js";
 
 function adminUser(row, now) {
@@ -46,12 +46,14 @@ function adminUser(row, now) {
 }
 
 export async function adminUsersResponse(request, env) {
+  const cors = managerCorsHeaders(request);
   try {
     const url = new URL(request.url);
     if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) {
       throw new AuthError(400, "Account access requires HTTPS.");
     }
-    if (request.method !== "GET") return reply({ message: "Method not allowed." }, 405, { Allow: "GET" });
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+    if (request.method !== "GET") return reply({ message: "Method not allowed." }, 405, { Allow: "GET", ...cors });
     if (!env.PORTAL_DB) throw new AuthError(503, "Account services are not configured yet. Please try again later.");
     const current = await sessionUser(env.PORTAL_DB, request);
     if (!current) throw new AuthError(401, "Please sign in to continue.");
@@ -100,9 +102,9 @@ export async function adminUsersResponse(request, env) {
         subscribed: users.filter((user) => user.subscription).length,
         overdue: users.filter((user) => user.billing?.status === "overdue").length,
       },
-    });
+    }, 200, cors);
   } catch (error) {
     return reply({ message: error instanceof AuthError ? error.message : "Account services are temporarily unavailable. Please try again later." },
-      error instanceof AuthError ? error.status : 503);
+      error instanceof AuthError ? error.status : 503, cors);
   }
 }

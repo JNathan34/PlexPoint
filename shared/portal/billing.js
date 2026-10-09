@@ -1,4 +1,4 @@
-import { AuthError, isAdminEmail, readBody, reply, sessionUser } from "./auth.js";
+import { AuthError, isAdminEmail, managerCorsHeaders, readBody, reply, sessionUser } from "./auth.js";
 import { referralAdminDetail } from "./referrals.js";
 
 const DAY_MS = 86_400_000;
@@ -463,9 +463,9 @@ async function voidPayment(db, actor, body, now) {
   return adminDetail(db, userId, now);
 }
 
-function errorResponse(error) {
+function errorResponse(error, headers = {}) {
   return reply({ message: error instanceof AuthError ? error.message : "Billing services are temporarily unavailable. Please try again later." },
-    error instanceof AuthError ? error.status : 503);
+    error instanceof AuthError ? error.status : 503, headers);
 }
 
 export async function billingResponse(request, env) {
@@ -477,17 +477,19 @@ export async function billingResponse(request, env) {
 }
 
 export async function adminBillingResponse(request, env) {
+  const cors = managerCorsHeaders(request);
   try {
     const url = ensureHttps(request);
-    if (!["GET", "POST"].includes(request.method)) return reply({ message: "Method not allowed." }, 405, { Allow: "GET, POST" });
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+    if (!["GET", "POST"].includes(request.method)) return reply({ message: "Method not allowed." }, 405, { Allow: "GET, POST", ...cors });
     const current = await authenticated(request, env, true);
     const now = Date.now();
-    if (request.method === "GET") return reply(await adminDetail(env.PORTAL_DB, url.searchParams.get("userId"), now));
-    const body = await readBody(request);
-    if (body.action === "save_plan") return reply(await savePlan(env.PORTAL_DB, current, body, now));
-    if (body.action === "record_payment") return reply(await recordPayment(env.PORTAL_DB, current, body, now));
-    if (body.action === "void_payment") return reply(await voidPayment(env.PORTAL_DB, current, body, now));
-    if (body.action === "save_addons") return reply(await saveAddons(env.PORTAL_DB, current, body, now));
+    if (request.method === "GET") return reply(await adminDetail(env.PORTAL_DB, url.searchParams.get("userId"), now), 200, cors);
+    const body = await readBody(request, { allowManagerOrigin: true });
+    if (body.action === "save_plan") return reply(await savePlan(env.PORTAL_DB, current, body, now), 200, cors);
+    if (body.action === "record_payment") return reply(await recordPayment(env.PORTAL_DB, current, body, now), 200, cors);
+    if (body.action === "void_payment") return reply(await voidPayment(env.PORTAL_DB, current, body, now), 200, cors);
+    if (body.action === "save_addons") return reply(await saveAddons(env.PORTAL_DB, current, body, now), 200, cors);
     throw new AuthError(400, "Select a valid billing action.");
-  } catch (error) { return errorResponse(error); }
+  } catch (error) { return errorResponse(error, cors); }
 }

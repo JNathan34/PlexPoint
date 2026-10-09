@@ -134,6 +134,19 @@ test("billing access is private and admin mutations are owner-only and same-orig
     body: JSON.stringify({ action: "save_plan", userId: second.user.id }),
   });
   assert.equal((await adminBillingResponse(crossOrigin, env)).status, 403);
+
+  const managerRequest = new Request("https://portal.example.test/api/portal/admin/billing", {
+    method: "POST", headers: { Cookie: admin.cookie, Origin: "https://simply-pay.plexpoint.uk", "Content-Type": "application/json", "X-PlexPoint-Request": "1", "Sec-Fetch-Site": "same-site" },
+    body: JSON.stringify({ action: "save_plan", userId: second.user.id, tierId: "gold", accessStatus: "enabled", startsOn: "2026-07-01", nextDueOn: "2026-08-01" }),
+  });
+  const managerResponse = await adminBillingResponse(managerRequest, env);
+  assert.equal(managerResponse.status, 200);
+  assert.equal(managerResponse.headers.get("Access-Control-Allow-Origin"), "https://simply-pay.plexpoint.uk");
+  const preflight = await adminBillingResponse(new Request("https://portal.example.test/api/portal/admin/billing", {
+    method: "OPTIONS", headers: { Origin: "https://simply-pay.plexpoint.uk" },
+  }), env);
+  assert.equal(preflight.status, 204);
+  assert.equal(preflight.headers.get("Access-Control-Allow-Credentials"), "true");
 });
 
 test("one payment can catch up several months or prepay several months ahead", async (t) => {

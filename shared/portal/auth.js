@@ -5,6 +5,7 @@ const SESSION_SECONDS = 7 * 24 * 60 * 60;
 const ITERATIONS = 100000;
 const WINDOW_MS = 15 * 60 * 1000;
 const ADMIN_EMAIL = "jacobnathan1718@gmail.com";
+const SIMPLY_PAY_MANAGER_ORIGIN = "https://simply-pay.plexpoint.uk";
 const encoder = new TextEncoder();
 const hex = (bytes) => Array.from(new Uint8Array(bytes), (value) => value.toString(16).padStart(2, "0")).join("");
 const randomHex = (length) => hex(crypto.getRandomValues(new Uint8Array(length)));
@@ -36,9 +37,22 @@ function reply(data, status = 200, headers = {}) {
   } });
 }
 
-async function readBody(request) {
+function managerCorsHeaders(request) {
+  if (request.headers.get("Origin") !== SIMPLY_PAY_MANAGER_ORIGIN) return {};
+  return {
+    "Access-Control-Allow-Origin": SIMPLY_PAY_MANAGER_ORIGIN,
+    "Access-Control-Allow-Credentials": "true",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, X-PlexPoint-Request",
+    "Vary": "Cookie, Origin",
+  };
+}
+
+async function readBody(request, { allowManagerOrigin = false } = {}) {
   const url = new URL(request.url);
-  if (request.headers.get("Origin") !== url.origin || request.headers.get("X-PlexPoint-Request") !== "1"
+  const origin = request.headers.get("Origin");
+  const allowedManagerRequest = allowManagerOrigin && origin === SIMPLY_PAY_MANAGER_ORIGIN;
+  if ((origin !== url.origin && !allowedManagerRequest) || request.headers.get("X-PlexPoint-Request") !== "1"
     || request.headers.get("Sec-Fetch-Site") === "cross-site") {
     throw new AuthError(403, "Please submit this form from My PlexPoint.");
   }
@@ -217,7 +231,7 @@ async function currentSession(db, request, now) {
     !row && readToken(request) ? { "Set-Cookie": sessionCookie(request, "", 0) } : {});
 }
 
-export { ADMIN_EMAIL, AuthError, randomHex, digest, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail, plexAvatarColumnAvailable };
+export { ADMIN_EMAIL, AuthError, randomHex, digest, managerCorsHeaders, readBody, readToken, reply, rateLimit, publicUser, sessionStatements, sessionCookie, sessionUser, isAdminEmail, plexAvatarColumnAvailable };
 
 export async function authResponse(request, env, action) {
   try {

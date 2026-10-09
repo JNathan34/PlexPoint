@@ -91,6 +91,20 @@ test("the admin user list requires an authenticated owner and GET", async (t) =>
   assert.equal((await adminUsersResponse(new Request("http://portal.example.test/api/portal/admin/users"), env)).status, 400);
 });
 
+test("the trusted Simply Pay manager can read the admin user list with CORS credentials", async (t) => {
+  const { env } = setup(t);
+  const registration = await authResponse(authRequest("register", account("jacobnathan1718@gmail.com", "Jacob")), env, "register");
+  const response = await adminUsersResponse(new Request("https://portal.example.test/api/portal/admin/users", {
+    headers: { Cookie: cookieOf(registration), Origin: "https://simply-pay.plexpoint.uk" },
+  }), env);
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("Access-Control-Allow-Origin"), "https://simply-pay.plexpoint.uk");
+  const preflight = await adminUsersResponse(new Request("https://portal.example.test/api/portal/admin/users", {
+    method: "OPTIONS", headers: { Origin: "https://simply-pay.plexpoint.uk" },
+  }), env);
+  assert.equal(preflight.status, 204);
+});
+
 test("the admin user list remains available before the avatar migration", async (t) => {
   const { sqlite, env } = setup(t, { avatars: false });
   const registration = await authResponse(authRequest("register", account("jacobnathan1718@gmail.com", "Jacob")), env, "register");
