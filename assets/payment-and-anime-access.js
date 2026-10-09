@@ -56,17 +56,18 @@ function formatHomepageLibraryCount(count, label) {
   return `${Math.floor(count / increment) * increment}+`;
 }
 
-function updateHomepageLibraryCounts() {
-  const homepage = document.querySelector('[data-testid="hero-section"]');
-  if (!homepage || !plexLibraryCounts) return;
+function updateLibraryCounts(container) {
+  if (!container || !plexLibraryCounts) return;
 
   for (const [label, count] of [
     ["Movies", plexLibraryCounts.movies],
     ["Shows", plexLibraryCounts.shows],
   ]) {
-    const card = [...homepage.querySelectorAll(".glass-card")].find((element) =>
-      [...element.children].some((child) => child.textContent?.trim() === label),
-    );
+    const card =
+      container.querySelector(`[data-testid="library-stat-${label.toLowerCase()}"]`) ||
+      [...container.querySelectorAll(".glass-card")].find((element) =>
+        [...element.children].some((child) => child.textContent?.trim() === label),
+      );
     const labelElement = [...(card?.children || [])].find(
       (child) => child.textContent?.trim() === label,
     );
@@ -79,6 +80,11 @@ function updateHomepageLibraryCounts() {
       labelElement.previousElementSibling.textContent = formattedCount;
     }
   }
+}
+
+function updateHomepageLibraryCounts() {
+  updateLibraryCounts(document.querySelector('[data-testid="hero-section"]'));
+  updateLibraryCounts(document.querySelector('[data-testid="plex-collection-section"]'));
 }
 
 function updateNavigationBrand() {
