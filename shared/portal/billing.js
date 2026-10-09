@@ -463,6 +463,42 @@ async function voidPayment(db, actor, body, now) {
   return adminDetail(db, userId, now);
 }
 
+async function updatePayment(db, actor, body, now) {
+  const userId = identifier(body.userId);
+  const paymentId = identifier(body.paymentId, "payment");
+  await targetUser(db, userId);
+  const amountMinor = body.amountMinor;
+  if (!Number.isSafeInteger(amountMinor) || amountMinor < 1 || amountMinor > 100_000_000) {
+    throw new AuthError(400, "Enter a payment amount between £0.01 and £1,000,000.");
+  }
+  const method = typeof body.method === "string" ? body.method : "";
+  if (!PAYMENT_METHODS.has(method)) throw new AuthError(400, "Select a valid payment method.");
+  const receivedAt = dateTimestamp(body.receivedOn, "payment date");
+  const today = new Date(now);
+  const todayStart = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  if (receivedAt > todayStart) throw new AuthError(400, "The payment date cannot be in the future.");
+  const reference = typeof body.reference === "string" ? body.reference.trim() : "";
+  if (reference.length > 80 || /[\x00-\x1f\x7f]/.test(reference)) {
+    throw new AuthError(400, "Keep the payment reference under 80 characters.");
+  }
+  const payment = await db.prepare(`SELECT p.id FROM payments p
+    JOIN billing_periods bp ON bp.id = p.billing_period_id
+    JOIN subscriptions s ON s.id = bp.subscription_id
+    WHERE p.id = ? AND s.user_id = ? AND p.status = 'confirmed'`).bind(paymentId, userId).first();
+  if (!payment) throw new AuthError(404, "That confirmed payment could not be found.");
+  if (reference && await db.prepare("SELECT id FROM payments WHERE provider = 'manual' AND provider_payment_id = ? AND id != ?")
+    .bind(reference, paymentId).first()) throw new AuthError(409, "That payment reference has already been used.");
+  await db.batch([
+    db.prepare(`UPDATE payments SET amount_minor = ?, method = ?, received_at = ?, provider_payment_id = ?
+      WHERE id = ? AND status = 'confirmed'`).bind(amountMinor, method, receivedAt, reference || null, paymentId),
+    db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
+      VALUES (?, ?, ?, 'billing.payment_updated', ?, ?)`)
+      .bind(crypto.randomUUID(), actor.id, userId, JSON.stringify({ paymentId, amountMinor, method, receivedAt,
+        ...(reference ? { reference } : {}) }), now),
+  ]);
+  return adminDetail(db, userId, now);
+}
+
 function errorResponse(error, headers = {}) {
   return reply({ message: error instanceof AuthError ? error.message : "Billing services are temporarily unavailable. Please try again later." },
     error instanceof AuthError ? error.status : 503, headers);
@@ -488,6 +524,7 @@ export async function adminBillingResponse(request, env) {
     const body = await readBody(request, { allowManagerOrigin: true });
     if (body.action === "save_plan") return reply(await savePlan(env.PORTAL_DB, current, body, now), 200, cors);
     if (body.action === "record_payment") return reply(await recordPayment(env.PORTAL_DB, current, body, now), 200, cors);
+    if (body.action === "update_payment") return reply(await updatePayment(env.PORTAL_DB, current, body, now), 200, cors);
     if (body.action === "void_payment") return reply(await voidPayment(env.PORTAL_DB, current, body, now), 200, cors);
     if (body.action === "save_addons") return reply(await saveAddons(env.PORTAL_DB, current, body, now), 200, cors);
     throw new AuthError(400, "Select a valid billing action.");
