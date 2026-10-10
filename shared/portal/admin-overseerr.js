@@ -1,4 +1,4 @@
-import { AuthError, isAdminEmail, plexAvatarColumnAvailable, readBody, reply, sessionUser } from "./auth.js";
+import { AuthError, isAdminEmail, managerCorsHeaders, plexAvatarColumnAvailable, readBody, reply, sessionUser } from "./auth.js";
 import { configuredOverseerr, overseerrJson } from "./overseerr.js";
 
 const PAGE_SIZE = 100;
@@ -55,15 +55,17 @@ async function importList(request, env, fetcher) {
 }
 
 export async function adminOverseerrUsersResponse(request, env, fetcher = fetch) {
+  const cors = managerCorsHeaders(request);
   try {
     const url = new URL(request.url);
     if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) throw new AuthError(400, "Account access requires HTTPS.");
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     if (request.method === "GET") {
       const data = await importList(request, env, fetcher);
-      return reply({ users: data.users }, 200);
+      return reply({ users: data.users }, 200, cors);
     }
-    if (request.method !== "POST") return reply({ message: "Method not allowed." }, 405, { Allow: "GET, POST" });
-    const body = await readBody(request);
+    if (request.method !== "POST") return reply({ message: "Method not allowed." }, 405, { Allow: "GET, POST", ...cors });
+    const body = await readBody(request, { allowManagerOrigin: true });
     if (body.action !== "import_users" || !Array.isArray(body.userIds) || body.userIds.length < 1 || body.userIds.length > 100
       || body.userIds.some((id) => !Number.isInteger(id) || id < 1)) throw new AuthError(400, "Choose at least one valid Overseerr user.");
     const { current, users } = await importList(request, env, fetcher);
@@ -93,9 +95,9 @@ export async function adminOverseerrUsersResponse(request, env, fetcher = fetch)
       try { await env.PORTAL_DB.batch(statements); imported.push({ overseerrId: entry.overseerrId, id, displayName: entry.displayName }); }
       catch { skipped.push({ overseerrId: entry.overseerrId, reason: "Could not import this user" }); }
     }
-    return reply({ imported, skipped }, 200);
+    return reply({ imported, skipped }, 200, cors);
   } catch (error) {
     if (!(error instanceof AuthError)) console.error(JSON.stringify({ event: "admin_overseerr_import_error", errorType: error?.name || "UnknownError" }));
-    return reply({ message: error instanceof AuthError ? error.message : "Overseerr users are temporarily unavailable. Please try again later." }, error instanceof AuthError ? error.status : 503);
+    return reply({ message: error instanceof AuthError ? error.message : "Overseerr users are temporarily unavailable. Please try again later." }, error instanceof AuthError ? error.status : 503, cors);
   }
 }

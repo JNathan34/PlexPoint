@@ -11,7 +11,6 @@ let requestsBusy = false;
 let billingBusy = false;
 let adminBillingBusy = false;
 let adminRequestCreditsBusy = false;
-let adminOverseerrBusy = false;
 let referralBusy = false;
 let referralRedeemEnabled = false;
 let referralData = null;
@@ -51,7 +50,6 @@ function controls() {
   for (const id of ["auth-retry", "plex-check", "plex-cancel"]) byId(id).disabled = busy;
   byId("plex-sign-in").disabled = busy || !available || plexPending;
   byId("admin-retry").disabled = adminBusy;
-  for (const control of byId("admin-overseerr-import").querySelectorAll("button, input")) control.disabled = adminOverseerrBusy;
   byId("requests-retry").disabled = requestsBusy;
   byId("billing-retry").disabled = billingBusy;
   for (const id of ["referral-copy", "referral-order-back", "referral-order-next", "referral-order-submit"]) {
@@ -197,10 +195,6 @@ function renderUser(next) {
     byId("admin-users").replaceChildren();
     byId("admin-table-wrap").hidden = true;
     byId("admin-status").textContent = "";
-    byId("admin-overseerr-list").replaceChildren();
-    byId("admin-overseerr-list").hidden = true;
-    byId("admin-overseerr-footer").hidden = true;
-    byId("admin-overseerr-status").textContent = "";
     byId("admin-billing-editor").hidden = true;
     byId("admin-billing-content").hidden = true;
     byId("admin-billing-status").textContent = "";
@@ -1236,78 +1230,6 @@ async function acceptUser(next) {
   else await loadReferrals();
 }
 
-function renderOverseerrImport(users) {
-  const list = byId("admin-overseerr-list");
-  list.replaceChildren(...users.map((entry) => {
-    const row = document.createElement("label");
-    row.className = "pp-overseerr-import-user";
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.value = String(entry.overseerrId);
-    checkbox.disabled = entry.status !== "available";
-    checkbox.dataset.overseerrUser = "";
-    const avatar = document.createElement("span");
-    avatar.className = "pp-overseerr-import-avatar";
-    avatar.textContent = entry.displayName.slice(0, 1).toUpperCase();
-    if (safeAvatarUrl(entry.avatarUrl)) {
-      const image = document.createElement("img");
-      image.src = entry.avatarUrl; image.alt = ""; image.referrerPolicy = "no-referrer";
-      image.onerror = () => image.remove();
-      avatar.replaceChildren(image);
-    }
-    const copy = document.createElement("span");
-    const name = document.createElement("strong"); name.textContent = entry.displayName;
-    const detail = document.createElement("small"); detail.textContent = `${entry.username} · ${entry.email}`;
-    copy.append(name, detail);
-    const state = document.createElement("em");
-    state.textContent = entry.status === "available" ? "Ready" : "Already imported";
-    row.append(checkbox, avatar, copy, state);
-    return row;
-  }));
-  list.hidden = false;
-  byId("admin-overseerr-footer").hidden = users.length === 0;
-  byId("admin-overseerr-select-all").checked = false;
-}
-
-async function loadOverseerrUsers() {
-  if (!user?.isAdmin || adminOverseerrBusy) return;
-  adminOverseerrBusy = true;
-  byId("admin-overseerr-status").textContent = "Loading Overseerr users…";
-  byId("admin-overseerr-status").dataset.error = "false";
-  controls();
-  try {
-    const data = await request("overseerr-users", undefined, "admin", { timeoutMs: 30000, timeoutMessage: "Overseerr took too long to respond. Please try again." });
-    if (!Array.isArray(data.users)) throw new Error("Overseerr returned an unexpected user list.");
-    renderOverseerrImport(data.users);
-    const availableCount = data.users.filter((entry) => entry.status === "available").length;
-    byId("admin-overseerr-status").textContent = availableCount ? `${availableCount} user${availableCount === 1 ? "" : "s"} ready to import.` : "Everyone from Overseerr is already in PlexPoint.";
-  } catch (error) {
-    byId("admin-overseerr-status").textContent = error.message;
-    byId("admin-overseerr-status").dataset.error = "true";
-  } finally { adminOverseerrBusy = false; controls(); }
-}
-
-async function importOverseerrUsers() {
-  const userIds = [...byId("admin-overseerr-list").querySelectorAll("input[data-overseerr-user]:checked")].map((input) => Number(input.value));
-  if (!userIds.length) { byId("admin-overseerr-status").textContent = "Choose at least one user to import."; byId("admin-overseerr-status").dataset.error = "true"; return; }
-  adminOverseerrBusy = true;
-  byId("admin-overseerr-status").textContent = "Importing selected users…";
-  byId("admin-overseerr-status").dataset.error = "false";
-  controls();
-  try {
-    const data = await request("overseerr-users", { action: "import_users", userIds }, "admin", { timeoutMs: 30000 });
-    const count = Array.isArray(data.imported) ? data.imported.length : 0;
-    byId("admin-overseerr-status").textContent = count ? `${count} user${count === 1 ? "" : "s"} imported into PlexPoint.` : "No users were imported.";
-    await loadAdminUsers();
-    for (const input of byId("admin-overseerr-list").querySelectorAll("input[data-overseerr-user]:checked")) {
-      input.checked = false;
-      input.disabled = true;
-      input.closest(".pp-overseerr-import-user")?.querySelector("em")?.replaceChildren("Already imported");
-    }
-  } catch (error) { byId("admin-overseerr-status").textContent = error.message; byId("admin-overseerr-status").dataset.error = "true"; }
-  finally { adminOverseerrBusy = false; controls(); }
-}
-
 async function request(action, body, group = "auth", options = {}) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), options.timeoutMs || 15000);
@@ -1434,11 +1356,6 @@ async function initializeSession() {
 }
 byId("auth-retry").addEventListener("click", () => void initializeSession());
 byId("admin-retry").addEventListener("click", () => void loadAdminUsers());
-byId("admin-overseerr-load").addEventListener("click", () => void loadOverseerrUsers());
-byId("admin-overseerr-save").addEventListener("click", () => void importOverseerrUsers());
-byId("admin-overseerr-select-all").addEventListener("change", (event) => {
-  for (const input of byId("admin-overseerr-list").querySelectorAll("input[data-overseerr-user]:not(:disabled)")) input.checked = event.target.checked;
-});
 byId("billing-retry").addEventListener("click", () => void loadBilling());
 byId("billing-view-all").addEventListener("click", () => {
   memberPaymentsExpanded = !memberPaymentsExpanded;

@@ -145,3 +145,19 @@ test("an administrator can choose specific Overseerr users to import", async (t)
   const relisted = await adminOverseerrUsersResponse(importRequest(cookie), env, overseerrFetch);
   assert.deepEqual((await relisted.json()).users.map((entry) => entry.status), ["available", "imported"]);
 });
+
+test("the Simply Pay manager can use the Overseerr importer with CORS", async (t) => {
+  const { env } = setup(t);
+  env.OVERSEERR_API_KEY = "a".repeat(24);
+  env.OVERSEERR_URL = "https://requests.example.test";
+  const registration = await authResponse(authRequest("register", account("jacobnathan1718@gmail.com", "Jacob")), env, "register");
+  const response = await adminOverseerrUsersResponse(new Request("https://portal.example.test/api/portal/admin/overseerr-users", {
+    headers: { Cookie: cookieOf(registration), Origin: "https://simply-pay.pages.dev" },
+  }), env, overseerrFetch);
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("Access-Control-Allow-Origin"), "https://simply-pay.pages.dev");
+  const preflight = await adminOverseerrUsersResponse(new Request("https://portal.example.test/api/portal/admin/overseerr-users", {
+    method: "OPTIONS", headers: { Origin: "https://simply-pay.pages.dev" },
+  }), env, overseerrFetch);
+  assert.equal(preflight.status, 204);
+});

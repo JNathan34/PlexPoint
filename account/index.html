@@ -142,15 +142,6 @@
               <section id="admin-panel" class="pp-card glass-card pp-admin-panel" aria-labelledby="admin-heading" hidden>
               <div class="pp-admin-heading"><div><span class="pp-badge">ADMIN</span><h2 id="admin-heading">User accounts and billing</h2><p>Assign plans, set payment dates, record payments and spot overdue accounts.</p><p><a class="pp-text-link" href="/billing/">Open the streamlined payment manager →</a></p></div><div class="pp-admin-summary" aria-label="Account summary"><span><strong id="admin-total">0</strong>Total</span><span><strong id="admin-enabled">0</strong>Enabled</span><span><strong id="admin-subscribed">0</strong>With a plan</span><span><strong id="admin-overdue">0</strong>Overdue</span></div></div>
               <p id="admin-status" class="pp-small" role="status"></p><button id="admin-retry" type="button" class="pp-button" hidden>Retry user list</button>
-              <details id="admin-overseerr-import" class="pp-admin-secondary-section pp-admin-overseerr-import">
-                <summary><span><strong>Import users from Overseerr</strong><small>Choose request-service users to add to PlexPoint</small></span><span class="pp-secondary-action">Open</span></summary>
-                <div class="pp-overseerr-import-body">
-                  <div class="pp-overseerr-import-actions"><p>Only the people you tick are imported. Existing PlexPoint users stay unchanged.</p><button id="admin-overseerr-load" type="button" class="pp-button">Load Overseerr users</button></div>
-                  <p id="admin-overseerr-status" class="pp-small" role="status"></p>
-                  <div id="admin-overseerr-list" class="pp-overseerr-import-list" hidden></div>
-                  <div id="admin-overseerr-footer" class="pp-overseerr-import-footer" hidden><label><input id="admin-overseerr-select-all" type="checkbox" /> Select all available</label><button id="admin-overseerr-save" type="button" class="pp-button pp-button-primary">Import selected</button></div>
-                </div>
-              </details>
               <div id="admin-table-wrap" class="pp-admin-table-wrap" hidden><table class="pp-admin-table"><thead><tr><th scope="col">User</th><th scope="col">Sign-in</th><th scope="col">Plan</th><th scope="col">Payment</th><th scope="col">Account</th><th scope="col"><span class="pp-sr-only">Manage billing</span></th></tr></thead><tbody id="admin-users"></tbody></table></div>
               <section id="admin-billing-editor" class="pp-admin-billing-editor" aria-labelledby="admin-billing-heading" hidden>
                 <div class="pp-admin-editor-heading"><div><span class="pp-badge">BILLING</span><h3 id="admin-billing-heading">Manage membership</h3><p id="admin-billing-account"></p></div><button id="admin-billing-close" type="button" class="pp-button">Close</button></div>
