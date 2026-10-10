@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
 import { readFileSync } from "node:fs";
 import { adminUsersResponse } from "../shared/portal/admin.js";
+import { adminOverseerrUsersResponse } from "../shared/portal/admin-overseerr.js";
 import { authResponse } from "../shared/portal/auth.js";
 
 const migrations = ["0001_portal.sql", "0002_public_content.sql", "0003_auth.sql", "0004_plex_sign_in.sql", "0005_admin_account.sql", "0006_plex_avatars.sql", "0007_vip_addons.sql", "0008_billing_coverage.sql", "0009_referrals.sql", "0010_referral_redemptions.sql"];
@@ -48,6 +49,15 @@ const cookieOf = (response) => response.headers.get("Set-Cookie").split(";")[0];
 const adminRequest = (cookie, method = "GET") => new Request("https://portal.example.test/api/portal/admin/users", {
   method, headers: cookie ? { Cookie: cookie } : {},
 });
+const importRequest = (cookie, body) => new Request("https://portal.example.test/api/portal/admin/overseerr-users", {
+  method: body ? "POST" : "GET",
+  headers: { Cookie: cookie, ...(body ? { Origin: "https://portal.example.test", "Content-Type": "application/json", "X-PlexPoint-Request": "1" } : {}) },
+  ...(body ? { body: JSON.stringify(body) } : {}),
+});
+const overseerrFetch = async () => new Response(JSON.stringify({ results: [
+  { id: 51, plexId: "plex-import-1", email: "first@example.test", plexUsername: "First", displayName: "First User", avatar: "https://images.example.test/first.jpg" },
+  { id: 52, plexId: "plex-import-2", email: "second@example.test", plexUsername: "Second", displayName: "Second User" },
+] }), { status: 200, headers: { "Content-Type": "application/json" } });
 
 test("the owner can view a safe account list with Plex and subscription details", async (t) => {
   const { sqlite, env } = setup(t);
@@ -116,4 +126,22 @@ test("the admin user list remains available before the avatar migration", async 
   const listed = (await response.json()).users[0];
   assert.equal(listed.plexUsername, "JNathan34");
   assert.equal(listed.plexAvatarUrl, `/api/portal/avatar?userId=${encodeURIComponent(owner.id)}`);
+});
+
+test("an administrator can choose specific Overseerr users to import", async (t) => {
+  const { sqlite, env } = setup(t);
+  env.OVERSEERR_API_KEY = "a".repeat(24);
+  env.OVERSEERR_URL = "https://requests.example.test";
+  const registration = await authResponse(authRequest("register", account("jacobnathan1718@gmail.com", "Jacob")), env, "register");
+  const cookie = cookieOf(registration);
+  const listed = await adminOverseerrUsersResponse(importRequest(cookie), env, overseerrFetch);
+  assert.equal(listed.status, 200);
+  assert.deepEqual((await listed.json()).users.map((entry) => entry.status), ["available", "available"]);
+  const imported = await adminOverseerrUsersResponse(importRequest(cookie, { action: "import_users", userIds: [52] }), env, overseerrFetch);
+  assert.equal(imported.status, 200);
+  assert.equal((await imported.json()).imported[0].displayName, "Second User");
+  assert.equal(sqlite.prepare("SELECT count(*) AS n FROM users WHERE email = 'first@example.test'").get().n, 0);
+  assert.equal(sqlite.prepare("SELECT username FROM plex_identities WHERE plex_id = 'plex-import-2'").get().username, "Second");
+  const relisted = await adminOverseerrUsersResponse(importRequest(cookie), env, overseerrFetch);
+  assert.deepEqual((await relisted.json()).users.map((entry) => entry.status), ["available", "imported"]);
 });

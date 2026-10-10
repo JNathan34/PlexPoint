@@ -477,4 +477,4 @@ export async function avatarResponse(request, env, fetcher = fetch) {
   }
 }
 
-export { configuredOverseerr, findOverseerrUser };
+export { configuredOverseerr, overseerrJson, findOverseerrUser };
