@@ -130,6 +130,10 @@ test("a plan saved across several unpaid months starts with the full balance due
   assert.equal(data.billing.currentPeriod.storedAmountDueMinor, 750);
   assert.equal(data.billing.currentPeriod.outstandingMinor, 750);
   assert.equal(data.billing.currentPeriod.monthsDue, 3);
+  const listed = await adminUsersResponse(getRequest("/api/portal/admin/users", admin.cookie), env);
+  const listedUser = (await listed.json()).users.find((user) => user.id === member.user.id);
+  assert.equal(listedUser.billing.outstandingMinor, 750);
+  assert.equal(listedUser.billing.monthsDue, 3);
   sqlite.prepare("UPDATE billing_periods SET amount_due_minor = 250 WHERE subscription_id = ?").run(data.billing.subscription.id);
   const legacy = await adminBillingResponse(getRequest(`/api/portal/admin/billing?userId=${member.user.id}`, admin.cookie), env);
   assert.equal((await legacy.json()).billing.currentPeriod.outstandingMinor, 750);

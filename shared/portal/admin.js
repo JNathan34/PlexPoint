@@ -31,6 +31,7 @@ function adminUser(row, now) {
       const period = accruedBillingPeriod({
         id: row.billing_period_id,
         status: "open",
+        starts_at: row.billing_starts_at,
         ends_at: row.billing_ends_at,
         amount_due_minor: row.amount_due_minor,
         monthly_price_minor: row.billing_monthly_price_minor,
@@ -75,7 +76,7 @@ export async function adminUsersResponse(request, env) {
       r.status AS referral_status, r.order_id AS referral_order_id,
       s.access_status AS subscription_status, s.starts_at, s.ends_at,
       t.name AS tier_name, t.monthly_price_minor, t.currency AS subscription_currency,
-      bp.id AS billing_period_id, bp.ends_at AS billing_ends_at,
+      bp.id AS billing_period_id, bp.starts_at AS billing_starts_at, bp.ends_at AS billing_ends_at,
       bp.amount_due_minor, COALESCE(bp.base_amount_due_minor, bp.amount_due_minor) AS billing_monthly_price_minor,
       bp.currency AS billing_currency,
       COALESCE(pt.confirmed_minor, 0) AS confirmed_minor,
