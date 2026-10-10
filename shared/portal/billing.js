@@ -85,10 +85,12 @@ export function accruedBillingPeriod(row, now = Date.now()) {
   const confirmedMinor = Number(row.confirmed_minor || 0);
   const pendingMinor = Number(row.pending_minor || 0);
   const monthlyPriceMinor = Number(row.monthly_price_minor ?? row.amount_due_minor);
+  const includedCycles = monthlyPriceMinor <= 0 ? 0 : monthlyCyclesCovered(Number(row.starts_at), Number(row.ends_at));
+  const scheduledAmountDueMinor = Math.max(amountDueMinor, monthlyPriceMinor * includedCycles);
   const missedCycles = row.status === "void" || monthlyPriceMinor <= 0
     ? 0
     : missedMonthlyCycles(Number(row.ends_at), now);
-  const accruedAmountDueMinor = amountDueMinor + (monthlyPriceMinor * missedCycles);
+  const accruedAmountDueMinor = scheduledAmountDueMinor + (monthlyPriceMinor * missedCycles);
   const period = {
     id: row.id,
     tierId: row.tier_id,
@@ -97,6 +99,7 @@ export function accruedBillingPeriod(row, now = Date.now()) {
     endsAt: Number(row.ends_at),
     amountDueMinor: accruedAmountDueMinor,
     storedAmountDueMinor: amountDueMinor,
+    includedCycles,
     monthlyPriceMinor,
     missedCycles,
     monthsDue: monthlyPriceMinor > 0 ? Math.max(1, Math.ceil(accruedAmountDueMinor / monthlyPriceMinor)) : 0,
@@ -408,7 +411,9 @@ async function recordPayment(db, actor, body, now) {
   // backdated payment from being charged for months that had not happened yet.
   const missedCycles = missedMonthlyCycles(Number(period.ends_at), receivedAt);
   const materializedEndsAt = addCalendarMonths(Number(period.ends_at), missedCycles);
-  const accruedAmountDueMinor = Number(period.amount_due_minor) + (monthlyPriceMinor * missedCycles);
+  const scheduledAmountDueMinor = Math.max(Number(period.amount_due_minor),
+    monthlyPriceMinor * monthlyCyclesCovered(Number(period.starts_at), Number(period.ends_at)));
+  const accruedAmountDueMinor = scheduledAmountDueMinor + (monthlyPriceMinor * missedCycles);
   const hasOutstandingBalance = Number(period.confirmed_minor) < accruedAmountDueMinor;
   const coverageStartsAt = hasOutstandingBalance ? Number(period.starts_at) : Number(period.ends_at);
   const coverageEndsAt = addCalendarMonths(coverageStartsAt, coverageMonths);
