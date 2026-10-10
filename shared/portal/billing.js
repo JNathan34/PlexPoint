@@ -40,6 +40,26 @@ function addCalendarMonths(timestamp, months) {
   return target.getTime();
 }
 
+function startOfUtcDay(timestamp) {
+  const date = new Date(timestamp);
+  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+}
+
+// A billing period represents the first month. Once it has run out, each
+// complete additional calendar month is another charge.  This stays a pure
+// calculation while the manager is being viewed, so merely opening a customer
+// cannot alter their subscription or entitlement.
+function missedMonthlyCycles(endsAt, now) {
+  const today = startOfUtcDay(now);
+  let cycles = 0;
+  let nextCycleAt = Number(endsAt);
+  while (cycles < 120 && addCalendarMonths(nextCycleAt, 1) <= today) {
+    cycles += 1;
+    nextCycleAt = addCalendarMonths(nextCycleAt, 1);
+  }
+  return cycles;
+}
+
 export function paymentState(period, now = Date.now()) {
   if (!period) return "none";
   if (period.status === "void") return "void";
@@ -50,24 +70,32 @@ export function paymentState(period, now = Date.now()) {
   return period.confirmedMinor > 0 ? "partially_paid" : "unpaid";
 }
 
-function mapPeriod(row, now) {
+export function accruedBillingPeriod(row, now = Date.now()) {
   const amountDueMinor = Number(row.amount_due_minor);
   const confirmedMinor = Number(row.confirmed_minor || 0);
   const pendingMinor = Number(row.pending_minor || 0);
+  const monthlyPriceMinor = Number(row.monthly_price_minor ?? row.amount_due_minor);
+  const missedCycles = row.status === "void" || monthlyPriceMinor <= 0
+    ? 0
+    : missedMonthlyCycles(Number(row.ends_at), now);
+  const accruedAmountDueMinor = amountDueMinor + (monthlyPriceMinor * missedCycles);
   const period = {
     id: row.id,
     tierId: row.tier_id,
     tier: row.tier_name,
     startsAt: Number(row.starts_at),
     endsAt: Number(row.ends_at),
-    amountDueMinor,
-    monthlyPriceMinor: Number(row.monthly_price_minor ?? row.amount_due_minor),
+    amountDueMinor: accruedAmountDueMinor,
+    storedAmountDueMinor: amountDueMinor,
+    monthlyPriceMinor,
+    missedCycles,
+    monthsDue: monthlyPriceMinor > 0 ? Math.max(1, Math.ceil(accruedAmountDueMinor / monthlyPriceMinor)) : 0,
     currency: row.currency,
     status: row.status,
     confirmedMinor,
     pendingMinor,
-    outstandingMinor: row.status === "void" ? 0 : Math.max(0, amountDueMinor - confirmedMinor),
-    creditMinor: Math.max(0, confirmedMinor - amountDueMinor),
+    outstandingMinor: row.status === "void" ? 0 : Math.max(0, accruedAmountDueMinor - confirmedMinor),
+    creditMinor: Math.max(0, confirmedMinor - accruedAmountDueMinor),
   };
   return { ...period, paymentStatus: paymentState(period, now) };
 }
@@ -134,7 +162,7 @@ export async function billingForUser(db, userId, { includeVoided = false, includ
     GROUP BY bp.id, bp.tier_id, t.name, bp.starts_at, bp.ends_at, bp.amount_due_minor,
       bp.base_amount_due_minor, bp.currency, bp.status
     ORDER BY bp.starts_at DESC LIMIT 24`).bind(subscription.id).all();
-  const periods = (periodResult.results || []).map((row) => mapPeriod(row, now));
+  const periods = (periodResult.results || []).map((row) => accruedBillingPeriod(row, now));
   const currentPeriod = periods.find((period) => period.status === "open"
     && period.startsAt === Number(subscription.starts_at) && period.endsAt === Number(subscription.ends_at))
     || periods.find((period) => period.status === "open") || null;
@@ -364,18 +392,23 @@ async function recordPayment(db, actor, body, now) {
   if (!period) throw new AuthError(409, "Assign a plan and billing dates before recording a payment.");
   const monthlyPriceMinor = Number(period.base_amount_due_minor);
   if (monthlyPriceMinor === 0) throw new AuthError(409, "This plan does not require payment.");
-  const hasOutstandingBalance = Number(period.confirmed_minor) < Number(period.amount_due_minor);
+  // Apply arrears only up to the payment's effective date. This keeps a
+  // backdated payment from being charged for months that had not happened yet.
+  const missedCycles = missedMonthlyCycles(Number(period.ends_at), receivedAt);
+  const materializedEndsAt = addCalendarMonths(Number(period.ends_at), missedCycles);
+  const accruedAmountDueMinor = Number(period.amount_due_minor) + (monthlyPriceMinor * missedCycles);
+  const hasOutstandingBalance = Number(period.confirmed_minor) < accruedAmountDueMinor;
   const coverageStartsAt = hasOutstandingBalance ? Number(period.starts_at) : Number(period.ends_at);
   const coverageEndsAt = addCalendarMonths(coverageStartsAt, coverageMonths);
   const requestedCoverageMinor = monthlyPriceMinor * coverageMonths;
   const periodExtensionMinor = hasOutstandingBalance
-    ? Math.max(0, requestedCoverageMinor - Number(period.amount_due_minor))
+    ? Math.max(0, requestedCoverageMinor - accruedAmountDueMinor)
     : requestedCoverageMinor;
   if (!Number.isSafeInteger(periodExtensionMinor) || periodExtensionMinor > 100_000_000) {
     throw new AuthError(400, "That coverage period is too large.");
   }
-  const nextEndsAt = Math.max(Number(period.ends_at), coverageEndsAt);
-  const nextAmountDueMinor = Number(period.amount_due_minor) + periodExtensionMinor;
+  const nextEndsAt = Math.max(materializedEndsAt, coverageEndsAt);
+  const nextAmountDueMinor = accruedAmountDueMinor + periodExtensionMinor;
   const paymentId = crypto.randomUUID();
   const details = JSON.stringify({ paymentId, amountMinor, currency: period.currency, method, receivedAt,
     coverageStartsAt, coverageEndsAt, coverageMonths, periodExtensionMinor,
@@ -445,7 +478,8 @@ async function voidPayment(db, actor, body, now) {
   const userId = identifier(body.userId);
   const paymentId = identifier(body.paymentId, "payment");
   await targetUser(db, userId);
-  const payment = await db.prepare(`SELECT p.id, p.billing_period_id, s.id AS subscription_id,
+  const payment = await db.prepare(`SELECT p.id, p.billing_period_id, p.period_extension_minor,
+      bp.amount_due_minor AS current_amount_due_minor, s.id AS subscription_id,
       COALESCE(bp.base_ends_at, bp.ends_at) AS base_ends_at,
       COALESCE(bp.base_amount_due_minor, bp.amount_due_minor) AS base_amount_due_minor,
       CASE WHEN bp.starts_at = s.starts_at AND bp.ends_at = s.ends_at THEN 1 ELSE 0 END AS is_current
@@ -486,7 +520,10 @@ async function voidPayment(db, actor, body, now) {
     FROM payments WHERE billing_period_id = ? AND status = 'confirmed'`)
     .bind(Number(payment.base_ends_at), payment.billing_period_id).first();
   const nextEndsAt = Math.max(Number(payment.base_ends_at), Number(activeCoverage.latest_coverage_end));
-  const nextAmountDueMinor = Number(payment.base_amount_due_minor) + Number(activeCoverage.extension_minor);
+  // Keep any arrears already materialised on the period.  Rebuilding from the
+  // base price alone would erase missed months when a later prepayment is voided.
+  const nextAmountDueMinor = Math.max(Number(payment.base_amount_due_minor),
+    Number(payment.current_amount_due_minor) - Number(payment.period_extension_minor || 0));
   await db.batch([
     db.prepare("UPDATE billing_periods SET ends_at = ?, amount_due_minor = ? WHERE id = ?")
       .bind(nextEndsAt, nextAmountDueMinor, payment.billing_period_id),

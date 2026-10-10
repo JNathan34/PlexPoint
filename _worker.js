@@ -60,7 +60,7 @@ function notImplementedClass(name) {
 }
 var init_utils = __esm({
   "../node_modules/unenv/dist/runtime/_internal/utils.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -74,7 +74,7 @@ var init_utils = __esm({
 var _timeOrigin, _performanceNow, nodeTiming, PerformanceEntry, PerformanceMark, PerformanceMeasure, PerformanceResourceTiming, PerformanceObserverEntryList, Performance, PerformanceObserver, performance;
 var init_performance = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -321,7 +321,7 @@ var init_performance = __esm({
 // ../node_modules/unenv/dist/runtime/node/perf_hooks.mjs
 var init_perf_hooks = __esm({
   "../node_modules/unenv/dist/runtime/node/perf_hooks.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -359,7 +359,7 @@ var init_performance2 = __esm({
 var noop_default;
 var init_noop = __esm({
   "../node_modules/unenv/dist/runtime/mock/noop.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -373,7 +373,7 @@ import { Writable } from "node:stream";
 var _console, _ignoreErrors, _stderr, _stdout, log, info, trace, debug, table, error, warn, createTask, clear, count, countReset, dir, dirxml, group, groupEnd, groupCollapsed, profile, profileEnd, time, timeEnd, timeLog, timeStamp, Console, _times, _stdoutErrorHandler, _stderrErrorHandler;
 var init_console = __esm({
   "../node_modules/unenv/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -416,7 +416,7 @@ var init_console = __esm({
 var workerdConsole, assert, clear2, context, count2, countReset2, createTask2, debug2, dir2, dirxml2, error2, group2, groupCollapsed2, groupEnd2, info2, log2, profile2, profileEnd2, table2, time2, timeEnd2, timeLog2, timeStamp2, trace2, warn2, console_default;
 var init_console2 = __esm({
   "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -479,7 +479,7 @@ var init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console = __
 var hrtime;
 var init_hrtime = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -507,7 +507,7 @@ var init_hrtime = __esm({
 var ReadStream;
 var init_read_stream = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -533,7 +533,7 @@ var init_read_stream = __esm({
 var WriteStream;
 var init_write_stream = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -591,7 +591,7 @@ var init_write_stream = __esm({
 // ../node_modules/unenv/dist/runtime/node/tty.mjs
 var init_tty = __esm({
   "../node_modules/unenv/dist/runtime/node/tty.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -604,7 +604,7 @@ var init_tty = __esm({
 var NODE_VERSION;
 var init_node_version = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/node-version.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -617,7 +617,7 @@ import { EventEmitter } from "node:events";
 var Process;
 var init_process = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/process.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -864,7 +864,7 @@ var init_process = __esm({
 var globalProcess, getBuiltinModule, workerdProcess, unenvProcess, exit, features, platform, _channel, _debugEnd, _debugProcess, _disconnect, _events, _eventsCount, _exiting, _fatalException, _getActiveHandles, _getActiveRequests, _handleQueue, _kill, _linkedBinding, _maxListeners, _pendingMessage, _preload_modules, _rawDebug, _send, _startProfilerIdleNotifier, _stopProfilerIdleNotifier, _tickCallback, abort, addListener, allowedNodeEnvironmentFlags, arch, argv, argv0, assert2, availableMemory, binding, channel, chdir, config, connected, constrainedMemory, cpuUsage, cwd, debugPort, disconnect, dlopen, domain, emit, emitWarning, env, eventNames, execArgv, execPath, exitCode, finalization, getActiveResourcesInfo, getegid, geteuid, getgid, getgroups, getMaxListeners, getuid, hasUncaughtExceptionCaptureCallback, hrtime3, initgroups, kill, listenerCount, listeners, loadEnvFile, mainModule, memoryUsage, moduleLoadList, nextTick, off, on, once, openStdin, permission, pid, ppid, prependListener, prependOnceListener, rawListeners, reallyExit, ref, release, removeAllListeners, removeListener, report, resourceUsage, send, setegid, seteuid, setgid, setgroups, setMaxListeners, setSourceMapsEnabled, setuid, setUncaughtExceptionCaptureCallback, sourceMapsEnabled, stderr, stdin, stdout, throwDeprecation, title, traceDeprecation, umask, unref, uptime, version, versions, _process, process_default;
 var init_process2 = __esm({
   "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1143,7 +1143,7 @@ async function newAccountReferralStatements(db, request, user, now) {
 var REFERRAL_COOKIE_SECONDS;
 var init_referral_core = __esm({
   "../shared/portal/referral-core.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1414,7 +1414,7 @@ async function authResponse(request, env2, action) {
 var SESSION_SECONDS, ITERATIONS, WINDOW_MS, ADMIN_EMAIL, SIMPLY_PAY_MANAGER_ORIGINS, encoder, hex, randomHex, digest, AuthError;
 var init_auth = __esm({
   "../shared/portal/auth.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1917,7 +1917,7 @@ async function avatarResponse(request, env2, fetcher = fetch) {
 var DEFAULT_OVERSEERR_URL, MAX_JSON_BYTES, MAX_AVATAR_BYTES, USER_PAGE_SIZE, MAX_USER_PAGES, normalized;
 var init_overseerr = __esm({
   "../shared/portal/overseerr.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2316,7 +2316,7 @@ async function referralLandingResponse(request, env2, code) {
 var WHATSAPP_NUMBER, MAX_REFERRALS, REWARDS;
 var init_referrals = __esm({
   "../shared/portal/referrals.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2383,6 +2383,20 @@ function addCalendarMonths(timestamp, months) {
   target.setUTCDate(Math.min(day, lastDay));
   return target.getTime();
 }
+function startOfUtcDay(timestamp) {
+  const date = new Date(timestamp);
+  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+}
+function missedMonthlyCycles(endsAt, now) {
+  const today = startOfUtcDay(now);
+  let cycles = 0;
+  let nextCycleAt = Number(endsAt);
+  while (cycles < 120 && addCalendarMonths(nextCycleAt, 1) <= today) {
+    cycles += 1;
+    nextCycleAt = addCalendarMonths(nextCycleAt, 1);
+  }
+  return cycles;
+}
 function paymentState(period, now = Date.now()) {
   if (!period) return "none";
   if (period.status === "void") return "void";
@@ -2392,24 +2406,30 @@ function paymentState(period, now = Date.now()) {
   if (period.endsAt - now <= 7 * DAY_MS) return "due_soon";
   return period.confirmedMinor > 0 ? "partially_paid" : "unpaid";
 }
-function mapPeriod(row, now) {
+function accruedBillingPeriod(row, now = Date.now()) {
   const amountDueMinor = Number(row.amount_due_minor);
   const confirmedMinor = Number(row.confirmed_minor || 0);
   const pendingMinor = Number(row.pending_minor || 0);
+  const monthlyPriceMinor = Number(row.monthly_price_minor ?? row.amount_due_minor);
+  const missedCycles = row.status === "void" || monthlyPriceMinor <= 0 ? 0 : missedMonthlyCycles(Number(row.ends_at), now);
+  const accruedAmountDueMinor = amountDueMinor + monthlyPriceMinor * missedCycles;
   const period = {
     id: row.id,
     tierId: row.tier_id,
     tier: row.tier_name,
     startsAt: Number(row.starts_at),
     endsAt: Number(row.ends_at),
-    amountDueMinor,
-    monthlyPriceMinor: Number(row.monthly_price_minor ?? row.amount_due_minor),
+    amountDueMinor: accruedAmountDueMinor,
+    storedAmountDueMinor: amountDueMinor,
+    monthlyPriceMinor,
+    missedCycles,
+    monthsDue: monthlyPriceMinor > 0 ? Math.max(1, Math.ceil(accruedAmountDueMinor / monthlyPriceMinor)) : 0,
     currency: row.currency,
     status: row.status,
     confirmedMinor,
     pendingMinor,
-    outstandingMinor: row.status === "void" ? 0 : Math.max(0, amountDueMinor - confirmedMinor),
-    creditMinor: Math.max(0, confirmedMinor - amountDueMinor)
+    outstandingMinor: row.status === "void" ? 0 : Math.max(0, accruedAmountDueMinor - confirmedMinor),
+    creditMinor: Math.max(0, confirmedMinor - accruedAmountDueMinor)
   };
   return { ...period, paymentStatus: paymentState(period, now) };
 }
@@ -2471,7 +2491,7 @@ async function billingForUser(db, userId, { includeVoided = false, includeInacti
     GROUP BY bp.id, bp.tier_id, t.name, bp.starts_at, bp.ends_at, bp.amount_due_minor,
       bp.base_amount_due_minor, bp.currency, bp.status
     ORDER BY bp.starts_at DESC LIMIT 24`).bind(subscription.id).all();
-  const periods = (periodResult.results || []).map((row) => mapPeriod(row, now));
+  const periods = (periodResult.results || []).map((row) => accruedBillingPeriod(row, now));
   const currentPeriod = periods.find((period) => period.status === "open" && period.startsAt === Number(subscription.starts_at) && period.endsAt === Number(subscription.ends_at)) || periods.find((period) => period.status === "open") || null;
   const paymentResult = await db.prepare(`SELECT
     p.id, p.amount_minor, p.currency, p.status, p.method, p.received_at, p.provider_payment_id,
@@ -2718,16 +2738,19 @@ async function recordPayment(db, actor, body, now) {
   if (!period) throw new AuthError(409, "Assign a plan and billing dates before recording a payment.");
   const monthlyPriceMinor = Number(period.base_amount_due_minor);
   if (monthlyPriceMinor === 0) throw new AuthError(409, "This plan does not require payment.");
-  const hasOutstandingBalance = Number(period.confirmed_minor) < Number(period.amount_due_minor);
+  const missedCycles = missedMonthlyCycles(Number(period.ends_at), receivedAt);
+  const materializedEndsAt = addCalendarMonths(Number(period.ends_at), missedCycles);
+  const accruedAmountDueMinor = Number(period.amount_due_minor) + monthlyPriceMinor * missedCycles;
+  const hasOutstandingBalance = Number(period.confirmed_minor) < accruedAmountDueMinor;
   const coverageStartsAt = hasOutstandingBalance ? Number(period.starts_at) : Number(period.ends_at);
   const coverageEndsAt = addCalendarMonths(coverageStartsAt, coverageMonths);
   const requestedCoverageMinor = monthlyPriceMinor * coverageMonths;
-  const periodExtensionMinor = hasOutstandingBalance ? Math.max(0, requestedCoverageMinor - Number(period.amount_due_minor)) : requestedCoverageMinor;
+  const periodExtensionMinor = hasOutstandingBalance ? Math.max(0, requestedCoverageMinor - accruedAmountDueMinor) : requestedCoverageMinor;
   if (!Number.isSafeInteger(periodExtensionMinor) || periodExtensionMinor > 1e8) {
     throw new AuthError(400, "That coverage period is too large.");
   }
-  const nextEndsAt = Math.max(Number(period.ends_at), coverageEndsAt);
-  const nextAmountDueMinor = Number(period.amount_due_minor) + periodExtensionMinor;
+  const nextEndsAt = Math.max(materializedEndsAt, coverageEndsAt);
+  const nextAmountDueMinor = accruedAmountDueMinor + periodExtensionMinor;
   const paymentId = crypto.randomUUID();
   const details = JSON.stringify({
     paymentId,
@@ -2821,7 +2844,8 @@ async function voidPayment(db, actor, body, now) {
   const userId = identifier(body.userId);
   const paymentId = identifier(body.paymentId, "payment");
   await targetUser(db, userId);
-  const payment = await db.prepare(`SELECT p.id, p.billing_period_id, s.id AS subscription_id,
+  const payment = await db.prepare(`SELECT p.id, p.billing_period_id, p.period_extension_minor,
+      bp.amount_due_minor AS current_amount_due_minor, s.id AS subscription_id,
       COALESCE(bp.base_ends_at, bp.ends_at) AS base_ends_at,
       COALESCE(bp.base_amount_due_minor, bp.amount_due_minor) AS base_amount_due_minor,
       CASE WHEN bp.starts_at = s.starts_at AND bp.ends_at = s.ends_at THEN 1 ELSE 0 END AS is_current
@@ -2863,7 +2887,10 @@ async function voidPayment(db, actor, body, now) {
       COALESCE(SUM(period_extension_minor), 0) AS extension_minor
     FROM payments WHERE billing_period_id = ? AND status = 'confirmed'`).bind(Number(payment.base_ends_at), payment.billing_period_id).first();
   const nextEndsAt = Math.max(Number(payment.base_ends_at), Number(activeCoverage.latest_coverage_end));
-  const nextAmountDueMinor = Number(payment.base_amount_due_minor) + Number(activeCoverage.extension_minor);
+  const nextAmountDueMinor = Math.max(
+    Number(payment.base_amount_due_minor),
+    Number(payment.current_amount_due_minor) - Number(payment.period_extension_minor || 0)
+  );
   await db.batch([
     db.prepare("UPDATE billing_periods SET ends_at = ?, amount_due_minor = ? WHERE id = ?").bind(nextEndsAt, nextAmountDueMinor, payment.billing_period_id),
     db.prepare("UPDATE subscriptions SET ends_at = ?, version = version + 1, updated_at = ? WHERE id = ? AND ? = 1").bind(nextEndsAt, now, payment.subscription_id, Number(payment.is_current))
@@ -2949,7 +2976,7 @@ async function adminBillingResponse(request, env2) {
 var DAY_MS, ACCESS_STATUSES, PAYMENT_METHODS;
 var init_billing = __esm({
   "../shared/portal/billing.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -2962,8 +2989,10 @@ var init_billing = __esm({
     __name(identifier, "identifier");
     __name(dateTimestamp, "dateTimestamp");
     __name(addCalendarMonths, "addCalendarMonths");
+    __name(startOfUtcDay, "startOfUtcDay");
+    __name(missedMonthlyCycles, "missedMonthlyCycles");
     __name(paymentState, "paymentState");
-    __name(mapPeriod, "mapPeriod");
+    __name(accruedBillingPeriod, "accruedBillingPeriod");
     __name(mapPayment, "mapPayment");
     __name(addonsForUser, "addonsForUser");
     __name(billingForUser, "billingForUser");
@@ -2990,7 +3019,7 @@ async function onRequest({ request, env: env2 }) {
 }
 var init_billing2 = __esm({
   "api/portal/admin/billing.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3094,7 +3123,7 @@ async function adminOverseerrUsersResponse(request, env2, fetcher = fetch) {
 var PAGE_SIZE, MAX_PAGES, emailPattern;
 var init_admin_overseerr = __esm({
   "../shared/portal/admin-overseerr.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3118,7 +3147,7 @@ async function onRequest2({ request, env: env2 }) {
 }
 var init_overseerr_users = __esm({
   "api/portal/admin/overseerr-users.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3133,7 +3162,7 @@ async function onRequest3({ request, env: env2 }) {
 }
 var init_referrals2 = __esm({
   "api/portal/admin/referrals.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3148,7 +3177,7 @@ async function onRequest4({ request, env: env2 }) {
 }
 var init_request_credits = __esm({
   "api/portal/admin/request-credits.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3189,20 +3218,22 @@ function adminUser(row, now) {
       currency: row.subscription_currency
     } : null,
     billing: row.billing_period_id ? (() => {
-      const amountDueMinor = Number(row.amount_due_minor);
-      const confirmedMinor = Number(row.confirmed_minor || 0);
-      const period = {
+      const period = accruedBillingPeriod({
+        id: row.billing_period_id,
         status: "open",
-        endsAt: Number(row.billing_ends_at),
-        outstandingMinor: Math.max(0, amountDueMinor - confirmedMinor),
-        confirmedMinor,
-        pendingMinor: Number(row.pending_minor || 0)
-      };
+        ends_at: row.billing_ends_at,
+        amount_due_minor: row.amount_due_minor,
+        monthly_price_minor: row.billing_monthly_price_minor,
+        confirmed_minor: row.confirmed_minor,
+        pending_minor: row.pending_minor
+      }, now);
       return {
-        status: paymentState(period, now),
+        status: period.paymentStatus,
         nextDueAt: period.endsAt,
-        amountDueMinor,
+        amountDueMinor: period.amountDueMinor,
         outstandingMinor: period.outstandingMinor,
+        missedCycles: period.missedCycles,
+        monthsDue: period.monthsDue,
         currency: row.billing_currency
       };
     })() : null
@@ -3231,7 +3262,8 @@ async function adminUsersResponse(request, env2) {
       s.access_status AS subscription_status, s.starts_at, s.ends_at,
       t.name AS tier_name, t.monthly_price_minor, t.currency AS subscription_currency,
       bp.id AS billing_period_id, bp.ends_at AS billing_ends_at,
-      bp.amount_due_minor, bp.currency AS billing_currency,
+      bp.amount_due_minor, COALESCE(bp.base_amount_due_minor, bp.amount_due_minor) AS billing_monthly_price_minor,
+      bp.currency AS billing_currency,
       COALESCE(pt.confirmed_minor, 0) AS confirmed_minor,
       COALESCE(pt.pending_minor, 0) AS pending_minor
       FROM users u
@@ -3273,7 +3305,7 @@ async function adminUsersResponse(request, env2) {
 }
 var init_admin = __esm({
   "../shared/portal/admin.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3290,7 +3322,7 @@ async function onRequest5({ request, env: env2 }) {
 }
 var init_users = __esm({
   "api/portal/admin/users.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3305,7 +3337,7 @@ async function onRequest6({ request, env: env2, params }) {
 }
 var init_action = __esm({
   "api/portal/auth/[action].js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3545,7 +3577,7 @@ async function plexAuthResponse(request, env2, action, fetcher = fetch) {
 var MAX_AGE;
 var init_plex_auth = __esm({
   "../shared/portal/plex-auth.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3572,7 +3604,7 @@ async function onRequest7({ request, env: env2, params }) {
 }
 var init_action2 = __esm({
   "api/portal/plex/[action].js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3585,7 +3617,7 @@ var init_action2 = __esm({
 var require_util = __commonJS({
   "../node_modules/fast-xml-parser/src/util.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3663,7 +3695,7 @@ var require_util = __commonJS({
 var require_validator = __commonJS({
   "../node_modules/fast-xml-parser/src/validator.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -3990,7 +4022,7 @@ var require_validator = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
 var require_OptionsBuilder = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"(exports) {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4123,7 +4155,7 @@ var require_OptionsBuilder = __commonJS({
 var require_xmlNode = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4156,7 +4188,7 @@ var require_xmlNode = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js
 var require_DocTypeReader = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js"(exports, module) {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4453,7 +4485,7 @@ var require_DocTypeReader = __commonJS({
 // ../node_modules/strnum/strnum.js
 var require_strnum = __commonJS({
   "../node_modules/strnum/strnum.js"(exports, module) {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4548,7 +4580,7 @@ var require_strnum = __commonJS({
 // ../node_modules/fast-xml-parser/src/ignoreAttributes.js
 var require_ignoreAttributes = __commonJS({
   "../node_modules/fast-xml-parser/src/ignoreAttributes.js"(exports, module) {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4579,7 +4611,7 @@ var require_ignoreAttributes = __commonJS({
 var require_OrderedObjParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5205,7 +5237,7 @@ var require_OrderedObjParser = __commonJS({
 var require_node2json = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/node2json.js"(exports) {
     "use strict";
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5300,7 +5332,7 @@ var require_node2json = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js
 var require_XMLParser = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlparser/XMLParser.js"(exports, module) {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5365,7 +5397,7 @@ var require_XMLParser = __commonJS({
 // ../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js
 var require_orderedJs2Xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js"(exports, module) {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5509,7 +5541,7 @@ var require_orderedJs2Xml = __commonJS({
 var require_json2xml = __commonJS({
   "../node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5763,7 +5795,7 @@ var require_json2xml = __commonJS({
 var require_fxp = __commonJS({
   "../node_modules/fast-xml-parser/src/fxp.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6257,7 +6289,7 @@ async function getFeaturedCollection(env2, options = {}) {
 var import_fast_xml_parser, parser, cache, DEFAULT_PLEX_FETCH_TIMEOUT_MS, DEFAULT_LIBRARY_TITLES;
 var init_plex_client = __esm({
   "../shared/plex-client.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6377,7 +6409,7 @@ async function cachedJson(context2, options) {
 var PLEX_API_CACHE_VERSION;
 var init_pages = __esm({
   "_lib/pages.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6405,7 +6437,7 @@ async function onRequestGet(context2) {
 }
 var init_anime_movies = __esm({
   "api/plex/anime-movies.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6430,7 +6462,7 @@ async function onRequestGet2(context2) {
 }
 var init_anime_shows = __esm({
   "api/plex/anime-shows.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6453,7 +6485,7 @@ async function onRequestGet3(context2) {
 }
 var init_collections = __esm({
   "api/plex/collections.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6474,7 +6506,7 @@ async function onRequestGet4(context2) {
 }
 var init_counts = __esm({
   "api/plex/counts.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6505,7 +6537,7 @@ async function onRequestGet5(context2) {
 }
 var init_featured_collection = __esm({
   "api/plex/featured-collection.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6558,7 +6590,7 @@ async function onRequestGet6(context2) {
 }
 var init_image = __esm({
   "api/plex/image.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6583,7 +6615,7 @@ async function onRequestGet7(context2) {
 }
 var init_movies = __esm({
   "api/plex/movies.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6604,7 +6636,7 @@ async function onRequestGet8(context2) {
 }
 var init_sections = __esm({
   "api/plex/sections.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6629,7 +6661,7 @@ async function onRequestGet9(context2) {
 }
 var init_shows = __esm({
   "api/plex/shows.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6693,7 +6725,7 @@ async function onRequestGet10(context2) {
 }
 var init_status = __esm({
   "api/plex/status.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6722,7 +6754,7 @@ async function onRequestGet11(context2) {
 }
 var init_top_rated = __esm({
   "api/plex/top-rated.ts"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6736,7 +6768,7 @@ var init_top_rated = __esm({
 var defaultLinks, defaultArticles;
 var init_portal_content = __esm({
   "../assets/portal-content.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6828,7 +6860,7 @@ function normalizeContent(content) {
 }
 var init_portal_utils = __esm({
   "../assets/portal-utils.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6864,7 +6896,7 @@ async function publicContentResponse(env2) {
 var publicContentQueries;
 var init_content = __esm({
   "../shared/portal/content.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6885,7 +6917,7 @@ async function onRequestGet12(context2) {
 }
 var init_content2 = __esm({
   "api/portal/content.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7014,7 +7046,7 @@ async function activityResponse(request, env2, fetcher = fetch) {
 var DEFAULT_TAUTULLI_URL, ACTIVITY_RANGE, ACTIVITY_LABEL, count3, normalized2;
 var init_activity = __esm({
   "../shared/portal/activity.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7041,7 +7073,7 @@ async function onRequest8({ request, env: env2 }) {
 }
 var init_activity2 = __esm({
   "api/portal/activity.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7056,7 +7088,7 @@ async function onRequest9({ request, env: env2 }) {
 }
 var init_avatar = __esm({
   "api/portal/avatar.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7071,7 +7103,7 @@ async function onRequest10({ request, env: env2 }) {
 }
 var init_billing3 = __esm({
   "api/portal/billing.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7086,7 +7118,7 @@ async function onRequest11({ request, env: env2 }) {
 }
 var init_referrals3 = __esm({
   "api/portal/referrals.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7101,7 +7133,7 @@ async function onRequest12({ request, env: env2 }) {
 }
 var init_requests = __esm({
   "api/portal/requests.js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7116,7 +7148,7 @@ async function onRequest13({ request, env: env2, params }) {
 }
 var init_code = __esm({
   "join/[code].js"() {
-    init_functionsRoutes_0_0665219995019839();
+    init_functionsRoutes_0_819241099043611();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7125,10 +7157,10 @@ var init_code = __esm({
   }
 });
 
-// ../.wrangler/tmp/pages-3XAlKF/functionsRoutes-0.0665219995019839.mjs
+// ../.wrangler/tmp/pages-DzLJdt/functionsRoutes-0.819241099043611.mjs
 var routes;
-var init_functionsRoutes_0_0665219995019839 = __esm({
-  "../.wrangler/tmp/pages-3XAlKF/functionsRoutes-0.0665219995019839.mjs"() {
+var init_functionsRoutes_0_819241099043611 = __esm({
+  "../.wrangler/tmp/pages-DzLJdt/functionsRoutes-0.819241099043611.mjs"() {
     init_billing2();
     init_overseerr_users();
     init_referrals2();
@@ -7335,13 +7367,13 @@ var init_functionsRoutes_0_0665219995019839 = __esm({
 });
 
 // ../node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_0665219995019839();
+init_functionsRoutes_0_819241099043611();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
 init_performance2();
 
 // ../node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_0665219995019839();
+init_functionsRoutes_0_819241099043611();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
 init_performance2();

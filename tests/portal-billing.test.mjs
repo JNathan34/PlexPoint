@@ -69,7 +69,8 @@ test("an admin assigns a plan, records payments and members see their own billin
   const savedData = await saved.json();
   assert.equal(savedData.billing.subscription.tier, "Gold Tier");
   assert.equal(savedData.billing.currentPeriod.paymentStatus, "overdue");
-  assert.equal(savedData.billing.currentPeriod.outstandingMinor, 500);
+  assert.equal(savedData.billing.currentPeriod.outstandingMinor, 1500);
+  assert.equal(savedData.billing.currentPeriod.monthsDue, 3);
   assert.equal(savedData.tiers.length, 7);
   assert.equal(savedData.availableAddons.length, 3);
 
@@ -96,8 +97,8 @@ test("an admin assigns a plan, records payments and members see their own billin
   }), env);
   assert.equal(payment.status, 200);
   const paymentData = await payment.json();
-  assert.equal(paymentData.billing.currentPeriod.paymentStatus, "paid");
-  assert.equal(paymentData.billing.currentPeriod.outstandingMinor, 0);
+  assert.equal(paymentData.billing.currentPeriod.paymentStatus, "overdue");
+  assert.equal(paymentData.billing.currentPeriod.outstandingMinor, 1000);
   assert.equal(paymentData.billing.lastPayment.reference, "BANK-001");
   assert.equal(paymentData.billing.lastPayment.note, "July membership");
   assert.equal(paymentData.billing.lastPayment.coverageMonths, 1);
@@ -217,7 +218,7 @@ test("voiding a payment preserves its audit trail and restores the outstanding b
   }), env);
   const data = await voided.json();
   assert.equal(data.billing.payments[0].status, "void");
-  assert.equal(data.billing.currentPeriod.outstandingMinor, 250);
+  assert.equal(data.billing.currentPeriod.outstandingMinor, 500);
   assert.equal(sqlite.prepare("SELECT status FROM payments WHERE id = ?").get(paymentId).status, "void");
   assert.equal(sqlite.prepare("SELECT count(*) AS n FROM audit_events WHERE action = 'billing.payment_voided'").get().n, 1);
 });
@@ -233,7 +234,8 @@ test("the admin user list includes an automatically calculated payment state", a
   const response = await adminUsersResponse(getRequest("/api/portal/admin/users", admin.cookie), env);
   const listed = (await response.json()).users.find((account) => account.id === member.user.id);
   assert.equal(listed.billing.status, "overdue");
-  assert.equal(listed.billing.outstandingMinor, 350);
+  assert.equal(listed.billing.outstandingMinor, 1050);
+  assert.equal(listed.billing.monthsDue, 3);
 });
 
 test("VIP uses the normal entitlement flow without requiring a payment", async (t) => {

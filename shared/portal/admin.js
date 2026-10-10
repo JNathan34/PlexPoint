@@ -1,5 +1,5 @@
 import { AuthError, isAdminEmail, managerCorsHeaders, plexAvatarColumnAvailable, reply, sessionUser } from "./auth.js";
-import { paymentState } from "./billing.js";
+import { accruedBillingPeriod } from "./billing.js";
 
 function adminUser(row, now) {
   const signInMethods = [];
@@ -28,20 +28,22 @@ function adminUser(row, now) {
       currency: row.subscription_currency,
     } : null,
     billing: row.billing_period_id ? (() => {
-      const amountDueMinor = Number(row.amount_due_minor);
-      const confirmedMinor = Number(row.confirmed_minor || 0);
-      const period = {
+      const period = accruedBillingPeriod({
+        id: row.billing_period_id,
         status: "open",
-        endsAt: Number(row.billing_ends_at),
-        outstandingMinor: Math.max(0, amountDueMinor - confirmedMinor),
-        confirmedMinor,
-        pendingMinor: Number(row.pending_minor || 0),
-      };
+        ends_at: row.billing_ends_at,
+        amount_due_minor: row.amount_due_minor,
+        monthly_price_minor: row.billing_monthly_price_minor,
+        confirmed_minor: row.confirmed_minor,
+        pending_minor: row.pending_minor,
+      }, now);
       return {
-        status: paymentState(period, now),
+        status: period.paymentStatus,
         nextDueAt: period.endsAt,
-        amountDueMinor,
+        amountDueMinor: period.amountDueMinor,
         outstandingMinor: period.outstandingMinor,
+        missedCycles: period.missedCycles,
+        monthsDue: period.monthsDue,
         currency: row.billing_currency,
       };
     })() : null,
@@ -74,7 +76,8 @@ export async function adminUsersResponse(request, env) {
       s.access_status AS subscription_status, s.starts_at, s.ends_at,
       t.name AS tier_name, t.monthly_price_minor, t.currency AS subscription_currency,
       bp.id AS billing_period_id, bp.ends_at AS billing_ends_at,
-      bp.amount_due_minor, bp.currency AS billing_currency,
+      bp.amount_due_minor, COALESCE(bp.base_amount_due_minor, bp.amount_due_minor) AS billing_monthly_price_minor,
+      bp.currency AS billing_currency,
       COALESCE(pt.confirmed_minor, 0) AS confirmed_minor,
       COALESCE(pt.pending_minor, 0) AS pending_minor
       FROM users u
