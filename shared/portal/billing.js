@@ -287,6 +287,39 @@ async function savePlan(db, actor, body, now) {
   return adminDetail(db, userId, now);
 }
 
+function displayName(value) {
+  const name = typeof value === "string" ? value.trim().replace(/\s+/g, " ") : "";
+  if (!name || name.length > 100 || /[\x00-\x1f\x7f]/.test(name)) throw new AuthError(400, "Enter a name between 1 and 100 characters.");
+  return name;
+}
+
+async function renameUser(db, actor, body, now) {
+  const userId = identifier(body.userId);
+  const account = await targetUser(db, userId);
+  const name = displayName(body.displayName);
+  await db.batch([
+    db.prepare("UPDATE users SET display_name = ?, updated_at = ? WHERE id = ?").bind(name, now, userId),
+    db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
+      VALUES (?, ?, ?, 'admin.user_renamed', ?, ?)`)
+      .bind(crypto.randomUUID(), actor.id, userId, JSON.stringify({ previousDisplayName: account.displayName, displayName: name }), now),
+  ]);
+  return adminDetail(db, userId, now);
+}
+
+async function removeUser(db, actor, body, now) {
+  const userId = identifier(body.userId);
+  const account = await targetUser(db, userId);
+  if (account.id === actor.id || isAdminEmail(account.email)) throw new AuthError(400, "The administrator account cannot be removed.");
+  if (account.accountStatus === "disabled") throw new AuthError(400, "This user has already been removed.");
+  await db.batch([
+    db.prepare("UPDATE users SET account_status = 'disabled', updated_at = ? WHERE id = ?").bind(now, userId),
+    db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
+      VALUES (?, ?, ?, 'admin.user_removed', '{}', ?)`)
+      .bind(crypto.randomUUID(), actor.id, userId, now),
+  ]);
+  return { removedUserId: userId };
+}
+
 async function recordPayment(db, actor, body, now) {
   const userId = identifier(body.userId);
   await targetUser(db, userId);
@@ -527,6 +560,8 @@ export async function adminBillingResponse(request, env) {
     if (body.action === "update_payment") return reply(await updatePayment(env.PORTAL_DB, current, body, now), 200, cors);
     if (body.action === "void_payment") return reply(await voidPayment(env.PORTAL_DB, current, body, now), 200, cors);
     if (body.action === "save_addons") return reply(await saveAddons(env.PORTAL_DB, current, body, now), 200, cors);
+    if (body.action === "rename_user") return reply(await renameUser(env.PORTAL_DB, current, body, now), 200, cors);
+    if (body.action === "remove_user") return reply(await removeUser(env.PORTAL_DB, current, body, now), 200, cors);
     throw new AuthError(400, "Select a valid billing action.");
   } catch (error) { return errorResponse(error, cors); }
 }

@@ -252,3 +252,24 @@ test("VIP uses the normal entitlement flow without requiring a payment", async (
   assert.equal(data.billing.currentPeriod.paymentStatus, "paid");
   assert.equal(data.billing.payments.length, 0);
 });
+
+test("an admin can rename and safely remove a payment-manager user", async (t) => {
+  const { sqlite, env } = setup(t);
+  const admin = await register(env, "jacobnathan1718@gmail.com", "Jacob");
+  const member = await register(env, "remove@example.test", "Original name");
+  const renamed = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "rename_user", userId: member.user.id, displayName: "Updated customer",
+  }), env);
+  assert.equal(renamed.status, 200);
+  assert.equal((await renamed.json()).account.displayName, "Updated customer");
+  const removed = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "remove_user", userId: member.user.id,
+  }), env);
+  assert.equal(removed.status, 200);
+  assert.equal((await removed.json()).removedUserId, member.user.id);
+  assert.equal(sqlite.prepare("SELECT account_status FROM users WHERE id = ?").get(member.user.id).account_status, "disabled");
+  const ownerRemoval = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "remove_user", userId: admin.user.id,
+  }), env);
+  assert.equal(ownerRemoval.status, 400);
+});
