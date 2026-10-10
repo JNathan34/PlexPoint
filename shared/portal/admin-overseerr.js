@@ -11,7 +11,12 @@ function text(value, maximum = 254) {
 
 function importableUser(value) {
   const overseerrId = Number(value?.id);
-  const plexId = text(value?.plexId, 120);
+  // Overseerr serializes Plex IDs as numbers on some installations and strings
+  // on others. The provider ID is an opaque identifier, so preserve either
+  // representation as text before storing it in the portal identity table.
+  const plexId = (typeof value?.plexId === "string" || Number.isSafeInteger(value?.plexId))
+    ? String(value.plexId).trim().slice(0, 120)
+    : "";
   const email = text(value?.email).toLowerCase();
   const username = text(value?.plexUsername || value?.username || value?.displayName, 100);
   const displayName = text(value?.displayName || username || email.split("@")[0], 100);

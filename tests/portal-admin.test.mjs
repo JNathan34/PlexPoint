@@ -55,7 +55,7 @@ const importRequest = (cookie, body) => new Request("https://portal.example.test
   ...(body ? { body: JSON.stringify(body) } : {}),
 });
 const overseerrFetch = async () => new Response(JSON.stringify({ results: [
-  { id: 51, plexId: "plex-import-1", email: "first@example.test", plexUsername: "First", displayName: "First User", avatar: "https://images.example.test/first.jpg" },
+  { id: 51, plexId: 51, email: "first@example.test", plexUsername: "First", displayName: "First User", avatar: "https://images.example.test/first.jpg" },
   { id: 52, plexId: "plex-import-2", email: "second@example.test", plexUsername: "Second", displayName: "Second User" },
 ] }), { status: 200, headers: { "Content-Type": "application/json" } });
 
