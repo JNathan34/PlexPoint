@@ -60,6 +60,16 @@ function missedMonthlyCycles(endsAt, now) {
   return cycles;
 }
 
+function monthlyCyclesCovered(startsAt, endsAt) {
+  let cycles = 0;
+  let boundary = Number(startsAt);
+  while (cycles < 120 && boundary < Number(endsAt)) {
+    cycles += 1;
+    boundary = addCalendarMonths(boundary, 1);
+  }
+  return cycles;
+}
+
 export function paymentState(period, now = Date.now()) {
   if (!period) return "none";
   if (period.status === "void") return "void";
@@ -285,13 +295,15 @@ async function savePlan(db, actor, body, now) {
   const startsAt = dateTimestamp(body.startsOn, "plan start date");
   const endsAt = dateTimestamp(body.nextDueOn, "next payment due date");
   if (endsAt <= startsAt) throw new AuthError(400, "The next payment date must be after the plan start date.");
+  const billedMonths = monthlyCyclesCovered(startsAt, endsAt);
+  const amountDueMinor = Number(tier.monthly_price_minor) * billedMonths;
 
   const existing = await db.prepare("SELECT id FROM subscriptions WHERE user_id = ?").bind(userId).first();
   const subscriptionId = existing?.id || crypto.randomUUID();
   const periodId = crypto.randomUUID();
   const reference = `manual:${subscriptionId}:${startsAt}`;
   const details = JSON.stringify({ tierId, tier: tier.name, accessStatus, startsAt, endsAt,
-    amountDueMinor: Number(tier.monthly_price_minor), currency: tier.currency });
+    billedMonths, amountDueMinor, currency: tier.currency });
   await db.batch([
     db.prepare(`INSERT INTO subscriptions
       (id, user_id, tier_id, access_status, starts_at, ends_at, provider, version, created_at, updated_at)
@@ -306,7 +318,7 @@ async function savePlan(db, actor, body, now) {
       ON CONFLICT(reference) DO UPDATE SET tier_id = excluded.tier_id, ends_at = excluded.ends_at,
         amount_due_minor = excluded.amount_due_minor, currency = excluded.currency, status = 'open',
         base_ends_at = excluded.base_ends_at, base_amount_due_minor = excluded.base_amount_due_minor`)
-      .bind(periodId, subscriptionId, tierId, startsAt, endsAt, Number(tier.monthly_price_minor), tier.currency,
+      .bind(periodId, subscriptionId, tierId, startsAt, endsAt, amountDueMinor, tier.currency,
         reference, now, endsAt, Number(tier.monthly_price_minor)),
     db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
       VALUES (?, ?, ?, 'billing.plan_updated', ?, ?)`)

@@ -118,6 +118,20 @@ test("an admin assigns a plan, records payments and members see their own billin
   assert.deepEqual(audit.map((row) => row.action).sort(), ["billing.addons_updated", "billing.payment_recorded", "billing.plan_updated"]);
 });
 
+test("a plan saved across several unpaid months starts with the full balance due", async (t) => {
+  const { env } = setup(t);
+  const admin = await register(env, "jacobnathan1718@gmail.com", "Jacob");
+  const member = await register(env, "three-months@example.test", "Three Months");
+  const saved = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "save_plan", userId: member.user.id, tierId: "bronze", accessStatus: "enabled",
+    startsOn: "2026-07-01", nextDueOn: "2026-10-01",
+  }), env);
+  const data = await saved.json();
+  assert.equal(data.billing.currentPeriod.storedAmountDueMinor, 750);
+  assert.equal(data.billing.currentPeriod.outstandingMinor, 750);
+  assert.equal(data.billing.currentPeriod.monthsDue, 3);
+});
+
 test("billing access is private and admin mutations are owner-only and same-origin", async (t) => {
   const { env } = setup(t);
   const admin = await register(env, "jacobnathan1718@gmail.com", "Jacob");
