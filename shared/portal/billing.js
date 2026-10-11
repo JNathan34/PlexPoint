@@ -410,6 +410,8 @@ async function createDemoUsers(db, actor, now) {
     const subscriptionId = `demo-subscription-${number}`;
     const periodId = `demo-period-${number}`;
     const paymentId = `demo-payment-${number}`;
+    const username = name.toLowerCase().replace(/[^a-z]+/g, ".").replace(/^\.|\.$/g, "");
+    const avatarUrl = `https://api.dicebear.com/9.x/personas/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
     const tier = tiers.get(tierId);
     const amountMinor = Number(tier.monthly_price_minor);
     statements.push(
@@ -419,6 +421,10 @@ async function createDemoUsers(db, actor, now) {
         (id, user_id, tier_id, access_status, starts_at, ends_at, provider, provider_subscription_id, version, created_at, updated_at)
         VALUES (?, ?, ?, 'enabled', ?, ?, 'demo_seed', ?, 1, ?, ?)`)
         .bind(subscriptionId, userId, tierId, dayStart, nextDueAt, userId, now, now),
+      db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(user_id) DO UPDATE SET username = excluded.username, avatar_url = excluded.avatar_url`)
+        .bind(`demo-plex-${number}`, userId, username, now, avatarUrl),
       db.prepare(`INSERT INTO billing_periods
         (id, subscription_id, tier_id, starts_at, ends_at, amount_due_minor, currency, status, reference, created_at,
          base_ends_at, base_amount_due_minor)
@@ -438,13 +444,40 @@ async function createDemoUsers(db, actor, now) {
     );
     created += 1;
   }
+  // Also repair the presentation of demo customers that were created by an
+  // earlier version before realistic usernames and avatars were added.
+  for (const [index, [name]] of DEMO_CUSTOMERS.entries()) {
+    const number = String(index + 1).padStart(2, "0");
+    const userId = `demo-customer-${number}`;
+    const username = name.toLowerCase().replace(/[^a-z]+/g, ".").replace(/^\.|\.$/g, "");
+    const avatarUrl = `https://api.dicebear.com/9.x/personas/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
+    statements.push(db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
+      SELECT ?, id, ?, ?, ? FROM users WHERE id = ?
+      ON CONFLICT(user_id) DO UPDATE SET username = excluded.username, avatar_url = excluded.avatar_url`)
+      .bind(`demo-plex-${number}`, username, now, avatarUrl, userId));
+  }
   if (statements.length) await db.batch(statements);
   const reenabled = await db.prepare(`UPDATE users SET account_status = 'enabled', updated_at = ?
     WHERE email LIKE 'demo-customer-%@plexpoint.demo' AND account_status = 'disabled'`).bind(now).run();
   return { created, reenabled: Number(reenabled.meta?.changes || 0), totalUsers: DEMO_CUSTOMERS.length, monthlyTotalMinor, currency: "GBP", enabled: true };
 }
 
-async function demoUsersStatus(db) {
+async function repairDemoProfiles(db, now) {
+  const statements = DEMO_CUSTOMERS.map(([name], index) => {
+    const number = String(index + 1).padStart(2, "0");
+    const userId = `demo-customer-${number}`;
+    const username = name.toLowerCase().replace(/[^a-z]+/g, ".").replace(/^\.|\.$/g, "");
+    const avatarUrl = `https://api.dicebear.com/9.x/personas/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
+    return db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
+      SELECT ?, id, ?, ?, ? FROM users WHERE id = ?
+      ON CONFLICT(user_id) DO UPDATE SET username = excluded.username, avatar_url = excluded.avatar_url`)
+      .bind(`demo-plex-${number}`, username, now, avatarUrl, userId);
+  });
+  await db.batch(statements);
+}
+
+async function demoUsersStatus(db, now) {
+  await repairDemoProfiles(db, now);
   const result = await db.prepare(`SELECT
     COUNT(*) AS total,
     SUM(CASE WHEN account_status = 'enabled' THEN 1 ELSE 0 END) AS enabled
@@ -456,11 +489,11 @@ async function demoUsersStatus(db) {
 
 async function setDemoUsersEnabled(db, actor, body, now) {
   if (typeof body.enabled !== "boolean") throw new AuthError(400, "Choose whether to show the demo users.");
-  const status = await demoUsersStatus(db);
+  const status = await demoUsersStatus(db, now);
   if (!status.total) throw new AuthError(409, "Add the demo users before turning them on or off.");
   await db.prepare(`UPDATE users SET account_status = ?, updated_at = ?
     WHERE email LIKE 'demo-customer-%@plexpoint.demo'`).bind(body.enabled ? "enabled" : "disabled", now).run();
-  return { ...(await demoUsersStatus(db)), enabled: body.enabled };
+  return { ...(await demoUsersStatus(db, now)), enabled: body.enabled };
 }
 
 async function recordPayment(db, actor, body, now) {
@@ -717,7 +750,7 @@ export async function adminBillingResponse(request, env) {
     if (body.action === "rename_user") return reply(await renameUser(env.PORTAL_DB, current, body, now), 200, cors);
     if (body.action === "remove_user") return reply(await removeUser(env.PORTAL_DB, current, body, now), 200, cors);
     if (body.action === "create_demo_users") return reply(await createDemoUsers(env.PORTAL_DB, current, now), 200, cors);
-    if (body.action === "demo_users_status") return reply(await demoUsersStatus(env.PORTAL_DB), 200, cors);
+    if (body.action === "demo_users_status") return reply(await demoUsersStatus(env.PORTAL_DB, now), 200, cors);
     if (body.action === "set_demo_users_enabled") return reply(await setDemoUsersEnabled(env.PORTAL_DB, current, body, now), 200, cors);
     throw new AuthError(400, "Select a valid billing action.");
   } catch (error) { return errorResponse(error, cors); }
