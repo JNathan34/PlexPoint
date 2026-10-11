@@ -296,3 +296,29 @@ test("an admin can rename and safely remove a payment-manager user", async (t) =
   }), env);
   assert.equal(ownerRemoval.status, 400);
 });
+
+test("an admin can add a realistic paid £200 demo customer set once", async (t) => {
+  const { sqlite, env } = setup(t);
+  const admin = await register(env, "jacobnathan1718@gmail.com", "Jacob");
+  const response = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "create_demo_users",
+  }), env);
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), {
+    created: 48, totalUsers: 48, monthlyTotalMinor: 20_000, currency: "GBP",
+  });
+  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM users WHERE email LIKE 'demo-customer-%@plexpoint.demo'").get().n, 48);
+  assert.equal(sqlite.prepare(`SELECT SUM(t.monthly_price_minor) AS total
+    FROM subscriptions s JOIN subscription_tiers t ON t.id = s.tier_id
+    WHERE s.provider = 'demo_seed' AND s.access_status = 'enabled'`).get().total, 20_000);
+  assert.equal(sqlite.prepare(`SELECT COUNT(*) AS n FROM payments p
+    WHERE p.provider = 'demo_seed' AND p.status = 'confirmed'`).get().n, 48);
+  const users = await adminUsersResponse(getRequest("/api/portal/admin/users", admin.cookie), env);
+  const demos = (await users.json()).users.filter((user) => user.email.endsWith("@plexpoint.demo"));
+  assert.equal(demos.length, 48);
+  assert.ok(demos.every((user) => user.billing?.status === "paid"));
+  const again = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "create_demo_users",
+  }), env);
+  assert.equal((await again.json()).created, 0);
+});

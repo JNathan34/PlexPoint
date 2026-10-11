@@ -363,6 +363,78 @@ async function removeUser(db, actor, body, now) {
   return { removedUserId: userId };
 }
 
+const DEMO_CUSTOMERS = [
+  ["Amelia Carter", "bronze"], ["Noah Bennett", "bronze"], ["Olivia Harris", "bronze"], ["Theo Morgan", "bronze"],
+  ["Freya Collins", "bronze"], ["Leo Walker", "bronze"], ["Grace Mitchell", "bronze"], ["Arthur Reed", "bronze"],
+  ["Isla Turner", "bronze"], ["Henry Foster", "bronze"], ["Mia Cooper", "bronze"], ["Oscar Bennett", "bronze"],
+  ["Evie Parker", "bronze"], ["Jack Edwards", "bronze"], ["Sophie Bailey", "bronze"], ["George Ward", "bronze"],
+  ["Lily Price", "bronze"], ["Charlie Russell", "bronze"], ["Ruby Hughes", "bronze"], ["Alfie Brooks", "bronze"],
+  ["Ella Graham", "bronze"], ["Harry Dawson", "bronze"], ["Poppy Ellis", "bronze"], ["Finley Shaw", "bronze"],
+  ["Ava Fletcher", "bronze"], ["Lucas Mason", "bronze"], ["Daisy Palmer", "bronze"], ["Ethan Lawson", "bronze"],
+  ["Ivy Chapman", "bronze"], ["Jacob Spencer", "bronze"], ["Rosie Walton", "bronze"], ["Mason Clarke", "bronze"],
+  ["Phoebe Atkinson", "bronze"], ["Daniel Kerr", "bronze"], ["Holly Newman", "bronze"], ["Samuel Grant", "bronze"],
+  ["Bella Pearson", "bronze"], ["Thomas Webb", "bronze"], ["Millie Sutton", "bronze"], ["William Dean", "bronze"],
+  ["Harper Lawson", "gold"], ["Benjamin Moore", "gold"],
+  ["Charlotte King", "platinum"], ["Alexander Wright", "platinum"], ["Florence Hall", "platinum"],
+  ["Edward Young", "platinum"], ["Matilda Green", "platinum"], ["Oliver Scott", "platinum"],
+];
+
+async function createDemoUsers(db, actor, now) {
+  const tiersResult = await db.prepare(`SELECT id, monthly_price_minor, currency
+    FROM subscription_tiers WHERE enabled = 1 AND id IN ('bronze', 'gold', 'platinum')`).all();
+  const tiers = new Map((tiersResult.results || []).map((tier) => [tier.id, tier]));
+  if (!["bronze", "gold", "platinum"].every((tierId) => tiers.has(tierId))) {
+    throw new AuthError(409, "The standard Bronze, Gold, and Platinum plans must be available before adding demo users.");
+  }
+  const monthlyTotalMinor = DEMO_CUSTOMERS.reduce((total, [, tierId]) => total + Number(tiers.get(tierId).monthly_price_minor), 0);
+  if (monthlyTotalMinor !== 20_000) throw new AuthError(409, "Demo plan prices no longer total £200.00.");
+
+  const dayStart = startOfUtcDay(now);
+  const nextDueAt = addCalendarMonths(dayStart, 1);
+  const existing = await db.prepare("SELECT email FROM users WHERE email LIKE 'demo-customer-%@plexpoint.demo'").all();
+  const existingEmails = new Set((existing.results || []).map((row) => row.email.toLowerCase()));
+  const statements = [];
+  let created = 0;
+  for (const [index, [name, tierId]] of DEMO_CUSTOMERS.entries()) {
+    const number = String(index + 1).padStart(2, "0");
+    const email = `demo-customer-${number}@plexpoint.demo`;
+    if (existingEmails.has(email)) continue;
+    const userId = `demo-customer-${number}`;
+    const subscriptionId = `demo-subscription-${number}`;
+    const periodId = `demo-period-${number}`;
+    const paymentId = `demo-payment-${number}`;
+    const tier = tiers.get(tierId);
+    const amountMinor = Number(tier.monthly_price_minor);
+    statements.push(
+      db.prepare(`INSERT INTO users (id, email, display_name, account_status, created_at, updated_at)
+        VALUES (?, ?, ?, 'enabled', ?, ?)`).bind(userId, email, name, now, now),
+      db.prepare(`INSERT INTO subscriptions
+        (id, user_id, tier_id, access_status, starts_at, ends_at, provider, provider_subscription_id, version, created_at, updated_at)
+        VALUES (?, ?, ?, 'enabled', ?, ?, 'demo_seed', ?, 1, ?, ?)`)
+        .bind(subscriptionId, userId, tierId, dayStart, nextDueAt, userId, now, now),
+      db.prepare(`INSERT INTO billing_periods
+        (id, subscription_id, tier_id, starts_at, ends_at, amount_due_minor, currency, status, reference, created_at,
+         base_ends_at, base_amount_due_minor)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'open', ?, ?, ?, ?)`)
+        .bind(periodId, subscriptionId, tierId, dayStart, nextDueAt, amountMinor, tier.currency,
+          `demo:${userId}:${dayStart}`, now, nextDueAt, amountMinor),
+      db.prepare(`INSERT INTO payments
+        (id, billing_period_id, amount_minor, currency, status, method, received_at, confirmed_at, recorded_by,
+         provider, provider_payment_id, idempotency_key, created_at, coverage_starts_at, coverage_ends_at,
+         coverage_months, period_extension_minor, note)
+        VALUES (?, ?, ?, ?, 'confirmed', 'card', ?, ?, ?, 'demo_seed', ?, ?, ?, ?, ?, 1, 0, ?)`)
+        .bind(paymentId, periodId, amountMinor, tier.currency, dayStart, now, actor.id,
+          paymentId, `demo-seed:${paymentId}`, now, dayStart, nextDueAt, "Demo payment"),
+      db.prepare(`INSERT INTO audit_events(id, actor_id, subject_user_id, action, details_json, created_at)
+        VALUES (?, ?, ?, 'billing.demo_user_created', ?, ?)`)
+        .bind(crypto.randomUUID(), actor.id, userId, JSON.stringify({ demo: true, tierId, amountMinor }), now),
+    );
+    created += 1;
+  }
+  if (statements.length) await db.batch(statements);
+  return { created, totalUsers: DEMO_CUSTOMERS.length, monthlyTotalMinor, currency: "GBP" };
+}
+
 async function recordPayment(db, actor, body, now) {
   const userId = identifier(body.userId);
   await targetUser(db, userId);
@@ -616,6 +688,7 @@ export async function adminBillingResponse(request, env) {
     if (body.action === "save_addons") return reply(await saveAddons(env.PORTAL_DB, current, body, now), 200, cors);
     if (body.action === "rename_user") return reply(await renameUser(env.PORTAL_DB, current, body, now), 200, cors);
     if (body.action === "remove_user") return reply(await removeUser(env.PORTAL_DB, current, body, now), 200, cors);
+    if (body.action === "create_demo_users") return reply(await createDemoUsers(env.PORTAL_DB, current, now), 200, cors);
     throw new AuthError(400, "Select a valid billing action.");
   } catch (error) { return errorResponse(error, cors); }
 }
