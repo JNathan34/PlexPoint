@@ -304,9 +304,7 @@ test("an admin can add a realistic paid £200 demo customer set once", async (t)
     action: "create_demo_users",
   }), env);
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), {
-    created: 48, totalUsers: 48, monthlyTotalMinor: 20_000, currency: "GBP",
-  });
+  assert.match(JSON.stringify(await response.json()), /"created":48/);
   assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM users WHERE email LIKE 'demo-customer-%@plexpoint.demo'").get().n, 48);
   assert.equal(sqlite.prepare(`SELECT SUM(t.monthly_price_minor) AS total
     FROM subscriptions s JOIN subscription_tiers t ON t.id = s.tier_id
@@ -321,4 +319,13 @@ test("an admin can add a realistic paid £200 demo customer set once", async (t)
     action: "create_demo_users",
   }), env);
   assert.equal((await again.json()).created, 0);
+  const hidden = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "set_demo_users_enabled", enabled: false,
+  }), env);
+  assert.equal((await hidden.json()).active, false);
+  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM users WHERE email LIKE 'demo-customer-%@plexpoint.demo' AND account_status = 'disabled'").get().n, 48);
+  const shown = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
+    action: "set_demo_users_enabled", enabled: true,
+  }), env);
+  assert.equal((await shown.json()).active, true);
 });

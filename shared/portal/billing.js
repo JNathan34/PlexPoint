@@ -439,7 +439,28 @@ async function createDemoUsers(db, actor, now) {
     created += 1;
   }
   if (statements.length) await db.batch(statements);
-  return { created, totalUsers: DEMO_CUSTOMERS.length, monthlyTotalMinor, currency: "GBP" };
+  const reenabled = await db.prepare(`UPDATE users SET account_status = 'enabled', updated_at = ?
+    WHERE email LIKE 'demo-customer-%@plexpoint.demo' AND account_status = 'disabled'`).bind(now).run();
+  return { created, reenabled: Number(reenabled.meta?.changes || 0), totalUsers: DEMO_CUSTOMERS.length, monthlyTotalMinor, currency: "GBP", enabled: true };
+}
+
+async function demoUsersStatus(db) {
+  const result = await db.prepare(`SELECT
+    COUNT(*) AS total,
+    SUM(CASE WHEN account_status = 'enabled' THEN 1 ELSE 0 END) AS enabled
+    FROM users WHERE email LIKE 'demo-customer-%@plexpoint.demo'`).first();
+  const total = Number(result?.total || 0);
+  const enabled = Number(result?.enabled || 0);
+  return { total, enabled, active: total > 0 && enabled > 0 };
+}
+
+async function setDemoUsersEnabled(db, actor, body, now) {
+  if (typeof body.enabled !== "boolean") throw new AuthError(400, "Choose whether to show the demo users.");
+  const status = await demoUsersStatus(db);
+  if (!status.total) throw new AuthError(409, "Add the demo users before turning them on or off.");
+  await db.prepare(`UPDATE users SET account_status = ?, updated_at = ?
+    WHERE email LIKE 'demo-customer-%@plexpoint.demo'`).bind(body.enabled ? "enabled" : "disabled", now).run();
+  return { ...(await demoUsersStatus(db)), enabled: body.enabled };
 }
 
 async function recordPayment(db, actor, body, now) {
@@ -696,6 +717,8 @@ export async function adminBillingResponse(request, env) {
     if (body.action === "rename_user") return reply(await renameUser(env.PORTAL_DB, current, body, now), 200, cors);
     if (body.action === "remove_user") return reply(await removeUser(env.PORTAL_DB, current, body, now), 200, cors);
     if (body.action === "create_demo_users") return reply(await createDemoUsers(env.PORTAL_DB, current, now), 200, cors);
+    if (body.action === "demo_users_status") return reply(await demoUsersStatus(env.PORTAL_DB), 200, cors);
+    if (body.action === "set_demo_users_enabled") return reply(await setDemoUsersEnabled(env.PORTAL_DB, current, body, now), 200, cors);
     throw new AuthError(400, "Select a valid billing action.");
   } catch (error) { return errorResponse(error, cors); }
 }
