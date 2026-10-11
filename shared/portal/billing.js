@@ -390,6 +390,10 @@ function demoUsername(name) {
   return name.toLowerCase().replace(/[^a-z]+/g, "");
 }
 
+function demoAvatarUrl(name) {
+  return `https://plexpoint.uk/assets/demo-avatars/${name.trim().charAt(0).toLowerCase()}.png`;
+}
+
 async function createDemoUsers(db, actor, now) {
   const tiersResult = await db.prepare(`SELECT id, monthly_price_minor, currency
     FROM subscription_tiers WHERE enabled = 1 AND id IN ('bronze', 'gold', 'platinum')`).all();
@@ -415,6 +419,7 @@ async function createDemoUsers(db, actor, now) {
     const periodId = `demo-period-${number}`;
     const paymentId = `demo-payment-${number}`;
     const username = demoUsername(name);
+    const avatarUrl = demoAvatarUrl(name);
     const tier = tiers.get(tierId);
     const amountMinor = Number(tier.monthly_price_minor);
     statements.push(
@@ -427,7 +432,7 @@ async function createDemoUsers(db, actor, now) {
       db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
         VALUES (?, ?, ?, ?, ?)
         ON CONFLICT(user_id) DO UPDATE SET username = excluded.username, avatar_url = excluded.avatar_url`)
-        .bind(`demo-plex-${number}`, userId, username, now, null),
+        .bind(`demo-plex-${number}`, userId, username, now, avatarUrl),
       db.prepare(`INSERT INTO billing_periods
         (id, subscription_id, tier_id, starts_at, ends_at, amount_due_minor, currency, status, reference, created_at,
          base_ends_at, base_amount_due_minor)
@@ -453,10 +458,11 @@ async function createDemoUsers(db, actor, now) {
     const number = String(index + 1).padStart(2, "0");
     const userId = `demo-customer-${number}`;
     const username = demoUsername(name);
+    const avatarUrl = demoAvatarUrl(name);
     statements.push(db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
       SELECT ?, id, ?, ?, ? FROM users WHERE id = ?
       ON CONFLICT(user_id) DO UPDATE SET username = excluded.username, avatar_url = excluded.avatar_url`)
-      .bind(`demo-plex-${number}`, username, now, null, userId));
+      .bind(`demo-plex-${number}`, username, now, avatarUrl, userId));
   }
   if (statements.length) await db.batch(statements);
   const reenabled = await db.prepare(`UPDATE users SET account_status = 'enabled', updated_at = ?
@@ -469,10 +475,11 @@ async function repairDemoProfiles(db, now) {
     const number = String(index + 1).padStart(2, "0");
     const userId = `demo-customer-${number}`;
     const username = demoUsername(name);
+    const avatarUrl = demoAvatarUrl(name);
     return db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
       SELECT ?, id, ?, ?, ? FROM users WHERE id = ?
       ON CONFLICT(user_id) DO UPDATE SET username = excluded.username, avatar_url = excluded.avatar_url`)
-      .bind(`demo-plex-${number}`, username, now, null, userId);
+      .bind(`demo-plex-${number}`, username, now, avatarUrl, userId);
   });
   await db.batch(statements);
 }
