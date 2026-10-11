@@ -386,6 +386,10 @@ const DEMO_CUSTOMERS = [
   ["Edward Young", "platinum"], ["Matilda Green", "platinum"], ["Oliver Scott", "platinum"],
 ];
 
+function demoUsername(name) {
+  return name.toLowerCase().replace(/[^a-z]+/g, "");
+}
+
 async function createDemoUsers(db, actor, now) {
   const tiersResult = await db.prepare(`SELECT id, monthly_price_minor, currency
     FROM subscription_tiers WHERE enabled = 1 AND id IN ('bronze', 'gold', 'platinum')`).all();
@@ -410,8 +414,7 @@ async function createDemoUsers(db, actor, now) {
     const subscriptionId = `demo-subscription-${number}`;
     const periodId = `demo-period-${number}`;
     const paymentId = `demo-payment-${number}`;
-    const username = name.toLowerCase().replace(/[^a-z]+/g, ".").replace(/^\.|\.$/g, "");
-    const avatarUrl = `https://api.dicebear.com/9.x/personas/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
+    const username = demoUsername(name);
     const tier = tiers.get(tierId);
     const amountMinor = Number(tier.monthly_price_minor);
     statements.push(
@@ -424,7 +427,7 @@ async function createDemoUsers(db, actor, now) {
       db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
         VALUES (?, ?, ?, ?, ?)
         ON CONFLICT(user_id) DO UPDATE SET username = excluded.username, avatar_url = excluded.avatar_url`)
-        .bind(`demo-plex-${number}`, userId, username, now, avatarUrl),
+        .bind(`demo-plex-${number}`, userId, username, now, null),
       db.prepare(`INSERT INTO billing_periods
         (id, subscription_id, tier_id, starts_at, ends_at, amount_due_minor, currency, status, reference, created_at,
          base_ends_at, base_amount_due_minor)
@@ -449,12 +452,11 @@ async function createDemoUsers(db, actor, now) {
   for (const [index, [name]] of DEMO_CUSTOMERS.entries()) {
     const number = String(index + 1).padStart(2, "0");
     const userId = `demo-customer-${number}`;
-    const username = name.toLowerCase().replace(/[^a-z]+/g, ".").replace(/^\.|\.$/g, "");
-    const avatarUrl = `https://api.dicebear.com/9.x/personas/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
+    const username = demoUsername(name);
     statements.push(db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
       SELECT ?, id, ?, ?, ? FROM users WHERE id = ?
       ON CONFLICT(user_id) DO UPDATE SET username = excluded.username, avatar_url = excluded.avatar_url`)
-      .bind(`demo-plex-${number}`, username, now, avatarUrl, userId));
+      .bind(`demo-plex-${number}`, username, now, null, userId));
   }
   if (statements.length) await db.batch(statements);
   const reenabled = await db.prepare(`UPDATE users SET account_status = 'enabled', updated_at = ?
@@ -466,12 +468,11 @@ async function repairDemoProfiles(db, now) {
   const statements = DEMO_CUSTOMERS.map(([name], index) => {
     const number = String(index + 1).padStart(2, "0");
     const userId = `demo-customer-${number}`;
-    const username = name.toLowerCase().replace(/[^a-z]+/g, ".").replace(/^\.|\.$/g, "");
-    const avatarUrl = `https://api.dicebear.com/9.x/personas/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
+    const username = demoUsername(name);
     return db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
       SELECT ?, id, ?, ?, ? FROM users WHERE id = ?
       ON CONFLICT(user_id) DO UPDATE SET username = excluded.username, avatar_url = excluded.avatar_url`)
-      .bind(`demo-plex-${number}`, username, now, avatarUrl, userId);
+      .bind(`demo-plex-${number}`, username, now, null, userId);
   });
   await db.batch(statements);
 }
