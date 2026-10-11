@@ -156,7 +156,7 @@ async function addonsForUser(db, userId, { includeInactive = false, now = Date.n
 export async function billingForUser(db, userId, { includeVoided = false, includeInactiveAddons = false, now = Date.now() } = {}) {
   const addons = await addonsForUser(db, userId, { includeInactive: includeInactiveAddons, now });
   const subscription = await db.prepare(`SELECT
-    s.id, s.tier_id, s.access_status, s.starts_at, s.ends_at,
+    s.id, s.tier_id, s.access_status, s.starts_at, s.ends_at, s.provider,
     t.name AS tier_name, t.monthly_price_minor, t.currency
     FROM subscriptions s JOIN subscription_tiers t ON t.id = s.tier_id
     WHERE s.user_id = ?`).bind(userId).first();
@@ -175,7 +175,14 @@ export async function billingForUser(db, userId, { includeVoided = false, includ
     GROUP BY bp.id, bp.tier_id, t.name, bp.starts_at, bp.ends_at, bp.amount_due_minor,
       bp.base_amount_due_minor, bp.currency, bp.status
     ORDER BY bp.starts_at DESC LIMIT 24`).bind(subscription.id).all();
-  const periods = (periodResult.results || []).map((row) => accruedBillingPeriod(row, now));
+  const periods = (periodResult.results || []).map((row) => {
+    const period = accruedBillingPeriod(row, now);
+    // Seeded showcase accounts are intentionally always paid so they remain
+    // useful for a clean payment-manager demonstration over time.
+    return subscription.provider === "demo_seed"
+      ? { ...period, missedCycles: 0, monthsDue: 1, outstandingMinor: 0, paymentStatus: "paid" }
+      : period;
+  });
   const currentPeriod = periods.find((period) => period.status === "open"
     && period.startsAt === Number(subscription.starts_at) && period.endsAt === Number(subscription.ends_at))
     || periods.find((period) => period.status === "open") || null;

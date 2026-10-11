@@ -38,13 +38,14 @@ function adminUser(row, now) {
         confirmed_minor: row.confirmed_minor,
         pending_minor: row.pending_minor,
       }, now);
+      const demoPayment = row.subscription_provider === "demo_seed";
       return {
-        status: period.paymentStatus,
+        status: demoPayment ? "paid" : period.paymentStatus,
         nextDueAt: period.endsAt,
         amountDueMinor: period.amountDueMinor,
-        outstandingMinor: period.outstandingMinor,
-        missedCycles: period.missedCycles,
-        monthsDue: period.monthsDue,
+        outstandingMinor: demoPayment ? 0 : period.outstandingMinor,
+        missedCycles: demoPayment ? 0 : period.missedCycles,
+        monthsDue: demoPayment ? 1 : period.monthsDue,
         currency: row.billing_currency,
       };
     })() : null,
@@ -74,7 +75,7 @@ export async function adminUsersResponse(request, env) {
       p.username AS plex_username, ${avatarSelect},
       referrer.display_name AS referrer_name, rc.code AS referrer_code,
       r.status AS referral_status, r.order_id AS referral_order_id,
-      s.access_status AS subscription_status, s.starts_at, s.ends_at,
+      s.access_status AS subscription_status, s.starts_at, s.ends_at, s.provider AS subscription_provider,
       t.name AS tier_name, t.monthly_price_minor, t.currency AS subscription_currency,
       bp.id AS billing_period_id, bp.starts_at AS billing_starts_at, bp.ends_at AS billing_ends_at,
       bp.amount_due_minor, COALESCE(bp.base_amount_due_minor, bp.amount_due_minor) AS billing_monthly_price_minor,
