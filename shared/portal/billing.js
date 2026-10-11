@@ -45,6 +45,11 @@ function startOfUtcDay(timestamp) {
   return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
 }
 
+function startOfUtcMonth(timestamp) {
+  const date = new Date(timestamp);
+  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1);
+}
+
 // A billing period represents the first month. Once it has run out, each
 // complete additional calendar month is another charge.  This stays a pure
 // calculation while the manager is being viewed, so merely opening a customer
@@ -371,24 +376,20 @@ async function removeUser(db, actor, body, now) {
 }
 
 const DEMO_CUSTOMERS = [
-  ["Amelia Carter", "bronze"], ["Noah Bennett", "bronze"], ["Olivia Harris", "bronze"], ["Theo Morgan", "bronze"],
-  ["Freya Collins", "bronze"], ["Leo Walker", "bronze"], ["Grace Mitchell", "bronze"], ["Arthur Reed", "bronze"],
-  ["Isla Turner", "bronze"], ["Henry Foster", "bronze"], ["Mia Cooper", "bronze"], ["Oscar Bennett", "bronze"],
-  ["Evie Parker", "bronze"], ["Jack Edwards", "bronze"], ["Sophie Bailey", "bronze"], ["George Ward", "bronze"],
-  ["Lily Price", "bronze"], ["Charlie Russell", "bronze"], ["Ruby Hughes", "bronze"], ["Alfie Brooks", "bronze"],
-  ["Ella Graham", "bronze"], ["Harry Dawson", "bronze"], ["Poppy Ellis", "bronze"], ["Finley Shaw", "bronze"],
-  ["Ava Fletcher", "bronze"], ["Lucas Mason", "bronze"], ["Daisy Palmer", "bronze"], ["Ethan Lawson", "bronze"],
-  ["Ivy Chapman", "bronze"], ["Jacob Spencer", "bronze"], ["Rosie Walton", "bronze"], ["Mason Clarke", "bronze"],
-  ["Phoebe Atkinson", "bronze"], ["Daniel Kerr", "bronze"], ["Holly Newman", "bronze"], ["Samuel Grant", "bronze"],
-  ["Bella Pearson", "bronze"], ["Thomas Webb", "bronze"], ["Millie Sutton", "bronze"], ["William Dean", "bronze"],
-  ["Harper Lawson", "gold"], ["Benjamin Moore", "gold"],
-  ["Charlotte King", "platinum"], ["Alexander Wright", "platinum"], ["Florence Hall", "platinum"],
-  ["Edward Young", "platinum"], ["Matilda Green", "platinum"], ["Oliver Scott", "platinum"],
+  ["Alex", "alex_1998", "bronze"], ["Ben", "benji_92", "bronze"], ["Chloe", "chloe_x", "bronze"], ["Dan", "dan_1986", "bronze"],
+  ["Ellie", "ellie_15", "bronze"], ["Finn", "finn_uk", "bronze"], ["Georgia", "georgialou", "bronze"], ["Harry", "hazzar", "bronze"],
+  ["Izzy", "izzy_rose", "bronze"], ["Jack", "jackson_1", "bronze"], ["Katie", "katieb", "bronze"], ["Luke", "lukey_88", "bronze"],
+  ["Megan", "megz", "bronze"], ["Nathan", "nate_uk", "bronze"], ["Ollie", "ollieo", "bronze"], ["Poppy", "poppyx", "bronze"],
+  ["Ryan", "ryan_91", "bronze"], ["Sam", "sammy_uk", "bronze"], ["Tom", "tom_1989", "bronze"], ["Will", "willg", "bronze"],
+  ["Amy", "amyj", "bronze"], ["Beth", "beth_uk", "bronze"], ["Callum", "cal_90", "bronze"], ["Daisy", "daisy_00", "bronze"],
+  ["Ethan", "ethanx", "bronze"], ["Freya", "freya_m", "bronze"], ["Grace", "grace_92", "bronze"], ["Holly", "hollyx", "bronze"],
+  ["India", "indie_98", "bronze"], ["Jamie", "jamie_86", "bronze"], ["Kieran", "kieran_1", "bronze"], ["Lauren", "laurenm", "bronze"],
+  ["Molly", "molly_90", "bronze"], ["Noah", "noah_uk", "bronze"], ["Olivia", "livvy", "bronze"], ["Paige", "paigey", "bronze"],
+  ["Riley", "riley_10", "bronze"], ["Sophie", "sophs", "bronze"], ["Toby", "toby_87", "bronze"], ["Willow", "willow_9", "bronze"],
+  ["Aiden", "aidy", "gold"], ["Brooke", "brookey", "gold"],
+  ["Charlie", "charliep", "platinum"], ["Ellie-May", "ellie.may", "platinum"], ["Georgia-Rose", "georgiarose", "platinum"],
+  ["Harry J", "harryj", "platinum"], ["Izzy B", "izzyb", "platinum"], ["Jack T", "jackt", "platinum"],
 ];
-
-function demoUsername(name) {
-  return name.toLowerCase().replace(/[^a-z]+/g, "");
-}
 
 function demoAvatarUrl(name) {
   return `https://plexpoint.uk/assets/demo-avatars/${name.trim().charAt(0).toLowerCase()}.png`;
@@ -401,16 +402,16 @@ async function createDemoUsers(db, actor, now) {
   if (!["bronze", "gold", "platinum"].every((tierId) => tiers.has(tierId))) {
     throw new AuthError(409, "The standard Bronze, Gold, and Platinum plans must be available before adding demo users.");
   }
-  const monthlyTotalMinor = DEMO_CUSTOMERS.reduce((total, [, tierId]) => total + Number(tiers.get(tierId).monthly_price_minor), 0);
+  const monthlyTotalMinor = DEMO_CUSTOMERS.reduce((total, [, , tierId]) => total + Number(tiers.get(tierId).monthly_price_minor), 0);
   if (monthlyTotalMinor !== 20_000) throw new AuthError(409, "Demo plan prices no longer total £200.00.");
 
-  const dayStart = startOfUtcDay(now);
+  const dayStart = startOfUtcMonth(now);
   const nextDueAt = addCalendarMonths(dayStart, 1);
   const existing = await db.prepare("SELECT email FROM users WHERE email LIKE 'demo-customer-%@plexpoint.demo'").all();
   const existingEmails = new Set((existing.results || []).map((row) => row.email.toLowerCase()));
   const statements = [];
   let created = 0;
-  for (const [index, [name, tierId]] of DEMO_CUSTOMERS.entries()) {
+  for (const [index, [name, username, tierId]] of DEMO_CUSTOMERS.entries()) {
     const number = String(index + 1).padStart(2, "0");
     const email = `demo-customer-${number}@plexpoint.demo`;
     if (existingEmails.has(email)) continue;
@@ -418,7 +419,6 @@ async function createDemoUsers(db, actor, now) {
     const subscriptionId = `demo-subscription-${number}`;
     const periodId = `demo-period-${number}`;
     const paymentId = `demo-payment-${number}`;
-    const username = demoUsername(name);
     const avatarUrl = demoAvatarUrl(name);
     const tier = tiers.get(tierId);
     const amountMinor = Number(tier.monthly_price_minor);
@@ -454,10 +454,9 @@ async function createDemoUsers(db, actor, now) {
   }
   // Also repair the presentation of demo customers that were created by an
   // earlier version before realistic usernames and avatars were added.
-  for (const [index, [name]] of DEMO_CUSTOMERS.entries()) {
+  for (const [index, [name, username]] of DEMO_CUSTOMERS.entries()) {
     const number = String(index + 1).padStart(2, "0");
     const userId = `demo-customer-${number}`;
-    const username = demoUsername(name);
     const avatarUrl = demoAvatarUrl(name);
     statements.push(db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
       SELECT ?, id, ?, ?, ? FROM users WHERE id = ?
@@ -471,15 +470,26 @@ async function createDemoUsers(db, actor, now) {
 }
 
 async function repairDemoProfiles(db, now) {
-  const statements = DEMO_CUSTOMERS.map(([name], index) => {
+  const startsAt = startOfUtcMonth(now);
+  const nextDueAt = addCalendarMonths(startsAt, 1);
+  const statements = DEMO_CUSTOMERS.flatMap(([name, username], index) => {
     const number = String(index + 1).padStart(2, "0");
     const userId = `demo-customer-${number}`;
-    const username = demoUsername(name);
     const avatarUrl = demoAvatarUrl(name);
-    return db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
+    return [
+      db.prepare("UPDATE users SET display_name = ?, updated_at = ? WHERE id = ?")
+        .bind(name, now, userId),
+      db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
       SELECT ?, id, ?, ?, ? FROM users WHERE id = ?
       ON CONFLICT(user_id) DO UPDATE SET username = excluded.username, avatar_url = excluded.avatar_url`)
-      .bind(`demo-plex-${number}`, username, now, avatarUrl, userId);
+        .bind(`demo-plex-${number}`, username, now, avatarUrl, userId),
+      db.prepare(`UPDATE subscriptions SET starts_at = ?, ends_at = ?, updated_at = ?
+        WHERE id = ? AND provider = 'demo_seed'`).bind(startsAt, nextDueAt, now, `demo-subscription-${number}`),
+      db.prepare(`UPDATE billing_periods SET starts_at = ?, ends_at = ?, base_ends_at = ?
+        WHERE subscription_id = ?`).bind(startsAt, nextDueAt, nextDueAt, `demo-subscription-${number}`),
+      db.prepare(`UPDATE payments SET received_at = ?, coverage_starts_at = ?, coverage_ends_at = ?
+        WHERE id = ? AND provider = 'demo_seed'`).bind(startsAt, startsAt, nextDueAt, `demo-payment-${number}`),
+    ];
   });
   await db.batch(statements);
 }

@@ -328,4 +328,10 @@ test("an admin can add a realistic paid £200 demo customer set once", async (t)
     action: "set_demo_users_enabled", enabled: true,
   }), env);
   assert.equal((await shown.json()).active, true);
+  const refreshedDemo = sqlite.prepare(`SELECT u.display_name, pi.username, s.ends_at
+    FROM users u JOIN plex_identities pi ON pi.user_id = u.id
+    JOIN subscriptions s ON s.user_id = u.id WHERE u.id = 'demo-customer-01'`).get();
+  assert.equal(refreshedDemo.display_name, "Alex");
+  assert.equal(refreshedDemo.username, "alex_1998");
+  assert.equal(new Date(refreshedDemo.ends_at).getUTCDate(), 1);
 });
