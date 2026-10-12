@@ -391,6 +391,15 @@ const DEMO_CUSTOMERS = [
   ["Harry J", "harryj", "platinum"], ["Izzy B", "izzyb", "platinum"], ["Jack T", "jackt", "platinum"],
 ];
 
+const DEMO_EMAIL_DOMAINS = ["gmail.com", "outlook.com", "yahoo.com", "icloud.com", "proton.me"];
+
+function demoCustomerEmail(username, index) {
+  const localPart = username.toLowerCase()
+    .replace(/[^a-z0-9]+/g, ".")
+    .replace(/^\.+|\.+$/g, "");
+  return `${localPart}@${DEMO_EMAIL_DOMAINS[index % DEMO_EMAIL_DOMAINS.length]}`;
+}
+
 function demoAvatarUrl(name) {
   return `https://plexpoint.uk/assets/demo-avatars/${name.trim().charAt(0).toLowerCase()}.png`;
 }
@@ -407,15 +416,15 @@ async function createDemoUsers(db, actor, now) {
 
   const dayStart = startOfUtcMonth(now);
   const nextDueAt = addCalendarMonths(dayStart, 1);
-  const existing = await db.prepare("SELECT email FROM users WHERE email LIKE 'demo-customer-%@plexpoint.demo'").all();
-  const existingEmails = new Set((existing.results || []).map((row) => row.email.toLowerCase()));
+  const existing = await db.prepare("SELECT id FROM users WHERE id LIKE 'demo-customer-%'").all();
+  const existingUserIds = new Set((existing.results || []).map((row) => row.id));
   const statements = [];
   let created = 0;
   for (const [index, [name, username, tierId]] of DEMO_CUSTOMERS.entries()) {
     const number = String(index + 1).padStart(2, "0");
-    const email = `demo-customer-${number}@plexpoint.demo`;
-    if (existingEmails.has(email)) continue;
     const userId = `demo-customer-${number}`;
+    const email = demoCustomerEmail(username, index);
+    if (existingUserIds.has(userId)) continue;
     const subscriptionId = `demo-subscription-${number}`;
     const periodId = `demo-period-${number}`;
     const paymentId = `demo-payment-${number}`;
@@ -457,7 +466,10 @@ async function createDemoUsers(db, actor, now) {
   for (const [index, [name, username]] of DEMO_CUSTOMERS.entries()) {
     const number = String(index + 1).padStart(2, "0");
     const userId = `demo-customer-${number}`;
+    const email = demoCustomerEmail(username, index);
     const avatarUrl = demoAvatarUrl(name);
+    statements.push(db.prepare(`UPDATE users SET email = ?, display_name = ?, updated_at = ? WHERE id = ?`)
+      .bind(email, name, now, userId));
     statements.push(db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
       SELECT ?, id, ?, ?, ? FROM users WHERE id = ?
       ON CONFLICT(user_id) DO UPDATE SET username = excluded.username, avatar_url = excluded.avatar_url`)
@@ -465,7 +477,7 @@ async function createDemoUsers(db, actor, now) {
   }
   if (statements.length) await db.batch(statements);
   const reenabled = await db.prepare(`UPDATE users SET account_status = 'enabled', updated_at = ?
-    WHERE email LIKE 'demo-customer-%@plexpoint.demo' AND account_status = 'disabled'`).bind(now).run();
+    WHERE id LIKE 'demo-customer-%' AND account_status = 'disabled'`).bind(now).run();
   return { created, reenabled: Number(reenabled.meta?.changes || 0), totalUsers: DEMO_CUSTOMERS.length, monthlyTotalMinor, currency: "GBP", enabled: true };
 }
 
@@ -475,10 +487,11 @@ async function repairDemoProfiles(db, now) {
   const statements = DEMO_CUSTOMERS.flatMap(([name, username], index) => {
     const number = String(index + 1).padStart(2, "0");
     const userId = `demo-customer-${number}`;
+    const email = demoCustomerEmail(username, index);
     const avatarUrl = demoAvatarUrl(name);
     return [
-      db.prepare("UPDATE users SET display_name = ?, updated_at = ? WHERE id = ?")
-        .bind(name, now, userId),
+      db.prepare("UPDATE users SET email = ?, display_name = ?, updated_at = ? WHERE id = ?")
+        .bind(email, name, now, userId),
       db.prepare(`INSERT INTO plex_identities (plex_id, user_id, username, linked_at, avatar_url)
       SELECT ?, id, ?, ?, ? FROM users WHERE id = ?
       ON CONFLICT(user_id) DO UPDATE SET username = excluded.username, avatar_url = excluded.avatar_url`)
@@ -499,7 +512,7 @@ async function demoUsersStatus(db, now) {
   const result = await db.prepare(`SELECT
     COUNT(*) AS total,
     SUM(CASE WHEN account_status = 'enabled' THEN 1 ELSE 0 END) AS enabled
-    FROM users WHERE email LIKE 'demo-customer-%@plexpoint.demo'`).first();
+    FROM users WHERE id LIKE 'demo-customer-%'`).first();
   const total = Number(result?.total || 0);
   const enabled = Number(result?.enabled || 0);
   return { total, enabled, active: total > 0 && enabled > 0 };
@@ -510,7 +523,7 @@ async function setDemoUsersEnabled(db, actor, body, now) {
   const status = await demoUsersStatus(db, now);
   if (!status.total) throw new AuthError(409, "Add the demo users before turning them on or off.");
   await db.prepare(`UPDATE users SET account_status = ?, updated_at = ?
-    WHERE email LIKE 'demo-customer-%@plexpoint.demo'`).bind(body.enabled ? "enabled" : "disabled", now).run();
+    WHERE id LIKE 'demo-customer-%'`).bind(body.enabled ? "enabled" : "disabled", now).run();
   return { ...(await demoUsersStatus(db, now)), enabled: body.enabled };
 }
 

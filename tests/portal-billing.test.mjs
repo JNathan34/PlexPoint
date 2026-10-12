@@ -305,15 +305,17 @@ test("an admin can add a realistic paid £200 demo customer set once", async (t)
   }), env);
   assert.equal(response.status, 200);
   assert.match(JSON.stringify(await response.json()), /"created":48/);
-  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM users WHERE email LIKE 'demo-customer-%@plexpoint.demo'").get().n, 48);
+  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM users WHERE id LIKE 'demo-customer-%'").get().n, 48);
   assert.equal(sqlite.prepare(`SELECT SUM(t.monthly_price_minor) AS total
     FROM subscriptions s JOIN subscription_tiers t ON t.id = s.tier_id
     WHERE s.provider = 'demo_seed' AND s.access_status = 'enabled'`).get().total, 20_000);
   assert.equal(sqlite.prepare(`SELECT COUNT(*) AS n FROM payments p
     WHERE p.provider = 'demo_seed' AND p.status = 'confirmed'`).get().n, 48);
   const users = await adminUsersResponse(getRequest("/api/portal/admin/users", admin.cookie), env);
-  const demos = (await users.json()).users.filter((user) => user.email.endsWith("@plexpoint.demo"));
+  const demos = (await users.json()).users.filter((user) => user.id.startsWith("demo-customer-"));
   assert.equal(demos.length, 48);
+  assert.ok(demos.every((user) => /@(gmail|outlook|yahoo|icloud)\.com$|@proton\.me$/.test(user.email)));
+  assert.ok(demos.every((user) => !user.email.includes("demo")));
   assert.ok(demos.every((user) => user.billing?.status === "paid"));
   const again = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
     action: "create_demo_users",
@@ -323,7 +325,7 @@ test("an admin can add a realistic paid £200 demo customer set once", async (t)
     action: "set_demo_users_enabled", enabled: false,
   }), env);
   assert.equal((await hidden.json()).active, false);
-  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM users WHERE email LIKE 'demo-customer-%@plexpoint.demo' AND account_status = 'disabled'").get().n, 48);
+  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM users WHERE id LIKE 'demo-customer-%' AND account_status = 'disabled'").get().n, 48);
   const shown = await adminBillingResponse(postRequest("/api/portal/admin/billing", admin.cookie, {
     action: "set_demo_users_enabled", enabled: true,
   }), env);
